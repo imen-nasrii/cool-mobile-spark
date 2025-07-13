@@ -46,11 +46,11 @@ const Index = () => {
 
     switch (activeTab) {
       case "home":
-        return <Home onProductClick={handleProductClick} />;
+        return <Home onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
       case "messages":
-        return <Messages />;
+        return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
       default:
-        return <Home onProductClick={handleProductClick} />;
+        return <Home onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
     }
   };
 

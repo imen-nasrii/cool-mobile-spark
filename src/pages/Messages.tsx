@@ -28,23 +28,12 @@ const mockConversations = [
   }
 ];
 
-export const Messages = () => {
+import { Header } from "@/components/Layout/Header";
+
+export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <div className="sticky top-0 bg-card border-b border-border px-4 py-4 z-40">
-        <div className="max-w-md mx-auto">
-          <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-foreground">Messages & Vocal Calls</h1>
-            <div className="w-8 h-8 bg-warning/20 rounded-full flex items-center justify-center">
-              <MessageCircle size={16} className="text-warning" />
-            </div>
-          </div>
-          <p className="text-sm text-muted-foreground mt-1">
-            Connect with buyers anywhere, anytime
-          </p>
-        </div>
-      </div>
+      <Header activeTab={activeTab} onTabChange={onTabChange} />
 
       {/* Conversations List */}
       <div className="px-4 py-4 space-y-3 max-w-md mx-auto">

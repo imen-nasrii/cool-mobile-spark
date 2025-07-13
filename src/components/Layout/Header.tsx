@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 
-export const Header = () => {
+export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
   return (
     <div className="sticky top-0 bg-gradient-tomati backdrop-blur-sm border-b border-border z-40 px-4 py-4">
       <div className="flex items-center gap-3 max-w-md mx-auto">
@@ -39,23 +39,68 @@ export const Header = () => {
       
       {/* Top Navigation Menu */}
       <div className="flex items-center justify-center gap-4 mb-4 px-2">
-        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onTabChange?.("home")}
+          className={`flex flex-col items-center gap-1 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 transition-all duration-300 ${
+            activeTab === "home" 
+              ? "text-white bg-white/30 shadow-lg" 
+              : "text-white/70"
+          }`}
+        >
           <Home size={18} />
           <span className="text-xs font-medium">Home</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onTabChange?.("search")}
+          className={`flex flex-col items-center gap-1 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 transition-all duration-300 ${
+            activeTab === "search" 
+              ? "text-white bg-white/30 shadow-lg" 
+              : "text-white/70"
+          }`}
+        >
           <Search size={18} />
           <span className="text-xs font-medium">Search</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 bg-tomati-red/20">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onTabChange?.("add")}
+          className={`flex flex-col items-center gap-1 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 transition-all duration-300 ${
+            activeTab === "add" 
+              ? "text-white bg-tomati-red/40 shadow-lg" 
+              : "text-white bg-tomati-red/20"
+          }`}
+        >
           <Plus size={18} />
           <span className="text-xs font-medium">Add</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onTabChange?.("messages")}
+          className={`flex flex-col items-center gap-1 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 transition-all duration-300 ${
+            activeTab === "messages" 
+              ? "text-white bg-white/30 shadow-lg" 
+              : "text-white/70"
+          }`}
+        >
           <MessageSquare size={18} />
           <span className="text-xs font-medium">Messages</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => onTabChange?.("profile")}
+          className={`flex flex-col items-center gap-1 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 transition-all duration-300 ${
+            activeTab === "profile" 
+              ? "text-white bg-white/30 shadow-lg" 
+              : "text-white/70"
+          }`}
+        >
           <User size={18} />
           <span className="text-xs font-medium">Profile</span>
         </Button>
