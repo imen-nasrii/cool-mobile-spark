@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Home } from "./Home";
 import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
+import { Search } from "./Search";
+import { AddProduct } from "./AddProduct";
+import { Profile } from "./Profile";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,15 +16,6 @@ const Index = () => {
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    
-    // Show toast for non-implemented features
-    if (["search", "add", "profile"].includes(tab)) {
-      toast({
-        title: "Coming Soon!",
-        description: `${tab.charAt(0).toUpperCase() + tab.slice(1)} feature will be available soon.`,
-      });
-      return;
-    }
   };
 
   const handleProductClick = (productId: string) => {
@@ -47,8 +41,14 @@ const Index = () => {
     switch (activeTab) {
       case "home":
         return <Home onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
+      case "search":
+        return <Search activeTab={activeTab} onTabChange={handleTabChange} onProductClick={handleProductClick} />;
+      case "add":
+        return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} />;
       case "messages":
         return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
+      case "profile":
+        return <Profile activeTab={activeTab} onTabChange={handleTabChange} />;
       default:
         return <Home onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
     }
