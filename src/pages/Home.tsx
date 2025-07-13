@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/Layout/Header";
 import { CategoryGrid } from "@/components/Categories/CategoryGrid";
 import { ProductGrid } from "@/components/Products/ProductGrid";
 
@@ -17,20 +16,16 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <Header activeTab={activeTab} onTabChange={onTabChange} />
+    <div className="space-y-6">
+      <CategoryGrid 
+        selectedCategory={selectedCategory}
+        onCategorySelect={handleCategorySelect}
+      />
       
-      <div className="space-y-6">
-        <CategoryGrid 
-          selectedCategory={selectedCategory}
-          onCategorySelect={handleCategorySelect}
-        />
-        
-        <ProductGrid 
-          category={selectedCategory}
-          onProductClick={onProductClick}
-        />
-      </div>
+      <ProductGrid 
+        category={selectedCategory}
+        onProductClick={onProductClick}
+      />
     </div>
   );
 };

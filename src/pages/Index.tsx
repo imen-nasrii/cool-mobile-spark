@@ -5,7 +5,7 @@ import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
 import { Profile } from "./Profile";
-import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
+import { Header } from "@/components/Layout/Header";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -56,12 +56,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {renderContent()}
-      {currentView === "main" && (
-        <>
-          <FloatingActionButton />
-        </>
-      )}
+      <Header activeTab={activeTab} onTabChange={handleTabChange} />
+      <main className="container mx-auto px-4 py-6 max-w-7xl">
+        {renderContent()}
+      </main>
     </div>
   );
 };

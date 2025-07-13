@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/Layout/Header";
 import { Search as SearchIcon, Filter, MapPin, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,12 +64,10 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <Header activeTab={activeTab} onTabChange={onTabChange} />
-
+    <div className="space-y-6">
       {/* Search Bar */}
-      <div className="px-4 py-4 max-w-md mx-auto">
-        <div className="relative mb-4">
+      <div className="space-y-4">
+        <div className="relative">
           <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
           <Input 
             placeholder="Search products, cars, furniture..." 
@@ -85,7 +82,7 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
 
         {/* Popular Searches */}
         {!searchQuery && (
-          <div className="mb-6">
+          <div>
             <h3 className="text-sm font-medium text-foreground mb-3">Popular Searches</h3>
             <div className="flex flex-wrap gap-2">
               {popularSearches.map((search) => (
@@ -102,42 +99,42 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
             </div>
           </div>
         )}
+      </div>
 
-        {/* Search Results */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-foreground">
-              {searchQuery ? `Results for "${searchQuery}"` : "Recent Searches"}
-            </h2>
-            <Badge variant="secondary" className="bg-tomati-red/10 text-tomati-red">
-              {results.length} results
-            </Badge>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            {results.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onClick={() => onProductClick?.(product.id)}
-                onLike={() => console.log("Liked:", product.id)}
-                onMessage={() => console.log("Message:", product.id)}
-              />
-            ))}
-          </div>
-
-          {results.length === 0 && searchQuery && (
-            <div className="text-center py-8">
-              <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                <SearchIcon size={24} className="text-muted-foreground" />
-              </div>
-              <h3 className="text-lg font-medium text-foreground mb-2">No results found</h3>
-              <p className="text-muted-foreground text-sm">
-                Try searching with different keywords or check the spelling
-              </p>
-            </div>
-          )}
+      {/* Search Results */}
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-foreground">
+            {searchQuery ? `Results for "${searchQuery}"` : "Recent Searches"}
+          </h2>
+          <Badge variant="secondary" className="bg-tomati-red/10 text-tomati-red">
+            {results.length} results
+          </Badge>
         </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {results.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onClick={() => onProductClick?.(product.id)}
+              onLike={() => console.log("Liked:", product.id)}
+              onMessage={() => console.log("Message:", product.id)}
+            />
+          ))}
+        </div>
+
+        {results.length === 0 && searchQuery && (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <SearchIcon size={24} className="text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-medium text-foreground mb-2">No results found</h3>
+            <p className="text-muted-foreground text-sm">
+              Try searching with different keywords or check the spelling
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Header } from "@/components/Layout/Header";
 import { MessageCircle, Phone, Video, MoreHorizontal, Send, Plus, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -129,14 +128,12 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20">
-      <Header activeTab={activeTab} onTabChange={onTabChange} />
-
+    <div className="max-w-4xl mx-auto space-y-6">
       {/* Add Message Button */}
-      <div className="px-4 py-4 max-w-md mx-auto">
+      <div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="w-full bg-tomati-red hover:bg-tomati-red/90 text-white">
+            <Button className="bg-tomati-red hover:bg-tomati-red/90 text-white">
               <Plus size={16} className="mr-2" />
               Add New Message
             </Button>
@@ -179,7 +176,7 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
       </div>
 
       {/* Messages List */}
-      <div className="px-4 space-y-3 max-w-md mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {messages.map((conversation) => (
           <Card key={conversation.id} className="hover:shadow-sm transition-shadow">
             <CardContent className="p-4">
@@ -290,19 +287,6 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
           </p>
         </div>
       )}
-
-      {/* Chat Input */}
-      <div className="fixed bottom-4 left-0 right-0 bg-card border-t border-border px-4 py-3">
-        <div className="max-w-md mx-auto flex items-center gap-2">
-          <Input 
-            placeholder="Type a message..." 
-            className="flex-1 rounded-full border-muted"
-          />
-          <Button size="sm" className="rounded-full w-10 h-10 p-0 bg-tomati-red hover:bg-tomati-red/90 shadow-lg">
-            <Send size={16} className="text-white" />
-          </Button>
-        </div>
-      </div>
     </div>
   );
 };
