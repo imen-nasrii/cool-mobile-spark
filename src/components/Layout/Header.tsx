@@ -1,4 +1,4 @@
-import { Search, Bell, MapPin } from "lucide-react";
+import { Search, Bell, MapPin, Home, MessageSquare, Plus, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,30 @@ export const Header = () => {
       <div className="flex items-center justify-center gap-2 text-white/90 text-sm mt-2 mb-3">
         <MapPin size={16} className="text-white" />
         <span className="font-medium">Ariana, Tunisia</span>
+      </div>
+      
+      {/* Top Navigation Menu */}
+      <div className="flex items-center justify-center gap-4 mb-4 px-2">
+        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+          <Home size={18} />
+          <span className="text-xs font-medium">Home</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+          <Search size={18} />
+          <span className="text-xs font-medium">Search</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0 bg-tomati-red/20">
+          <Plus size={18} />
+          <span className="text-xs font-medium">Add</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+          <MessageSquare size={18} />
+          <span className="text-xs font-medium">Messages</span>
+        </Button>
+        <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 min-w-0">
+          <User size={18} />
+          <span className="text-xs font-medium">Profile</span>
+        </Button>
       </div>
       
       {/* Search Bar */}
