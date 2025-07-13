@@ -57,9 +57,11 @@ const Index = () => {
           {/* Header with Logo */}
           <header className="sticky top-0 z-50 bg-white border-b border-gray-100 px-4 py-3">
             <div className="flex items-center justify-center">
-              <h1 className="text-2xl font-bold bg-gradient-tomati bg-clip-text text-transparent">
-                Tomati
-              </h1>
+              <img 
+                src="/lovable-uploads/618489ca-9b35-4e4f-aacf-ba98ff16d1b6.png" 
+                alt="Tomati Logo" 
+                className="h-12 w-12"
+              />
             </div>
           </header>
           
