@@ -1,4 +1,4 @@
-import { Search, Bell, MapPin, Home, MessageSquare, User, Settings } from "lucide-react";
+import { Search, Bell, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -35,26 +35,6 @@ export const Header = () => {
       <div className="flex items-center justify-center gap-2 text-white/90 text-sm mt-2 mb-3">
         <MapPin size={16} className="text-white" />
         <span className="font-medium">Ariana, Tunisia</span>
-      </div>
-      
-      {/* Navigation Menu */}
-      <div className="flex items-center justify-center gap-2 mb-4">
-        <Button variant="ghost" size="sm" className="text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 text-sm font-medium">
-          <Home size={16} className="mr-1" />
-          Accueil
-        </Button>
-        <Button variant="ghost" size="sm" className="text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 text-sm font-medium">
-          <MessageSquare size={16} className="mr-1" />
-          Messages
-        </Button>
-        <Button variant="ghost" size="sm" className="text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 text-sm font-medium">
-          <User size={16} className="mr-1" />
-          Profil
-        </Button>
-        <Button variant="ghost" size="sm" className="text-white/90 hover:text-white hover:bg-white/20 rounded-xl px-3 py-2 text-sm font-medium">
-          <Settings size={16} className="mr-1" />
-          Paramètres
-        </Button>
       </div>
       
       {/* Search Bar */}
