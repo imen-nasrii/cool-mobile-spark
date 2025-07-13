@@ -86,7 +86,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
         <h2 className="text-lg font-semibold text-foreground">
           {category ? `${category} Products` : "Recent Listings"}
         </h2>
-        <Button variant="ghost" size="sm" className="text-primary text-sm">
+        <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
           View All
         </Button>
       </div>

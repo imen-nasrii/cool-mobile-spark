@@ -96,7 +96,7 @@ export const ProductCard = ({
         <Button
           variant="outline"
           size="sm"
-          className="w-full mt-3 text-xs h-8 bg-accent/10 border-accent/20 text-accent hover:bg-accent hover:text-accent-foreground"
+          className="w-full mt-3 text-xs h-8 bg-tomati-red/10 border-tomati-red/20 text-tomati-red hover:bg-tomati-red hover:text-white transition-all duration-300"
           onClick={(e) => {
             e.stopPropagation();
             onMessage?.();

@@ -43,10 +43,13 @@ All colors MUST be HSL.
     --warning-foreground: 0 0% 98%;
     --info: 221 83% 53%;
     --info-foreground: 0 0% 98%;
+    --tomati-red: 0 84% 55%;
+    --tomati-green: 142 76% 36%;
 
     /* Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 70% 45%));
     --gradient-accent: linear-gradient(135deg, hsl(25 95% 53%), hsl(15 90% 58%));
+    --gradient-tomati: linear-gradient(135deg, hsl(0 84% 55%), hsl(142 76% 36%));
 
     --radius: 0.5rem;
 

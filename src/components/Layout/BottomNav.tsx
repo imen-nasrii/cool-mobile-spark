@@ -26,10 +26,10 @@ export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
             size="sm"
             onClick={() => onTabChange(id)}
             className={cn(
-              "flex flex-col items-center gap-1 p-2 h-auto rounded-lg transition-colors",
+              "flex flex-col items-center gap-1 p-2 h-auto rounded-lg transition-all duration-300",
               activeTab === id 
-                ? "text-primary bg-primary/10" 
-                : "text-muted-foreground hover:text-foreground"
+                ? "text-tomati-red bg-tomati-red/10 shadow-sm scale-105" 
+                : "text-muted-foreground hover:text-tomati-red hover:bg-tomati-red/5"
             )}
           >
             <Icon size={20} />

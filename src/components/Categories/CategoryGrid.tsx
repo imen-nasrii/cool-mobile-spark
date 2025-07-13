@@ -31,7 +31,7 @@ export const CategoryGrid = ({ selectedCategory, onCategorySelect }: CategoryGri
     <div className="px-4 py-3">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-lg font-semibold text-foreground">Categories</h2>
-        <Button variant="ghost" size="sm" className="text-primary text-sm">
+        <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
           See All
         </Button>
       </div>
@@ -47,10 +47,10 @@ export const CategoryGrid = ({ selectedCategory, onCategorySelect }: CategoryGri
               variant="ghost"
               onClick={() => onCategorySelect?.(category.id)}
               className={cn(
-                "flex flex-col items-center gap-2 p-3 h-auto rounded-xl transition-all duration-200",
+                "flex flex-col items-center gap-2 p-3 h-auto rounded-xl transition-all duration-300 hover:scale-105",
                 isSelected 
-                  ? "bg-primary/10 border-2 border-primary/20" 
-                  : "hover:bg-muted/50"
+                  ? "bg-tomati-red/10 border-2 border-tomati-red/30 shadow-lg scale-105" 
+                  : "hover:bg-muted/50 hover:shadow-md"
               )}
             >
               <div className={cn("w-12 h-12 rounded-xl flex items-center justify-center", category.color)}>

@@ -69,7 +69,7 @@ export const Messages = () => {
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-muted-foreground">{conversation.timeAgo}</span>
                       {conversation.unread > 0 && (
-                        <Badge className="bg-accent text-accent-foreground text-xs min-w-5 h-5 rounded-full">
+                        <Badge className="bg-tomati-red text-white text-xs min-w-5 h-5 rounded-full animate-pulse-glow">
                           {conversation.unread}
                         </Badge>
                       )}
@@ -80,8 +80,8 @@ export const Messages = () => {
                 </div>
                 
                 <div className="flex flex-col gap-2">
-                  <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
-                    <Phone size={16} className="text-primary" />
+                  <Button variant="ghost" size="sm" className="w-8 h-8 p-0 hover:bg-tomati-red/10">
+                    <Phone size={16} className="text-tomati-red" />
                   </Button>
                   <Button variant="ghost" size="sm" className="w-8 h-8 p-0">
                     <MoreVertical size={16} className="text-muted-foreground" />
@@ -113,8 +113,8 @@ export const Messages = () => {
             placeholder="Type a message..." 
             className="flex-1 rounded-full border-muted"
           />
-          <Button size="sm" className="rounded-full w-10 h-10 p-0 bg-accent hover:bg-accent/90">
-            <Send size={16} />
+          <Button size="sm" className="rounded-full w-10 h-10 p-0 bg-tomati-red hover:bg-tomati-red/90 shadow-lg animate-scale-in">
+            <Send size={16} className="text-white" />
           </Button>
         </div>
       </div>
