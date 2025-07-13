@@ -99,7 +99,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
         </Button>
       </div>
       
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-7 gap-2">
         {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
