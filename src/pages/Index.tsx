@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Home } from "./Home";
 import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
-import { BottomNav } from "@/components/Layout/BottomNav";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
 import { useToast } from "@/hooks/use-toast";
 
@@ -61,7 +60,6 @@ const Index = () => {
       {currentView === "main" && (
         <>
           <FloatingActionButton />
-          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
         </>
       )}
     </div>
