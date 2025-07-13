@@ -3,16 +3,15 @@ import { Header } from "@/components/Layout/Header";
 import { CategoryGrid } from "@/components/Categories/CategoryGrid";
 import { ProductGrid } from "@/components/Products/ProductGrid";
 
-export const Home = () => {
+interface HomeProps {
+  onProductClick?: (productId: string) => void;
+}
+
+export const Home = ({ onProductClick }: HomeProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
-  };
-
-  const handleProductClick = (productId: string) => {
-    console.log("Product clicked:", productId);
-    // Navigate to product detail page
   };
 
   return (
@@ -27,7 +26,7 @@ export const Home = () => {
         
         <ProductGrid 
           category={selectedCategory}
-          onProductClick={handleProductClick}
+          onProductClick={onProductClick}
         />
       </div>
     </div>

@@ -1,7 +1,15 @@
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 
-// Mock data inspired by the app screenshots
+// Import product images
+import teslaImage from "@/assets/tesla-model3.jpg";
+import motherboardImage from "@/assets/motherboard-i5.jpg";
+import sofaImage from "@/assets/modern-sofa.jpg";
+import bikeImage from "@/assets/mountain-bike.jpg";
+import tractorImage from "@/assets/tractor-holland.jpg";
+import iphoneImage from "@/assets/iphone-15-pro.jpg";
+
+// Mock data inspired by the app screenshots with real images
 const mockProducts = [
   {
     id: "1",
@@ -9,7 +17,7 @@ const mockProducts = [
     price: "170 DT",
     location: "Ariana, Tunisia",
     timeAgo: "1 day ago",
-    images: [],
+    image: motherboardImage,
     category: "Electronics",
     likes: 12,
     isReserved: false
@@ -20,7 +28,7 @@ const mockProducts = [
     price: "Free",
     location: "Tunis, Tunisia", 
     timeAgo: "2 days ago",
-    images: [],
+    image: sofaImage,
     category: "Furniture",
     likes: 8,
     isFree: true
@@ -31,7 +39,7 @@ const mockProducts = [
     price: "300 DT",
     location: "Ariana, Tunisia",
     timeAgo: "2 days ago", 
-    images: [],
+    image: bikeImage,
     category: "Sports",
     likes: 15,
     isReserved: true
@@ -42,7 +50,7 @@ const mockProducts = [
     price: "Free",
     location: "Ariana, Tunisia",
     timeAgo: "2 days ago",
-    images: [],
+    image: tractorImage,
     category: "Vehicles",
     likes: 6,
     isFree: true
@@ -53,7 +61,7 @@ const mockProducts = [
     price: "120,000 DT",
     location: "Gabes, Tunisia",
     timeAgo: "6 days ago",
-    images: [],
+    image: teslaImage,
     category: "Cars", 
     likes: 45,
     isReserved: false
@@ -64,7 +72,7 @@ const mockProducts = [
     price: "2,800 DT",
     location: "Sousse, Tunisia",
     timeAgo: "1 week ago",
-    images: [],
+    image: iphoneImage,
     category: "Electronics",
     likes: 23
   }

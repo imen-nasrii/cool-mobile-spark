@@ -10,7 +10,7 @@ interface Product {
   price: string;
   location: string;
   timeAgo: string;
-  images: string[];
+  image?: string;
   isFree?: boolean;
   isReserved?: boolean;
   likes: number;
@@ -37,11 +37,19 @@ export const ProductCard = ({
       className={cn("overflow-hidden hover:shadow-md transition-shadow cursor-pointer", className)}
       onClick={onClick}
     >
-      <div className="relative aspect-[4/3] bg-muted">
-        {/* Placeholder for product image */}
-        <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/10 flex items-center justify-center">
-          <span className="text-muted-foreground text-sm">{product.category}</span>
-        </div>
+      <div className="relative aspect-[4/3] bg-muted overflow-hidden">
+        {/* Product image */}
+        {product.image ? (
+          <img 
+            src={product.image} 
+            alt={product.title}
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/10 flex items-center justify-center">
+            <span className="text-muted-foreground text-sm">{product.category}</span>
+          </div>
+        )}
         
         {/* Status badges */}
         <div className="absolute top-2 left-2 flex gap-1">
@@ -57,13 +65,13 @@ export const ProductCard = ({
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-card/80 backdrop-blur-sm hover:bg-card"
+          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm"
           onClick={(e) => {
             e.stopPropagation();
             onLike?.();
           }}
         >
-          <Heart size={16} className="text-muted-foreground hover:text-accent" />
+          <Heart size={16} className="text-tomati-red hover:fill-tomati-red transition-all" />
         </Button>
       </div>
       
