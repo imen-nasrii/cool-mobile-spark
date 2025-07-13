@@ -64,18 +64,18 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="min-h-screen bg-background p-4 pb-20">
       {/* Search Bar */}
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-4xl mx-auto">
         <div className="relative">
           <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
           <Input 
             placeholder="Search products, cars, furniture..." 
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="pl-12 pr-4 py-3 rounded-2xl border-2 border-tomati-red/20 focus:border-tomati-red focus:ring-tomati-red"
+            className="pl-12 pr-4 py-3 rounded-2xl border-2 border-primary/20 focus:border-primary focus:ring-primary"
           />
-          <Button variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 text-tomati-red">
+          <Button variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary">
             <Filter size={18} />
           </Button>
         </div>
@@ -91,7 +91,7 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
                   variant="outline"
                   size="sm"
                   onClick={() => handleSearch(search)}
-                  className="text-xs rounded-full border-tomati-red/20 hover:bg-tomati-red/10 hover:border-tomati-red"
+                  className="text-xs rounded-full border-primary/20 hover:bg-primary/10 hover:border-primary"
                 >
                   {search}
                 </Button>
@@ -102,12 +102,12 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
       </div>
 
       {/* Search Results */}
-      <div>
+      <div className="max-w-4xl mx-auto mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-foreground">
             {searchQuery ? `Results for "${searchQuery}"` : "Recent Searches"}
           </h2>
-          <Badge variant="secondary" className="bg-tomati-red/10 text-tomati-red">
+          <Badge variant="secondary" className="bg-primary/10 text-primary">
             {results.length} results
           </Badge>
         </div>

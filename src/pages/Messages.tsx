@@ -128,165 +128,167 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      {/* Add Message Button */}
-      <div>
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-tomati-red hover:bg-tomati-red/90 text-white">
-              <Plus size={16} className="mr-2" />
-              Add New Message
-            </Button>
-          </DialogTrigger>
+    <div className="min-h-screen bg-background p-4 pb-20">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Add Message Button */}
+        <div>
+          <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-primary hover:bg-primary/90 text-white">
+                <Plus size={16} className="mr-2" />
+                Add New Message
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Message</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4">
+                <Input
+                  placeholder="Name *"
+                  value={newMessage.name}
+                  onChange={(e) => setNewMessage(prev => ({ ...prev, name: e.target.value }))}
+                />
+                <Input
+                  placeholder="Username (optional)"
+                  value={newMessage.username}
+                  onChange={(e) => setNewMessage(prev => ({ ...prev, username: e.target.value }))}
+                />
+                <Textarea
+                  placeholder="Last message *"
+                  value={newMessage.lastMessage}
+                  onChange={(e) => setNewMessage(prev => ({ ...prev, lastMessage: e.target.value }))}
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="online"
+                    checked={newMessage.online}
+                    onChange={(e) => setNewMessage(prev => ({ ...prev, online: e.target.checked }))}
+                  />
+                  <label htmlFor="online" className="text-sm">Online status</label>
+                </div>
+                <Button onClick={handleCreate} className="w-full bg-primary hover:bg-primary/90">
+                  Create Message
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </div>
+
+        {/* Messages List */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {messages.map((conversation) => (
+            <Card key={conversation.id} className="hover:shadow-sm transition-shadow">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <Avatar className="w-12 h-12">
+                      <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                        {conversation.avatar}
+                      </AvatarFallback>
+                    </Avatar>
+                    {conversation.online && (
+                      <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card"></div>
+                    )}
+                  </div>
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <h3 className="font-medium text-foreground truncate">{conversation.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">{conversation.timeAgo}</span>
+                        {conversation.unread > 0 && (
+                          <Badge className="bg-primary text-white text-xs min-w-5 h-5 rounded-full">
+                            {conversation.unread}
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground truncate">{conversation.lastMessage}</p>
+                    <p className="text-xs text-muted-foreground mt-1">{conversation.username}</p>
+                  </div>
+                  
+                  <div className="flex flex-col gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-8 h-8 p-0 hover:bg-primary/10"
+                      onClick={() => handleEdit(conversation)}
+                    >
+                      <Edit2 size={14} className="text-primary" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-8 h-8 p-0 hover:bg-red-100"
+                      onClick={() => handleDelete(conversation.id)}
+                    >
+                      <Trash2 size={14} className="text-red-500" />
+                    </Button>
+                    <Button variant="ghost" size="sm" className="w-8 h-8 p-0 hover:bg-green-100">
+                      <Phone size={14} className="text-green-600" />
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Edit Dialog */}
+        <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Create New Message</DialogTitle>
+              <DialogTitle>Edit Message</DialogTitle>
             </DialogHeader>
-            <div className="space-y-4">
-              <Input
-                placeholder="Name *"
-                value={newMessage.name}
-                onChange={(e) => setNewMessage(prev => ({ ...prev, name: e.target.value }))}
-              />
-              <Input
-                placeholder="Username (optional)"
-                value={newMessage.username}
-                onChange={(e) => setNewMessage(prev => ({ ...prev, username: e.target.value }))}
-              />
-              <Textarea
-                placeholder="Last message *"
-                value={newMessage.lastMessage}
-                onChange={(e) => setNewMessage(prev => ({ ...prev, lastMessage: e.target.value }))}
-              />
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="online"
-                  checked={newMessage.online}
-                  onChange={(e) => setNewMessage(prev => ({ ...prev, online: e.target.checked }))}
+            {editingMessage && (
+              <div className="space-y-4">
+                <Input
+                  placeholder="Name"
+                  value={editingMessage.name}
+                  onChange={(e) => setEditingMessage(prev => prev ? { ...prev, name: e.target.value } : null)}
                 />
-                <label htmlFor="online" className="text-sm">Online status</label>
+                <Input
+                  placeholder="Username"
+                  value={editingMessage.username}
+                  onChange={(e) => setEditingMessage(prev => prev ? { ...prev, username: e.target.value } : null)}
+                />
+                <Textarea
+                  placeholder="Last message"
+                  value={editingMessage.lastMessage}
+                  onChange={(e) => setEditingMessage(prev => prev ? { ...prev, lastMessage: e.target.value } : null)}
+                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="edit-online"
+                    checked={editingMessage.online}
+                    onChange={(e) => setEditingMessage(prev => prev ? { ...prev, online: e.target.checked } : null)}
+                  />
+                  <label htmlFor="edit-online" className="text-sm">Online status</label>
+                </div>
+                <Button onClick={handleUpdate} className="w-full bg-primary hover:bg-primary/90">
+                  Update Message
+                </Button>
               </div>
-              <Button onClick={handleCreate} className="w-full bg-tomati-red hover:bg-tomati-red/90">
-                Create Message
-              </Button>
-            </div>
+            )}
           </DialogContent>
         </Dialog>
-      </div>
 
-      {/* Messages List */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {messages.map((conversation) => (
-          <Card key={conversation.id} className="hover:shadow-sm transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className="relative">
-                  <Avatar className="w-12 h-12">
-                    <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                      {conversation.avatar}
-                    </AvatarFallback>
-                  </Avatar>
-                  {conversation.online && (
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card"></div>
-                  )}
-                </div>
-                
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-1">
-                    <h3 className="font-medium text-foreground truncate">{conversation.name}</h3>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">{conversation.timeAgo}</span>
-                      {conversation.unread > 0 && (
-                        <Badge className="bg-tomati-red text-white text-xs min-w-5 h-5 rounded-full">
-                          {conversation.unread}
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                  <p className="text-sm text-muted-foreground truncate">{conversation.lastMessage}</p>
-                  <p className="text-xs text-muted-foreground mt-1">{conversation.username}</p>
-                </div>
-                
-                <div className="flex flex-col gap-1">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="w-8 h-8 p-0 hover:bg-tomati-red/10"
-                    onClick={() => handleEdit(conversation)}
-                  >
-                    <Edit2 size={14} className="text-tomati-red" />
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="w-8 h-8 p-0 hover:bg-red-100"
-                    onClick={() => handleDelete(conversation.id)}
-                  >
-                    <Trash2 size={14} className="text-red-500" />
-                  </Button>
-                  <Button variant="ghost" size="sm" className="w-8 h-8 p-0 hover:bg-green-100">
-                    <Phone size={14} className="text-green-600" />
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Edit Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Message</DialogTitle>
-          </DialogHeader>
-          {editingMessage && (
-            <div className="space-y-4">
-              <Input
-                placeholder="Name"
-                value={editingMessage.name}
-                onChange={(e) => setEditingMessage(prev => prev ? { ...prev, name: e.target.value } : null)}
-              />
-              <Input
-                placeholder="Username"
-                value={editingMessage.username}
-                onChange={(e) => setEditingMessage(prev => prev ? { ...prev, username: e.target.value } : null)}
-              />
-              <Textarea
-                placeholder="Last message"
-                value={editingMessage.lastMessage}
-                onChange={(e) => setEditingMessage(prev => prev ? { ...prev, lastMessage: e.target.value } : null)}
-              />
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  id="edit-online"
-                  checked={editingMessage.online}
-                  onChange={(e) => setEditingMessage(prev => prev ? { ...prev, online: e.target.checked } : null)}
-                />
-                <label htmlFor="edit-online" className="text-sm">Online status</label>
-              </div>
-              <Button onClick={handleUpdate} className="w-full bg-tomati-red hover:bg-tomati-red/90">
-                Update Message
-              </Button>
+        {/* Empty State */}
+        {messages.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
+            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <MessageCircle size={24} className="text-muted-foreground" />
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Empty State */}
-      {messages.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
-          <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
-            <MessageCircle size={24} className="text-muted-foreground" />
+            <h3 className="text-lg font-medium text-foreground mb-2">No messages yet</h3>
+            <p className="text-muted-foreground text-sm max-w-xs">
+              Click "Add New Message" to create your first conversation
+            </p>
           </div>
-          <h3 className="text-lg font-medium text-foreground mb-2">No messages yet</h3>
-          <p className="text-muted-foreground text-sm max-w-xs">
-            Click "Add New Message" to create your first conversation
-          </p>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 };
