@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User } from "lucide-react";
+import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell } from "lucide-react";
 import { Home as HomePage } from "./Home";
 import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
@@ -56,31 +56,38 @@ const Index = () => {
         <>
           {/* Header with Logo */}
           <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
-            <div className="flex items-center justify-center py-3">
+            {/* Top Row */}
+            <div className="flex items-center justify-between px-4 py-3">
+              <h1 className="text-xl font-bold text-primary">Tomati</h1>
+              
               <img 
                 src="/lovable-uploads/618489ca-9b35-4e4f-aacf-ba98ff16d1b6.png" 
                 alt="Tomati Logo" 
-                className="h-12 w-12"
+                className="h-10 w-10"
               />
+              
+              <div className="flex items-center gap-3">
+                <button className="p-2 hover:bg-gray-100 rounded-full">
+                  <SearchIcon size={20} className="text-gray-600" />
+                </button>
+                <button className="p-2 hover:bg-gray-100 rounded-full relative">
+                  <Bell size={20} className="text-gray-600" />
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">1</span>
+                </button>
+              </div>
             </div>
             
             {/* Categories Menu */}
             <div className="px-4 pb-3">
-              <div className="flex items-center gap-6 overflow-x-auto">
-                <button className="flex-shrink-0 px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors">
+              <div className="flex items-center gap-4 overflow-x-auto">
+                <button className="flex-shrink-0 px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700">
                   Tous les catégories
                 </button>
-                <button className="flex items-center gap-2 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+                <button className="flex items-center gap-2 flex-shrink-0 px-3 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
                   🚗 Voiture
                 </button>
-                <button className="flex items-center gap-2 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
+                <button className="flex items-center gap-2 flex-shrink-0 px-3 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
                   🏠 Immobilie
-                </button>
-                <button className="flex items-center gap-2 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
-                  📱 Électronique
-                </button>
-                <button className="flex items-center gap-2 flex-shrink-0 px-4 py-2 rounded-full text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors">
-                  👕 Vêtements
                 </button>
               </div>
             </div>
