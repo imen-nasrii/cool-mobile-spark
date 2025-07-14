@@ -83,6 +83,7 @@ export default {
 				'inter': ['Inter', 'sans-serif'],
 				'poppins': ['Poppins', 'sans-serif'],
 				'fredoka': ['Fredoka One', 'cursive'],
+				'pacifico': ['Pacifico', 'cursive'],
 				'sans': ['Inter', 'sans-serif'],
 			},
 			backgroundImage: {
