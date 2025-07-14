@@ -82,6 +82,7 @@ export default {
 			fontFamily: {
 				'inter': ['Inter', 'sans-serif'],
 				'poppins': ['Poppins', 'sans-serif'],
+				'fredoka': ['Fredoka One', 'cursive'],
 				'sans': ['Inter', 'sans-serif'],
 			},
 			backgroundImage: {
