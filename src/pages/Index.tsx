@@ -46,7 +46,13 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-float"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 bg-accent/10 rounded-full blur-xl animate-float" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/2 w-40 h-40 bg-gradient-primary/10 rounded-full blur-2xl animate-float" style={{animationDelay: '2s'}}></div>
+      </div>
       {currentView === "product" ? (
         <ProductDetail 
           productId={selectedProduct}
@@ -55,36 +61,43 @@ const Index = () => {
       ) : (
         <>
           {/* Header with Logo */}
-          <header className="sticky top-0 z-50 bg-white border-b border-gray-100">
+          <header className="sticky top-0 z-50 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/5 backdrop-blur-md border-b border-white/20 shadow-soft">
             {/* Single Row Header */}
-            <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center justify-between px-4 py-4">
               <div className="flex items-center gap-4">
-                <h1 className="text-2xl font-fredoka text-primary tracking-wide transform hover:scale-105 transition-transform duration-200">Tomati</h1>
-                <button className="px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-700">
+                <h1 className="text-3xl font-fredoka text-primary tracking-wide animate-pulse-glow bg-gradient-tomati bg-clip-text text-transparent">
+                  Tomati
+                </h1>
+                <button className="px-6 py-3 glass-card text-sm font-medium text-foreground hover:shadow-tomati transition-all duration-300 hover:scale-105 backdrop-blur-sm">
                   Tous les catégories
                 </button>
               </div>
               
-              <img 
-                src="/lovable-uploads/618489ca-9b35-4e4f-aacf-ba98ff16d1b6.png" 
-                alt="Tomati Logo" 
-                className="h-10 w-10"
-              />
+              <div className="relative">
+                <img 
+                  src="/lovable-uploads/618489ca-9b35-4e4f-aacf-ba98ff16d1b6.png" 
+                  alt="Tomati Logo" 
+                  className="h-12 w-12 rounded-full shadow-medium hover:shadow-glow transition-all duration-300 hover:rotate-12 hover:scale-110"
+                />
+                <div className="absolute inset-0 rounded-full bg-gradient-primary opacity-20 animate-pulse"></div>
+              </div>
               
               <div className="flex items-center gap-3">
-                <button className="p-2 hover:bg-gray-100 rounded-full">
-                  <SearchIcon size={20} className="text-gray-600" />
+                <button className="p-3 glass rounded-full hover:shadow-glow transition-all duration-300 hover:scale-110 group">
+                  <SearchIcon size={20} className="text-primary group-hover:text-accent transition-colors" />
                 </button>
-                <button className="p-2 hover:bg-gray-100 rounded-full relative">
-                  <Bell size={20} className="text-gray-600" />
-                  <span className="absolute -top-1 -right-1 bg-primary text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">1</span>
+                <button className="p-3 glass rounded-full hover:shadow-glow transition-all duration-300 hover:scale-110 relative group">
+                  <Bell size={20} className="text-primary group-hover:text-accent transition-colors" />
+                  <span className="absolute -top-1 -right-1 bg-gradient-accent text-white text-xs w-6 h-6 rounded-full flex items-center justify-center shadow-medium animate-bounce">
+                    1
+                  </span>
                 </button>
               </div>
             </div>
           </header>
           
           {renderContent()}
-          <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-2 z-50">
+          <div className="fixed bottom-0 left-0 right-0 glass-card border-t border-white/20 px-4 py-3 z-50 backdrop-blur-xl">
             <div className="flex justify-around items-center max-w-md mx-auto">
               {[
                 { id: "home", icon: HomeIcon, label: "Accueil" },
@@ -96,14 +109,14 @@ const Index = () => {
                 <button
                   key={id}
                   onClick={() => handleTabChange(id)}
-                  className={`flex flex-col items-center gap-1 p-2 transition-colors ${
+                  className={`flex flex-col items-center gap-1 p-3 transition-all duration-300 rounded-2xl hover:scale-110 ${
                     activeTab === id 
-                      ? "text-primary" 
-                      : "text-gray-500"
+                      ? "text-primary bg-gradient-primary/10 shadow-tomati scale-110" 
+                      : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                   }`}
                 >
-                  <Icon size={20} />
-                  <span className="text-xs">{label}</span>
+                  <Icon size={22} className={activeTab === id ? "animate-bounce" : ""} />
+                  <span className="text-xs font-medium">{label}</span>
                 </button>
               ))}
             </div>
