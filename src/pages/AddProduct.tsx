@@ -7,6 +7,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/hooks/useLanguage";
 
 const categories = [
   { id: "voiture", name: "Voiture", icon: Car },
@@ -50,7 +53,10 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     isPaid: true
   });
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { t } = useLanguage();
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -74,30 +80,86 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    toast({
-      title: "Succès!",
-      description: "Votre annonce a été publiée avec succès",
-    });
-    
-    // Reset form
-    setSelectedCategory("");
-    setFormData({
-      title: "",
-      brand: "",
-      model: "",
-      year: "",
-      mileage: "",
-      transmission: "",
-      description: "",
-      price: "",
-      condition: "",
-      location: "",
-      isPaid: true
-    });
-    setSelectedImages([]);
+    if (!user) {
+      toast({
+        title: "Erreur",
+        description: "Vous devez être connecté pour publier une annonce",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.title || !formData.description || !formData.location || !selectedCategory) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .insert([
+          {
+            title: formData.title,
+            description: formData.description,
+            price: formData.isPaid ? formData.price : "Free",
+            location: formData.location,
+            category: selectedCategory,
+            is_free: !formData.isPaid,
+            user_id: user.id,
+            // For now, we'll use a placeholder image - later we can implement image upload
+            image_url: selectedImages[0] || null
+          }
+        ])
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: "Succès!",
+        description: "Votre annonce a été publiée avec succès",
+      });
+      
+      // Reset form
+      setSelectedCategory("");
+      setFormData({
+        title: "",
+        brand: "",
+        model: "",
+        year: "",
+        mileage: "",
+        transmission: "",
+        description: "",
+        price: "",
+        condition: "",
+        location: "",
+        isPaid: true
+      });
+      setSelectedImages([]);
+      
+      // Redirect to home or products list
+      onTabChange?.("home");
+      
+    } catch (error: any) {
+      console.error('Error creating product:', error);
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible de publier l'annonce",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCancel = () => {
@@ -159,6 +221,20 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Category Selection */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <label className="block text-base font-medium mb-3">Catégorie *</label>
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="h-12 text-base">
+                  <SelectValue placeholder="Choisir une catégorie" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             {/* Title */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <label className="block text-base font-medium mb-3">Titre *</label>
@@ -167,149 +243,68 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
                 className="h-12 text-base"
+                required
               />
             </div>
 
-            {/* Brand */}
+            {/* Location */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <label className="block text-base font-medium mb-3">Marque *</label>
-              <Select value={formData.brand} onValueChange={(value) => setFormData(prev => ({ ...prev, brand: value }))}>
-                <SelectTrigger className="h-12 text-base">
-                  <SelectValue placeholder="Choisire une option" />
-                </SelectTrigger>
-                <SelectContent>
-                  {carBrands.map((brand) => (
-                    <SelectItem key={brand} value={brand}>{brand}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <label className="block text-base font-medium mb-3">Localisation *</label>
+              <div className="relative">
+                <Input
+                  placeholder="Ville, région"
+                  value={formData.location}
+                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
+                  className="h-12 text-base pr-12"
+                  required
+                />
+                <MapPin size={20} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              </div>
             </div>
 
-              {/* Model */}
-              <div>
-                <label className="block text-base font-medium mb-3">Modèle *</label>
-                <Select value={formData.model} onValueChange={(value) => setFormData(prev => ({ ...prev, model: value }))}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Choisire une option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="model1">Modèle 1</SelectItem>
-                    <SelectItem value="model2">Modèle 2</SelectItem>
-                    <SelectItem value="model3">Modèle 3</SelectItem>
-                  </SelectContent>
-                </Select>
+            {/* Price */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <label className="block text-base font-medium mb-3">Prix *</label>
+              <div className="flex gap-4 mb-4">
+                <Button
+                  type="button"
+                  variant={formData.isPaid ? "default" : "outline"}
+                  onClick={() => setFormData(prev => ({ ...prev, isPaid: true }))}
+                  className="px-8 py-3 rounded-full"
+                >
+                  Payant
+                </Button>
+                <Button
+                  type="button"
+                  variant={!formData.isPaid ? "default" : "outline"}
+                  onClick={() => setFormData(prev => ({ ...prev, isPaid: false }))}
+                  className="px-8 py-3 rounded-full"
+                >
+                  Gratuit
+                </Button>
               </div>
-
-              {/* Year */}
-              <div>
-                <label className="block text-base font-medium mb-3">Année *</label>
-                <Select value={formData.year} onValueChange={(value) => setFormData(prev => ({ ...prev, year: value }))}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Choisire une option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Array.from({ length: 30 }, (_, i) => 2024 - i).map((year) => (
-                      <SelectItem key={year} value={year.toString()}>{year}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Mileage */}
-              <div>
-                <label className="block text-base font-medium mb-3">Kilométrage *</label>
+              {formData.isPaid && (
                 <Input
-                  placeholder="Titre de produit"
-                  value={formData.mileage}
-                  onChange={(e) => setFormData(prev => ({ ...prev, mileage: e.target.value }))}
+                  placeholder="Prix en DT"
+                  value={formData.price}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
                   className="h-12 text-base"
+                  required
                 />
-              </div>
+              )}
+            </div>
 
-              {/* Transmission */}
-              <div>
-                <label className="block text-base font-medium mb-3">Transmission *</label>
-                <Select value={formData.transmission} onValueChange={(value) => setFormData(prev => ({ ...prev, transmission: value }))}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Choisire une option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {transmissions.map((trans) => (
-                      <SelectItem key={trans.value} value={trans.value}>{trans.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Condition */}
-              <div>
-                <label className="block text-base font-medium mb-3">État *</label>
-                <Select value={formData.condition} onValueChange={(value) => setFormData(prev => ({ ...prev, condition: value }))}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Choisire une option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {conditions.map((condition) => (
-                      <SelectItem key={condition.value} value={condition.value}>{condition.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Location */}
-              <div>
-                <label className="block text-base font-medium mb-3">Localisation *</label>
-                <div className="relative">
-                  <Input
-                    value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    className="h-12 text-base pr-12"
-                  />
-                  <MapPin size={20} className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                </div>
-              </div>
-
-              {/* Price */}
-              <div>
-                <label className="block text-base font-medium mb-3">Prix *</label>
-                <div className="flex gap-4 mb-4">
-                  <Button
-                    type="button"
-                    variant={formData.isPaid ? "default" : "outline"}
-                    onClick={() => setFormData(prev => ({ ...prev, isPaid: true }))}
-                    className="px-8 py-3 rounded-full"
-                  >
-                    Payant
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={!formData.isPaid ? "default" : "outline"}
-                    onClick={() => setFormData(prev => ({ ...prev, isPaid: false }))}
-                    className="px-8 py-3 rounded-full"
-                  >
-                    Gratuit
-                  </Button>
-                </div>
-                {formData.isPaid && (
-                  <Input
-                    placeholder="prix de produit"
-                    value={formData.price}
-                    onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                    className="h-12 text-base"
-                  />
-                )}
-              </div>
-
-              {/* Description */}
-              <div>
-                <label className="block text-base font-medium mb-3">Description *</label>
-                <Textarea
-                  placeholder="Déscription du produit"
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  className="min-h-32 text-base resize-none"
-                />
-              </div>
+            {/* Description */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <label className="block text-base font-medium mb-3">Description *</label>
+              <Textarea
+                placeholder="Description du produit"
+                value={formData.description}
+                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                className="min-h-32 text-base resize-none"
+                required
+              />
+            </div>
 
             {/* Action Buttons */}
             <div className="flex gap-4 pt-6">
@@ -323,9 +318,10 @@ export const AddProduct = ({ activeTab, onTabChange }: {
               </Button>
               <Button
                 type="submit"
+                disabled={loading}
                 className="flex-1 h-14 text-lg bg-primary hover:bg-primary/90"
               >
-                publier
+                {loading ? "Publication..." : "Publier"}
               </Button>
             </div>
           </form>
