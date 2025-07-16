@@ -15,10 +15,10 @@ const translations = {
     
     // Categories
     allCategories: "Toutes les catégories",
-    cars: "🚗 Voitures",
-    realEstate: "🏠 Immobilier", 
-    jobs: "💼 Emplois",
-    others: "📦 Autres",
+    cars: "Voitures",
+    realEstate: "Immobilier", 
+    jobs: "Emplois",
+    others: "Autres",
     
     // Products
     recentListings: "Annonces récentes",
@@ -51,10 +51,10 @@ const translations = {
     
     // Categories  
     allCategories: "جميع الفئات",
-    cars: "🚗 سيارات",
-    realEstate: "🏠 عقارات",
-    jobs: "💼 وظائف", 
-    others: "📦 أخرى",
+    cars: "سيارات",
+    realEstate: "عقارات",
+    jobs: "وظائف", 
+    others: "أخرى",
     
     // Products
     recentListings: "الإعلانات الأخيرة",
