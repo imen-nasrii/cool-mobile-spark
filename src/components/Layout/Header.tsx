@@ -1,9 +1,41 @@
-import { Search, Bell, MapPin, Home, MessageSquare, Plus, User } from "lucide-react";
+import { Search, Bell, MapPin, Home, MessageSquare, Plus, User, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast({
+        title: "Error signing out",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out.",
+      });
+    }
+  };
+
+  const handleAuthAction = () => {
+    if (user) {
+      handleSignOut();
+    } else {
+      navigate("/auth");
+    }
+  };
   return (
     <header className="sticky top-0 bg-gradient-hero backdrop-blur-sm border-b border-white/20 z-40">
       <div className="container mx-auto px-4 py-2 md:py-4 max-w-7xl">
@@ -118,6 +150,52 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
                 </Badge>
               </Button>
             </div>
+
+            {/* User Authentication */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.user_metadata?.avatar_url} alt={user.user_metadata?.display_name} />
+                      <AvatarFallback className="bg-tomati-red text-white">
+                        {user.user_metadata?.display_name?.charAt(0) || user.email?.charAt(0) || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <div className="flex items-center justify-start gap-2 p-2">
+                    <div className="flex flex-col space-y-1 leading-none">
+                      <p className="font-medium">
+                        {user.user_metadata?.display_name || "User"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => onTabChange?.("profile")}>
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button 
+                onClick={handleAuthAction}
+                className="bg-white/10 hover:bg-white/20 text-white border border-white/20 rounded-xl px-4 py-2 transition-all duration-300"
+              >
+                <LogIn size={16} className="mr-2" />
+                Sign In
+              </Button>
+            )}
           </div>
         </div>
 
