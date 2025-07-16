@@ -35,10 +35,44 @@ export type Database = {
         }
         Relationships: []
       }
+      messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_read: boolean
+          product_id: string
+          recipient_id: string
+          sender_id: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          product_id: string
+          recipient_id: string
+          sender_id: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_read?: boolean
+          product_id?: string
+          recipient_id?: string
+          sender_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       products: {
         Row: {
           category: string
           created_at: string
+          description: string | null
           id: string
           image_url: string | null
           is_free: boolean
@@ -53,6 +87,7 @@ export type Database = {
         Insert: {
           category: string
           created_at?: string
+          description?: string | null
           id?: string
           image_url?: string | null
           is_free?: boolean
@@ -67,6 +102,7 @@ export type Database = {
         Update: {
           category?: string
           created_at?: string
+          description?: string | null
           id?: string
           image_url?: string | null
           is_free?: boolean
