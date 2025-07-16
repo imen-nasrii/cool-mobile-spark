@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Car, Building, Briefcase, Grid3X3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProductGrid } from "@/components/Products/ProductGrid";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface HomeProps {
   onProductClick?: (productId: string) => void;
@@ -9,15 +10,16 @@ interface HomeProps {
   onTabChange?: (tab: string) => void;
 }
 
-const categories = [
-  { id: "voiture", name: "🚗 سيارات", icon: Car },
-  { id: "immobilier", name: "🏠 عقارات", icon: Building },
-  { id: "emplois", name: "💼 وظائف", icon: Briefcase },
-  { id: "autres", name: "📦 أخرى", icon: Grid3X3 }
-];
-
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { t } = useLanguage();
+
+  const categories = [
+    { id: "voiture", name: t('cars'), icon: Car },
+    { id: "immobilier", name: t('realEstate'), icon: Building },
+    { id: "emplois", name: t('jobs'), icon: Briefcase },
+    { id: "autres", name: t('others'), icon: Grid3X3 }
+  ];
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
@@ -33,7 +35,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
             onClick={() => handleCategorySelect("")}
             className="whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium"
           >
-            جميع الفئات
+            {t('allCategories')}
           </Button>
           {categories.map((category) => {
             const Icon = category.icon;

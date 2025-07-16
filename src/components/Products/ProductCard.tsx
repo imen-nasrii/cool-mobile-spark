@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface Product {
   id: string;
@@ -32,6 +33,8 @@ export const ProductCard = ({
   onClick,
   className 
 }: ProductCardProps) => {
+  const { t } = useLanguage();
+  
   return (
     <Card 
       className={cn("overflow-hidden hover:shadow-md transition-shadow cursor-pointer", className)}
@@ -83,7 +86,7 @@ export const ProductCard = ({
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1">
             <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
-              {product.isFree ? "Gratuit" : "Vendu"}
+              {product.isFree ? t('free') : t('sold')}
             </div>
             <span className="font-bold text-gray-900 text-sm">
               {product.price}

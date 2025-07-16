@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
 import teslaImage from "@/assets/tesla-model3.jpg";
@@ -59,6 +60,7 @@ interface ProductGridProps {
 export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -110,10 +112,10 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       <div className="px-4 py-3">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-foreground">
-            {category ? `منتجات ${category}` : "الإعلانات الأخيرة"}
+            {category ? `${t('recentListings')} ${category}` : t('recentListings')}
           </h2>
           <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-            عرض الكل
+            {t('viewAll')}
           </Button>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
@@ -133,10 +135,10 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
     <div className="px-4 py-3">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">
-          {category ? `منتجات ${category}` : "الإعلانات الأخيرة"}
+          {category ? `${t('recentListings')} ${category}` : t('recentListings')}
         </h2>
         <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-          عرض الكل
+          {t('viewAll')}
         </Button>
       </div>
       
@@ -154,7 +156,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       
       {transformedProducts.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">
-          <p>لا توجد منتجات في هذه الفئة</p>
+          <p>{t('noProducts')}</p>
         </div>
       )}
     </div>

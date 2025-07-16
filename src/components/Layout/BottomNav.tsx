@@ -1,6 +1,7 @@
 import { Home, Search, PlusCircle, MessageCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/hooks/useLanguage";
 
 interface BottomNavProps {
   activeTab: string;
@@ -8,12 +9,14 @@ interface BottomNavProps {
 }
 
 export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
+  const { t } = useLanguage();
+  
   const tabs = [
-    { id: "home", icon: Home, label: "Home" },
-    { id: "search", icon: Search, label: "Search" },
-    { id: "add", icon: PlusCircle, label: "Add" },
-    { id: "messages", icon: MessageCircle, label: "Messages" },
-    { id: "profile", icon: User, label: "Profile" },
+    { id: "home", icon: Home, label: t('home') },
+    { id: "search", icon: Search, label: t('search') },
+    { id: "add", icon: PlusCircle, label: t('add') },
+    { id: "messages", icon: MessageCircle, label: t('messages') },
+    { id: "profile", icon: User, label: t('profile') },
   ];
 
   return (
