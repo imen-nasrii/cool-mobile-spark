@@ -81,9 +81,14 @@ export const ProductCard = ({
         </h3>
         
         <div className="flex items-center justify-between mb-2">
-          <p className="font-bold text-primary text-lg">
-            {product.price}
-          </p>
+          <div className="flex items-center gap-1">
+            <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
+              {product.isFree ? "Gratuit" : "Vendu"}
+            </div>
+            <span className="font-bold text-gray-900 text-sm">
+              {product.price}
+            </span>
+          </div>
           <div className="flex items-center gap-1 text-muted-foreground">
             <Heart size={12} />
             <span className="text-xs">{product.likes}</span>
@@ -100,19 +105,6 @@ export const ProductCard = ({
             <span>{product.timeAgo}</span>
           </div>
         </div>
-        
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full mt-3 text-xs h-8 bg-tomati-red/10 border-tomati-red/20 text-tomati-red hover:bg-tomati-red hover:text-white transition-all duration-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            onMessage?.();
-          }}
-        >
-          <MessageCircle size={14} className="mr-1" />
-          Chat
-        </Button>
       </CardContent>
     </Card>
   );

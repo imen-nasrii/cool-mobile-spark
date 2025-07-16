@@ -5,14 +5,17 @@ export const Favorites = ({ activeTab, onTabChange }: {
   onTabChange?: (tab: string) => void;
 }) => {
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-2xl mx-auto px-6 flex items-center justify-center h-[60vh]">
-        <div className="text-center">
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="flex items-center justify-center h-[60vh]">
+        <div className="text-center px-6">
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <Heart size={80} className="text-gray-300 stroke-2" />
-              <Heart size={60} className="text-gray-300 absolute top-2 left-2.5 stroke-2" />
-              <Heart size={40} className="text-gray-300 absolute top-5 left-5 stroke-2" />
+              <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
+                <Heart size={40} className="text-gray-400 stroke-2" />
+              </div>
+              <div className="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center absolute -top-2 -right-2">
+                <Heart size={32} className="text-gray-400 stroke-2" />
+              </div>
             </div>
           </div>
           <p className="text-gray-600 text-lg leading-relaxed max-w-md">

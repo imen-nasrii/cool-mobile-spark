@@ -119,77 +119,71 @@ export const AddProduct = ({ activeTab, onTabChange }: {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-6">
-        <Card className="shadow-lg">
-          <CardHeader className="pb-6">
-            <CardTitle className="text-2xl font-semibold text-center">
-              Publier une annonce
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-8">
-            {/* Image Upload */}
-            <div>
-              <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50">
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label htmlFor="image-upload" className="cursor-pointer">
-                  <Upload size={48} className="mx-auto text-gray-400 mb-4" />
-                  <p className="text-lg font-medium text-gray-700 mb-2">Aperçus de produit</p>
-                  <Button type="button" variant="outline" className="mb-4">
-                    importer
-                  </Button>
-                </label>
-                <div className="text-sm text-gray-500 mb-4">
-                  {selectedImages.length}/8
-                </div>
-                {selectedImages.length > 0 && (
-                  <div className="grid grid-cols-4 gap-4 mt-4">
-                    {selectedImages.map((image, index) => (
-                      <img
-                        key={index}
-                        src={image}
-                        alt={`Preview ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg border"
-                      />
-                    ))}
-                  </div>
-                )}
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="px-4 py-6">
+        <div className="space-y-6">
+          {/* Image Upload */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50">
+              <input
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="image-upload"
+              />
+              <label htmlFor="image-upload" className="cursor-pointer">
+                <Upload size={48} className="mx-auto text-gray-400 mb-4" />
+                <p className="text-lg font-medium text-gray-700 mb-2">Aperçus de produit</p>
+                <Button type="button" variant="outline" className="mb-4">
+                  importer
+                </Button>
+              </label>
+              <div className="text-sm text-gray-500 mb-4">
+                {selectedImages.length}/8
               </div>
+              {selectedImages.length > 0 && (
+                <div className="grid grid-cols-4 gap-4 mt-4">
+                  {selectedImages.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image}
+                      alt={`Preview ${index + 1}`}
+                      className="w-full h-24 object-cover rounded-lg border"
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Title */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <label className="block text-base font-medium mb-3">Titre *</label>
+              <Input
+                placeholder="Titre de produit"
+                value={formData.title}
+                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
+                className="h-12 text-base"
+              />
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Title */}
-              <div>
-                <label className="block text-base font-medium mb-3">Titre *</label>
-                <Input
-                  placeholder="Titre de produit"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  className="h-12 text-base"
-                />
-              </div>
-
-              {/* Brand */}
-              <div>
-                <label className="block text-base font-medium mb-3">Marque *</label>
-                <Select value={formData.brand} onValueChange={(value) => setFormData(prev => ({ ...prev, brand: value }))}>
-                  <SelectTrigger className="h-12 text-base">
-                    <SelectValue placeholder="Choisire une option" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {carBrands.map((brand) => (
-                      <SelectItem key={brand} value={brand}>{brand}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Brand */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <label className="block text-base font-medium mb-3">Marque *</label>
+              <Select value={formData.brand} onValueChange={(value) => setFormData(prev => ({ ...prev, brand: value }))}>
+                <SelectTrigger className="h-12 text-base">
+                  <SelectValue placeholder="Choisire une option" />
+                </SelectTrigger>
+                <SelectContent>
+                  {carBrands.map((brand) => (
+                    <SelectItem key={brand} value={brand}>{brand}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
               {/* Model */}
               <div>
@@ -317,26 +311,25 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                 />
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex gap-4 pt-6">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleCancel}
-                  className="flex-1 h-14 text-lg bg-gray-200 text-gray-700 hover:bg-gray-300"
-                >
-                  annuler
-                </Button>
-                <Button
-                  type="submit"
-                  className="flex-1 h-14 text-lg bg-primary hover:bg-primary/90"
-                >
-                  publier
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
+            {/* Action Buttons */}
+            <div className="flex gap-4 pt-6">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancel}
+                className="flex-1 h-14 text-lg bg-gray-200 text-gray-700 hover:bg-gray-300"
+              >
+                annuler
+              </Button>
+              <Button
+                type="submit"
+                className="flex-1 h-14 text-lg bg-primary hover:bg-primary/90"
+              >
+                publier
+              </Button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );

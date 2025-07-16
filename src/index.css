@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 13% 18%;
 
-    --primary: 0 84% 55%;
+    --primary: 239 68 68;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 210 40% 96%;
@@ -43,7 +43,7 @@ All colors MUST be HSL.
     --warning-foreground: 0 0% 98%;
     --info: 221 83% 53%;
     --info-foreground: 0 0% 98%;
-    --tomati-red: 0 84% 55%;
+    --tomati-red: 239 68 68;
     --tomati-green: 142 76% 36%;
 
     /* Enhanced gradients */
