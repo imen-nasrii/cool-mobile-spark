@@ -21,7 +21,7 @@ import bikeImage from "@/assets/mountain-bike.jpg";
 import tractorImage from "@/assets/tractor-holland.jpg";
 
 interface ProductDetailProps {
-  productId?: string;
+  productId?: string | null;
   onBack?: () => void;
   onEdit?: (productId: string) => void;
 }
@@ -53,7 +53,10 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   useEffect(() => {
     const fetchProduct = async () => {
-      if (!productId) return;
+      if (!productId || productId.trim() === '') {
+        setLoading(false);
+        return;
+      }
       
       try {
         const { data: productData, error } = await supabase

@@ -26,7 +26,7 @@ const categories = [
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [currentView, setCurrentView] = useState<"main" | "product">("main");
-  const [selectedProduct, setSelectedProduct] = useState<string>("");
+  const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const { toast } = useToast();
   const { user, loading } = useAuth();
@@ -53,7 +53,7 @@ const Index = () => {
 
   const handleBackToMain = () => {
     setCurrentView("main");
-    setSelectedProduct("");
+    setSelectedProduct(null);
   };
 
   const handleCategorySelect = (categoryId: string) => {
