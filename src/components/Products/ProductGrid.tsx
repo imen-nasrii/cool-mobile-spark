@@ -110,13 +110,13 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       <div className="px-4 py-3">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold text-foreground">
-            {category ? `${category} Products` : "Recent Listings"}
+            {category ? `منتجات ${category}` : "الإعلانات الأخيرة"}
           </h2>
           <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-            View All
+            عرض الكل
           </Button>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-7 gap-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="animate-pulse">
               <div className="bg-gray-200 h-32 rounded-lg mb-2"></div>
@@ -133,14 +133,14 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
     <div className="px-4 py-3">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">
-          {category ? `${category} Products` : "Recent Listings"}
+          {category ? `منتجات ${category}` : "الإعلانات الأخيرة"}
         </h2>
         <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-          View All
+          عرض الكل
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
         {transformedProducts.map((product) => (
           <ProductCard
             key={product.id}
@@ -154,7 +154,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       
       {transformedProducts.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">
-          <p>No products found in this category</p>
+          <p>لا توجد منتجات في هذه الفئة</p>
         </div>
       )}
     </div>

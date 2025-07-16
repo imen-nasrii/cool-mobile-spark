@@ -10,10 +10,10 @@ interface HomeProps {
 }
 
 const categories = [
-  { id: "voiture", name: "Voiture", icon: Car },
-  { id: "immobilier", name: "Immobilier", icon: Building },
-  { id: "emplois", name: "Emplois", icon: Briefcase },
-  { id: "autres", name: "Autres", icon: Grid3X3 }
+  { id: "voiture", name: "🚗 سيارات", icon: Car },
+  { id: "immobilier", name: "🏠 عقارات", icon: Building },
+  { id: "emplois", name: "💼 وظائف", icon: Briefcase },
+  { id: "autres", name: "📦 أخرى", icon: Grid3X3 }
 ];
 
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
@@ -33,7 +33,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
             onClick={() => handleCategorySelect("")}
             className="whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium"
           >
-            Tous les catégories
+            جميع الفئات
           </Button>
           {categories.map((category) => {
             const Icon = category.icon;
