@@ -1,5 +1,7 @@
+import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 // Import product images
 import teslaImage from "@/assets/tesla-model3.jpg";
@@ -9,74 +11,45 @@ import bikeImage from "@/assets/mountain-bike.jpg";
 import tractorImage from "@/assets/tractor-holland.jpg";
 import iphoneImage from "@/assets/iphone-15-pro.jpg";
 
-// Mock data inspired by the app screenshots with real images
-const mockProducts = [
-  {
-    id: "1",
-    title: "Vente carte mère i5 - Gaming PC Components",
-    price: "170 DT",
-    location: "Ariana, Tunisia",
-    timeAgo: "1 day ago",
-    image: motherboardImage,
-    category: "Electronics",
-    likes: 12,
-    isReserved: false
-  },
-  {
-    id: "2",
-    title: "Canapé - Modern Sofa Set",
-    price: "Free",
-    location: "Tunis, Tunisia", 
-    timeAgo: "2 days ago",
-    image: sofaImage,
-    category: "Furniture",
-    likes: 8,
-    isFree: true
-  },
-  {
-    id: "3",
-    title: "Craft 500 - Mountain Bike",
-    price: "300 DT",
-    location: "Ariana, Tunisia",
-    timeAgo: "2 days ago", 
-    image: bikeImage,
-    category: "Sports",
-    likes: 15,
-    isReserved: true
-  },
-  {
-    id: "4",
-    title: "New Holland - Tractor Equipment",
-    price: "Free",
-    location: "Ariana, Tunisia",
-    timeAgo: "2 days ago",
-    image: tractorImage,
-    category: "Vehicles",
-    likes: 6,
-    isFree: true
-  },
-  {
-    id: "5",
-    title: "Tesla Model 3 - Electric Car",
-    price: "120,000 DT",
-    location: "Gabes, Tunisia",
-    timeAgo: "6 days ago",
-    image: teslaImage,
-    category: "Cars", 
-    likes: 45,
-    isReserved: false
-  },
-  {
-    id: "6",
-    title: "iPhone 15 Pro - Like New",
-    price: "2,800 DT",
-    location: "Sousse, Tunisia",
-    timeAgo: "1 week ago",
-    image: iphoneImage,
-    category: "Electronics",
-    likes: 23
+// Map image URLs to imported images
+const imageMap: { [key: string]: string } = {
+  '/src/assets/tesla-model3.jpg': teslaImage,
+  '/src/assets/motherboard-i5.jpg': motherboardImage,
+  '/src/assets/modern-sofa.jpg': sofaImage,
+  '/src/assets/mountain-bike.jpg': bikeImage,
+  '/src/assets/tractor-holland.jpg': tractorImage,
+  '/src/assets/iphone-15-pro.jpg': iphoneImage,
+};
+
+interface Product {
+  id: string;
+  title: string;
+  price: string;
+  location: string;
+  image_url: string;
+  category: string;
+  likes: number;
+  is_reserved: boolean;
+  is_free: boolean;
+  created_at: string;
+}
+
+// Helper function to format time ago
+const formatTimeAgo = (dateString: string) => {
+  const now = new Date();
+  const created = new Date(dateString);
+  const diffInHours = Math.floor((now.getTime() - created.getTime()) / (1000 * 60 * 60));
+  
+  if (diffInHours < 24) {
+    return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+  } else if (diffInHours < 168) {
+    const days = Math.floor(diffInHours / 24);
+    return `${days} day${days === 1 ? '' : 's'} ago`;
+  } else {
+    const weeks = Math.floor(diffInHours / 168);
+    return `${weeks} week${weeks === 1 ? '' : 's'} ago`;
   }
-];
+};
 
 interface ProductGridProps {
   category?: string;
@@ -84,9 +57,77 @@ interface ProductGridProps {
 }
 
 export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
-  const filteredProducts = category 
-    ? mockProducts.filter(p => p.category.toLowerCase().includes(category.toLowerCase()))
-    : mockProducts;
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        let query = supabase
+          .from('products')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (category) {
+          query = query.ilike('category', `%${category}%`);
+        }
+
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Error fetching products:', error);
+          return;
+        }
+
+        setProducts(data || []);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [category]);
+
+  // Transform products for ProductCard component
+  const transformedProducts = products.map(product => ({
+    id: product.id,
+    title: product.title,
+    price: product.price,
+    location: product.location,
+    timeAgo: formatTimeAgo(product.created_at),
+    image: imageMap[product.image_url] || product.image_url,
+    category: product.category,
+    likes: product.likes,
+    isReserved: product.is_reserved,
+    isFree: product.is_free
+  }));
+
+  if (loading) {
+    return (
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold text-foreground">
+            {category ? `${category} Products` : "Recent Listings"}
+          </h2>
+          <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
+            View All
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-7 gap-2">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="animate-pulse">
+              <div className="bg-gray-200 h-32 rounded-lg mb-2"></div>
+              <div className="bg-gray-200 h-4 rounded mb-1"></div>
+              <div className="bg-gray-200 h-3 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 py-3">
@@ -100,7 +141,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       </div>
       
       <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-7 gap-2">
-        {filteredProducts.map((product) => (
+        {transformedProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -111,7 +152,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
         ))}
       </div>
       
-      {filteredProducts.length === 0 && (
+      {transformedProducts.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">
           <p>No products found in this category</p>
         </div>
