@@ -103,7 +103,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+        <div className="text-center">
+          <div className="tomati-brand animate-pulse mb-4">Tomati</div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
+          <p className="text-sm text-muted-foreground mt-4">Chargement du produit...</p>
+        </div>
       </div>
     );
   }

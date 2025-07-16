@@ -110,22 +110,12 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
   if (loading) {
     return (
       <div className="px-4 py-3">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-foreground">
-            {category ? `${t('recentListings')} ${category}` : t('recentListings')}
-          </h2>
-          <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-            {t('viewAll')}
-          </Button>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="bg-gray-200 h-32 rounded-lg mb-2"></div>
-              <div className="bg-gray-200 h-4 rounded mb-1"></div>
-              <div className="bg-gray-200 h-3 rounded w-1/2"></div>
-            </div>
-          ))}
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="tomati-brand animate-pulse mb-4">Tomati</div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
+            <p className="text-sm text-muted-foreground mt-4">Chargement des produits...</p>
+          </div>
         </div>
       </div>
     );
