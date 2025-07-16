@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import { MapPin } from 'lucide-react';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+import { MapPin, Navigation } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+
+// Fix for default markers in Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 interface ProductMapProps {
   location?: string;
@@ -15,143 +23,119 @@ interface ProductMapProps {
 
 export const ProductMap = ({ location, onLocationSelect, readonly = false, className }: ProductMapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const marker = useRef<mapboxgl.Marker | null>(null);
-  const [mapboxToken, setMapboxToken] = useState('');
-  const [needsToken, setNeedsToken] = useState(false);
+  const map = useRef<L.Map | null>(null);
+  const marker = useRef<L.Marker | null>(null);
+  const [searchQuery, setSearchQuery] = useState(location || '');
 
   useEffect(() => {
-    // For now, we'll use a simple placeholder since we don't have the Mapbox token
-    // In a real implementation, you would get this from Supabase Edge Function secrets
-    setNeedsToken(true);
-  }, []);
+    if (!mapContainer.current) return;
 
-  useEffect(() => {
-    if (!mapContainer.current || !mapboxToken) return;
+    // Initialize map centered on Tunisia
+    map.current = L.map(mapContainer.current).setView([36.8065, 10.1815], 7);
 
-    mapboxgl.accessToken = mapboxToken;
-    
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [10.1815, 36.8065], // Tunisia coordinates
-      zoom: 6,
-    });
-
-    map.current.addControl(new mapboxgl.NavigationControl());
+    // Add OpenStreetMap tiles (free!)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19,
+    }).addTo(map.current);
 
     // Add click handler for location selection
     if (!readonly && onLocationSelect) {
-      map.current.on('click', async (e) => {
-        const { lng, lat } = e.lngLat;
+      map.current.on('click', (e) => {
+        const { lat, lng } = e.latlng;
         
-        // Reverse geocoding to get address
-        try {
-          const response = await fetch(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}&types=place,locality,neighborhood,address&country=tn`
-          );
-          const data = await response.json();
-          
-          if (data.features && data.features.length > 0) {
-            const address = data.features[0].place_name;
-            onLocationSelect(address, [lng, lat]);
-            
-            // Update marker
-            if (marker.current) {
-              marker.current.remove();
-            }
-            marker.current = new mapboxgl.Marker()
-              .setLngLat([lng, lat])
-              .addTo(map.current!);
-          }
-        } catch (error) {
-          console.error('Error getting location:', error);
+        // Simple reverse geocoding approximation for Tunisia
+        const approximateLocation = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+        onLocationSelect(approximateLocation, [lng, lat]);
+        
+        // Update marker
+        if (marker.current) {
+          marker.current.remove();
         }
+        marker.current = L.marker([lat, lng]).addTo(map.current!);
       });
     }
 
     return () => {
-      map.current?.remove();
-    };
-  }, [mapboxToken, readonly, onLocationSelect]);
-
-  // Geocode location when provided
-  useEffect(() => {
-    if (!location || !map.current || !mapboxToken) return;
-
-    const geocodeLocation = async () => {
-      try {
-        const response = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(location)}.json?access_token=${mapboxToken}&country=tn&limit=1`
-        );
-        const data = await response.json();
-        
-        if (data.features && data.features.length > 0) {
-          const [lng, lat] = data.features[0].center;
-          
-          map.current!.flyTo({
-            center: [lng, lat],
-            zoom: 12
-          });
-          
-          // Add marker
-          if (marker.current) {
-            marker.current.remove();
-          }
-          marker.current = new mapboxgl.Marker()
-            .setLngLat([lng, lat])
-            .addTo(map.current!);
-        }
-      } catch (error) {
-        console.error('Error geocoding location:', error);
+      if (map.current) {
+        map.current.remove();
       }
     };
+  }, [readonly, onLocationSelect]);
 
-    geocodeLocation();
-  }, [location, mapboxToken]);
+  // Handle search functionality
+  const handleSearch = async () => {
+    if (!searchQuery.trim() || !map.current) return;
 
-  if (needsToken) {
-    return (
-      <Card className={className}>
-        <CardContent className="p-6">
-          <div className="text-center space-y-4">
-            <MapPin className="w-12 h-12 mx-auto text-muted-foreground" />
-            <div>
-              <h3 className="font-semibold mb-2">Configuration Mapbox requise</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Pour utiliser la carte, veuillez entrer votre token Mapbox public.
-                <br />
-                <a href="https://mapbox.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-                  Obtenez votre token ici
-                </a>
-              </p>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="pk.eyJ1IjoiVm90cmVUb2tlbkljaS..."
-                  value={mapboxToken}
-                  onChange={(e) => setMapboxToken(e.target.value)}
-                  className="flex-1"
-                />
-                <Button
-                  onClick={() => setNeedsToken(false)}
-                  disabled={!mapboxToken}
-                >
-                  Utiliser
-                </Button>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
+    try {
+      // Use Nominatim (free OpenStreetMap geocoding service)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery)}&countrycodes=tn&limit=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const { lat, lon, display_name } = data[0];
+        
+        // Center map on found location
+        map.current.setView([parseFloat(lat), parseFloat(lon)], 12);
+        
+        // Add/update marker
+        if (marker.current) {
+          marker.current.remove();
+        }
+        marker.current = L.marker([parseFloat(lat), parseFloat(lon)]).addTo(map.current);
+        
+        // Update location if callback provided
+        if (onLocationSelect) {
+          onLocationSelect(display_name, [parseFloat(lon), parseFloat(lat)]);
+        }
+      }
+    } catch (error) {
+      console.error('Error searching location:', error);
+    }
+  };
+
+  // Auto-search when location prop changes
+  useEffect(() => {
+    if (location && location !== searchQuery) {
+      setSearchQuery(location);
+    }
+  }, [location]);
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
 
   return (
     <Card className={className}>
       <CardContent className="p-0">
+        {/* Search bar for location */}
+        {!readonly && (
+          <div className="p-4 border-b">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Rechercher une ville en Tunisie..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="flex-1"
+              />
+              <Button onClick={handleSearch} size="sm">
+                <Navigation className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+        )}
+        
+        {/* Map container */}
         <div ref={mapContainer} className="w-full h-64 rounded-lg" />
+        
+        {/* Location display */}
         {location && (
-          <div className="p-4">
+          <div className="p-4 border-t">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <MapPin className="w-4 h-4" />
               <span>{location}</span>
