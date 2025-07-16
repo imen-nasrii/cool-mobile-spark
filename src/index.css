@@ -193,9 +193,19 @@ All colors MUST be HSL.
   }
 
   .font-tomati {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Dancing Script', cursive;
     font-weight: 600;
     letter-spacing: -0.025em;
+    font-size: 1.5rem;
+    color: hsl(var(--tomati-red));
+  }
+
+  .tomati-brand {
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: 2rem;
+    color: hsl(var(--tomati-red));
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   /* Cute heading styles */

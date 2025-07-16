@@ -84,6 +84,7 @@ export default {
 				'poppins': ['Poppins', 'sans-serif'],
 				'fredoka': ['Fredoka One', 'cursive'],
 				'pacifico': ['Pacifico', 'cursive'],
+				'dancing': ['Dancing Script', 'cursive'],
 				'sans': ['Poppins', 'sans-serif'],
 			},
 			backgroundImage: {
