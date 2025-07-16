@@ -31,7 +31,7 @@ export default function Auth() {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("Veuillez remplir tous les champs - يرجى ملء جميع الحقول");
       return;
     }
 
@@ -43,14 +43,14 @@ export default function Auth() {
     if (error) {
       setError(error.message);
       toast({
-        title: "Sign up failed",
+        title: "Échec de l'inscription - فشل التسجيل",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Check your email",
-        description: "We've sent you a confirmation link to complete your registration.",
+        title: "Vérifiez votre email - تحقق من بريدك الإلكتروني",
+        description: "Nous vous avons envoyé un lien de confirmation pour compléter votre inscription.",
       });
     }
 
@@ -60,7 +60,7 @@ export default function Auth() {
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please fill in all fields");
+      setError("Veuillez remplir tous les champs - يرجى ملء جميع الحقول");
       return;
     }
 
@@ -72,14 +72,14 @@ export default function Auth() {
     if (error) {
       setError(error.message);
       toast({
-        title: "Sign in failed",
+        title: "Échec de la connexion - فشل تسجيل الدخول",
         description: error.message,
         variant: "destructive",
       });
     } else {
       toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
+        title: "Bienvenue ! - أهلاً وسهلاً",
+        description: "Vous vous êtes connecté avec succès.",
       });
       navigate("/");
     }
@@ -96,15 +96,15 @@ export default function Auth() {
             <div className="bg-tomati-red p-2 rounded-lg">
               <ShoppingBag className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Marketplace</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Tomati Market</h1>
           </div>
-          <p className="text-gray-600">Join our community of buyers and sellers</p>
+          <p className="text-gray-600">Rejoignez notre communauté d'acheteurs et de vendeurs - انضم إلى مجتمعنا من المشترين والبائعين</p>
         </div>
 
         <Tabs defaultValue="signin" className="space-y-4">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="signin">Se connecter - دخول</TabsTrigger>
+            <TabsTrigger value="signup">S'inscrire - تسجيل</TabsTrigger>
           </TabsList>
 
           {error && (
@@ -116,30 +116,31 @@ export default function Auth() {
           <TabsContent value="signin">
             <Card>
               <CardHeader>
-                <CardTitle>Sign In</CardTitle>
+                <CardTitle>Se connecter - تسجيل الدخول</CardTitle>
                 <CardDescription>
-                  Welcome back! Sign in to your account to continue.
+                  Bon retour ! Connectez-vous à votre compte pour continuer.
+                  أهلاً بعودتك! سجل دخولك لحسابك للمتابعة.
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleSignIn}>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signin-email">Email</Label>
+                    <Label htmlFor="signin-email">Email - بريد إلكتروني</Label>
                     <Input
                       id="signin-email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrez votre email - أدخل بريدك الإلكتروني"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signin-password">Password</Label>
+                    <Label htmlFor="signin-password">Mot de passe - كلمة المرور</Label>
                     <Input
                       id="signin-password"
                       type="password"
-                      placeholder="Enter your password"
+                      placeholder="Entrez votre mot de passe - أدخل كلمة مرورك"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -153,7 +154,7 @@ export default function Auth() {
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Sign In
+                    Se connecter - دخول
                   </Button>
                 </CardFooter>
               </form>
@@ -163,40 +164,41 @@ export default function Auth() {
           <TabsContent value="signup">
             <Card>
               <CardHeader>
-                <CardTitle>Sign Up</CardTitle>
+                <CardTitle>S'inscrire - إنشاء حساب</CardTitle>
                 <CardDescription>
-                  Create a new account to start buying and selling.
+                  Créez un nouveau compte pour commencer à acheter et vendre.
+                  أنشئ حساب جديد لتبدأ بالشراء والبيع.
                 </CardDescription>
               </CardHeader>
               <form onSubmit={handleSignUp}>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="signup-name">Display Name (Optional)</Label>
+                    <Label htmlFor="signup-name">Nom d'affichage (Optionnel) - اسم العرض (اختياري)</Label>
                     <Input
                       id="signup-name"
                       type="text"
-                      placeholder="Enter your display name"
+                      placeholder="Entrez votre nom d'affichage - أدخل اسم العرض"
                       value={displayName}
                       onChange={(e) => setDisplayName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
+                    <Label htmlFor="signup-email">Email - بريد إلكتروني</Label>
                     <Input
                       id="signup-email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Entrez votre email - أدخل بريدك الإلكتروني"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
+                    <Label htmlFor="signup-password">Mot de passe - كلمة المرور</Label>
                     <Input
                       id="signup-password"
                       type="password"
-                      placeholder="Create a password"
+                      placeholder="Créez un mot de passe - أنشئ كلمة مرور"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
@@ -210,7 +212,7 @@ export default function Auth() {
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Sign Up
+                    S'inscrire - تسجيل
                   </Button>
                 </CardFooter>
               </form>
@@ -219,7 +221,8 @@ export default function Auth() {
         </Tabs>
 
         <div className="text-center text-sm text-gray-600">
-          <p>By continuing, you agree to our Terms of Service and Privacy Policy.</p>
+          <p>En continuant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité.</p>
+          <p className="mt-1 text-xs">بالمتابعة، أنت توافق على شروط الخدمة وسياسة الخصوصية.</p>
         </div>
       </div>
     </div>
