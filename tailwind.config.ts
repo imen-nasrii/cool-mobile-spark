@@ -84,7 +84,7 @@ export default {
 				'poppins': ['Poppins', 'sans-serif'],
 				'fredoka': ['Fredoka One', 'cursive'],
 				'pacifico': ['Pacifico', 'cursive'],
-				'sans': ['Inter', 'sans-serif'],
+				'sans': ['Poppins', 'sans-serif'],
 			},
 			backgroundImage: {
 				'gradient-primary': 'var(--gradient-primary)',

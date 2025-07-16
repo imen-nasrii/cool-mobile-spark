@@ -115,7 +115,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-poppins;
   }
 
   /* Glass morphism utilities */
@@ -179,5 +179,41 @@ All colors MUST be HSL.
 
   ::-webkit-scrollbar-thumb:hover {
     background: hsl(var(--tomati-red) / 0.8);
+  }
+
+  /* Cute font styles */
+  .font-cute {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+  }
+
+  .font-cute-light {
+    font-family: 'Pacifico', cursive;
+    font-weight: 400;
+  }
+
+  .font-tomati {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  /* Cute heading styles */
+  h1, h2, h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+  }
+
+  .cute-title {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: hsl(var(--tomati-red));
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .cute-subtitle {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    color: hsl(var(--foreground));
   }
 }
