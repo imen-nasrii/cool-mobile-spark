@@ -55,12 +55,10 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       </div>
 
       {/* Products */}
-      <div className="px-4 space-y-4">
-        <ProductGrid 
-          category={selectedCategory}
-          onProductClick={onProductClick}
-        />
-      </div>
+      <ProductGrid 
+        category={selectedCategory}
+        onProductClick={onProductClick}
+      />
     </div>
   );
 };
