@@ -125,9 +125,37 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 pb-20 md:pb-0">
+      {/* Mobile Header */}
+      <div className="md:hidden sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 px-4 py-3">
+        <div className="flex items-center justify-between">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="p-2 hover:bg-gray-100 rounded-full -ml-2"
+            onClick={onBack}
+          >
+            <ArrowLeft size={20} />
+          </Button>
+          
+          <div className="flex gap-2">
+            <Button variant="ghost" size="sm" className="p-2">
+              <Share size={18} />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className={`p-2 ${isLiked ? "text-red-600" : ""}`}
+              onClick={handleLike}
+            >
+              <Heart size={18} className={isLiked ? "fill-current" : ""} />
+            </Button>
+          </div>
+        </div>
+      </div>
+
       {/* Desktop Header */}
-      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40 px-6 py-4">
+      <div className="hidden md:block sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button 
@@ -166,8 +194,130 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
+      {/* Mobile Layout */}
+      <div className="md:hidden">
+        {/* Mobile Images */}
+        <div className="w-full">
+          <ImageGallery 
+            images={product.image_url ? [product.image_url] : defaultImages.slice(0, 3)} 
+            title={product.title}
+            className="w-full aspect-square"
+          />
+        </div>
+
+        {/* Mobile Content */}
+        <div className="px-4 py-4 space-y-4">
+          {/* Price & Title */}
+          <div className="space-y-3">
+            <div>
+              <h2 className="text-2xl font-bold text-foreground mb-2">{product.title}</h2>
+              <div className="flex gap-2 mb-3">
+                <Badge variant="secondary">{product.category}</Badge>
+                {product.is_free && (
+                  <Badge variant="outline" className="text-green-600 border-green-600">
+                    Gratuit
+                  </Badge>
+                )}
+                {product.is_reserved && (
+                  <Badge variant="outline" className="text-red-600 border-red-600">
+                    Réservé
+                  </Badge>
+                )}
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+              <MapPin size={14} />
+              <span>{product.location}</span>
+              <span>•</span>
+              <span>{formatTimeAgo(product.created_at)}</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-lg font-semibold text-foreground mb-3">Description</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                {product.description || "Aucune description fournie."}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Seller Info */}
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-lg font-semibold text-foreground mb-3">Vendeur</h3>
+              <div className="flex items-center gap-3">
+                <Avatar className="w-12 h-12">
+                  <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                    {sellerProfile?.display_name?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="font-semibold text-foreground">
+                      {sellerProfile?.display_name || 'Utilisateur'}
+                    </h4>
+                    <Shield size={16} className="text-success" />
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                    <Star size={12} className="text-yellow-500 fill-yellow-500" />
+                    <span>4.8</span>
+                    <span>•</span>
+                    <span>Vérifié</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Map */}
+          <Card>
+            <CardContent className="p-4">
+              <h3 className="text-lg font-semibold mb-3">Localisation</h3>
+              <ProductMap location={product.location} readonly className="w-full h-48" />
+            </CardContent>
+          </Card>
+
+          {/* Stats */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-xl font-bold text-primary">{product.likes}</div>
+                  <div className="text-xs text-muted-foreground">J'aime</div>
+                </div>
+                <div>
+                  <div className="text-xl font-bold text-primary">-</div>
+                  <div className="text-xs text-muted-foreground">Vues</div>
+                </div>
+                <div>
+                  <div className="text-xl font-bold text-primary">-</div>
+                  <div className="text-xs text-muted-foreground">Note</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Chat Mobile */}
+          {showChat && !isOwner && (
+            <Card>
+              <CardContent className="p-4">
+                <ProductChat
+                  productId={product.id}
+                  sellerId={product.user_id}
+                  onClose={() => setShowChat(false)}
+                />
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </div>
+
       {/* Desktop Layout - 2 Column Grid */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="hidden md:block max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Images */}
           <div className="space-y-6">
@@ -324,6 +474,34 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </div>
         </div>
       </div>
+
+      {/* Mobile Fixed Bottom Bar */}
+      {!isOwner && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50">
+          <div className="flex items-center gap-4">
+            <div className="flex-1">
+              <div className="text-2xl font-bold text-primary">{product.price}</div>
+              <div className="text-xs text-muted-foreground">Prix</div>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="px-4 py-2"
+            >
+              <Phone size={16} className="mr-1" />
+              Appeler
+            </Button>
+            <Button 
+              size="sm"
+              className="bg-primary text-white px-4 py-2"
+              onClick={() => setShowChat(true)}
+            >
+              <MessageCircle size={16} className="mr-1" />
+              Message
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
