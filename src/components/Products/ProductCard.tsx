@@ -37,7 +37,10 @@ export const ProductCard = ({
   
   return (
     <Card 
-      className={cn("overflow-hidden hover:shadow-md transition-shadow cursor-pointer", className)}
+      className={cn(
+        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full min-w-0 flex-shrink-0", 
+        className
+      )}
       onClick={onClick}
     >
       <div className="relative aspect-[4/3] bg-muted overflow-hidden">
