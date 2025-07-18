@@ -38,12 +38,12 @@ export const ProductCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full min-w-0 flex-shrink-0", 
+        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full flex flex-row", 
         className
       )}
       onClick={onClick}
     >
-      <div className="relative aspect-[4/3] bg-muted overflow-hidden">
+      <div className="relative w-24 h-24 bg-muted overflow-hidden flex-shrink-0">
         {/* Product image */}
         {product.image ? (
           <img 
@@ -53,12 +53,12 @@ export const ProductCard = ({
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/10 flex items-center justify-center">
-            <span className="text-muted-foreground text-sm">{product.category}</span>
+            <span className="text-muted-foreground text-xs">{product.category}</span>
           </div>
         )}
         
         {/* Status badges */}
-        <div className="absolute top-2 left-2 flex gap-1">
+        <div className="absolute top-1 left-1 flex gap-1">
           {product.isFree && (
             <Badge className="bg-success text-success-foreground text-xs">Free</Badge>
           )}
@@ -66,38 +66,21 @@ export const ProductCard = ({
             <Badge className="bg-info text-info-foreground text-xs">Reserved</Badge>
           )}
         </div>
-        
-        {/* Like button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 backdrop-blur-sm hover:bg-white shadow-sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            onLike?.();
-          }}
-        >
-          <Heart size={16} className="text-tomati-red hover:fill-tomati-red transition-all" />
-        </Button>
       </div>
       
-      <CardContent className="p-3">
-        <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
-          {product.title}
-        </h3>
-        
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1">
+      <CardContent className="p-3 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
+            {product.title}
+          </h3>
+          
+          <div className="flex items-center gap-2 mb-2">
             <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
               {product.isFree ? t('free') : t('sold')}
             </div>
             <span className="font-bold text-gray-900 text-sm">
               {product.price}
             </span>
-          </div>
-          <div className="flex items-center gap-1 text-muted-foreground">
-            <Heart size={12} />
-            <span className="text-xs">{product.likes}</span>
           </div>
         </div>
         
@@ -109,6 +92,20 @@ export const ProductCard = ({
           <div className="flex items-center gap-1">
             <Clock size={12} />
             <span>{product.timeAgo}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-6 h-6 rounded-full p-0"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLike?.();
+              }}
+            >
+              <Heart size={12} className="text-tomati-red hover:fill-tomati-red transition-all" />
+            </Button>
+            <span className="text-xs">{product.likes}</span>
           </div>
         </div>
       </CardContent>

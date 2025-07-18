@@ -132,9 +132,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
         </Button>
       </div>
       
-      <div className="grid auto-fit-minmax-150 gap-2 sm:gap-3" style={{
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))'
-      }}>
+      <div className="flex flex-col gap-3">
         {transformedProducts.map((product) => (
           <ProductCard
             key={product.id}
