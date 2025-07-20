@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Package, TrendingUp, BarChart3, Users, Plus, ArrowLeft } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Cell } from 'recharts';
+import { Package, TrendingUp, BarChart3, Users, ArrowLeft, Zap, Target, Smartphone } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart as RechartsPieChart, Cell } from 'recharts';
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -203,23 +202,22 @@ export default function DashboardWithCharts() {
               </CardHeader>
               <CardContent>
                 <ResponsiveContainer width="100%" height={350}>
-                  <PieChart>
-                    <Tooltip />
-                    <Legend />
-                    <PieChart 
+                  <RechartsPieChart>
+                    <RechartsPieChart 
                       data={categoryData} 
                       cx="50%" 
                       cy="50%" 
                       outerRadius={120} 
                       fill="#8884d8" 
                       dataKey="value"
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                     >
                       {categoryData.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
                       ))}
-                    </PieChart>
-                  </PieChart>
+                    </RechartsPieChart>
+                    <Tooltip />
+                    <Legend />
+                  </RechartsPieChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
