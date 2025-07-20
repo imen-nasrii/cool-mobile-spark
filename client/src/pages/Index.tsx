@@ -33,6 +33,13 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Redirect admin users to dashboard
+  useEffect(() => {
+    if (user && user.role === 'admin') {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
+
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
     if ((tab === "add" || tab === "messages") && !user) {
