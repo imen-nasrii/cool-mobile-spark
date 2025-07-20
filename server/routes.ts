@@ -32,6 +32,19 @@ const authenticateToken = async (req: any, res: any, next: any) => {
   }
 };
 
+// Middleware to check if user is admin
+const requireAdmin = async (req: any, res: any, next: any) => {
+  if (!req.user) {
+    return res.status(401).json({ error: 'Authentication required' });
+  }
+  
+  if (req.user.role !== 'admin') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  
+  next();
+};
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.post("/api/auth/signup", async (req, res) => {
@@ -64,7 +77,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
       res.json({ 
-        user: { id: user.id, email: user.email, display_name: user.display_name },
+        user: { id: user.id, email: user.email, display_name: user.display_name, role: user.role },
         token 
       });
     } catch (error: any) {
@@ -84,7 +97,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
 
       res.json({ 
-        user: { id: user.id, email: user.email, display_name: user.display_name },
+        user: { id: user.id, email: user.email, display_name: user.display_name, role: user.role },
         token 
       });
     } catch (error: any) {
@@ -102,7 +115,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/categories", authenticateToken, async (req, res) => {
+  app.post("/api/categories", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const categoryData = insertCategorySchema.parse(req.body);
       const category = await storage.createCategory(categoryData);
@@ -135,7 +148,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/products", authenticateToken, async (req, res) => {
+  app.post("/api/products", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const productData = insertProductSchema.parse({
         ...req.body,
@@ -148,7 +161,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/products/:id", authenticateToken, async (req, res) => {
+  app.put("/api/products/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const product = await storage.updateProduct(req.params.id, req.body);
       if (!product) {
@@ -160,7 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/products/:id", authenticateToken, async (req, res) => {
+  app.delete("/api/products/:id", authenticateToken, requireAdmin, async (req, res) => {
     try {
       const success = await storage.deleteProduct(req.params.id);
       if (!success) {

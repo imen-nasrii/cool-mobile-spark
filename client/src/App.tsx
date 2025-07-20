@@ -6,11 +6,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/hooks/useLanguage";
 import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
+import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
+import { AdminInfo } from "./components/Auth/AdminInfo";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -28,7 +30,9 @@ const App = () => (
                 path="/admin" 
                 element={
                   <ProtectedRoute>
-                    <AdminDashboard />
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
                   </ProtectedRoute>
                 } 
               />
@@ -40,6 +44,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/admin-info" element={<AdminInfo />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

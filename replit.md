@@ -19,6 +19,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Database populated with sample data**: Products, categories, and users for testing
 - ✅ **Created Admin Dashboard with full CRUD operations**: Complete product management interface
 - ✅ **Organized authentication system**: Added protected routes, user menu, and profile management
+- ✅ **Implemented role-based admin access**: Only admin accounts can access dashboard
+- ✅ **Added AI chatbot for customer support**: Smart bot with contextual responses
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
@@ -32,10 +34,16 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 ## Project Status
 ✅ **Migration Complete**: Successfully running on Replit with:
 - Working product listings with sample data
-- Functional authentication system
+- Role-based authentication system (admin/user)
 - Database properly configured and connected
-- All major features operational
+- Admin dashboard with full product management
+- AI chatbot for customer support
 - Clean codebase with no critical errors
+
+## Admin Access
+- **Admin Account**: admin@tomati.com / admin123
+- **Admin Features**: Create, edit, delete products and categories
+- **Security**: Only admin role can access dashboard and management functions
 
 ## Database Schema
 - `users`: User accounts with authentication
