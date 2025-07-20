@@ -8,7 +8,7 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import AdminDashboard from "./pages/Admin/Dashboard";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const App = () => (

@@ -19,8 +19,8 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
   const checkAdminRole = async () => {
     if (!user) return;
     
-    // TODO: Implement admin role checking with new API
-    setIsAdmin(false); // Disabled for now
+    // Temporarily enable admin access for all authenticated users
+    setIsAdmin(true);
   };
 
   return (
