@@ -11,6 +11,7 @@ import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
+import DashboardWithCharts from "./pages/DashboardWithCharts";
 import Profile from "./pages/Profile";
 import { AdminInfo } from "./components/Auth/AdminInfo";
 import NotFound from "./pages/NotFound";
@@ -27,7 +28,7 @@ const App = () => (
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <AdminRoute>
-                    <AdminDashboard />
+                    <DashboardWithCharts />
                   </AdminRoute>
                 </ProtectedRoute>
               } />

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Search, Filter, MoreHorizontal, ArrowLeft } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Filter, MoreHorizontal, ArrowLeft, TrendingUp, BarChart3 } from "lucide-react";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Cell } from 'recharts';
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -35,8 +36,36 @@ export default function AdminDashboard() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [currentView, setCurrentView] = useState("dashboard"); // dashboard, products
   const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  // Données pour les graphiques
+  const salesData = [
+    { name: 'Jan', ventes: 65, revenus: 2400 },
+    { name: 'Fév', ventes: 59, revenus: 1398 },
+    { name: 'Mar', ventes: 80, revenus: 9800 },
+    { name: 'Avr', ventes: 81, revenus: 3908 },
+    { name: 'Mai', ventes: 56, revenus: 4800 },
+    { name: 'Jun', ventes: 55, revenus: 3800 },
+    { name: 'Jul', ventes: 40, revenus: 4300 },
+  ];
+
+  const categoryData = [
+    { name: 'Électronique', value: 400, color: '#8884d8' },
+    { name: 'Véhicules', value: 300, color: '#82ca9d' },
+    { name: 'Immobilier', value: 300, color: '#ffc658' },
+    { name: 'Mode', value: 200, color: '#ff7c7c' },
+  ];
+
+  const trafficData = [
+    { name: '00h', visiteurs: 12 },
+    { name: '04h', visiteurs: 19 },
+    { name: '08h', visiteurs: 45 },
+    { name: '12h', visiteurs: 78 },
+    { name: '16h', visiteurs: 52 },
+    { name: '20h', visiteurs: 28 },
+  ];
 
   // Initial form state
   const initialFormData = {
