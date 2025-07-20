@@ -5,11 +5,12 @@ import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
-import { Profile } from "./Profile";
+
 import { Favorites } from "./Favorites";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
+import { ChatBot } from "@/components/Chat/ChatBot";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -123,6 +124,8 @@ const Index = () => {
               </div>
             </DialogContent>
           </Dialog>
+          
+          <ChatBot />
         </>
       )}
     </div>

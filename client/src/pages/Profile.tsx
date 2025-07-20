@@ -11,7 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/queryClient";
 
-export default function Profile() {
+function Profile() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -262,3 +262,5 @@ export default function Profile() {
     </div>
   );
 }
+
+export default Profile;

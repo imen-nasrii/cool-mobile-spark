@@ -223,7 +223,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Chatbot endpoint
+  app.post("/api/chat", async (req, res) => {
+    try {
+      const { message, userContext } = req.body;
+      
+      if (!message || typeof message !== 'string') {
+        return res.status(400).json({ error: 'Message is required' });
+      }
+
+      // Simple rule-based chatbot responses
+      const responses = getChatbotResponse(message.toLowerCase(), userContext);
+      
+      res.json(responses);
+    } catch (error) {
+      console.error('Chat error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
+}
+
+// Simple rule-based chatbot function
+function getChatbotResponse(message: string, userContext: any = {}) {
+  const responses = {
+    greetings: [
+      "Bonjour ! Je suis votre assistant Tomati. Comment puis-je vous aider aujourd'hui ?",
+      "Salut ! Bienvenue sur Tomati Market. Que puis-je faire pour vous ?",
+      "Bonjour ! Je suis là pour répondre à vos questions sur notre marketplace."
+    ],
+    products: [
+      "Nous avons une large gamme de produits sur Tomati Market. Vous pouvez parcourir nos catégories ou utiliser la recherche pour trouver ce que vous cherchez.",
+      "Pour vendre un produit, connectez-vous à votre compte et accédez au tableau de bord admin. Pour acheter, parcourez nos offres.",
+      "Tous nos produits sont vérifiés par notre équipe. Vous pouvez voir les détails, photos et contacter le vendeur pour plus d'informations."
+    ],
+    help: [
+      "Je peux vous aider avec les produits, les comptes, les achats et ventes. Que voulez-vous savoir ?",
+      "Voici ce que je peux faire : vous aider à naviguer sur le site, expliquer comment vendre ou acheter, répondre aux questions sur les comptes.",
+      "N'hésitez pas à me poser vos questions sur Tomati Market !"
+    ],
+    account: [
+      "Pour créer un compte, cliquez sur 'Se connecter' puis 'S'inscrire'. C'est gratuit et rapide !",
+      "Vous pouvez modifier vos informations de profil en vous connectant et en allant dans votre profil.",
+      "Si vous avez des problèmes de connexion, vérifiez votre email et mot de passe."
+    ],
+    default: [
+      "Je ne suis pas sûr de comprendre votre question. Pouvez-vous la reformuler ?",
+      "Pouvez-vous être plus précis ? Je peux vous aider avec les produits, les comptes ou la navigation.",
+      "Je suis là pour vous aider ! Posez-moi des questions sur Tomati Market."
+    ]
+  };
+
+  const suggestions = {
+    greetings: ["Comment vendre ?", "Comment acheter ?", "Créer un compte"],
+    products: ["Types de produits", "Comment publier", "Rechercher un article"],
+    help: ["Navigation du site", "Gestion de compte", "Contacter support"],
+    account: ["Modifier profil", "Mot de passe oublié", "Supprimer compte"],
+    default: ["Aide générale", "Vendre un produit", "Créer un compte"]
+  };
+
+  // Detect intent based on keywords
+  let intent = 'default';
+  
+  if (/bonjour|salut|hello|hi|bonsoir/.test(message)) {
+    intent = 'greetings';
+  } else if (/produit|article|vendre|acheter|vente|achat/.test(message)) {
+    intent = 'products';
+  } else if (/aide|help|comment|question|problème/.test(message)) {
+    intent = 'help';
+  } else if (/compte|profil|connexion|inscription|mot de passe/.test(message)) {
+    intent = 'account';
+  }
+
+  const responseList = responses[intent as keyof typeof responses] || responses.default;
+  const suggestionList = suggestions[intent as keyof typeof suggestions] || suggestions.default;
+  
+  return {
+    response: responseList[Math.floor(Math.random() * responseList.length)],
+    intent,
+    suggestions: suggestionList,
+    timestamp: new Date().toISOString()
+  };
 }
