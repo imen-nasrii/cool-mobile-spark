@@ -129,7 +129,7 @@ export default function AdminDashboard() {
   const filteredProducts = products.filter((product: Product) => {
     const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || product.category === categoryFilter;
+    const matchesCategory = !categoryFilter || categoryFilter === "all" || product.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -371,7 +371,7 @@ export default function AdminDashboard() {
                 <SelectValue placeholder="Toutes les catégories" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Toutes les catégories</SelectItem>
+                <SelectItem value="all">Toutes les catégories</SelectItem>
                 {categories.map((category: any) => (
                   <SelectItem key={category.id} value={category.name}>
                     {category.name}
