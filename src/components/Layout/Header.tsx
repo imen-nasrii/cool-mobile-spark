@@ -1,11 +1,36 @@
-import { Search, Bell, SlidersHorizontal, Languages } from "lucide-react";
+import { Search, Bell, SlidersHorizontal, Languages, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
   const { user, signOut } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    checkAdminRole();
+  }, [user]);
+
+  const checkAdminRole = async () => {
+    if (!user) return;
+    
+    try {
+      const { data } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id)
+        .single();
+      
+      setIsAdmin(data?.role === 'admin');
+    } catch (error) {
+      console.error('Error checking admin role:', error);
+    }
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
@@ -15,6 +40,18 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
         </div>
         
         <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate('/admin')}
+              className="flex items-center gap-2"
+            >
+              <Shield size={16} />
+              Admin
+            </Button>
+          )}
+          
           <Button
             variant="outline"
             size="sm"
