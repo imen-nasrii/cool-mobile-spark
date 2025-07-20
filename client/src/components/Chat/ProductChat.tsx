@@ -7,7 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 interface Message {
@@ -44,60 +45,11 @@ export const ProductChat = ({ productId, sellerId, onClose }: ProductChatProps) 
   useEffect(() => {
     if (!user) return;
 
-    // Fetch seller profile
-    const fetchSellerProfile = async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', sellerId)
-        .single();
-      setSellerProfile(data);
-    };
+    // TODO: Implement with new API
+    setSellerProfile({ display_name: 'Seller' });
+    setMessages([]);
 
-    // Fetch messages
-    const fetchMessages = async () => {
-      const { data } = await supabase
-        .from('messages')
-        .select(`
-          *,
-          profiles:sender_id (display_name)
-        `)
-        .eq('product_id', productId)
-        .or(`sender_id.eq.${user.id},recipient_id.eq.${user.id}`)
-        .order('created_at', { ascending: true });
-
-      if (data) {
-        setMessages(data);
-      }
-    };
-
-    fetchSellerProfile();
-    fetchMessages();
-
-    // Set up realtime subscription
-    const channel = supabase
-      .channel('product-chat')
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'messages',
-          filter: `product_id=eq.${productId}`
-        },
-        (payload) => {
-          const newMessage = payload.new as Message;
-          // Only add if it's for this conversation
-          if (newMessage.sender_id === user.id || newMessage.recipient_id === user.id) {
-            setMessages(prev => [...prev, newMessage]);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
+    // TODO: Implement realtime messaging with WebSocket or similar
   }, [productId, sellerId, user]);
 
   useEffect(() => {
@@ -109,18 +61,11 @@ export const ProductChat = ({ productId, sellerId, onClose }: ProductChatProps) 
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('messages')
-        .insert([
-          {
-            product_id: productId,
-            sender_id: user.id,
-            recipient_id: sellerId,
-            content: newMessage.trim()
-          }
-        ]);
-
-      if (error) throw error;
+      await apiClient.createMessage({
+        product_id: productId,
+        recipient_id: sellerId,
+        content: newMessage.trim()
+      });
 
       setNewMessage("");
     } catch (error: any) {

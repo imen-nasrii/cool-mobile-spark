@@ -8,7 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { supabase } from "@/integrations/supabase/client";
+import { useMutation } from "@tanstack/react-query";
+import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const categories = [
@@ -104,26 +105,16 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .insert([
-          {
-            title: formData.title,
-            description: formData.description,
-            price: formData.isPaid ? formData.price : "Free",
-            location: formData.location,
-            category: selectedCategory,
-            is_free: !formData.isPaid,
-            user_id: user.id,
-            // For now, we'll use a placeholder image - later we can implement image upload
-            image_url: selectedImages[0] || null
-          }
-        ])
-        .select();
-
-      if (error) {
-        throw error;
-      }
+      await apiClient.createProduct({
+        title: formData.title,
+        description: formData.description,
+        price: formData.isPaid ? formData.price : "Free",
+        location: formData.location,
+        category: selectedCategory,
+        is_free: !formData.isPaid,
+        // For now, we'll use a placeholder image - later we can implement image upload
+        image_url: selectedImages[0] || '/src/assets/tesla-model3.jpg'
+      });
 
       toast({
         title: "Succès!",

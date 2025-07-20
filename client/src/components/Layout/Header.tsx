@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+// Removed Supabase import - admin role checking not implemented yet
 import { useNavigate } from "react-router-dom";
 
 export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
@@ -19,17 +19,8 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
   const checkAdminRole = async () => {
     if (!user) return;
     
-    try {
-      const { data } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
-      
-      setIsAdmin(data?.role === 'admin');
-    } catch (error) {
-      console.error('Error checking admin role:', error);
-    }
+    // TODO: Implement admin role checking with new API
+    setIsAdmin(false); // Disabled for now
   };
 
   return (

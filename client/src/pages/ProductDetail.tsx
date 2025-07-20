@@ -9,7 +9,8 @@ import { ProductChat } from "@/components/Chat/ProductChat";
 import { ProductMap } from "@/components/Map/ProductMap";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Default images for products
@@ -51,45 +52,26 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   };
 
+  // Use React Query to fetch product
+  const { data: productData, isLoading } = useQuery({
+    queryKey: ['/products', productId],
+    queryFn: () => apiClient.getProduct(productId!),
+    enabled: !!productId && productId.trim() !== '',
+    staleTime: 5 * 60 * 1000,
+  });
+
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!productId || productId.trim() === '') {
-        setLoading(false);
-        return;
-      }
-      
-      try {
-        const { data: productData, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('id', productId)
-          .single();
-
-        if (error) throw error;
-
-        // Fetch seller profile
-        const { data: sellerData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', productData.user_id)
-          .single();
-
-        setProduct(productData);
-        setSellerProfile(sellerData);
-      } catch (error) {
-        console.error('Error fetching product:', error);
-        toast({
-          title: "Erreur",
-          description: "Impossible de charger le produit",
-          variant: "destructive"
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProduct();
-  }, [productId, toast]);
+    if (productData) {
+      setProduct(productData);
+      setLoading(false);
+      // TODO: Fetch seller profile if needed
+      setSellerProfile(null);
+    } else if (isLoading) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [productData, isLoading]);
 
   const handleLike = async () => {
     if (!user || !product) return;

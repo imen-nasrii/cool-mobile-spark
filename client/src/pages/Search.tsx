@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
-import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
@@ -72,32 +73,18 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   const [searchLoading, setSearchLoading] = useState(false);
   const { t } = useLanguage();
 
-  // Fetch all products initially
+  // Use react-query to fetch products
+  const { data: productsData = [], isLoading: queryLoading } = useQuery({
+    queryKey: ['/products'],
+    queryFn: () => apiClient.getProducts(),
+    staleTime: 5 * 60 * 1000,
+  });
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (error) {
-          console.error('Error fetching products:', error);
-          return;
-        }
-
-        setProducts(data || []);
-        setFilteredProducts(data || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    setProducts(productsData);
+    setFilteredProducts(productsData);
+    setLoading(queryLoading);
+  }, [productsData, queryLoading]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);

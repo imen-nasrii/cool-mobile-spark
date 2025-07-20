@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
@@ -58,40 +59,14 @@ interface ProductGridProps {
 }
 
 export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        let query = supabase
-          .from('products')
-          .select('*')
-          .order('created_at', { ascending: false });
-
-        if (category) {
-          query = query.ilike('category', `%${category}%`);
-        }
-
-        const { data, error } = await query;
-
-        if (error) {
-          console.error('Error fetching products:', error);
-          return;
-        }
-
-        setProducts(data || []);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, [category]);
+  // Use react-query to fetch products
+  const { data: products = [], isLoading: loading } = useQuery({
+    queryKey: ['/products', category],
+    queryFn: () => apiClient.getProducts(category),
+    staleTime: 5 * 60 * 1000,
+  });
 
   // Transform products for ProductCard component
   const transformedProducts = products.map(product => ({

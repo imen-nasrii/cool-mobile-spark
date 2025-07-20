@@ -1,6 +1,6 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+// Admin functionality disabled for now - TODO: Implement with new API
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users, Package, BarChart3, Settings } from "lucide-react";
@@ -26,37 +26,18 @@ export default function AdminDashboard() {
   const checkAdminRole = async () => {
     if (!user) return;
     
-    try {
-      const { data } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id)
-        .single();
-      
-      setIsAdmin(data?.role === 'admin');
-    } catch (error) {
-      console.error('Error checking admin role:', error);
-    } finally {
-      setLoading(false);
-    }
+    // Admin functionality disabled for now - TODO: Implement with new API
+    setIsAdmin(false);
+    setLoading(false);
   };
 
   const fetchStats = async () => {
-    try {
-      const [usersRes, productsRes, messagesRes] = await Promise.all([
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
-        supabase.from('products').select('id', { count: 'exact', head: true }),
-        supabase.from('messages').select('id', { count: 'exact', head: true }),
-      ]);
-
-      setStats({
-        totalUsers: usersRes.count || 0,
-        totalProducts: productsRes.count || 0,
-        totalMessages: messagesRes.count || 0,
-      });
-    } catch (error) {
-      console.error('Error fetching stats:', error);
-    }
+    // Admin functionality disabled for now - TODO: Implement with new API
+    setStats({
+      totalUsers: 0,
+      totalProducts: 0,
+      totalMessages: 0,
+    });
   };
 
   if (loading) {
