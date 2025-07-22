@@ -90,20 +90,22 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     setSearchQuery(query);
     setSearchLoading(true);
     
-    try {
-      if (query.trim()) {
-        const filtered = products.filter(product =>
-          product.title.toLowerCase().includes(query.toLowerCase()) ||
-          product.category.toLowerCase().includes(query.toLowerCase()) ||
-          product.location.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredProducts(filtered);
-      } else {
-        setFilteredProducts(products);
+    setTimeout(() => {
+      try {
+        if (query.trim()) {
+          const filtered = products.filter(product =>
+            product.title.toLowerCase().includes(query.toLowerCase()) ||
+            product.category.toLowerCase().includes(query.toLowerCase()) ||
+            product.location.toLowerCase().includes(query.toLowerCase())
+          );
+          setFilteredProducts(filtered);
+        } else {
+          setFilteredProducts(products);
+        }
+      } finally {
+        setSearchLoading(false);
       }
-    } finally {
-      setSearchLoading(false);
-    }
+    }, 300);
   };
 
   // Transform products for ProductCard component

@@ -95,7 +95,7 @@ export class DatabaseStorage implements IStorage {
 
   // Products
   async getProducts(category?: string): Promise<Product[]> {
-    if (category) {
+    if (category && category.trim() !== '') {
       return await db.select().from(products)
         .where(eq(products.category, category))
         .orderBy(desc(products.created_at));

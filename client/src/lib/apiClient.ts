@@ -74,7 +74,7 @@ class ApiClient {
 
   // Products
   async getProducts(category?: string) {
-    const query = category ? `?category=${encodeURIComponent(category)}` : '';
+    const query = category && category !== '' ? `?category=${encodeURIComponent(category)}` : '';
     return this.request(`/products${query}`);
   }
 
