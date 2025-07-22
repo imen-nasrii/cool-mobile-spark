@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images

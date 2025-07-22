@@ -65,7 +65,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
   // Use react-query to fetch products
   const { data: products = [], isLoading: loading } = useQuery({
     queryKey: ['/products', category],
-    queryFn: () => apiClient.getProducts(category),
+    queryFn: () => apiClient.getProducts(category || ''),
     staleTime: 5 * 60 * 1000,
   });
 

@@ -84,7 +84,7 @@ const Index = () => {
       case "messages":
         return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
       case "profile":
-        return <Profile activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <Profile />;
       case "favorites":
         return <Favorites activeTab={activeTab} onTabChange={handleTabChange} />;
       default:

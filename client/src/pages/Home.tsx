@@ -15,10 +15,10 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const { t } = useLanguage();
 
   const categories = [
-    { id: "voiture", name: t('cars'), icon: Car },
-    { id: "immobilier", name: t('realEstate'), icon: Building },
-    { id: "emplois", name: t('jobs'), icon: Briefcase },
-    { id: "autres", name: t('others'), icon: Grid3X3 }
+    { id: "Voiture", name: t('cars'), icon: Car },
+    { id: "Electronics", name: "Électronique", icon: Building },
+    { id: "Furniture", name: "Mobilier", icon: Briefcase },
+    { id: "Sports", name: "Sports", icon: Grid3X3 }
   ];
 
   const handleCategorySelect = (categoryId: string) => {
