@@ -20,6 +20,12 @@ export default function SimpleDashboard() {
     queryFn: () => apiClient.getCategories(),
   });
 
+  // Fetch dashboard statistics
+  const { data: dashboardStats } = useQuery({
+    queryKey: ['/dashboard/stats'],
+    queryFn: () => apiClient.getDashboardStats(),
+  });
+
   // Graphique simple avec CSS
   const createBarChart = (data: number[], labels: string[]) => (
     <div className="space-y-3">
@@ -38,12 +44,14 @@ export default function SimpleDashboard() {
     </div>
   );
 
-  // Données d'exemple
-  const salesProgress = [85, 92, 78, 65, 88];
-  const salesLabels = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai'];
+  // Utiliser uniquement les vraies données
+  const salesData = dashboardStats?.salesTrends || [];
+  const salesProgress = salesData.map(d => d.value || 0);
+  const salesLabels = salesData.map(d => d.name || '');
 
-  const categoryProgress = [75, 60, 85, 45, 90];
-  const categoryLabels = ['Électronique', 'Mode', 'Auto', 'Maison', 'Sport'];
+  const categoryData = dashboardStats?.topCategories || [];
+  const categoryProgress = categoryData.map(cat => Math.min(100, (cat.count / Math.max(...categoryData.map(c => c.count), 1)) * 100));
+  const categoryLabels = categoryData.map(cat => cat.name);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -87,10 +95,10 @@ export default function SimpleDashboard() {
                 <Package className="h-5 w-5 text-blue-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900">{products.length}</div>
+                <div className="text-3xl font-bold text-gray-900">{dashboardStats?.totalProducts || products.length}</div>
                 <div className="flex items-center space-x-1 text-sm">
                   <Activity className="h-3 w-3 text-green-500" />
-                  <span className="text-green-600 font-medium">+20.1%</span>
+                  <span className="text-green-600 font-medium">+{dashboardStats?.monthlyGrowthProducts || 0}%</span>
                   <span className="text-gray-500">ce mois</span>
                 </div>
               </CardContent>
@@ -102,10 +110,10 @@ export default function SimpleDashboard() {
                 <TrendingUp className="h-5 w-5 text-green-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900">247</div>
+                <div className="text-3xl font-bold text-gray-900">{dashboardStats?.monthlySales || 0}</div>
                 <div className="flex items-center space-x-1 text-sm">
                   <Activity className="h-3 w-3 text-green-500" />
-                  <span className="text-green-600 font-medium">+12%</span>
+                  <span className="text-green-600 font-medium">+{dashboardStats?.monthlyGrowthSales || 0}%</span>
                   <span className="text-gray-500">vs mois dernier</span>
                 </div>
               </CardContent>
@@ -117,10 +125,12 @@ export default function SimpleDashboard() {
                 <DollarSign className="h-5 w-5 text-purple-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900">12,543€</div>
+                <div className="text-3xl font-bold text-gray-900">
+                  {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()}€` : '0€'}
+                </div>
                 <div className="flex items-center space-x-1 text-sm">
                   <Activity className="h-3 w-3 text-green-500" />
-                  <span className="text-green-600 font-medium">+8.2%</span>
+                  <span className="text-green-600 font-medium">+{dashboardStats?.monthlyGrowthRevenue || 0}%</span>
                   <span className="text-gray-500">ce mois</span>
                 </div>
               </CardContent>
@@ -132,10 +142,10 @@ export default function SimpleDashboard() {
                 <Users className="h-5 w-5 text-orange-500" />
               </CardHeader>
               <CardContent>
-                <div className="text-3xl font-bold text-gray-900">1,234</div>
+                <div className="text-3xl font-bold text-gray-900">{dashboardStats?.totalUsers || 0}</div>
                 <div className="flex items-center space-x-1 text-sm">
                   <Activity className="h-3 w-3 text-green-500" />
-                  <span className="text-green-600 font-medium">+15.3%</span>
+                  <span className="text-green-600 font-medium">+{dashboardStats?.monthlyGrowthUsers || 0}%</span>
                   <span className="text-gray-500">ce mois</span>
                 </div>
               </CardContent>
@@ -185,31 +195,43 @@ export default function SimpleDashboard() {
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
                 <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-                  <div className="text-3xl font-bold text-blue-600">94.2%</div>
+                  <div className="text-3xl font-bold text-blue-600">
+                    {dashboardStats?.performance?.customerSatisfaction || 0}%
+                  </div>
                   <div className="text-sm text-blue-700 font-medium">Satisfaction Client</div>
                   <div className="w-full bg-blue-200 rounded-full h-2 mt-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '94.2%' }}></div>
+                    <div className="bg-blue-600 h-2 rounded-full" style={{ 
+                      width: `${dashboardStats?.performance?.customerSatisfaction || 0}%` 
+                    }}></div>
                   </div>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-green-50 to-green-100 rounded-lg">
-                  <div className="text-3xl font-bold text-green-600">2.3s</div>
+                  <div className="text-3xl font-bold text-green-600">
+                    {dashboardStats?.performance?.loadTime || '0s'}
+                  </div>
                   <div className="text-sm text-green-700 font-medium">Temps de Chargement</div>
                   <div className="w-full bg-green-200 rounded-full h-2 mt-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '77%' }}></div>
+                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '0%' }}></div>
                   </div>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-                  <div className="text-3xl font-bold text-purple-600">67%</div>
+                  <div className="text-3xl font-bold text-purple-600">
+                    {dashboardStats?.performance?.mobileTraffic || 0}%
+                  </div>
                   <div className="text-sm text-purple-700 font-medium">Trafic Mobile</div>
                   <div className="w-full bg-purple-200 rounded-full h-2 mt-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '67%' }}></div>
+                    <div className="bg-purple-600 h-2 rounded-full" style={{ 
+                      width: `${dashboardStats?.performance?.mobileTraffic || 0}%` 
+                    }}></div>
                   </div>
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
-                  <div className="text-3xl font-bold text-orange-600">€45.2</div>
+                  <div className="text-3xl font-bold text-orange-600">
+                    €{dashboardStats?.performance?.averageCart || 0}
+                  </div>
                   <div className="text-sm text-orange-700 font-medium">Panier Moyen</div>
                   <div className="w-full bg-orange-200 rounded-full h-2 mt-2">
-                    <div className="bg-orange-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+                    <div className="bg-orange-600 h-2 rounded-full" style={{ width: '0%' }}></div>
                   </div>
                 </div>
               </div>
@@ -224,27 +246,21 @@ export default function SimpleDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="font-medium">Nouveau produit ajouté</div>
-                    <div className="text-sm text-gray-500">iPhone 14 Pro - Il y a 2 heures</div>
+                {dashboardStats?.recentActivity?.length > 0 ? (
+                  dashboardStats.recentActivity.map((activity: any, index: number) => (
+                    <div key={index} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      <div className="flex-1">
+                        <div className="font-medium">{activity.type}</div>
+                        <div className="text-sm text-gray-500">{activity.description}</div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500 py-8">
+                    Aucune activité récente à afficher
                   </div>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="font-medium">Vente réalisée</div>
-                    <div className="text-sm text-gray-500">Vélo de ville - Il y a 4 heures</div>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <div className="font-medium">Nouvel utilisateur</div>
-                    <div className="text-sm text-gray-500">marie.durand@email.com - Il y a 6 heures</div>
-                  </div>
-                </div>
+                )}
               </div>
             </CardContent>
           </Card>
