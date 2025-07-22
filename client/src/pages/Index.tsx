@@ -17,6 +17,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { FilterModal, FilterState } from "@/components/Search/FilterModal";
+import { SearchModal } from "@/components/Search/SearchModal";
 
 const categories = [
   { id: "voiture", name: "Voiture", icon: Car },
@@ -30,6 +32,16 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<"main" | "product">("main");
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [currentFilters, setCurrentFilters] = useState<FilterState>({
+    categories: [],
+    priceRange: [0, 10000],
+    location: '',
+    isFree: null,
+    isReserved: null,
+    isPromoted: null,
+  });
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -101,7 +113,18 @@ const Index = () => {
         />
       ) : (
         <>
-          <Header activeTab={activeTab} onTabChange={handleTabChange} />
+          <Header 
+          activeTab={activeTab} 
+          onTabChange={handleTabChange}
+          onSearchClick={() => {
+            if (activeTab !== "search") {
+              setActiveTab("search");
+            } else {
+              setShowSearchModal(true);
+            }
+          }}
+          onFilterClick={() => setShowFilterModal(true)}
+        />
           
           {renderContent()}
           
@@ -134,6 +157,26 @@ const Index = () => {
           </Dialog>
           
           <ChatBot />
+          {/* Search Modal */}
+          <SearchModal
+            open={showSearchModal}
+            onOpenChange={setShowSearchModal}
+            onSearch={(query) => {
+              setActiveTab("search");
+              // Pass search query to Search component
+            }}
+          />
+
+          {/* Filter Modal */}
+          <FilterModal
+            open={showFilterModal}
+            onOpenChange={setShowFilterModal}
+            onApplyFilters={(filters) => {
+              setCurrentFilters(filters);
+              // Apply filters logic here
+            }}
+            initialFilters={currentFilters}
+          />
         </>
       )}
     </div>

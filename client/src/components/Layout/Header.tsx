@@ -6,7 +6,14 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { UserMenu } from "@/components/Auth/UserMenu";
 import { useState, useEffect } from "react";
 
-export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
+interface HeaderProps {
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+  onSearchClick?: () => void;
+  onFilterClick?: () => void;
+}
+
+export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }: HeaderProps) => {
   const { user } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -40,11 +47,21 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             {language === 'fr' ? 'العربية' : 'Français'}
           </Button>
           
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onFilterClick}
+            title={t('filters')}
+          >
             <SlidersHorizontal size={20} />
           </Button>
           
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={onSearchClick}
+            title={t('search')}
+          >
             <Search size={20} />
           </Button>
           
