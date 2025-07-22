@@ -14,6 +14,7 @@ import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import SimpleDashboard from "./pages/SimpleDashboard";
 import Profile from "./pages/Profile";
+import Messages from "./pages/Messages";
 import { AdminInfo } from "./components/Auth/AdminInfo";
 import NotFound from "./pages/NotFound";
 
@@ -50,6 +51,14 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <Profile />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/messages" 
+                element={
+                  <ProtectedRoute>
+                    <Messages />
                   </ProtectedRoute>
                 } 
               />

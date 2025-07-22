@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell, Car, Building, Briefcase, Grid3X3, X, Heart } from "lucide-react";
 import { Home as HomePage } from "./Home";
-import { Messages } from "./Messages";
+// Messages handled in separate routing
 import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
@@ -64,6 +64,13 @@ const Index = () => {
       navigate("/auth");
       return;
     }
+    
+    // Handle navigation for messages tab
+    if (tab === "messages" && user) {
+      navigate("/messages");
+      return;
+    }
+    
     setActiveTab(tab);
   };
 

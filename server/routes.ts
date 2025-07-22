@@ -438,7 +438,227 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Messages/Conversations API
+  app.get("/api/conversations", authenticateToken, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      
+      // Get conversations for the current user
+      const userMessages = await db
+        .select({
+          id: messages.id,
+          product_id: messages.product_id,
+          sender_id: messages.sender_id,
+          recipient_id: messages.recipient_id,
+          content: messages.content,
+          created_at: messages.created_at,
+          is_read: messages.is_read,
+          product_title: products.title,
+          sender_name: users.display_name,
+          sender_email: users.email,
+          recipient_name: sql<string>`CASE WHEN ${messages.sender_id} = ${userId} THEN ${users.display_name} ELSE sender.display_name END`,
+          other_user_id: sql<string>`CASE WHEN ${messages.sender_id} = ${userId} THEN ${messages.recipient_id} ELSE ${messages.sender_id} END`
+        })
+        .from(messages)
+        .leftJoin(products, eq(products.id, messages.product_id))
+        .leftJoin(users, eq(users.id, messages.recipient_id))
+        .leftJoin(sql`users sender`, sql`sender.id = ${messages.sender_id}`)
+        .where(or(eq(messages.sender_id, userId), eq(messages.recipient_id, userId)))
+        .orderBy(desc(messages.created_at));
+
+      // Group by conversation (product + other user)
+      const conversations = new Map();
+      
+      for (const msg of userMessages) {
+        const conversationKey = `${msg.product_id}-${msg.other_user_id}`;
+        if (!conversations.has(conversationKey)) {
+          conversations.set(conversationKey, {
+            id: conversationKey,
+            product_id: msg.product_id,
+            product_title: msg.product_title,
+            other_user_id: msg.other_user_id,
+            other_user_name: msg.other_user_id === userId ? msg.sender_name : msg.recipient_name,
+            last_message: msg.content,
+            last_message_at: msg.created_at,
+            unread_count: 0,
+            messages: []
+          });
+        }
+        
+        const conv = conversations.get(conversationKey);
+        conv.messages.push(msg);
+        
+        if (!msg.is_read && msg.recipient_id === userId) {
+          conv.unread_count++;
+        }
+      }
+
+      res.json(Array.from(conversations.values()));
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      res.status(500).json({ error: "Failed to fetch conversations" });
+    }
+  });
+
+  app.get("/api/conversations/:conversationId/messages", authenticateToken, async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const userId = req.user.id;
+      const [productId, otherUserId] = conversationId.split('-');
+      
+      const conversationMessages = await db
+        .select({
+          id: messages.id,
+          content: messages.content,
+          sender_id: messages.sender_id,
+          recipient_id: messages.recipient_id,
+          created_at: messages.created_at,
+          is_read: messages.is_read,
+          sender_name: users.display_name,
+          sender_email: users.email
+        })
+        .from(messages)
+        .leftJoin(users, eq(users.id, messages.sender_id))
+        .where(
+          and(
+            eq(messages.product_id, productId),
+            or(
+              and(eq(messages.sender_id, userId), eq(messages.recipient_id, otherUserId)),
+              and(eq(messages.sender_id, otherUserId), eq(messages.recipient_id, userId))
+            )
+          )
+        )
+        .orderBy(messages.created_at);
+
+      res.json(conversationMessages);
+    } catch (error) {
+      console.error("Error fetching conversation messages:", error);
+      res.status(500).json({ error: "Failed to fetch messages" });
+    }
+  });
+
+  app.post("/api/conversations/:conversationId/messages", authenticateToken, async (req, res) => {
+    try {
+      const { conversationId } = req.params;
+      const { content } = req.body;
+      const userId = req.user.id;
+      const [productId, recipientId] = conversationId.split('-');
+
+      if (!content || !productId || !recipientId) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const newMessage = await db
+        .insert(messages)
+        .values({
+          product_id: productId,
+          sender_id: userId,
+          recipient_id: recipientId,
+          content: content,
+          message_type: "text"
+        })
+        .returning();
+
+      // Broadcast via WebSocket if available
+      const { broadcastToUser } = await import('./websocket');
+      broadcastToUser(recipientId, {
+        type: 'new_message',
+        conversationId,
+        message: {
+          ...newMessage[0],
+          sender_name: req.user.display_name || req.user.email
+        }
+      });
+
+      res.json(newMessage[0]);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
+  // User reviews API
+  app.post("/api/users/:userId/reviews", authenticateToken, async (req, res) => {
+    try {
+      const { userId: reviewedUserId } = req.params;
+      const { rating, comment, transaction_context } = req.body;
+      const reviewerId = req.user.id;
+
+      if (reviewerId === reviewedUserId) {
+        return res.status(400).json({ error: "Cannot review yourself" });
+      }
+
+      // Check if review already exists
+      const existingReview = await db
+        .select()
+        .from(sql`user_reviews`)
+        .where(sql`reviewer_id = ${reviewerId} AND reviewed_user_id = ${reviewedUserId}`)
+        .limit(1);
+
+      if (existingReview.length > 0) {
+        return res.status(400).json({ error: "You have already reviewed this user" });
+      }
+
+      // Create the review
+      await db.execute(sql`
+        INSERT INTO user_reviews (reviewer_id, reviewed_user_id, rating, comment, transaction_context)
+        VALUES (${reviewerId}, ${reviewedUserId}, ${rating}, ${comment}, ${transaction_context})
+      `);
+
+      // Update user's average rating
+      const avgResult = await db.execute(sql`
+        SELECT AVG(rating)::REAL as avg_rating, COUNT(*)::INTEGER as total_reviews 
+        FROM user_reviews 
+        WHERE reviewed_user_id = ${reviewedUserId}
+      `);
+
+      if (avgResult.rows[0]) {
+        await db.execute(sql`
+          UPDATE profiles 
+          SET user_rating = ${avgResult.rows[0].avg_rating}, 
+              total_user_reviews = ${avgResult.rows[0].total_reviews}
+          WHERE user_id = ${reviewedUserId}
+        `);
+      }
+
+      res.json({ success: true, message: "Review submitted successfully" });
+    } catch (error) {
+      console.error("Error submitting user review:", error);
+      res.status(500).json({ error: "Failed to submit review" });
+    }
+  });
+
+  app.get("/api/users/:userId/reviews", async (req, res) => {
+    try {
+      const { userId } = req.params;
+      
+      const userReviews = await db.execute(sql`
+        SELECT 
+          ur.*,
+          u.display_name as reviewer_name,
+          u.email as reviewer_email
+        FROM user_reviews ur
+        LEFT JOIN users u ON u.id = ur.reviewer_id
+        WHERE ur.reviewed_user_id = ${userId}
+        ORDER BY ur.created_at DESC
+      `);
+
+      res.json(userReviews.rows);
+    } catch (error) {
+      console.error("Error fetching user reviews:", error);
+      res.status(500).json({ error: "Failed to fetch reviews" });
+    }
+  });
+
   const httpServer = createServer(app);
+  
+  // Setup WebSocket for real-time messaging
+  try {
+    const { setupWebSocket } = await import('./websocket');
+    setupWebSocket(httpServer);
+  } catch (error) {
+    console.error('WebSocket setup failed:', error);
+  }
 
   return httpServer;
 }
