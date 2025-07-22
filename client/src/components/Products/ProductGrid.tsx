@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
