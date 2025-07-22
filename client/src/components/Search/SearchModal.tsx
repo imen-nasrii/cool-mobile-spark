@@ -15,7 +15,7 @@ interface SearchModalProps {
 }
 
 const popularSearches = [
-  "iPhone", "Tesla", "Appartement", "Voiture", "Emploi", "Laptop", "Meuble", "Vélo"
+  "iPhone", "Voiture", "Appartement", "Emploi", "Laptop", "Meuble", "Vélo", "Tunis", "Sfax", "Sousse"
 ];
 
 export function SearchModal({ open, onOpenChange, onSearch, recentSearches = [] }: SearchModalProps) {

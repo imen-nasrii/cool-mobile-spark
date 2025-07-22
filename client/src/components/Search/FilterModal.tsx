@@ -128,7 +128,7 @@ export function FilterModal({ open, onOpenChange, onApplyFilters, initialFilters
             {/* Price Range */}
             <div>
               <Label className="text-sm font-medium mb-3 block">
-                {t('priceRange')}: {filters.priceRange[0]} DH - {filters.priceRange[1]} DH
+                Prix: {filters.priceRange[0]} TND - {filters.priceRange[1]} TND
               </Label>
               <Slider
                 value={filters.priceRange}
@@ -139,8 +139,8 @@ export function FilterModal({ open, onOpenChange, onApplyFilters, initialFilters
                 className="w-full"
               />
               <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                <span>0 DH</span>
-                <span>10,000 DH</span>
+                <span>0 TND</span>
+                <span>10,000 TND</span>
               </div>
             </div>
 
@@ -153,7 +153,7 @@ export function FilterModal({ open, onOpenChange, onApplyFilters, initialFilters
               </Label>
               <Input
                 id="location"
-                placeholder={t('enterLocation')}
+                placeholder="Ex: Tunis, Sfax, Sousse..."
                 value={filters.location}
                 onChange={(e) => setFilters(prev => ({ ...prev, location: e.target.value }))}
               />

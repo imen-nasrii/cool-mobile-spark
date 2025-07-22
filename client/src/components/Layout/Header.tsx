@@ -60,7 +60,7 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
             variant="ghost" 
             size="icon"
             onClick={onSearchClick}
-            title={t('search')}
+            title={t('searchBtn')}
           >
             <Search size={20} />
           </Button>

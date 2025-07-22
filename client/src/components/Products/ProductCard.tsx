@@ -1,4 +1,5 @@
 import { Heart, MapPin, Clock, MessageCircle } from "lucide-react";
+import { formatPrice } from "@/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -83,7 +84,7 @@ export const ProductCard = ({
               {product.isFree ? t('free') : t('sold')}
             </div>
             <span className="font-bold text-gray-900 text-sm">
-              {product.price}
+              {product.isFree ? 'Gratuit' : formatPrice(parseFloat(product.price.replace(/[^\d.-]/g, '') || '0'), product.isFree)}
             </span>
           </div>
         </div>

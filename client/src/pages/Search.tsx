@@ -81,8 +81,10 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   });
 
   useEffect(() => {
-    setProducts(productsData);
-    setFilteredProducts(productsData);
+    if (productsData && productsData !== products) {
+      setProducts(productsData);
+      setFilteredProducts(productsData);
+    }
     setLoading(queryLoading);
   }, [productsData, queryLoading]);
 
