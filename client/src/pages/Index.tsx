@@ -5,7 +5,7 @@ import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
-
+import { Map } from "./Map";
 import { Favorites } from "./Favorites";
 import Profile from "./Profile";
 import { Header } from "@/components/Layout/Header";
@@ -91,6 +91,8 @@ const Index = () => {
         return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
       case "search":
         return <Search activeTab={activeTab} onTabChange={handleTabChange} onProductClick={handleProductClick} />;
+      case "map":
+        return <Map />;
       case "add":
         return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} />;
       case "messages":
