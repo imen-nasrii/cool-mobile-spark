@@ -147,6 +147,23 @@ export class DatabaseStorage implements IStorage {
 
   async createMessage(message: InsertMessage): Promise<Message> {
     const result = await db.insert(messages).values(message).returning();
+    
+    // Vérifier le nombre de messages pour ce produit
+    const messageCount = await db
+      .select()
+      .from(messages)
+      .where(eq(messages.product_id, message.product_id));
+    
+    // Si le produit a maintenant 5 messages ou plus, le promouvoir automatiquement
+    if (messageCount.length >= 5) {
+      await db
+        .update(products)
+        .set({ is_promoted: true })
+        .where(eq(products.id, message.product_id));
+      
+      console.log(`Produit ${message.product_id} promu automatiquement après ${messageCount.length} messages`);
+    }
+    
     return result[0];
   }
 

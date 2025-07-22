@@ -33,6 +33,7 @@ interface Product {
   likes: number;
   is_reserved: boolean;
   is_free: boolean;
+  is_promoted: boolean;
   created_at: string;
 }
 
@@ -68,8 +69,12 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
     staleTime: 5 * 60 * 1000,
   });
 
+  // Séparer les produits promus des autres
+  const promotedProducts = products.filter((product: Product) => product.is_promoted);
+  const regularProducts = products.filter((product: Product) => !product.is_promoted);
+  
   // Transform products for ProductCard component
-  const transformedProducts = products.map(product => ({
+  const transformProduct = (product: Product) => ({
     id: product.id,
     title: product.title,
     price: product.price,
@@ -79,8 +84,12 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
     category: product.category,
     likes: product.likes,
     isReserved: product.is_reserved,
-    isFree: product.is_free
-  }));
+    isFree: product.is_free,
+    isPromoted: product.is_promoted
+  });
+  
+  const transformedPromotedProducts = promotedProducts.map(transformProduct);
+  const transformedRegularProducts = regularProducts.map(transformProduct);
 
   if (loading) {
     return (
@@ -108,7 +117,29 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       </div>
       
       <div className="flex flex-col gap-3">
-        {transformedProducts.map((product) => (
+        {/* Produits promus en premier */}
+        {transformedPromotedProducts.length > 0 && (
+          <>
+            <div className="text-sm font-medium text-orange-600 mb-2 flex items-center gap-2">
+              <span className="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-semibold">PUBLICITÉ</span>
+              Produits populaires
+            </div>
+            {transformedPromotedProducts.map((product: any) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onClick={() => onProductClick?.(product.id)}
+                onLike={() => console.log("Liked:", product.id)}
+                onMessage={() => console.log("Message:", product.id)}
+                className="border-2 border-orange-200 bg-gradient-to-r from-orange-50 to-yellow-50"
+              />
+            ))}
+            <div className="border-b border-gray-200 my-4"></div>
+          </>
+        )}
+        
+        {/* Produits réguliers */}
+        {transformedRegularProducts.map((product: any) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -119,7 +150,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
         ))}
       </div>
       
-      {transformedProducts.length === 0 && (
+      {(transformedPromotedProducts.length + transformedRegularProducts.length) === 0 && (
         <div className="text-center py-8 text-muted-foreground">
           <p>{t('noProducts')}</p>
         </div>

@@ -14,6 +14,7 @@ interface Product {
   image?: string;
   isFree?: boolean;
   isReserved?: boolean;
+  isPromoted?: boolean;
   likes: number;
   category: string;
 }
@@ -59,6 +60,9 @@ export const ProductCard = ({
         
         {/* Status badges */}
         <div className="absolute top-1 left-1 flex gap-1">
+          {product.isPromoted && (
+            <Badge className="bg-orange-500 text-white text-xs animate-pulse">🔥 PUB</Badge>
+          )}
           {product.isFree && (
             <Badge className="bg-success text-success-foreground text-xs">Free</Badge>
           )}
