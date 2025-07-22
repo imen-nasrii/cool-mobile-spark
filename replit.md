@@ -34,6 +34,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Fixed infinite render loops**: Optimized React components for stable performance
 - ✅ **Implemented interactive map system**: Geolocation-based product discovery with distance calculation and radius filtering
 - ✅ **Added nearby articles feature**: Smart proximity detection using Tunisian city coordinates and real-time location
+- ✅ **Fixed Tunisia localization**: Updated all product locations from French cities to Tunisian cities (Tunis, Sfax, Sousse, etc.)
+- ✅ **Implemented complete like system**: Working heart button with real-time updates, authentication required, visual feedback
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
