@@ -125,11 +125,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Products routes
+  // Products routes - Enhanced filtering
   app.get("/api/products", async (req, res) => {
     try {
-      const { category } = req.query;
-      const products = await storage.getProducts(category as string);
+      const { category, search, sortBy } = req.query;
+      
+      const filters = {
+        category: category as string,
+        search: search as string,
+        sortBy: sortBy as string
+      };
+      
+      const products = await storage.getProducts(filters);
       res.json(products);
     } catch (error: any) {
       res.status(500).json({ error: error.message });

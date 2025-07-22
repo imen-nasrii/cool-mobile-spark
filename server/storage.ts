@@ -1,13 +1,17 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and, count, ilike, or, sql } from "drizzle-orm";
 import { 
-  users, profiles, categories, products, messages,
+  users, profiles, categories, products, messages, notifications, favorites, product_views, search_logs,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
-  type Message, type InsertMessage
+  type Message, type InsertMessage,
+  type Notification, type InsertNotification,
+  type Favorite, type InsertFavorite,
+  type ProductView, type InsertProductView,
+  type SearchLog, type InsertSearchLog
 } from "@shared/schema";
 
 const connectionString = process.env.DATABASE_URL!;
@@ -29,13 +33,14 @@ export interface IStorage {
   getCategories(): Promise<Category[]>;
   createCategory(category: InsertCategory): Promise<Category>;
   
-  // Products
-  getProducts(category?: string): Promise<Product[]>;
+  // Products - Enhanced
+  getProducts(filters?: { category?: string; search?: string; sortBy?: string }): Promise<Product[]>;
   getProduct(id: string): Promise<Product | undefined>;
   getUserProducts(userId: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: string): Promise<boolean>;
+  searchProducts(query: string): Promise<Product[]>;
   
   // Messages
   getProductMessages(productId: string, userId: string): Promise<Message[]>;
@@ -93,14 +98,52 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  // Products
-  async getProducts(category?: string): Promise<Product[]> {
-    if (category && category.trim() !== '') {
-      return await db.select().from(products)
-        .where(eq(products.category, category))
-        .orderBy(desc(products.created_at));
+  // Products - Enhanced with filtering
+  async getProducts(filters?: {
+    category?: string;
+    search?: string;
+    sortBy?: string;
+  }): Promise<Product[]> {
+    let query = db.select().from(products);
+    
+    const conditions = [];
+    
+    if (filters?.category && filters.category.trim() !== '') {
+      conditions.push(eq(products.category, filters.category));
     }
-    return await db.select().from(products).orderBy(desc(products.created_at));
+    
+    if (filters?.search && filters.search.trim() !== '') {
+      const searchTerm = `%${filters.search.toLowerCase()}%`;
+      conditions.push(
+        or(
+          ilike(products.title, searchTerm),
+          ilike(products.description, searchTerm),
+          ilike(products.location, searchTerm),
+          ilike(products.category, searchTerm)
+        )
+      );
+    }
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+    
+    return await query.orderBy(desc(products.created_at));
+  }
+
+  async searchProducts(query: string): Promise<Product[]> {
+    const searchTerm = `%${query.toLowerCase()}%`;
+    return await db.select().from(products)
+      .where(
+        or(
+          ilike(products.title, searchTerm),
+          ilike(products.description, searchTerm),
+          ilike(products.location, searchTerm),
+          ilike(products.category, searchTerm)
+        )
+      )
+      .orderBy(desc(products.created_at))
+      .limit(20);
   }
 
   async getProduct(id: string): Promise<Product | undefined> {

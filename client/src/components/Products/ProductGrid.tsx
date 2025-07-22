@@ -62,10 +62,15 @@ interface ProductGridProps {
 export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
   const { t } = useLanguage();
 
-  // Use react-query to fetch products
+  // Use react-query to fetch products with improved filtering
   const { data: products = [], isLoading: loading } = useQuery({
-    queryKey: ['/products', category],
-    queryFn: () => apiClient.getProducts(category || ''),
+    queryKey: ['products', category],
+    queryFn: () => {
+      if (category && category.trim() !== '') {
+        return apiClient.getProducts(category);
+      }
+      return apiClient.getProducts();
+    },
     staleTime: 5 * 60 * 1000,
   });
 

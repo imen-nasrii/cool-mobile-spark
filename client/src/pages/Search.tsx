@@ -90,22 +90,31 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     setSearchQuery(query);
     setSearchLoading(true);
     
-    setTimeout(() => {
-      try {
-        if (query.trim()) {
-          const filtered = products.filter(product =>
-            product.title.toLowerCase().includes(query.toLowerCase()) ||
-            product.category.toLowerCase().includes(query.toLowerCase()) ||
-            product.location.toLowerCase().includes(query.toLowerCase())
-          );
-          setFilteredProducts(filtered);
-        } else {
-          setFilteredProducts(products);
-        }
-      } finally {
-        setSearchLoading(false);
+    try {
+      if (query.trim()) {
+        // Use server-side search for better performance
+        const response = await fetch(`/api/products?search=${encodeURIComponent(query)}`);
+        const results = await response.json();
+        setFilteredProducts(results);
+      } else {
+        setFilteredProducts(products);
       }
-    }, 300);
+    } catch (error) {
+      console.error('Search error:', error);
+      // Fallback to client-side filtering
+      if (query.trim()) {
+        const filtered = products.filter(product =>
+          product.title.toLowerCase().includes(query.toLowerCase()) ||
+          product.category.toLowerCase().includes(query.toLowerCase()) ||
+          product.location.toLowerCase().includes(query.toLowerCase())
+        );
+        setFilteredProducts(filtered);
+      } else {
+        setFilteredProducts(products);
+      }
+    } finally {
+      setSearchLoading(false);
+    }
   };
 
   // Transform products for ProductCard component

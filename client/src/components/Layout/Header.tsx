@@ -1,4 +1,5 @@
-import { Search, Bell, SlidersHorizontal, Languages } from "lucide-react";
+import { Search, SlidersHorizontal, Languages } from "lucide-react";
+import { NotificationBell } from "@/components/Notifications/NotificationBell";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -47,9 +48,7 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             <Search size={20} />
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <Bell size={20} />
-          </Button>
+          <NotificationBell />
 
           <UserMenu showAdminButton={isAdmin} />
         </div>
