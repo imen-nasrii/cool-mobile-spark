@@ -42,14 +42,7 @@ export default function AdminDashboard() {
 
 
 
-  const trafficData = [
-    { name: '00h', visiteurs: 12 },
-    { name: '04h', visiteurs: 19 },
-    { name: '08h', visiteurs: 45 },
-    { name: '12h', visiteurs: 78 },
-    { name: '16h', visiteurs: 52 },
-    { name: '20h', visiteurs: 28 },
-  ];
+
 
   // Initial form state
   const initialFormData = {
@@ -82,24 +75,14 @@ export default function AdminDashboard() {
     queryFn: () => apiClient.getDashboardStats(),
   });
 
-  // Utiliser les vraies données du dashboard ou des valeurs par défaut
-  const salesData = dashboardStats?.salesTrends || [
-    { name: 'Jan', ventes: 7, revenus: 2400 },
-    { name: 'Fév', ventes: 8, revenus: 1398 },
-    { name: 'Mar', ventes: 7, revenus: 9800 },
-    { name: 'Avr', ventes: 5, revenus: 3908 },
-    { name: 'Mai', ventes: 7, revenus: 4800 },
-  ];
-
+  // Utiliser uniquement les vraies données du dashboard
+  const salesData = dashboardStats?.salesTrends || [];
   const categoryData = dashboardStats?.topCategories?.map((cat: any, index: number) => ({
     name: cat.name,
     value: cat.count,
     color: ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1'][index % 5]
-  })) || [
-    { name: 'Électronique', value: 1, color: '#8884d8' },
-    { name: 'Sport', value: 1, color: '#82ca9d' },
-    { name: 'Maison', value: 1, color: '#ffc658' },
-  ];
+  })) || [];
+  const trafficData = dashboardStats?.trafficData || [];
 
   // Create product mutation
   const createProductMutation = useMutation({
@@ -364,10 +347,10 @@ export default function AdminDashboard() {
             <Package className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{dashboardStats?.totalProducts || products.length}</div>
+            <div className="text-2xl font-bold text-blue-600">{dashboardStats?.totalProducts || 0}</div>
             <p className="text-xs text-green-600 flex items-center">
               <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthProducts || 20.1}% ce mois
+              +{dashboardStats?.monthlyGrowthProducts || 0}% ce mois
             </p>
           </CardContent>
         </Card>
@@ -378,10 +361,10 @@ export default function AdminDashboard() {
             <BarChart3 className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{dashboardStats?.monthlySales || 247}</div>
+            <div className="text-2xl font-bold text-green-600">{dashboardStats?.monthlySales || 0}</div>
             <p className="text-xs text-green-600 flex items-center">
               <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthSales || 12}% vs mois dernier
+              +{dashboardStats?.monthlyGrowthSales || 0}% vs mois dernier
             </p>
           </CardContent>
         </Card>
@@ -393,11 +376,11 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">
-              {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()}€` : '12,543€'}
+              {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()}€` : '0€'}
             </div>
             <p className="text-xs text-green-600 flex items-center">
               <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthRevenue || 8.2}% ce mois
+              +{dashboardStats?.monthlyGrowthRevenue || 0}% ce mois
             </p>
           </CardContent>
         </Card>
@@ -408,10 +391,10 @@ export default function AdminDashboard() {
             <Users className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{dashboardStats?.totalUsers || '1,234'}</div>
+            <div className="text-2xl font-bold text-orange-600">{dashboardStats?.totalUsers || 0}</div>
             <p className="text-xs text-green-600 flex items-center">
               <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthUsers || 15.3}% ce mois
+              +{dashboardStats?.monthlyGrowthUsers || 0}% ce mois
             </p>
           </CardContent>
         </Card>

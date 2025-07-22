@@ -178,28 +178,21 @@ export class DatabaseStorage implements IStorage {
         return sum + price;
       }, 0);
 
-      // Mock monthly sales data based on current products
-      const monthlySales = [
-        { month: 'Jan', sales: Math.floor(totalProducts.length * 0.8), percentage: 85 },
-        { month: 'Fév', sales: Math.floor(totalProducts.length * 0.9), percentage: 92 },
-        { month: 'Mar', sales: Math.floor(totalProducts.length * 0.7), percentage: 78 },
-        { month: 'Avr', sales: Math.floor(totalProducts.length * 0.6), percentage: 65 },
-        { month: 'Mai', sales: Math.floor(totalProducts.length * 0.8), percentage: 88 }
-      ];
+      // Pas de données de ventes fictives
 
       return {
         totalProducts: totalProducts.length,
         totalUsers: totalUsers.length,
         totalCategories: totalCategories.length,
-        monthlyGrowthProducts: 20.1,
-        monthlySales: 247,
-        monthlyGrowthSales: 12,
+        monthlyGrowthProducts: 0,
+        monthlySales: 0,
+        monthlyGrowthSales: 0,
         revenue: totalRevenue,
-        monthlyGrowthRevenue: 8.2,
+        monthlyGrowthRevenue: 0,
         activeUsers: totalUsers.length,
-        monthlyGrowthUsers: 15.3,
+        monthlyGrowthUsers: 0,
         categoryDistribution: categoryStats,
-        salesTrends: monthlySales,
+        salesTrends: [],
         topCategories: Object.entries(categoryStats)
           .sort(([,a], [,b]) => b - a)
           .slice(0, 5)
@@ -207,7 +200,8 @@ export class DatabaseStorage implements IStorage {
             name, 
             count, 
             percentage: Math.round((count / totalProducts.length) * 100) 
-          }))
+          })),
+        trafficData: []
       };
     } catch (error) {
       console.error('Error getting dashboard stats:', error);
