@@ -7,6 +7,7 @@ import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
 
 import { Favorites } from "./Favorites";
+import Profile from "./Profile";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";

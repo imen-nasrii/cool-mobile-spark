@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowLeft, User, Mail, Edit, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,15 +29,19 @@ function Profile() {
     queryKey: ['/profile'],
     queryFn: () => apiClient.getProfile(),
     enabled: !!user,
-    onSuccess: (data) => {
+  });
+
+  // Update form data when profile loads
+  useEffect(() => {
+    if (profile) {
       setFormData({
-        display_name: data.display_name || "",
-        bio: data.bio || "",
-        location: data.location || "",
-        phone: data.phone || ""
+        display_name: profile.display_name || "",
+        bio: profile.bio || "",
+        location: profile.location || "",
+        phone: profile.phone || ""
       });
     }
-  });
+  }, [profile]);
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
