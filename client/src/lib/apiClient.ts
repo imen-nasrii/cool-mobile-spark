@@ -146,6 +146,80 @@ class ApiClient {
   async getDashboardStats() {
     return this.request('/dashboard/stats');
   }
+
+  // Reviews API
+  async createReview(reviewData: {
+    product_id: string;
+    rating: number;
+    title?: string;
+    comment: string;
+  }): Promise<any> {
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(this.token && { Authorization: `Bearer ${this.token}` }),
+      },
+      body: JSON.stringify(reviewData),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create review');
+    }
+
+    return response.json();
+  }
+
+  async getProductReviews(productId: string): Promise<any[]> {
+    const response = await fetch(`/api/products/${productId}/reviews`);
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to get reviews');
+    }
+
+    return response.json();
+  }
+
+  async getProductStats(productId: string): Promise<any> {
+    const response = await fetch(`/api/products/${productId}/stats`);
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to get product stats');
+    }
+
+    return response.json();
+  }
+
+  async getProductBadges(productId: string): Promise<any[]> {
+    const response = await fetch(`/api/products/${productId}/badges`);
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to get product badges');
+    }
+
+    return response.json();
+  }
+
+  async markReviewHelpful(reviewId: string): Promise<any> {
+    const response = await fetch(`/api/reviews/${reviewId}/helpful`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(this.token && { Authorization: `Bearer ${this.token}` }),
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to mark review helpful');
+    }
+
+    return response.json();
+  }
 }
 
 export const apiClient = new ApiClient();

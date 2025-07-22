@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, uuid, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -179,3 +179,83 @@ export type ProductView = typeof product_views.$inferSelect;
 
 export type InsertSearchLog = z.infer<typeof insertSearchLogSchema>;
 export type SearchLog = typeof search_logs.$inferSelect;
+
+export const reviews = pgTable("reviews", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  rating: integer("rating").notNull(), // 1-5 stars
+  title: text("title"),
+  comment: text("comment"),
+  is_verified_purchase: boolean("is_verified_purchase").default(false),
+  is_featured: boolean("is_featured").default(false), // Marketing highlight
+  helpful_count: integer("helpful_count").default(0),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const reviewHelpful = pgTable("review_helpful", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  review_id: uuid("review_id").references(() => reviews.id, { onDelete: "cascade" }).notNull(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const marketingBadges = pgTable("marketing_badges", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  badge_type: text("badge_type").notNull(), // "bestseller", "trending", "new", "popular", "verified"
+  badge_text: text("badge_text").notNull(),
+  badge_color: text("badge_color").notNull(),
+  priority: integer("priority").default(0), // Higher priority shows first
+  expires_at: timestamp("expires_at"),
+  is_active: boolean("is_active").default(true),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const productStats = pgTable("product_stats", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  total_reviews: integer("total_reviews").default(0),
+  average_rating: real("average_rating").default(0),
+  total_views: integer("total_views").default(0),
+  total_favorites: integer("total_favorites").default(0),
+  total_messages: integer("total_messages").default(0),
+  conversion_rate: real("conversion_rate").default(0), // Marketing metric
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Insert schemas for new tables
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
+export const insertReviewHelpfulSchema = createInsertSchema(reviewHelpful).omit({
+  id: true,
+  created_at: true,
+});
+
+export const insertMarketingBadgeSchema = createInsertSchema(marketingBadges).omit({
+  id: true,
+  created_at: true,
+});
+
+export const insertProductStatsSchema = createInsertSchema(productStats).omit({
+  id: true,
+  updated_at: true,
+});
+
+// Types for new tables
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+export type Review = typeof reviews.$inferSelect;
+
+export type InsertReviewHelpful = z.infer<typeof insertReviewHelpfulSchema>;
+export type ReviewHelpful = typeof reviewHelpful.$inferSelect;
+
+export type InsertMarketingBadge = z.infer<typeof insertMarketingBadgeSchema>;
+export type MarketingBadge = typeof marketingBadges.$inferSelect;
+
+export type InsertProductStats = z.infer<typeof insertProductStatsSchema>;
+export type ProductStats = typeof productStats.$inferSelect;

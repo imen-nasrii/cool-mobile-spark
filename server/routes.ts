@@ -273,6 +273,75 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Reviews Routes  
+  app.post("/api/reviews", authenticateToken, async (req, res) => {
+    try {
+      const { reviewService } = await import('./reviewsService');
+      const reviewData = {
+        product_id: req.body.product_id,
+        user_id: req.user.id,
+        rating: req.body.rating,
+        title: req.body.title,
+        comment: req.body.comment
+      };
+
+      const review = await reviewService.createReview(reviewData);
+      res.json(review);
+    } catch (error) {
+      console.error("Error creating review:", error);
+      res.status(500).json({ error: "Failed to create review" });
+    }
+  });
+
+  app.get("/api/products/:id/reviews", async (req, res) => {
+    try {
+      const { reviewService } = await import('./reviewsService');
+      const productId = req.params.id;
+      const reviews = await reviewService.getProductReviews(productId);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error getting reviews:", error);
+      res.status(500).json({ error: "Failed to get reviews" });
+    }
+  });
+
+  app.get("/api/products/:id/stats", async (req, res) => {
+    try {
+      const { reviewService } = await import('./reviewsService');
+      const productId = req.params.id;
+      const stats = await reviewService.getProductStats(productId);
+      res.json(stats);
+    } catch (error) {
+      console.error("Error getting product stats:", error);
+      res.status(500).json({ error: "Failed to get product stats" });
+    }
+  });
+
+  app.get("/api/products/:id/badges", async (req, res) => {
+    try {
+      const { reviewService } = await import('./reviewsService');
+      const productId = req.params.id;
+      const badges = await reviewService.getProductMarketingBadges(productId);
+      res.json(badges);
+    } catch (error) {
+      console.error("Error getting marketing badges:", error);
+      res.status(500).json({ error: "Failed to get marketing badges" });
+    }
+  });
+
+  app.post("/api/reviews/:id/helpful", authenticateToken, async (req, res) => {
+    try {
+      const { reviewService } = await import('./reviewsService');
+      const reviewId = req.params.id;
+      const userId = req.user.id;
+      const isHelpful = await reviewService.markReviewHelpful(reviewId, userId);
+      res.json({ isHelpful });
+    } catch (error) {
+      console.error("Error marking review helpful:", error);
+      res.status(500).json({ error: "Failed to mark review helpful" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;
