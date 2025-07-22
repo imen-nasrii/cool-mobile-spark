@@ -102,6 +102,16 @@ class ApiClient {
     });
   }
 
+  async toggleLike(productId: string) {
+    return this.request(`/products/${productId}/like`, {
+      method: 'POST',
+    });
+  }
+
+  async getLikeStatus(productId: string) {
+    return this.request(`/products/${productId}/like-status`);
+  }
+
   // Categories
   async getCategories() {
     return this.request('/categories');

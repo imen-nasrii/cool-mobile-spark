@@ -342,6 +342,102 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Like/Unlike product endpoint
+  app.post("/api/products/:id/like", authenticateToken, async (req, res) => {
+    try {
+      const { id: productId } = req.params;
+      const userId = req.user.id;
+
+      // Check if already liked
+      const existingLike = await db
+        .select()
+        .from(favorites)
+        .where(eq(favorites.product_id, productId))
+        .where(eq(favorites.user_id, userId));
+
+      let isLiked = false;
+      let currentLikes = 0;
+
+      if (existingLike.length > 0) {
+        // Unlike - remove from favorites and decrement likes
+        await db
+          .delete(favorites)
+          .where(eq(favorites.product_id, productId))
+          .where(eq(favorites.user_id, userId));
+
+        await db
+          .update(products)
+          .set({ 
+            likes: sql`${products.likes} - 1`,
+            updated_at: new Date()
+          })
+          .where(eq(products.id, productId));
+
+        isLiked = false;
+      } else {
+        // Like - add to favorites and increment likes
+        await db
+          .insert(favorites)
+          .values({
+            user_id: userId,
+            product_id: productId,
+          });
+
+        await db
+          .update(products)
+          .set({ 
+            likes: sql`${products.likes} + 1`,
+            updated_at: new Date()
+          })
+          .where(eq(products.id, productId));
+
+        isLiked = true;
+      }
+
+      // Get updated like count
+      const updatedProduct = await db
+        .select({ likes: products.likes })
+        .from(products)
+        .where(eq(products.id, productId));
+
+      currentLikes = updatedProduct[0]?.likes || 0;
+
+      res.json({ 
+        success: true, 
+        isLiked, 
+        likes: currentLikes 
+      });
+
+    } catch (error) {
+      console.error("Error toggling like:", error);
+      res.status(500).json({ error: "Failed to toggle like" });
+    }
+  });
+
+  // Get product like status for current user
+  app.get("/api/products/:id/like-status", async (req, res) => {
+    try {
+      const { id: productId } = req.params;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        return res.json({ isLiked: false });
+      }
+
+      const existingLike = await db
+        .select()
+        .from(favorites)
+        .where(eq(favorites.product_id, productId))
+        .where(eq(favorites.user_id, userId));
+
+      res.json({ isLiked: existingLike.length > 0 });
+
+    } catch (error) {
+      console.error("Error getting like status:", error);
+      res.status(500).json({ error: "Failed to get like status" });
+    }
+  });
+
   const httpServer = createServer(app);
 
   return httpServer;

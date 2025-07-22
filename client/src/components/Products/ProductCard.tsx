@@ -5,6 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { apiClient } from "@/lib/apiClient";
+import { useAuth } from "@/hooks/useAuth";
+import { useState } from "react";
 
 interface Product {
   id: string;
@@ -36,6 +40,38 @@ export const ProductCard = ({
   className 
 }: ProductCardProps) => {
   const { t } = useLanguage();
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [currentLikes, setCurrentLikes] = useState(product.likes);
+
+  // Get like status for current user
+  const { data: likeStatus } = useQuery({
+    queryKey: ['like-status', product.id],
+    queryFn: () => apiClient.getLikeStatus(product.id),
+    enabled: !!user,
+  });
+
+  // Like/Unlike mutation
+  const likeMutation = useMutation({
+    mutationFn: () => apiClient.toggleLike(product.id),
+    onSuccess: (data) => {
+      setCurrentLikes(data.likes);
+      queryClient.invalidateQueries({ queryKey: ['like-status', product.id] });
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onError: (error) => {
+      console.error('Like error:', error);
+    }
+  });
+
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      // Could show login modal or redirect to auth
+      return;
+    }
+    likeMutation.mutate();
+  };
   
   return (
     <Card 
@@ -103,14 +139,20 @@ export const ProductCard = ({
               variant="ghost"
               size="sm"
               className="w-6 h-6 rounded-full p-0"
-              onClick={(e) => {
-                e.stopPropagation();
-                onLike?.();
-              }}
+              onClick={handleLike}
+              disabled={likeMutation.isPending}
             >
-              <Heart size={12} className="text-tomati-red hover:fill-tomati-red transition-all" />
+              <Heart 
+                size={12} 
+                className={cn(
+                  "transition-all",
+                  likeStatus?.isLiked 
+                    ? "text-red-500 fill-red-500" 
+                    : "text-gray-500 hover:text-red-500 hover:fill-red-500"
+                )}
+              />
             </Button>
-            <span className="text-xs">{product.likes}</span>
+            <span className="text-xs">{currentLikes}</span>
           </div>
         </div>
       </CardContent>
