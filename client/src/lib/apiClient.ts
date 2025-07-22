@@ -17,7 +17,7 @@ class ApiClient {
     localStorage.removeItem('authToken');
   }
 
-  private async request(endpoint: string, options: RequestInit = {}) {
+  async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE}${endpoint}`;
     const config: RequestInit = {
       headers: {
@@ -140,6 +140,11 @@ class ApiClient {
       method: 'PUT',
       body: JSON.stringify(profile),
     });
+  }
+
+  // Dashboard
+  async getDashboardStats() {
+    return this.request('/dashboard/stats');
   }
 }
 
