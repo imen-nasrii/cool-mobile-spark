@@ -218,7 +218,7 @@ export default function Auth() {
                 <CardFooter className="flex flex-col space-y-4">
                   <Button 
                     type="submit" 
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -275,7 +275,7 @@ export default function Auth() {
                 <CardFooter className="flex flex-col space-y-4">
                   <Button 
                     type="submit" 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    className="w-full bg-red-600 hover:bg-red-700 text-white"
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
