@@ -2,12 +2,11 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq, desc, or, sql } from "drizzle-orm";
 import { 
-  users, profiles, categories, products, messages,
+  users, profiles, categories, products,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
-  type Product, type InsertProduct,
-  type Message, type InsertMessage
+  type Product, type InsertProduct
 } from "@shared/schema";
 
 const connectionString = process.env.DATABASE_URL!;
@@ -37,11 +36,7 @@ export interface IStorage {
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: string): Promise<boolean>;
   
-  // Messages
-  getProductMessages(productId: string, userId: string): Promise<Message[]>;
-  getUserMessages(userId: string): Promise<Message[]>;
-  createMessage(message: InsertMessage): Promise<Message>;
-  markMessageAsRead(id: string): Promise<boolean>;
+  // Legacy message methods removed - use MessagingService instead
 }
 
 export class DatabaseStorage implements IStorage {
@@ -158,30 +153,7 @@ export class DatabaseStorage implements IStorage {
     return result.length > 0;
   }
 
-  // Messages
-  async getProductMessages(productId: string, userId: string): Promise<Message[]> {
-    return await db.select().from(messages)
-      .where(eq(messages.product_id, productId))
-      .orderBy(messages.created_at);
-  }
-
-  async getUserMessages(userId: string): Promise<Message[]> {
-    return await db.select().from(messages)
-      .where(eq(messages.recipient_id, userId))
-      .orderBy(desc(messages.created_at));
-  }
-
-  async createMessage(message: InsertMessage): Promise<Message> {
-    const result = await db.insert(messages).values(message).returning();
-    return result[0];
-  }
-
-  async markMessageAsRead(id: string): Promise<boolean> {
-    const result = await db.update(messages)
-      .set({ is_read: true })
-      .where(eq(messages.id, id));
-    return result.length > 0;
-  }
+  // Legacy message methods removed - use MessagingService instead
 }
 
 export const storage = new DatabaseStorage();
