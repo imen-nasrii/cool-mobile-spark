@@ -76,7 +76,7 @@ export function useMessaging() {
   // Get conversations
   const conversationsQuery = useQuery({
     queryKey: ['/api/conversations'],
-    queryFn: () => apiRequest('/api/conversations'),
+    queryFn: () => apiRequest('/conversations'),
     enabled: !!user,
   });
 
@@ -84,7 +84,7 @@ export function useMessaging() {
   const useConversationMessages = (conversationId: string | null) => {
     return useQuery({
       queryKey: ['/api/conversations', conversationId, 'messages'],
-      queryFn: () => apiRequest(`/api/conversations/${conversationId}/messages`),
+      queryFn: () => apiRequest(`/conversations/${conversationId}/messages`),
       enabled: !!conversationId && !!user,
     });
   };
@@ -92,7 +92,7 @@ export function useMessaging() {
   // Create conversation
   const createConversationMutation = useMutation({
     mutationFn: (data: { product_id: string; seller_id: string }) =>
-      apiRequest('/api/conversations', {
+      apiRequest('/conversations', {
         method: 'POST',
         body: JSON.stringify(data),
         headers: { 'Content-Type': 'application/json' },
@@ -105,7 +105,7 @@ export function useMessaging() {
   // Send message
   const sendMessageMutation = useMutation({
     mutationFn: (data: { conversationId: string; content: string }) =>
-      apiRequest(`/api/conversations/${data.conversationId}/messages`, {
+      apiRequest(`/conversations/${data.conversationId}/messages`, {
         method: 'POST',
         body: JSON.stringify({ content: data.content }),
         headers: { 'Content-Type': 'application/json' },
