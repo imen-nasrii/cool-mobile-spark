@@ -39,16 +39,23 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             {language === 'fr' ? 'العربية' : 'Français'}
           </Button>
           
-          <Button variant="ghost" size="icon">
-            <SlidersHorizontal size={20} />
-          </Button>
-          
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => onTabChange?.('search')}
+            className={activeTab === 'search' ? 'bg-gray-100' : ''}
+          >
             <Search size={20} />
           </Button>
           
-          <Button variant="ghost" size="icon">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => onTabChange?.('notifications')}
+            className={activeTab === 'notifications' ? 'bg-gray-100' : ''}
+          >
             <Bell size={20} />
+            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
           </Button>
 
           <UserMenu showAdminButton={isAdmin} />

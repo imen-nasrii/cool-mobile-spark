@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, or, sql } from "drizzle-orm";
 import { 
   users, profiles, categories, products, messages,
   type User, type InsertUser,
@@ -30,7 +30,7 @@ export interface IStorage {
   createCategory(category: InsertCategory): Promise<Category>;
   
   // Products
-  getProducts(category?: string): Promise<Product[]>;
+  getProducts(category?: string, search?: string): Promise<Product[]>;
   getProduct(id: string): Promise<Product | undefined>;
   getUserProducts(userId: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
@@ -91,12 +91,41 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Products
-  async getProducts(category?: string): Promise<Product[]> {
+  async getProducts(category?: string, search?: string): Promise<Product[]> {
+    if (category && search) {
+      const searchTerm = `%${search.toLowerCase()}%`;
+      return await db.select().from(products)
+        .where(
+          sql`${products.category} = ${category} AND (
+            LOWER(${products.title}) LIKE ${searchTerm} OR
+            LOWER(${products.description}) LIKE ${searchTerm} OR
+            LOWER(${products.category}) LIKE ${searchTerm} OR
+            LOWER(${products.location}) LIKE ${searchTerm}
+          )`
+        )
+        .orderBy(desc(products.created_at));
+    }
+    
     if (category) {
       return await db.select().from(products)
         .where(eq(products.category, category))
         .orderBy(desc(products.created_at));
     }
+    
+    if (search) {
+      const searchTerm = `%${search.toLowerCase()}%`;
+      return await db.select().from(products)
+        .where(
+          or(
+            sql`LOWER(${products.title}) LIKE ${searchTerm}`,
+            sql`LOWER(${products.description}) LIKE ${searchTerm}`,
+            sql`LOWER(${products.category}) LIKE ${searchTerm}`,
+            sql`LOWER(${products.location}) LIKE ${searchTerm}`
+          )
+        )
+        .orderBy(desc(products.created_at));
+    }
+    
     return await db.select().from(products).orderBy(desc(products.created_at));
   }
 

@@ -128,8 +128,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Products routes
   app.get("/api/products", async (req, res) => {
     try {
-      const { category } = req.query;
-      const products = await storage.getProducts(category as string);
+      const { category, search } = req.query;
+      const products = await storage.getProducts(category as string, search as string);
       res.json(products);
     } catch (error: any) {
       res.status(500).json({ error: error.message });

@@ -71,13 +71,15 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
-  const { t } = useLanguage();
+  // const { t } = useLanguage();
 
-  // Use react-query to fetch products
+  // Use react-query to fetch products with search
   const { data: productsData = [], isLoading: queryLoading } = useQuery({
-    queryKey: ['/products'],
-    queryFn: () => apiClient.getProducts(),
-    staleTime: 5 * 60 * 1000,
+    queryKey: ['/products', searchQuery],
+    queryFn: () => searchQuery ? 
+      fetch(`/api/products?search=${encodeURIComponent(searchQuery)}`).then(res => res.json()) :
+      apiClient.getProducts(),
+    staleTime: 30 * 1000, // Reduced for search responsiveness
   });
 
   useEffect(() => {

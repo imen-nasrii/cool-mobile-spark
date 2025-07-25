@@ -7,6 +7,7 @@ import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
 import Profile from "./Profile";
 import { Favorites } from "./Favorites";
+import { Notifications } from "./Notifications";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
@@ -79,6 +80,8 @@ const Index = () => {
         return <Profile activeTab={activeTab} onTabChange={handleTabChange} />;
       case "favorites":
         return <Favorites activeTab={activeTab} onTabChange={handleTabChange} />;
+      case "notifications":
+        return <Notifications activeTab={activeTab} onTabChange={handleTabChange} />;
       default:
         return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
     }
