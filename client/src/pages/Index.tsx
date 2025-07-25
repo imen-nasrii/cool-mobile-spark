@@ -49,9 +49,9 @@ const Index = () => {
   // Redirect admin users to dashboard
   useEffect(() => {
     if (user && user.role === 'admin') {
-      navigate('/dashboard');
+      window.location.href = '/admin';
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
@@ -103,7 +103,8 @@ const Index = () => {
       case "add":
         return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} />;
       case "messages":
-        return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
+        navigate('/messages');
+        return null;
       case "profile":
         return <Profile />;
       case "favorites":

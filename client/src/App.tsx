@@ -11,6 +11,8 @@ import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import { Login } from "./pages/Login";
+import { AuthLanding } from "./pages/AuthLanding";
 import AdminDashboard from "./pages/AdminDashboard";
 import SimpleDashboard from "./pages/SimpleDashboard";
 import Profile from "./pages/Profile";
@@ -27,22 +29,33 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <AdminRoute>
-                    <SimpleDashboard />
-                  </AdminRoute>
+              {/* Pages d'authentification */}
+              <Route path="/login" element={<Login />} />
+              <Route path="/auth" element={<Auth />} />
+              
+              {/* Landing page avec redirection automatique */}
+              <Route path="/welcome" element={<AuthLanding />} />
+              
+              {/* Application principale pour utilisateurs connectés */}
+              <Route path="/" element={
+                <ProtectedRoute redirectTo="/login">
+                  <Index />
                 </ProtectedRoute>
               } />
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
+              
+              {/* Dashboard admin avec protection */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute requiredRole="admin" redirectTo="/login">
+                  <SimpleDashboard />
+                </ProtectedRoute>
+              } />
+              
+              {/* Admin dashboard avec protection */}
               <Route 
                 path="/admin" 
                 element={
-                  <ProtectedRoute>
-                    <AdminRoute>
-                      <AdminDashboard />
-                    </AdminRoute>
+                  <ProtectedRoute requiredRole="admin" redirectTo="/login">
+                    <AdminDashboard />
                   </ProtectedRoute>
                 } 
               />
