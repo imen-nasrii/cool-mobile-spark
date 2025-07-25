@@ -7,13 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Filter, Navigation, Heart, MessageCircle } from "lucide-react";
+import { MapPin, Filter, Navigation, Heart } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
-import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocation } from 'wouter';
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -83,8 +81,6 @@ export default function MapView() {
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const { toast } = useToast();
   const { user } = useAuth();
-  const { createConversation } = useMessaging();
-  const [, setLocation] = useLocation();
 
   // Get user's current location
   useEffect(() => {
@@ -172,45 +168,7 @@ export default function MapView() {
     return matchesSearch && matchesCategory && matchesPrice && matchesDistance;
   });
 
-  const handleContact = async (product: ProductLocation) => {
-    if (!user) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour contacter le vendeur.",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    try {
-      // Get product details to find seller
-      const productDetails = await apiClient.getProduct(product.id);
-      
-      // Create conversation with seller
-      const conversation = await createConversation({
-        product_id: product.id,
-        seller_id: productDetails.user_id,
-      });
-      
-      toast({
-        title: "Conversation créée",
-        description: "Redirection vers les messages...",
-      });
-      
-      // Navigate to messages after a short delay
-      setTimeout(() => {
-        setLocation('/messages');
-      }, 1000);
-      
-    } catch (error) {
-      console.error('Error creating conversation:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible de contacter le vendeur.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleToggleFavorite = (productId: string) => {
     toast({
@@ -413,20 +371,7 @@ export default function MapView() {
                             {product.likes}
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              handleContact(product);
-                            }}
-                            className="flex-1 text-xs"
-                            disabled={!user}
-                          >
-                            <MessageCircle size={12} className="mr-1" />
-                            Contacter
-                          </Button>
+                        <div className="flex justify-end">
                           <Button
                             size="sm"
                             variant="outline"
