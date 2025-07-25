@@ -19,7 +19,8 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
     { id: "Sport", name: "Sport", icon: Grid3X3 },
     { id: "Voiture", name: "Voiture", icon: Car },
     { id: "Bureautique", name: "Bureautique", icon: Briefcase },
-    { id: "Jeux vidéo", name: "Jeux vidéo", icon: Grid3X3 }
+    { id: "Jeux vidéo", name: "Jeux vidéo", icon: Grid3X3 },
+    { id: "Mobilier", name: "Mobilier", icon: Building }
   ];
 
   const handleCategorySelect = (categoryId: string) => {
