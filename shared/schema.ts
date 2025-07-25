@@ -45,15 +45,33 @@ export const products = pgTable("products", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Conversations table for managing chat threads
+export const conversations = pgTable("conversations", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }),
+  buyer_id: uuid("buyer_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  seller_id: uuid("seller_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  last_message_at: timestamp("last_message_at").defaultNow().notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Messages table for individual messages within conversations
 export const messages = pgTable("messages", {
   id: uuid("id").primaryKey().defaultRandom(),
-  product_id: uuid("product_id").notNull(),
-  sender_id: uuid("sender_id").notNull(),
-  recipient_id: uuid("recipient_id").notNull(),
+  conversation_id: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade" }).notNull(),
+  sender_id: uuid("sender_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
   content: text("content").notNull(),
+  message_type: text("message_type").default("text").notNull(), // 'text', 'image', 'file'
   is_read: boolean("is_read").default(false).notNull(),
   created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
+// Message read status for tracking who has read what
+export const message_reads = pgTable("message_reads", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  message_id: uuid("message_id").references(() => messages.id, { onDelete: "cascade" }).notNull(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  read_at: timestamp("read_at").defaultNow().notNull(),
 });
 
 // Insert schemas
@@ -80,24 +98,34 @@ export const insertProductSchema = createInsertSchema(products).omit({
   updated_at: true,
 });
 
+export const insertConversationSchema = createInsertSchema(conversations).omit({
+  id: true,
+  created_at: true,
+  last_message_at: true,
+});
+
 export const insertMessageSchema = createInsertSchema(messages).omit({
   id: true,
   created_at: true,
-  updated_at: true,
+});
+
+export const insertMessageReadSchema = createInsertSchema(message_reads).omit({
+  id: true,
+  read_at: true,
 });
 
 // Types
-export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
-
-export type InsertProfile = z.infer<typeof insertProfileSchema>;
+export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Profile = typeof profiles.$inferSelect;
-
-export type InsertCategory = z.infer<typeof insertCategorySchema>;
+export type InsertProfile = z.infer<typeof insertProfileSchema>;
 export type Category = typeof categories.$inferSelect;
-
-export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type InsertCategory = z.infer<typeof insertCategorySchema>;
 export type Product = typeof products.$inferSelect;
-
-export type InsertMessage = z.infer<typeof insertMessageSchema>;
-export type Message = typeof messages.$inferSelect;
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type Conversation = typeof conversations.$inferSelect;
+export type InsertConversation = z.infer<typeof insertConversationSchema>;
+export type ChatMessage = typeof messages.$inferSelect;
+export type InsertChatMessage = z.infer<typeof insertMessageSchema>;
+export type MessageRead = typeof message_reads.$inferSelect;
+export type InsertMessageRead = z.infer<typeof insertMessageReadSchema>;

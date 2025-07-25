@@ -1,4 +1,4 @@
-import { Search, Bell, SlidersHorizontal, Languages, MapPin } from "lucide-react";
+import { Search, Bell, SlidersHorizontal, Languages, MapPin, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -55,6 +55,15 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             title="Carte interactive"
           >
             <MapPin size={20} />
+          </Button>
+          
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => window.location.href = '/messages'}
+            title="Messages"
+          >
+            <MessageCircle size={20} />
           </Button>
           
           <Button 

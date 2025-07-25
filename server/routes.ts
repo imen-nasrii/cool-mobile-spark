@@ -5,6 +5,7 @@ import {
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema 
 } from "@shared/schema";
+import { messagingService } from "./messaging";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -255,7 +256,69 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Messaging routes
+  app.get("/api/conversations", authenticateToken, async (req: any, res) => {
+    try {
+      const conversations = await messagingService.getConversations(req.user.id);
+      res.json(conversations);
+    } catch (error) {
+      console.error("Error fetching conversations:", error);
+      res.status(500).json({ error: "Failed to fetch conversations" });
+    }
+  });
+
+  app.post("/api/conversations", authenticateToken, async (req: any, res) => {
+    try {
+      const { product_id, seller_id } = req.body;
+      const conversation = await messagingService.createConversation(
+        req.user.id,
+        seller_id,
+        product_id
+      );
+      res.json(conversation);
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+      res.status(500).json({ error: "Failed to create conversation" });
+    }
+  });
+
+  app.get("/api/conversations/:id/messages", authenticateToken, async (req: any, res) => {
+    try {
+      const messages = await messagingService.getMessages(req.params.id, req.user.id);
+      res.json(messages);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      res.status(500).json({ error: "Failed to fetch messages" });
+    }
+  });
+
+  app.post("/api/conversations/:id/messages", authenticateToken, async (req: any, res) => {
+    try {
+      const { content } = req.body;
+      const message = await messagingService.sendMessage(
+        req.params.id,
+        req.user.id,
+        content
+      );
+      res.json(message);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
   const httpServer = createServer(app);
+  
+  // WebSocket server for real-time messaging  
+  const ws = await import('ws');
+  const wss = new ws.WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  wss.on('connection', (ws: any, req: any) => {
+    const userId = req.url?.split('userId=')[1];
+    if (userId) {
+      messagingService.addClient(userId, ws);
+    }
+  });
 
   return httpServer;
 }
@@ -321,3 +384,5 @@ function getChatbotResponse(message: string, userContext: any = {}) {
     timestamp: new Date().toISOString()
   };
 }
+
+

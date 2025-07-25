@@ -11,6 +11,8 @@ import { MapPin, Filter, Navigation, Heart, MessageCircle } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
+import { useMessaging } from '@/hooks/useMessaging';
+import { useAuth } from '@/hooks/useAuth';
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -79,6 +81,8 @@ export default function MapView() {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [showFilters, setShowFilters] = useState<boolean>(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { createConversation } = useMessaging();
 
   // Get user's current location
   useEffect(() => {
@@ -166,9 +170,41 @@ export default function MapView() {
     return matchesSearch && matchesCategory && matchesPrice && matchesDistance;
   });
 
-  const handleContactSeller = (productId: string) => {
-    // Navigate to messages with the product context
-    window.location.href = `/?tab=messages&product=${productId}`;
+  const handleContact = async (product: ProductLocation) => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour contacter le vendeur.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Get product details to find seller
+      const productDetails = await apiClient.getProduct(product.id);
+      
+      // Create conversation with seller
+      await createConversation({
+        product_id: product.id,
+        seller_id: productDetails.user_id,
+      });
+      
+      toast({
+        title: "Conversation créée",
+        description: "Vous pouvez maintenant discuter avec le vendeur.",
+      });
+      
+      // Navigate to messages
+      window.location.href = '/messages';
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de contacter le vendeur.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleToggleFavorite = (productId: string) => {
@@ -375,7 +411,7 @@ export default function MapView() {
                         <div className="flex gap-2">
                           <Button
                             size="sm"
-                            onClick={() => handleContactSeller(product.id)}
+                            onClick={() => handleContact(product)}
                             className="flex-1 text-xs"
                           >
                             <MessageCircle size={12} className="mr-1" />

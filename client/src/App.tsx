@@ -13,6 +13,7 @@ import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
 import MapView from "./pages/MapView";
+import MessagesPage from "./pages/Messages";
 import { AdminInfo } from "./components/Auth/AdminInfo";
 import NotFound from "./pages/NotFound";
 
@@ -46,6 +47,14 @@ const App = () => (
                 } 
               />
               <Route path="/map" element={<MapView />} />
+              <Route 
+                path="/messages" 
+                element={
+                  <ProtectedRoute>
+                    <MessagesPage />
+                  </ProtectedRoute>
+                } 
+              />
               <Route path="/admin-info" element={<AdminInfo />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
