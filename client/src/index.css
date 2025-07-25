@@ -17,16 +17,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 13% 18%;
 
-    --primary: 262 83% 58%;
+    --primary: 0 84% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 200 50% 94%;
+    --secondary: 210 40% 96%;
     --secondary-foreground: 220 13% 18%;
 
-    --muted: 200 50% 94%;
+    --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 142 76% 36%;
+    --accent: 0 84% 60%;
     --accent-foreground: 0 0% 98%;
 
     --destructive: 0 84.2% 60.2%;
@@ -34,7 +34,7 @@ All colors MUST be HSL.
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 262 83% 58%;
+    --ring: 0 84% 60%;
 
     /* Custom marketplace colors */
     --success: 142 76% 36%;
@@ -47,11 +47,11 @@ All colors MUST be HSL.
     --tomati-green: 142 76% 36%;
 
     /* Enhanced gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(262 83% 58%), hsl(262 80% 65%));
-    --gradient-accent: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 70% 45%));
-    --gradient-tomati: linear-gradient(135deg, hsl(262 83% 58%), hsl(142 76% 36%));
+    --gradient-primary: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 70% 45%));
+    --gradient-accent: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 80% 65%));
+    --gradient-tomati: linear-gradient(135deg, hsl(0 84% 55%), hsl(142 76% 36%));
     --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
-    --gradient-hero: linear-gradient(135deg, hsl(262 83% 58%) 0%, hsl(142 76% 36%) 50%, hsl(197 71% 73%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(0 84% 55%) 0%, hsl(0 80% 65%) 50%, hsl(142 76% 36%) 100%);
     --gradient-shimmer: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
 
     /* Glass morphism colors */

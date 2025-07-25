@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Plus, Pencil, Trash2, Search, Filter, MoreHorizontal, ArrowLeft, TrendingUp, BarChart3, Package, Users } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Cell } from 'recharts';
+import { Plus, Pencil, Trash2, Search, Filter, MoreHorizontal, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,13 +35,8 @@ export default function AdminDashboard() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [currentView, setCurrentView] = useState("dashboard"); // dashboard, products
   const { toast } = useToast();
   const queryClient = useQueryClient();
-
-
-
-
 
   // Initial form state
   const initialFormData = {
@@ -68,21 +62,6 @@ export default function AdminDashboard() {
     queryKey: ['/categories'],
     queryFn: () => apiClient.getCategories(),
   });
-
-  // Fetch dashboard statistics
-  const { data: dashboardStats, isLoading: statsLoading } = useQuery({
-    queryKey: ['/dashboard/stats'],
-    queryFn: () => apiClient.getDashboardStats(),
-  });
-
-  // Utiliser uniquement les vraies données du dashboard
-  const salesData = dashboardStats?.salesTrends || [];
-  const categoryData = dashboardStats?.topCategories?.map((cat: any, index: number) => ({
-    name: cat.name,
-    value: cat.count,
-    color: ['#8884d8', '#82ca9d', '#ffc658', '#ff7c7c', '#8dd1e1'][index % 5]
-  })) || [];
-  const trafficData = dashboardStats?.trafficData || [];
 
   // Create product mutation
   const createProductMutation = useMutation({
@@ -317,90 +296,54 @@ export default function AdminDashboard() {
               Retour
             </Button>
           </div>
-          <h1 className="text-3xl font-bold">
-            {currentView === "dashboard" ? "Dashboard Administrateur" : "Administration des Produits"}
-          </h1>
-          <p className="text-muted-foreground">
-            {currentView === "dashboard" ? "Statistiques et analyses de la plateforme" : "Gérez tous les produits de votre plateforme"}
-          </p>
+          <h1 className="text-3xl font-bold">Administration des Produits</h1>
+          <p className="text-muted-foreground">Gérez tous les produits de votre plateforme</p>
         </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant={currentView === "dashboard" ? "default" : "outline"}
-            onClick={() => setCurrentView("dashboard")}
-          >
-            <BarChart3 className="w-4 h-4 mr-2" />
-            Dashboard
-          </Button>
-          <Button
-            variant={currentView === "products" ? "default" : "outline"}
-            onClick={() => setCurrentView("products")}
-          >
-            <Package className="w-4 h-4 mr-2" />
-            Gérer les produits
-          </Button>
-        </div>
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="w-4 h-4 mr-2" />
+              Nouveau Produit
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Créer un nouveau produit</DialogTitle>
+              <DialogDescription>
+                Ajoutez un nouveau produit à votre catalogue
+              </DialogDescription>
+            </DialogHeader>
+            <ProductForm />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {currentView === "dashboard" && (
-        <>
-          {/* Stats Cards avec vraies données */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="border-l-4 border-l-blue-500">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Produits</CardTitle>
-            <Package className="h-4 w-4 text-blue-500" />
+            <CardTitle className="text-sm font-medium">Total Produits</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{dashboardStats?.totalProducts || 0}</div>
-            <p className="text-xs text-green-600 flex items-center">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthProducts || 0}% ce mois
-            </p>
+            <div className="text-2xl font-bold">{products.length}</div>
           </CardContent>
         </Card>
-        
-        <Card className="border-l-4 border-l-green-500">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Ventes Mensuelles</CardTitle>
-            <BarChart3 className="h-4 w-4 text-green-500" />
+            <CardTitle className="text-sm font-medium">Produits Gratuits</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{dashboardStats?.monthlySales || 0}</div>
-            <p className="text-xs text-green-600 flex items-center">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthSales || 0}% vs mois dernier
-            </p>
-          </CardContent>
-        </Card>
-        
-        <Card className="border-l-4 border-l-purple-500">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Revenus</CardTitle>
-            <TrendingUp className="h-4 w-4 text-purple-500" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-purple-600">
-              {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()} TND` : '0 TND'}
+            <div className="text-2xl font-bold">
+              {products.filter((p: Product) => p.is_free).length}
             </div>
-            <p className="text-xs text-green-600 flex items-center">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthRevenue || 0}% ce mois
-            </p>
           </CardContent>
         </Card>
-        
-        <Card className="border-l-4 border-l-orange-500">
+        <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Utilisateurs Actifs</CardTitle>
-            <Users className="h-4 w-4 text-orange-500" />
+            <CardTitle className="text-sm font-medium">Catégories</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{dashboardStats?.totalUsers || 0}</div>
-            <p className="text-xs text-green-600 flex items-center">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +{dashboardStats?.monthlyGrowthUsers || 0}% ce mois
-            </p>
+            <div className="text-2xl font-bold">{categories.length}</div>
           </CardContent>
         </Card>
       </div>
@@ -515,145 +458,6 @@ export default function AdminDashboard() {
           )}
         </CardContent>
       </Card>
-
-        </>
-      )}
-
-      {currentView === "products" && (
-        <>
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold">Gestion des Produits</h2>
-              <p className="text-muted-foreground">Créez, modifiez et supprimez des produits</p>
-            </div>
-            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  Nouveau Produit
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Créer un nouveau produit</DialogTitle>
-                  <DialogDescription>
-                    Ajoutez un nouveau produit à votre catalogue
-                  </DialogDescription>
-                </DialogHeader>
-                <ProductForm />
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Filters */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Filtres</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <Input
-                    placeholder="Rechercher un produit..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full"
-                  />
-                </div>
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-48">
-                    <SelectValue placeholder="Toutes les catégories" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Toutes les catégories</SelectItem>
-                    {categories.map((category: any) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Products Table */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Liste des Produits ({filteredProducts.length})</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Produit</TableHead>
-                    <TableHead>Catégorie</TableHead>
-                    <TableHead>Prix</TableHead>
-                    <TableHead>Localisation</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredProducts.map((product: Product) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="font-medium">
-                        <div>
-                          <div className="font-semibold">{product.title}</div>
-                          <div className="text-sm text-muted-foreground line-clamp-1">
-                            {product.description}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary">{product.category}</Badge>
-                      </TableCell>
-                      <TableCell>
-                        {product.is_free ? (
-                          <Badge variant="outline" className="text-green-600">Gratuit</Badge>
-                        ) : (
-                          <span className="font-semibold">{product.price}</span>
-                        )}
-                      </TableCell>
-                      <TableCell>{product.location}</TableCell>
-                      <TableCell>
-                        {new Date(product.created_at).toLocaleDateString('fr-FR')}
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleEdit(product)}>
-                              <Pencil className="w-4 h-4 mr-2" />
-                              Modifier
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handleDelete(product.id)}
-                              className="text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4 mr-2" />
-                              Supprimer
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              {filteredProducts.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                  Aucun produit trouvé
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </>
-      )}
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>

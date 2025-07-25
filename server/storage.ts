@@ -1,17 +1,13 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, desc, and, count, ilike, or, sql } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { 
-  users, profiles, categories, products, messages, notifications, favorites, product_views, search_logs,
+  users, profiles, categories, products, messages,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
-  type Message, type InsertMessage,
-  type Notification, type InsertNotification,
-  type Favorite, type InsertFavorite,
-  type ProductView, type InsertProductView,
-  type SearchLog, type InsertSearchLog
+  type Message, type InsertMessage
 } from "@shared/schema";
 
 const connectionString = process.env.DATABASE_URL!;
@@ -33,23 +29,19 @@ export interface IStorage {
   getCategories(): Promise<Category[]>;
   createCategory(category: InsertCategory): Promise<Category>;
   
-  // Products - Enhanced
-  getProducts(filters?: { category?: string; search?: string; sortBy?: string }): Promise<Product[]>;
+  // Products
+  getProducts(category?: string): Promise<Product[]>;
   getProduct(id: string): Promise<Product | undefined>;
   getUserProducts(userId: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: string): Promise<boolean>;
-  searchProducts(query: string): Promise<Product[]>;
   
   // Messages
   getProductMessages(productId: string, userId: string): Promise<Message[]>;
   getUserMessages(userId: string): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(id: string): Promise<boolean>;
-  
-  // Dashboard
-  getDashboardStats(): Promise<any>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -98,52 +90,14 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  // Products - Enhanced with filtering
-  async getProducts(filters?: {
-    category?: string;
-    search?: string;
-    sortBy?: string;
-  }): Promise<Product[]> {
-    let query = db.select().from(products);
-    
-    const conditions = [];
-    
-    if (filters?.category && filters.category.trim() !== '') {
-      conditions.push(eq(products.category, filters.category));
+  // Products
+  async getProducts(category?: string): Promise<Product[]> {
+    if (category) {
+      return await db.select().from(products)
+        .where(eq(products.category, category))
+        .orderBy(desc(products.created_at));
     }
-    
-    if (filters?.search && filters.search.trim() !== '') {
-      const searchTerm = `%${filters.search.toLowerCase()}%`;
-      conditions.push(
-        or(
-          ilike(products.title, searchTerm),
-          ilike(products.description, searchTerm),
-          ilike(products.location, searchTerm),
-          ilike(products.category, searchTerm)
-        )
-      );
-    }
-    
-    if (conditions.length > 0) {
-      query = query.where(and(...conditions));
-    }
-    
-    return await query.orderBy(desc(products.created_at));
-  }
-
-  async searchProducts(query: string): Promise<Product[]> {
-    const searchTerm = `%${query.toLowerCase()}%`;
-    return await db.select().from(products)
-      .where(
-        or(
-          ilike(products.title, searchTerm),
-          ilike(products.description, searchTerm),
-          ilike(products.location, searchTerm),
-          ilike(products.category, searchTerm)
-        )
-      )
-      .orderBy(desc(products.created_at))
-      .limit(20);
+    return await db.select().from(products).orderBy(desc(products.created_at));
   }
 
   async getProduct(id: string): Promise<Product | undefined> {
@@ -190,23 +144,6 @@ export class DatabaseStorage implements IStorage {
 
   async createMessage(message: InsertMessage): Promise<Message> {
     const result = await db.insert(messages).values(message).returning();
-    
-    // Vérifier le nombre de messages pour ce produit
-    const messageCount = await db
-      .select()
-      .from(messages)
-      .where(eq(messages.product_id, message.product_id));
-    
-    // Si le produit a maintenant 5 messages ou plus, le promouvoir automatiquement
-    if (messageCount.length >= 5) {
-      await db
-        .update(products)
-        .set({ is_promoted: true })
-        .where(eq(products.id, message.product_id));
-      
-      console.log(`Produit ${message.product_id} promu automatiquement après ${messageCount.length} messages`);
-    }
-    
     return result[0];
   }
 
@@ -215,58 +152,6 @@ export class DatabaseStorage implements IStorage {
       .set({ is_read: true })
       .where(eq(messages.id, id));
     return result.length > 0;
-  }
-
-  // Dashboard
-  async getDashboardStats(): Promise<any> {
-    try {
-      // Get total counts
-      const totalProducts = await db.select().from(products);
-      const totalUsers = await db.select().from(users);
-      const totalCategories = await db.select().from(categories);
-
-      // Get category distribution
-      const categoryStats: Record<string, number> = {};
-      totalProducts.forEach(product => {
-        const category = product.category || 'Autre';
-        categoryStats[category] = (categoryStats[category] || 0) + 1;
-      });
-
-      // Calculate revenue (calculation for paid products in TND)
-      const totalRevenue = totalProducts.reduce((sum, product) => {
-        const price = parseFloat(product.price?.replace(/[TND,\s]/g, '') || '0');
-        return sum + price;
-      }, 0);
-
-      // Pas de données de ventes fictives
-
-      return {
-        totalProducts: totalProducts.length,
-        totalUsers: totalUsers.length,
-        totalCategories: totalCategories.length,
-        monthlyGrowthProducts: 0,
-        monthlySales: 0,
-        monthlyGrowthSales: 0,
-        revenue: totalRevenue,
-        monthlyGrowthRevenue: 0,
-        activeUsers: totalUsers.length,
-        monthlyGrowthUsers: 0,
-        categoryDistribution: categoryStats,
-        salesTrends: [],
-        topCategories: Object.entries(categoryStats)
-          .sort(([,a], [,b]) => b - a)
-          .slice(0, 5)
-          .map(([name, count]) => ({ 
-            name, 
-            count, 
-            percentage: Math.round((count / totalProducts.length) * 100) 
-          })),
-        trafficData: []
-      };
-    } catch (error) {
-      console.error('Error getting dashboard stats:', error);
-      throw error;
-    }
   }
 }
 

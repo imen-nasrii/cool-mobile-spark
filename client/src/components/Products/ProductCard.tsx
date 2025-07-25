@@ -1,14 +1,9 @@
 import { Heart, MapPin, Clock, MessageCircle } from "lucide-react";
-import { formatPrice } from "@/utils/currency";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
-import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
 
 interface Product {
   id: string;
@@ -19,7 +14,6 @@ interface Product {
   image?: string;
   isFree?: boolean;
   isReserved?: boolean;
-  isPromoted?: boolean;
   likes: number;
   category: string;
 }
@@ -40,43 +34,11 @@ export const ProductCard = ({
   className 
 }: ProductCardProps) => {
   const { t } = useLanguage();
-  const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [currentLikes, setCurrentLikes] = useState(product.likes);
-
-  // Get like status for current user
-  const { data: likeStatus } = useQuery({
-    queryKey: ['like-status', product.id],
-    queryFn: () => apiClient.getLikeStatus(product.id),
-    enabled: !!user,
-  });
-
-  // Like/Unlike mutation
-  const likeMutation = useMutation({
-    mutationFn: () => apiClient.toggleLike(product.id),
-    onSuccess: (data) => {
-      setCurrentLikes(data.likes);
-      queryClient.invalidateQueries({ queryKey: ['like-status', product.id] });
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-    onError: (error) => {
-      console.error('Like error:', error);
-    }
-  });
-
-  const handleLike = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!user) {
-      // Could show login modal or redirect to auth
-      return;
-    }
-    likeMutation.mutate();
-  };
   
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer w-full flex flex-row bg-white/80 backdrop-blur-sm border-purple-100 hover:border-purple-200 hover:scale-[1.02]", 
+        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full flex flex-row", 
         className
       )}
       onClick={onClick}
@@ -97,9 +59,6 @@ export const ProductCard = ({
         
         {/* Status badges */}
         <div className="absolute top-1 left-1 flex gap-1">
-          {product.isPromoted && (
-            <Badge className="bg-orange-500 text-white text-xs animate-pulse">🔥 PUB</Badge>
-          )}
           {product.isFree && (
             <Badge className="bg-success text-success-foreground text-xs">Free</Badge>
           )}
@@ -116,11 +75,11 @@ export const ProductCard = ({
           </h3>
           
           <div className="flex items-center gap-2 mb-2">
-            <div className="bg-gradient-to-r from-purple-600 to-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+            <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
               {product.isFree ? t('free') : t('sold')}
             </div>
-            <span className="font-bold bg-gradient-to-r from-purple-600 to-green-500 bg-clip-text text-transparent text-sm">
-              {product.isFree ? 'Gratuit' : formatPrice(parseFloat(product.price.replace(/[^\d.-]/g, '') || '0'), product.isFree)}
+            <span className="font-bold text-gray-900 text-sm">
+              {product.price}
             </span>
           </div>
         </div>
@@ -139,20 +98,14 @@ export const ProductCard = ({
               variant="ghost"
               size="sm"
               className="w-6 h-6 rounded-full p-0"
-              onClick={handleLike}
-              disabled={likeMutation.isPending}
+              onClick={(e) => {
+                e.stopPropagation();
+                onLike?.();
+              }}
             >
-              <Heart 
-                size={12} 
-                className={cn(
-                  "transition-all",
-                  likeStatus?.isLiked 
-                    ? "text-red-500 fill-red-500" 
-                    : "text-gray-500 hover:text-red-500 hover:fill-red-500"
-                )}
-              />
+              <Heart size={12} className="text-tomati-red hover:fill-tomati-red transition-all" />
             </Button>
-            <span className="text-xs">{currentLikes}</span>
+            <span className="text-xs">{product.likes}</span>
           </div>
         </div>
       </CardContent>

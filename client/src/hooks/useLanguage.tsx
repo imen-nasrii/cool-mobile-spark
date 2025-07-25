@@ -12,22 +12,6 @@ const translations = {
   fr: {
     // Header
     tomati: "Tomati",
-    filters: "Filtres",
-    searchBtn: "Rechercher",
-    categories: "Catégories",
-    priceRange: "Gamme de prix",
-    location: "Localisation",
-    enterLocation: "Entrez la ville",
-    quickFilters: "Filtres rapides",
-    freeOnly: "Gratuit uniquement",
-    availableOnly: "Disponible seulement",
-    promotedOnly: "Promu seulement",
-    reset: "Réinitialiser",
-    applyFilters: "Appliquer les filtres",
-    searchProducts: "Rechercher des produits",
-    recentSearches: "Recherches récentes",
-    popularSearches: "Recherches populaires",
-    searchFor: "Rechercher pour",
     
     // Categories
     allCategories: "Toutes les catégories",
@@ -64,22 +48,6 @@ const translations = {
   ar: {
     // Header
     tomati: "طماطي",
-    filters: "المرشحات",
-    searchBtn: "البحث",
-    categories: "الفئات", 
-    priceRange: "نطاق السعر",
-    location: "الموقع",
-    enterLocation: "أدخل المدينة",
-    quickFilters: "مرشحات سريعة",
-    freeOnly: "مجاني فقط",
-    availableOnly: "متاح فقط",
-    promotedOnly: "مروج فقط",
-    reset: "إعادة تعيين",
-    applyFilters: "تطبيق المرشحات",
-    searchProducts: "البحث عن المنتجات",
-    recentSearches: "البحث الأخيرة",
-    popularSearches: "البحث الشائعة",
-    searchFor: "البحث عن",
     
     // Categories  
     allCategories: "جميع الفئات",

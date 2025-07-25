@@ -17,7 +17,7 @@ class ApiClient {
     localStorage.removeItem('authToken');
   }
 
-  async request(endpoint: string, options: RequestInit = {}) {
+  private async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE}${endpoint}`;
     const config: RequestInit = {
       headers: {
@@ -74,7 +74,7 @@ class ApiClient {
 
   // Products
   async getProducts(category?: string) {
-    const query = category && category !== '' ? `?category=${encodeURIComponent(category)}` : '';
+    const query = category ? `?category=${encodeURIComponent(category)}` : '';
     return this.request(`/products${query}`);
   }
 
@@ -100,16 +100,6 @@ class ApiClient {
     return this.request(`/products/${id}`, {
       method: 'DELETE',
     });
-  }
-
-  async toggleLike(productId: string) {
-    return this.request(`/products/${productId}/like`, {
-      method: 'POST',
-    });
-  }
-
-  async getLikeStatus(productId: string) {
-    return this.request(`/products/${productId}/like-status`);
   }
 
   // Categories
@@ -150,85 +140,6 @@ class ApiClient {
       method: 'PUT',
       body: JSON.stringify(profile),
     });
-  }
-
-  // Dashboard
-  async getDashboardStats() {
-    return this.request('/dashboard/stats');
-  }
-
-  // Reviews API
-  async createReview(reviewData: {
-    product_id: string;
-    rating: number;
-    title?: string;
-    comment: string;
-  }): Promise<any> {
-    const response = await fetch('/api/reviews', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.token && { Authorization: `Bearer ${this.token}` }),
-      },
-      body: JSON.stringify(reviewData),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to create review');
-    }
-
-    return response.json();
-  }
-
-  async getProductReviews(productId: string): Promise<any[]> {
-    const response = await fetch(`/api/products/${productId}/reviews`);
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to get reviews');
-    }
-
-    return response.json();
-  }
-
-  async getProductStats(productId: string): Promise<any> {
-    const response = await fetch(`/api/products/${productId}/stats`);
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to get product stats');
-    }
-
-    return response.json();
-  }
-
-  async getProductBadges(productId: string): Promise<any[]> {
-    const response = await fetch(`/api/products/${productId}/badges`);
-    
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to get product badges');
-    }
-
-    return response.json();
-  }
-
-  async markReviewHelpful(reviewId: string): Promise<any> {
-    const response = await fetch(`/api/reviews/${reviewId}/helpful`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(this.token && { Authorization: `Bearer ${this.token}` }),
-      },
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.error || 'Failed to mark review helpful');
-    }
-
-    return response.json();
   }
 }
 

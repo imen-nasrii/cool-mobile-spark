@@ -5,14 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ImageGallery } from "@/components/UI/ImageGallery";
-import { ReviewSystem } from '@/components/Reviews/ReviewSystem';
 import { ProductChat } from "@/components/Chat/ProductChat";
 import { ProductMap } from "@/components/Map/ProductMap";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
-
+import { useLanguage } from "@/hooks/useLanguage";
 
 // Default images for products
 import teslaImage from "@/assets/tesla-model3.jpg";
@@ -36,52 +35,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const [sellerProfile, setSellerProfile] = useState<any>(null);
   const { user } = useAuth();
   const { toast } = useToast();
-  
-  // Reviews data queries
-  const { data: reviews = [], refetch: refetchReviews } = useQuery({
-    queryKey: ['/api/products', productId, 'reviews'],
-    queryFn: () => apiClient.getProductReviews(productId!),
-    enabled: !!productId,
-  });
-
-  const { data: reviewStats, refetch: refetchStats } = useQuery({
-    queryKey: ['/api/products', productId, 'stats'],
-    queryFn: () => apiClient.getProductStats(productId!),
-    enabled: !!productId,
-  });
-
-  const { data: marketingBadges = [] } = useQuery({
-    queryKey: ['/api/products', productId, 'badges'],
-    queryFn: () => apiClient.getProductBadges(productId!),
-    enabled: !!productId,
-  });
-
-  // Review mutations
-  const createReviewMutation = useMutation({
-    mutationFn: (reviewData: any) => apiClient.createReview(reviewData),
-    onSuccess: () => {
-      toast({
-        title: "Avis publié !",
-        description: "Votre avis a été publié avec succès.",
-      });
-      refetchReviews();
-      refetchStats();
-    },
-    onError: (error: any) => {
-      toast({
-        title: "Erreur",
-        description: error.message || "Impossible de publier l'avis",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const markHelpfulMutation = useMutation({
-    mutationFn: (reviewId: string) => apiClient.markReviewHelpful(reviewId),
-    onSuccess: () => {
-      refetchReviews();
-    },
-  });
+  const { t } = useLanguage();
 
   const defaultImages = [teslaImage, motherboardImage, sofaImage, phoneImage, bikeImage, tractorImage];
 
@@ -499,48 +453,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 </Button>
               </div>
             )}
-
-            {/* Reviews Section */}
-            <Card className="glass-card">
-              <CardContent className="p-6">
-                <ReviewSystem
-                  productId={productId!}
-                  reviews={reviews}
-                  stats={reviewStats || {
-                    total_reviews: 0,
-                    average_rating: 0,
-                    rating_distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-                  }}
-                  badges={marketingBadges}
-                  onSubmitReview={(reviewData) => createReviewMutation.mutate(reviewData)}
-                  onHelpfulClick={(reviewId) => markHelpfulMutation.mutate(reviewId)}
-                  currentUser={user ? { id: user.id, username: user.display_name || user.email } : undefined}
-                />
-              </CardContent>
-            </Card>
           </div>
         </div>
-      </div>
-
-      {/* Mobile Reviews Section */}
-      <div className="md:hidden px-4 pb-4">
-        <Card>
-          <CardContent className="p-4">
-            <ReviewSystem
-              productId={productId!}
-              reviews={reviews}
-              stats={reviewStats || {
-                total_reviews: 0,
-                average_rating: 0,
-                rating_distribution: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
-              }}
-              badges={marketingBadges}
-              onSubmitReview={(reviewData) => createReviewMutation.mutate(reviewData)}
-              onHelpfulClick={(reviewId) => markHelpfulMutation.mutate(reviewId)}
-              currentUser={user ? { id: user.id, username: user.display_name || user.email } : undefined}
-            />
-          </CardContent>
-        </Card>
       </div>
 
       {/* Mobile Fixed Bottom Bar */}

@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/queryClient";
+import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
@@ -81,10 +81,8 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   });
 
   useEffect(() => {
-    if (productsData && productsData !== products) {
-      setProducts(productsData);
-      setFilteredProducts(productsData);
-    }
+    setProducts(productsData);
+    setFilteredProducts(productsData);
     setLoading(queryLoading);
   }, [productsData, queryLoading]);
 
@@ -93,17 +91,6 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     setSearchLoading(true);
     
     try {
-      if (query.trim()) {
-        // Use server-side search for better performance
-        const response = await fetch(`/api/products?search=${encodeURIComponent(query)}`);
-        const results = await response.json();
-        setFilteredProducts(results);
-      } else {
-        setFilteredProducts(products);
-      }
-    } catch (error) {
-      console.error('Search error:', error);
-      // Fallback to client-side filtering
       if (query.trim()) {
         const filtered = products.filter(product =>
           product.title.toLowerCase().includes(query.toLowerCase()) ||
