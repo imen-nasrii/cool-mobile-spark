@@ -23,9 +23,13 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
   }, [user]);
 
   const checkAdminRole = async () => {
-    if (!user) return;
+    if (!user) {
+      setIsAdmin(false);
+      return;
+    }
     
     // Check if user has admin role
+    console.log('User role:', user.role); // Debug log
     setIsAdmin(user.role === 'admin');
   };
 

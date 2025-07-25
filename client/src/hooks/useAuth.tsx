@@ -41,8 +41,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (profile) {
             setUser({
               id: profile.user_id,
-              email: '', // We'll need to update this from user data if needed
-              display_name: profile.display_name
+              email: profile.email || '', 
+              display_name: profile.display_name,
+              role: profile.role || 'user'
             });
           }
           setLoading(false);
