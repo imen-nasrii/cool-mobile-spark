@@ -13,7 +13,7 @@ import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
-import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'wouter';
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -84,7 +84,7 @@ export default function MapView() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { createConversation } = useMessaging();
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   // Get user's current location
   useEffect(() => {
@@ -199,7 +199,7 @@ export default function MapView() {
       
       // Navigate to messages after a short delay
       setTimeout(() => {
-        navigate('/messages');
+        setLocation('/messages');
       }, 1000);
       
     } catch (error) {
