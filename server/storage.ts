@@ -232,9 +232,9 @@ export class DatabaseStorage implements IStorage {
         categoryStats[category] = (categoryStats[category] || 0) + 1;
       });
 
-      // Calculate revenue (mock calculation for paid products)
+      // Calculate revenue (calculation for paid products in TND)
       const totalRevenue = totalProducts.reduce((sum, product) => {
-        const price = parseFloat(product.price?.replace(/[€$,]/g, '') || '0');
+        const price = parseFloat(product.price?.replace(/[TND,\s]/g, '') || '0');
         return sum + price;
       }, 0);
 

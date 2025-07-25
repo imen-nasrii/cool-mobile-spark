@@ -123,7 +123,7 @@ export default function DashboardWithCharts() {
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">12,543€</div>
+                <div className="text-2xl font-bold">12,543 TND</div>
                 <p className="text-xs text-muted-foreground">
                   +8.2% depuis le mois dernier
                 </p>
@@ -178,7 +178,7 @@ export default function DashboardWithCharts() {
                       stroke="#82ca9d"
                       strokeWidth={3}
                       dot={{ fill: '#82ca9d', strokeWidth: 2, r: 6 }}
-                      name="Revenus (€)"
+                      name="Revenus (TND)"
                     />
                     <Line
                       yAxisId="left"
@@ -310,7 +310,7 @@ export default function DashboardWithCharts() {
                   <div className="text-sm text-muted-foreground">Trafic mobile</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-orange-600">€45.2</div>
+                  <div className="text-2xl font-bold text-orange-600">45.2 TND</div>
                   <div className="text-sm text-muted-foreground">Panier moyen</div>
                 </div>
               </div>

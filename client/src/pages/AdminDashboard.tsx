@@ -376,7 +376,7 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-purple-600">
-              {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()}€` : '0€'}
+              {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()} TND` : '0 TND'}
             </div>
             <p className="text-xs text-green-600 flex items-center">
               <TrendingUp className="h-3 w-3 mr-1" />

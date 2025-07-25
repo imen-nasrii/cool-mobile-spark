@@ -126,7 +126,7 @@ export default function SimpleDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-3xl font-bold text-gray-900">
-                  {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()}€` : '0€'}
+                  {dashboardStats?.revenue ? `${Math.round(dashboardStats.revenue).toLocaleString()} TND` : '0 TND'}
                 </div>
                 <div className="flex items-center space-x-1 text-sm">
                   <Activity className="h-3 w-3 text-green-500" />
@@ -227,7 +227,7 @@ export default function SimpleDashboard() {
                 </div>
                 <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg">
                   <div className="text-3xl font-bold text-orange-600">
-                    €{dashboardStats?.performance?.averageCart || 0}
+                    {dashboardStats?.performance?.averageCart || 0} TND
                   </div>
                   <div className="text-sm text-orange-700 font-medium">Panier Moyen</div>
                   <div className="w-full bg-orange-200 rounded-full h-2 mt-2">
