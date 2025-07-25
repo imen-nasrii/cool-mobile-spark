@@ -76,7 +76,7 @@ export const ProductCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full flex flex-row", 
+        "overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer w-full flex flex-row bg-white/80 backdrop-blur-sm border-purple-100 hover:border-purple-200 hover:scale-[1.02]", 
         className
       )}
       onClick={onClick}
@@ -116,10 +116,10 @@ export const ProductCard = ({
           </h3>
           
           <div className="flex items-center gap-2 mb-2">
-            <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
+            <div className="bg-gradient-to-r from-purple-600 to-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
               {product.isFree ? t('free') : t('sold')}
             </div>
-            <span className="font-bold text-gray-900 text-sm">
+            <span className="font-bold bg-gradient-to-r from-purple-600 to-green-500 bg-clip-text text-transparent text-sm">
               {product.isFree ? 'Gratuit' : formatPrice(parseFloat(product.price.replace(/[^\d.-]/g, '') || '0'), product.isFree)}
             </span>
           </div>

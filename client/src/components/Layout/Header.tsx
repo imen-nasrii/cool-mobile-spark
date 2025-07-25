@@ -34,10 +34,10 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+    <header className="bg-gradient-to-r from-purple-600 to-green-500 border-b border-purple-200 sticky top-0 z-40 shadow-lg">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
-          <div className="tomati-brand">{t('tomati')}</div>
+          <div className="text-white font-bold text-xl tracking-wide">{t('tomati')}</div>
         </div>
         
         <div className="flex items-center gap-3">
@@ -45,7 +45,7 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
             variant="outline"
             size="sm"
             onClick={() => setLanguage(language === 'fr' ? 'ar' : 'fr')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 bg-white/20 border-white/30 text-white hover:bg-white/30"
           >
             <Languages size={16} />
             {language === 'fr' ? 'العربية' : 'Français'}
@@ -56,6 +56,7 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
             size="icon"
             onClick={onFilterClick}
             title={t('filters')}
+            className="text-white hover:bg-white/20"
           >
             <SlidersHorizontal size={20} />
           </Button>
@@ -65,6 +66,7 @@ export const Header = ({ activeTab, onTabChange, onSearchClick, onFilterClick }:
             size="icon"
             onClick={onSearchClick}
             title={t('searchBtn')}
+            className="text-white hover:bg-white/20"
           >
             <Search size={20} />
           </Button>
