@@ -10,7 +10,7 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - **Authentication**: Custom JWT-based system with bcrypt password hashing
 - **File Structure**: Clean separation between client and server code
 
-## Recent Changes (January 20, 2025)
+## Recent Changes (January 25, 2025)
 - ✅ **Successfully migrated from Supabase to PostgreSQL**: Complete database migration with all tables and relationships
 - ✅ **Replaced Supabase authentication with custom JWT system**: Secure user authentication and authorization
 - ✅ **Created comprehensive API layer**: RESTful endpoints replacing Supabase client calls
@@ -27,6 +27,9 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Interactive map with geolocation**: Leaflet-based map showing user position and nearby products
 - ✅ **AI chat assistant**: Smart chatbot for user assistance and platform questions
 - ✅ **Map-based product filtering**: Filter by category, price range, and distance with visual markers
+- ✅ **Real-time messaging system**: Complete WebSocket-based chat with PostgreSQL storage
+- ✅ **Map-to-messaging integration**: Direct "Contacter" button from product popups to start conversations
+- ✅ **Comprehensive messaging API**: Full REST endpoints for conversations, messages, and real-time sync
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
@@ -44,6 +47,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - Database properly configured and connected
 - Admin dashboard with full product management
 - AI chatbot for customer support
+- **Real-time messaging system fully operational**
+- **Interactive map with direct messaging integration**
 - Clean codebase with no critical errors
 
 ## Admin Access
@@ -56,8 +61,10 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - `profiles`: User profile information
 - `products`: Product listings with details
 - `categories`: Product categorization
-- `messages`: User communication system
-- All tables properly linked with foreign key relationships
+- `conversations`: Chat conversations between users
+- `messages`: Real-time messaging system with conversation threading
+- `message_reads`: Read status tracking for messages
+- All tables properly linked with foreign key relationships and indexes
 
 ## User Preferences
 - Focus on clean, maintainable code architecture
