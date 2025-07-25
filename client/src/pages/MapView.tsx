@@ -170,12 +170,7 @@ export default function MapView() {
 
 
 
-  const handleToggleFavorite = (productId: string) => {
-    toast({
-      title: "Favori ajouté",
-      description: "Produit ajouté à vos favoris.",
-    });
-  };
+
 
   if (!userLocation) {
     return (
@@ -371,15 +366,7 @@ export default function MapView() {
                             {product.likes}
                           </div>
                         </div>
-                        <div className="flex justify-end">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleToggleFavorite(product.id)}
-                          >
-                            <Heart size={12} />
-                          </Button>
-                        </div>
+
                         {product.is_reserved && (
                           <Badge variant="destructive" className="w-full mt-2 text-xs">
                             Réservé
