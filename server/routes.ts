@@ -186,37 +186,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Messages routes
-  app.get("/api/messages", authenticateToken, async (req, res) => {
-    try {
-      const messages = await storage.getUserMessages((req as any).user.id);
-      res.json(messages);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.get("/api/products/:productId/messages", authenticateToken, async (req, res) => {
-    try {
-      const messages = await storage.getProductMessages(req.params.productId, (req as any).user.id);
-      res.json(messages);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.post("/api/messages", authenticateToken, async (req, res) => {
-    try {
-      const messageData = insertMessageSchema.parse({
-        ...req.body,
-        sender_id: (req as any).user.id
-      });
-      const message = await storage.createMessage(messageData);
-      res.json(message);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
+  // Legacy messages routes - deprecated, use conversations instead
 
   // Profile routes
   app.get("/api/profile", authenticateToken, async (req, res) => {

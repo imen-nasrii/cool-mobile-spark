@@ -124,6 +124,7 @@ class ApiClient {
   }
 
   async createMessage(message: any) {
+    // Deprecated - use conversations API instead
     return this.request('/messages', {
       method: 'POST',
       body: JSON.stringify(message),

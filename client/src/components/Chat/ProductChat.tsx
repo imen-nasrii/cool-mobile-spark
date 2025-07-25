@@ -61,11 +61,50 @@ export const ProductChat = ({ productId, sellerId, onClose }: ProductChatProps) 
 
     setLoading(true);
     try {
-      await apiClient.createMessage({
-        product_id: productId,
-        recipient_id: sellerId,
-        content: newMessage.trim()
+      // First create/get conversation
+      const conversationResponse = await fetch('/api/conversations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          product_id: productId,
+          seller_id: sellerId
+        })
       });
+
+      if (!conversationResponse.ok) {
+        throw new Error('Failed to create conversation');
+      }
+
+      const conversation = await conversationResponse.json();
+
+      // Send message to conversation
+      const messageResponse = await fetch(`/api/conversations/${conversation.id}/messages`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          content: newMessage.trim()
+        })
+      });
+
+      if (!messageResponse.ok) {
+        throw new Error('Failed to send message');
+      }
+
+      const message = await messageResponse.json();
+      setMessages(prev => [...prev, {
+        id: message.id,
+        content: message.content,
+        sender_id: message.sender_id,
+        recipient_id: sellerId,
+        created_at: message.created_at,
+        profiles: { display_name: user.email }
+      }]);
 
       setNewMessage("");
     } catch (error: any) {
