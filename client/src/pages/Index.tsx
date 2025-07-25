@@ -36,6 +36,15 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
+  // Check URL for tab parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    if (tabParam) {
+      setActiveTab(tabParam);
+    }
+  }, []);
+
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
     if ((tab === "add" || tab === "messages") && !user) {
@@ -48,6 +57,15 @@ const Index = () => {
       return;
     }
     setActiveTab(tab);
+    
+    // Update URL to reflect current tab
+    const url = new URL(window.location.href);
+    if (tab !== "home") {
+      url.searchParams.set('tab', tab);
+    } else {
+      url.searchParams.delete('tab');
+    }
+    window.history.replaceState({}, '', url.toString());
   };
 
   const handleProductClick = (productId: string) => {
@@ -145,9 +163,7 @@ const Index = () => {
           )}
 
           {/* Floating Action Button */}
-          <FloatingActionButton 
-            onClick={() => setShowCategoryModal(true)}
-          />
+          <FloatingActionButton />
         </>
       )}
     </div>

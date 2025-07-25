@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { MessageCircle, Phone, Video, MoreHorizontal, Send, Plus, Edit2, Trash2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { MessageCircle, Phone, Video, MoreHorizontal, Send, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import { apiClient } from "@/lib/apiClient";
 
 interface Message {
   id: string;
@@ -43,8 +45,20 @@ const initialMessages: Message[] = [
   }
 ];
 
+interface ChatMessage {
+  id: string;
+  senderId: string;
+  content: string;
+  timestamp: Date;
+  isOwn: boolean;
+}
+
 export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [newChatMessage, setNewChatMessage] = useState("");
+  const [productId, setProductId] = useState<string | null>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [editingMessage, setEditingMessage] = useState<Message | null>(null);
@@ -55,6 +69,197 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
     online: false
   });
   const { toast } = useToast();
+
+  // Check URL for product parameter
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productParam = urlParams.get('product');
+    if (productParam) {
+      setProductId(productParam);
+      // Start a new conversation for this product
+      startProductConversation(productParam);
+    }
+  }, []);
+
+  // Fetch product details if needed
+  const { data: product } = useQuery({
+    queryKey: ['/api/products', productId],
+    queryFn: () => productId ? apiClient.getProduct(productId) : null,
+    enabled: !!productId,
+  });
+
+  const startProductConversation = (prodId: string) => {
+    // Create a new conversation about this product
+    const conversation: Message = {
+      id: `product_${prodId}`,
+      name: "Vendeur du produit",
+      username: "@vendeur",
+      lastMessage: "Conversation à propos du produit",
+      timeAgo: "maintenant",
+      unread: 0,
+      avatar: "V",
+      online: true
+    };
+    
+    setMessages(prev => [conversation, ...prev]);
+    setSelectedConversation(conversation.id);
+    
+    // Add initial message
+    const initialMessage: ChatMessage = {
+      id: "1",
+      senderId: "vendor",
+      content: `Bonjour ! Je suis intéressé(e) par votre produit. Pouvez-vous me donner plus d'informations ?`,
+      timestamp: new Date(),
+      isOwn: true
+    };
+    setChatMessages([initialMessage]);
+  };
+
+  const handleSendMessage = () => {
+    if (!newChatMessage.trim() || !selectedConversation) return;
+
+    const message: ChatMessage = {
+      id: Date.now().toString(),
+      senderId: "me",
+      content: newChatMessage,
+      timestamp: new Date(),
+      isOwn: true
+    };
+
+    setChatMessages(prev => [...prev, message]);
+    setNewChatMessage("");
+
+    // Simulate vendor response after a delay
+    setTimeout(() => {
+      const response: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        senderId: "vendor",
+        content: "Merci pour votre message ! Je vais vous répondre dans les plus brefs délais.",
+        timestamp: new Date(),
+        isOwn: false
+      };
+      setChatMessages(prev => [...prev, response]);
+    }, 1000);
+  };
+
+  const handleConversationSelect = (conversationId: string) => {
+    setSelectedConversation(conversationId);
+    // Load messages for this conversation (mock data for now)
+    setChatMessages([
+      {
+        id: "1",
+        senderId: "vendor",
+        content: "Bonjour ! Comment puis-je vous aider ?",
+        timestamp: new Date(Date.now() - 3600000),
+        isOwn: false
+      }
+    ]);
+  };
+
+  if (selectedConversation) {
+    const conversation = messages.find(m => m.id === selectedConversation);
+    
+    return (
+      <div className="flex flex-col h-screen bg-white">
+        {/* Chat Header */}
+        <div className="flex items-center justify-between p-4 border-b bg-white sticky top-0 z-10">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setSelectedConversation(null)}
+              className="p-2"
+            >
+              <ArrowLeft size={18} />
+            </Button>
+            <Avatar className="w-10 h-10">
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {conversation?.avatar}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="font-semibold">{conversation?.name}</h3>
+              <p className="text-sm text-muted-foreground">
+                {conversation?.online ? "En ligne" : "Hors ligne"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="ghost" size="sm">
+              <Phone size={18} />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <Video size={18} />
+            </Button>
+            <Button variant="ghost" size="sm">
+              <MoreHorizontal size={18} />
+            </Button>
+          </div>
+        </div>
+
+        {/* Product Info Banner (if from product) */}
+        {product && productId && (
+          <div className="p-4 bg-gray-50 border-b">
+            <div className="flex items-center gap-3">
+              {product.image_url && (
+                <img 
+                  src={product.image_url} 
+                  alt={product.title}
+                  className="w-12 h-12 object-cover rounded"
+                />
+              )}
+              <div>
+                <h4 className="font-medium">{product.title}</h4>
+                <p className="text-sm text-muted-foreground">
+                  {product.is_free ? "Gratuit" : product.price} • {product.category}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {chatMessages.map((message) => (
+            <div
+              key={message.id}
+              className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
+            >
+              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                message.isOwn 
+                  ? 'bg-primary text-primary-foreground' 
+                  : 'bg-gray-100 text-gray-900'
+              }`}>
+                <p className="text-sm">{message.content}</p>
+                <p className="text-xs opacity-70 mt-1">
+                  {message.timestamp.toLocaleTimeString('fr-FR', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                  })}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Message Input */}
+        <div className="p-4 border-t bg-white">
+          <div className="flex items-center gap-2">
+            <Input
+              placeholder="Tapez votre message..."
+              value={newChatMessage}
+              onChange={(e) => setNewChatMessage(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              className="flex-1"
+            />
+            <Button onClick={handleSendMessage} disabled={!newChatMessage.trim()}>
+              <Send size={18} />
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Create new message
   const handleCreate = () => {
@@ -130,13 +335,14 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
   return (
     <div className="min-h-screen bg-background p-4 pb-20">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Add Message Button */}
-        <div>
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold">Messages</h1>
           <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
             <DialogTrigger asChild>
               <Button className="bg-primary hover:bg-primary/90 text-white">
                 <Plus size={16} className="mr-2" />
-                Add New Message
+                Nouvelle conversation
               </Button>
             </DialogTrigger>
             <DialogContent>
@@ -179,7 +385,11 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
         {/* Messages List */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {messages.map((conversation) => (
-            <Card key={conversation.id} className="hover:shadow-sm transition-shadow">
+            <Card 
+              key={conversation.id} 
+              className="hover:shadow-sm transition-shadow cursor-pointer"
+              onClick={() => handleConversationSelect(conversation.id)}
+            >
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
                   <div className="relative">
@@ -214,7 +424,10 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
                       variant="ghost" 
                       size="sm" 
                       className="w-8 h-8 p-0 hover:bg-primary/10"
-                      onClick={() => handleEdit(conversation)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleEdit(conversation);
+                      }}
                     >
                       <Edit2 size={14} className="text-primary" />
                     </Button>
@@ -222,11 +435,19 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
                       variant="ghost" 
                       size="sm" 
                       className="w-8 h-8 p-0 hover:bg-red-100"
-                      onClick={() => handleDelete(conversation.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(conversation.id);
+                      }}
                     >
                       <Trash2 size={14} className="text-red-500" />
                     </Button>
-                    <Button variant="ghost" size="sm" className="w-8 h-8 p-0 hover:bg-green-100">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="w-8 h-8 p-0 hover:bg-green-100"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <Phone size={14} className="text-green-600" />
                     </Button>
                   </div>

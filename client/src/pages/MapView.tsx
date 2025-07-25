@@ -167,10 +167,8 @@ export default function MapView() {
   });
 
   const handleContactSeller = (productId: string) => {
-    toast({
-      title: "Contacter le vendeur",
-      description: "Fonctionnalité de messagerie en cours de développement.",
-    });
+    // Navigate to messages with the product context
+    window.location.href = `/?tab=messages&product=${productId}`;
   };
 
   const handleToggleFavorite = (productId: string) => {
