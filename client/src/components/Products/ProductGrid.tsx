@@ -59,7 +59,7 @@ interface ProductGridProps {
 }
 
 export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
-  const { t } = useLanguage();
+  // const { t } = useLanguage();
 
   // Use react-query to fetch products
   const { data: products = [], isLoading: loading } = useQuery({
@@ -69,7 +69,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
   });
 
   // Transform products for ProductCard component
-  const transformedProducts = products.map(product => ({
+  const transformedProducts = products.map((product: Product) => ({
     id: product.id,
     title: product.title,
     price: product.price,
@@ -100,15 +100,15 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
     <div className="px-4 py-3">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold text-foreground">
-          {category ? `${t('recentListings')} ${category}` : t('recentListings')}
+          {category ? `Produits ${category}` : "Produits récents"}
         </h2>
         <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-          {t('viewAll')}
+          Voir tout
         </Button>
       </div>
       
       <div className="flex flex-col gap-3">
-        {transformedProducts.map((product) => (
+        {transformedProducts.map((product: any) => (
           <ProductCard
             key={product.id}
             product={product}
@@ -121,7 +121,7 @@ export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
       
       {transformedProducts.length === 0 && (
         <div className="text-center py-8 text-muted-foreground">
-          <p>{t('noProducts')}</p>
+          <p>Aucun produit disponible</p>
         </div>
       )}
     </div>

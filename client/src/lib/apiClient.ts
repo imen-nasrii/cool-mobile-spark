@@ -149,10 +149,32 @@ export const apiClient = new ApiClient();
 export const queryFetcher = async ({ queryKey }: { queryKey: any[] }) => {
   const [url, ...params] = queryKey;
   const endpoint = params.length > 0 ? `${url}/${params.join('/')}` : url;
-  return apiClient.request(endpoint.replace('/api', ''));
+  const cleanEndpoint = endpoint.replace('/api', '');
+  
+  if (cleanEndpoint.includes('/products')) {
+    return apiClient.getProducts();
+  }
+  
+  return fetch(`/api${cleanEndpoint}`).then(res => res.json());
 };
 
 // API request helper for mutations
 export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  return apiClient.request(endpoint.replace('/api', ''), options);
+  const cleanEndpoint = endpoint.replace('/api', '');
+  const response = await fetch(`/api${cleanEndpoint}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(localStorage.getItem('authToken') && {
+        Authorization: `Bearer ${localStorage.getItem('authToken')}`
+      }),
+    },
+    ...options,
+  });
+  
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Network error' }));
+    throw new Error(error.error || 'Request failed');
+  }
+  
+  return response.json();
 };

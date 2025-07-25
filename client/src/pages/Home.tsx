@@ -15,10 +15,11 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const { t } = useLanguage();
 
   const categories = [
-    { id: "voiture", name: t('cars'), icon: Car },
-    { id: "immobilier", name: t('realEstate'), icon: Building },
-    { id: "emplois", name: t('jobs'), icon: Briefcase },
-    { id: "autres", name: t('others'), icon: Grid3X3 }
+    { id: "Électronique", name: "Électronique", icon: Grid3X3 },
+    { id: "Sport", name: "Sport", icon: Grid3X3 },
+    { id: "Voiture", name: "Voiture", icon: Car },
+    { id: "Bureautique", name: "Bureautique", icon: Briefcase },
+    { id: "Jeux vidéo", name: "Jeux vidéo", icon: Grid3X3 }
   ];
 
   const handleCategorySelect = (categoryId: string) => {
@@ -35,7 +36,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
             onClick={() => handleCategorySelect("")}
             className="whitespace-nowrap rounded-full px-6 py-2 text-sm font-medium"
           >
-            {t('allCategories')}
+            Toutes les catégories
           </Button>
           {categories.map((category) => {
             const Icon = category.icon;

@@ -5,7 +5,7 @@ import { Messages } from "./Messages";
 import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
-
+import Profile from "./Profile";
 import { Favorites } from "./Favorites";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
