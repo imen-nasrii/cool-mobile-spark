@@ -317,29 +317,34 @@ export default function AdminDashboard() {
               Retour
             </Button>
           </div>
-          <h1 className="text-3xl font-bold">Administration des Produits</h1>
-          <p className="text-muted-foreground">Gérez tous les produits de votre plateforme</p>
+          <h1 className="text-3xl font-bold">
+            {currentView === "dashboard" ? "Dashboard Administrateur" : "Administration des Produits"}
+          </h1>
+          <p className="text-muted-foreground">
+            {currentView === "dashboard" ? "Statistiques et analyses de la plateforme" : "Gérez tous les produits de votre plateforme"}
+          </p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="w-4 h-4 mr-2" />
-              Nouveau Produit
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Créer un nouveau produit</DialogTitle>
-              <DialogDescription>
-                Ajoutez un nouveau produit à votre catalogue
-              </DialogDescription>
-            </DialogHeader>
-            <ProductForm />
-          </DialogContent>
-        </Dialog>
+        <div className="flex items-center gap-3">
+          <Button
+            variant={currentView === "dashboard" ? "default" : "outline"}
+            onClick={() => setCurrentView("dashboard")}
+          >
+            <BarChart3 className="w-4 h-4 mr-2" />
+            Dashboard
+          </Button>
+          <Button
+            variant={currentView === "products" ? "default" : "outline"}
+            onClick={() => setCurrentView("products")}
+          >
+            <Package className="w-4 h-4 mr-2" />
+            Gérer les produits
+          </Button>
+        </div>
       </div>
 
-      {/* Stats Cards avec vraies données */}
+      {currentView === "dashboard" && (
+        <>
+          {/* Stats Cards avec vraies données */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -510,6 +515,145 @@ export default function AdminDashboard() {
           )}
         </CardContent>
       </Card>
+
+        </>
+      )}
+
+      {currentView === "products" && (
+        <>
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-xl font-semibold">Gestion des Produits</h2>
+              <p className="text-muted-foreground">Créez, modifiez et supprimez des produits</p>
+            </div>
+            <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Nouveau Produit
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Créer un nouveau produit</DialogTitle>
+                  <DialogDescription>
+                    Ajoutez un nouveau produit à votre catalogue
+                  </DialogDescription>
+                </DialogHeader>
+                <ProductForm />
+              </DialogContent>
+            </Dialog>
+          </div>
+
+          {/* Filters */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Filtres</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Input
+                    placeholder="Rechercher un produit..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-48">
+                    <SelectValue placeholder="Toutes les catégories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Toutes les catégories</SelectItem>
+                    {categories.map((category: any) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Products Table */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Liste des Produits ({filteredProducts.length})</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Produit</TableHead>
+                    <TableHead>Catégorie</TableHead>
+                    <TableHead>Prix</TableHead>
+                    <TableHead>Localisation</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredProducts.map((product: Product) => (
+                    <TableRow key={product.id}>
+                      <TableCell className="font-medium">
+                        <div>
+                          <div className="font-semibold">{product.title}</div>
+                          <div className="text-sm text-muted-foreground line-clamp-1">
+                            {product.description}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{product.category}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {product.is_free ? (
+                          <Badge variant="outline" className="text-green-600">Gratuit</Badge>
+                        ) : (
+                          <span className="font-semibold">{product.price}</span>
+                        )}
+                      </TableCell>
+                      <TableCell>{product.location}</TableCell>
+                      <TableCell>
+                        {new Date(product.created_at).toLocaleDateString('fr-FR')}
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleEdit(product)}>
+                              <Pencil className="w-4 h-4 mr-2" />
+                              Modifier
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={() => handleDelete(product.id)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Supprimer
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+              {filteredProducts.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  Aucun produit trouvé
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </>
+      )}
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
