@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Car, Building, Briefcase, Grid3X3 } from "lucide-react";
+import { Car, Building, Briefcase, Grid3X3, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ProductGrid } from "@/components/Products/ProductGrid";
 import { useLanguage } from "@/hooks/useLanguage";
 
@@ -12,6 +13,8 @@ interface HomeProps {
 
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("date");
+  const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
 
   const categories = [
@@ -54,11 +57,45 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
             );
           })}
         </div>
+
+        {/* Quick Sort Options */}
+        <div className="flex items-center justify-between mt-4 px-2">
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 text-gray-600"
+            >
+              <SlidersHorizontal size={16} />
+              Tri rapide
+            </Button>
+          </div>
+          
+          {showFilters && (
+            <div className="flex items-center gap-2">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-40 h-8">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date">Plus récent</SelectItem>
+                  <SelectItem value="price-asc">Prix croissant</SelectItem>
+                  <SelectItem value="price-desc">Prix décroissant</SelectItem>
+                  <SelectItem value="title">Titre A-Z</SelectItem>
+                  <SelectItem value="likes">Plus populaire</SelectItem>
+                  <SelectItem value="location">Localisation</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Products */}
       <ProductGrid 
         category={selectedCategory}
+        sortBy={sortBy}
         onProductClick={onProductClick}
       />
     </div>

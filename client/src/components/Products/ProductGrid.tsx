@@ -55,17 +55,37 @@ const formatTimeAgo = (dateString: string) => {
 
 interface ProductGridProps {
   category?: string;
+  sortBy?: string;
   onProductClick?: (productId: string) => void;
 }
 
-export const ProductGrid = ({ category, onProductClick }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", onProductClick }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
-  const { data: products = [], isLoading: loading } = useQuery({
+  const { data: fetchedProducts = [], isLoading: loading } = useQuery({
     queryKey: ['/products', category],
     queryFn: () => apiClient.getProducts(category),
     staleTime: 5 * 60 * 1000,
+  });
+
+  // Apply sorting to products
+  const products = [...fetchedProducts].sort((a: Product, b: Product) => {
+    switch (sortBy) {
+      case "price-asc":
+        return parseFloat(a.price.replace(/[€,]/g, '')) - parseFloat(b.price.replace(/[€,]/g, ''));
+      case "price-desc":
+        return parseFloat(b.price.replace(/[€,]/g, '')) - parseFloat(a.price.replace(/[€,]/g, ''));
+      case "title":
+        return a.title.localeCompare(b.title);
+      case "location":
+        return a.location.localeCompare(b.location);
+      case "likes":
+        return b.likes - a.likes;
+      case "date":
+      default:
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    }
   });
 
   // Transform products for ProductCard component

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
+import { AdvancedFilters } from "@/components/Filters/AdvancedFilters";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -61,6 +62,19 @@ const popularSearches = [
   "iPhone", "Tesla", "Canapé", "PC Gaming", "VTT", "Tracteur"
 ];
 
+interface FilterOptions {
+  category: string;
+  minPrice: number;
+  maxPrice: number;
+  location: string;
+  condition: string;
+  sortBy: string;
+  sortOrder: 'asc' | 'desc';
+  freeOnly: boolean;
+  availableOnly: boolean;
+  dateRange: string;
+}
+
 export const Search = ({ activeTab, onTabChange, onProductClick }: { 
   activeTab?: string; 
   onTabChange?: (tab: string) => void;
@@ -71,6 +85,19 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [activeFilters, setActiveFilters] = useState<FilterOptions>({
+    category: "",
+    minPrice: 0,
+    maxPrice: 10000,
+    location: "",
+    condition: "",
+    sortBy: "date",
+    sortOrder: "desc",
+    freeOnly: false,
+    availableOnly: true,
+    dateRange: "all"
+  });
   // const { t } = useLanguage();
 
   // Use react-query to fetch products with search
@@ -84,7 +111,11 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
 
   useEffect(() => {
     setProducts(productsData);
-    setFilteredProducts(productsData);
+    if (productsData.length > 0) {
+      applyFiltersAndSort(productsData);
+    } else {
+      setFilteredProducts([]);
+    }
     setLoading(queryLoading);
   }, [productsData, queryLoading]);
 
@@ -99,13 +130,127 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
           product.category.toLowerCase().includes(query.toLowerCase()) ||
           product.location.toLowerCase().includes(query.toLowerCase())
         );
-        setFilteredProducts(filtered);
+        applyFiltersAndSort(filtered);
       } else {
-        setFilteredProducts(products);
+        applyFiltersAndSort(products);
       }
     } finally {
       setSearchLoading(false);
     }
+  };
+
+  const applyFiltersAndSort = (productsList: Product[]) => {
+    let filtered = [...productsList];
+
+    // Apply filters
+    if (activeFilters.category) {
+      filtered = filtered.filter(p => p.category === activeFilters.category);
+    }
+    
+    if (activeFilters.location) {
+      filtered = filtered.filter(p => p.location === activeFilters.location);
+    }
+    
+    if (activeFilters.freeOnly) {
+      filtered = filtered.filter(p => p.is_free);
+    }
+    
+    if (activeFilters.availableOnly) {
+      filtered = filtered.filter(p => !p.is_reserved);
+    }
+
+    // Price filtering
+    filtered = filtered.filter(p => {
+      const price = parseFloat(p.price.replace(/[€,]/g, ''));
+      return price >= activeFilters.minPrice && price <= activeFilters.maxPrice;
+    });
+
+    // Date filtering
+    if (activeFilters.dateRange !== "all") {
+      const now = new Date();
+      const cutoffDate = new Date();
+      
+      switch (activeFilters.dateRange) {
+        case "today":
+          cutoffDate.setHours(0, 0, 0, 0);
+          break;
+        case "week":
+          cutoffDate.setDate(now.getDate() - 7);
+          break;
+        case "month":
+          cutoffDate.setMonth(now.getMonth() - 1);
+          break;
+        case "3months":
+          cutoffDate.setMonth(now.getMonth() - 3);
+          break;
+      }
+      
+      filtered = filtered.filter(p => new Date(p.created_at) >= cutoffDate);
+    }
+
+    // Apply sorting
+    filtered.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (activeFilters.sortBy) {
+        case "price":
+          const priceA = parseFloat(a.price.replace(/[€,]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[€,]/g, ''));
+          comparison = priceA - priceB;
+          break;
+        case "title":
+          comparison = a.title.localeCompare(b.title);
+          break;
+        case "likes":
+          comparison = a.likes - b.likes;
+          break;
+        case "location":
+          comparison = a.location.localeCompare(b.location);
+          break;
+        case "date":
+        default:
+          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          break;
+      }
+      
+      return activeFilters.sortOrder === 'asc' ? comparison : -comparison;
+    });
+
+    setFilteredProducts(filtered);
+  };
+
+  const handleFiltersChange = (filters: FilterOptions) => {
+    setActiveFilters(filters);
+    applyFiltersAndSort(searchQuery ? 
+      products.filter(product =>
+        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.location.toLowerCase().includes(searchQuery.toLowerCase())
+      ) : products
+    );
+  };
+
+  const handleClearFilters = () => {
+    const defaultFilters = {
+      category: "",
+      minPrice: 0,
+      maxPrice: 10000,
+      location: "",
+      condition: "",
+      sortBy: "date",
+      sortOrder: "desc" as const,
+      freeOnly: false,
+      availableOnly: true,
+      dateRange: "all"
+    };
+    setActiveFilters(defaultFilters);
+    applyFiltersAndSort(searchQuery ? 
+      products.filter(product =>
+        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.location.toLowerCase().includes(searchQuery.toLowerCase())
+      ) : products
+    );
   };
 
   // Transform products for ProductCard component
@@ -150,7 +295,12 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
             </div>
           )}
-          <Button variant="ghost" size="sm" className="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary"
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          >
             <Filter size={18} />
           </Button>
         </div>
@@ -174,6 +324,30 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
             </div>
           </div>
         )}
+
+        {/* Advanced Filters */}
+        <AdvancedFilters
+          onFiltersChange={handleFiltersChange}
+          onClearFilters={handleClearFilters}
+          isOpen={filtersOpen}
+          onToggle={() => setFiltersOpen(!filtersOpen)}
+        />
+      </div>
+
+      {/* Results Summary */}
+      <div className="max-w-4xl mx-auto mb-4">
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <p>
+            {filteredProducts.length} produit{filteredProducts.length > 1 ? 's' : ''} trouvé{filteredProducts.length > 1 ? 's' : ''}
+            {searchQuery && ` pour "${searchQuery}"`}
+          </p>
+          <p>
+            Trié par {activeFilters.sortBy === 'date' ? 'date' : 
+                     activeFilters.sortBy === 'price' ? 'prix' :
+                     activeFilters.sortBy === 'likes' ? 'popularité' : activeFilters.sortBy}
+            {activeFilters.sortOrder === 'desc' ? ' ↓' : ' ↑'}
+          </p>
+        </div>
       </div>
 
       {/* Search Results */}
