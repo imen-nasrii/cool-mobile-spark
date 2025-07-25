@@ -13,6 +13,7 @@ import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocation } from 'wouter';
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -83,6 +84,7 @@ export default function MapView() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { createConversation } = useMessaging();
+  const [, setLocation] = useLocation();
 
   // Get user's current location
   useEffect(() => {
@@ -195,8 +197,8 @@ export default function MapView() {
         description: "Vous pouvez maintenant discuter avec le vendeur.",
       });
       
-      // Navigate to messages
-      window.location.href = '/messages';
+      // Navigate to messages using wouter
+      setLocation('/messages');
     } catch (error) {
       console.error('Error creating conversation:', error);
       toast({
