@@ -565,7 +565,7 @@ export default function AdminDashboard() {
                     <SelectValue placeholder="Toutes les catégories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes les catégories</SelectItem>
+                    <SelectItem value="all">Toutes les catégories</SelectItem>
                     {categories.map((category: any) => (
                       <SelectItem key={category.id} value={category.name}>
                         {category.name}
