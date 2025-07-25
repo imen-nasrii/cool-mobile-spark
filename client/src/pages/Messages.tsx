@@ -107,12 +107,24 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
     // Add initial message
     const initialMessage: ChatMessage = {
       id: "1",
-      senderId: "vendor",
+      senderId: "me",
       content: `Bonjour ! Je suis intéressé(e) par votre produit. Pouvez-vous me donner plus d'informations ?`,
       timestamp: new Date(),
       isOwn: true
     };
     setChatMessages([initialMessage]);
+    
+    // Add vendor's welcome message after a short delay
+    setTimeout(() => {
+      const vendorWelcome: ChatMessage = {
+        id: "2",
+        senderId: "vendor",
+        content: "Bonjour ! Merci pour votre intérêt. Je serai ravi de répondre à toutes vos questions sur ce produit.",
+        timestamp: new Date(),
+        isOwn: false
+      };
+      setChatMessages(prev => [...prev, vendorWelcome]);
+    }, 1000);
   };
 
   const handleSendMessage = () => {
@@ -158,9 +170,16 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
     setChatMessages([
       {
         id: "1",
+        senderId: "me",
+        content: "Bonjour ! Je vous contacte concernant votre annonce.",
+        timestamp: new Date(Date.now() - 3600000),
+        isOwn: true
+      },
+      {
+        id: "2",
         senderId: "vendor",
         content: "Bonjour ! Comment puis-je vous aider ?",
-        timestamp: new Date(Date.now() - 3600000),
+        timestamp: new Date(Date.now() - 3500000),
         isOwn: false
       }
     ]);
