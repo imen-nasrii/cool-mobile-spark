@@ -4,7 +4,10 @@ class ApiClient {
   private token: string | null = null;
 
   constructor() {
-    this.token = localStorage.getItem('authToken');
+    // Get token from localStorage if available
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('authToken');
+    }
   }
 
   setToken(token: string) {
@@ -17,7 +20,11 @@ class ApiClient {
     localStorage.removeItem('authToken');
   }
 
-  private async request(endpoint: string, options: RequestInit = {}) {
+  async request(endpoint: string, options: RequestInit = {}) {
+    // Always get fresh token from localStorage
+    if (typeof window !== 'undefined') {
+      this.token = localStorage.getItem('authToken');
+    }
     const url = `${API_BASE}${endpoint}`;
     const config: RequestInit = {
       headers: {
@@ -159,23 +166,7 @@ export const queryFetcher = async ({ queryKey }: { queryKey: any[] }) => {
   return fetch(`/api${cleanEndpoint}`).then(res => res.json());
 };
 
-// API request helper for mutations
-export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const cleanEndpoint = endpoint.replace('/api', '');
-  const response = await fetch(`/api${cleanEndpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(localStorage.getItem('authToken') && {
-        Authorization: `Bearer ${localStorage.getItem('authToken')}`
-      }),
-    },
-    ...options,
-  });
-  
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Network error' }));
-    throw new Error(error.error || 'Request failed');
-  }
-  
-  return response.json();
+// API request helper for mutations - use apiClient for consistency
+export const apiRequest = (endpoint: string, options: RequestInit = {}) => {
+  return apiClient.request(endpoint, options);
 };
