@@ -12,6 +12,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import AdminDashboard from "./pages/AdminDashboard";
 import Profile from "./pages/Profile";
+import MapView from "./pages/MapView";
 import { AdminInfo } from "./components/Auth/AdminInfo";
 import NotFound from "./pages/NotFound";
 
@@ -44,6 +45,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/map" element={<MapView />} />
               <Route path="/admin-info" element={<AdminInfo />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

@@ -24,6 +24,9 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Advanced filtering and sorting system**: Professional search with price sliders, multi-criteria filtering
 - ✅ **Complete admin CRUD system**: Full management interface for categories, products, and users
 - ✅ **Professional admin dashboard**: Statistics overview, quick actions, and tabbed management interface
+- ✅ **Interactive map with geolocation**: Leaflet-based map showing user position and nearby products
+- ✅ **AI chat assistant**: Smart chatbot for user assistance and platform questions
+- ✅ **Map-based product filtering**: Filter by category, price range, and distance with visual markers
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript

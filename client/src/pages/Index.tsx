@@ -12,6 +12,7 @@ import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
 import { ChatBot } from "@/components/Chat/ChatBot";
+import { AIChat, AIChatToggle } from "@/components/Chat/AIChat";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,7 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<"main" | "product">("main");
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -77,7 +79,7 @@ const Index = () => {
       case "messages":
         return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
       case "profile":
-        return <Profile activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <Profile />;
       case "favorites":
         return <Favorites activeTab={activeTab} onTabChange={handleTabChange} />;
       case "notifications":
@@ -128,7 +130,24 @@ const Index = () => {
             </DialogContent>
           </Dialog>
           
+          {/* ChatBot Component */}
           <ChatBot />
+
+          {/* AI Chat */}
+          {showAIChat ? (
+            <AIChat 
+              isOpen={showAIChat} 
+              onToggle={() => setShowAIChat(!showAIChat)}
+              onClose={() => setShowAIChat(false)}
+            />
+          ) : (
+            <AIChatToggle onClick={() => setShowAIChat(true)} />
+          )}
+
+          {/* Floating Action Button */}
+          <FloatingActionButton 
+            onClick={() => setShowCategoryModal(true)}
+          />
         </>
       )}
     </div>
