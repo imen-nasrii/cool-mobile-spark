@@ -7,6 +7,7 @@ import {
 } from "@shared/schema";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { healthCheck, readinessCheck } from "./health";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
@@ -46,6 +47,10 @@ const requireAdmin = async (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Health check routes for production monitoring
+  app.get("/api/health", healthCheck);
+  app.get("/api/ready", readinessCheck);
+  
   // Auth routes
   app.post("/api/auth/signup", async (req, res) => {
     try {
