@@ -231,12 +231,12 @@ export default function MapView() {
               {/* Category */}
               <div>
                 <label className="text-sm font-medium mb-2 block">Catégorie</label>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <Select value={selectedCategory || "all"} onValueChange={(value) => setSelectedCategory(value === "all" ? "" : value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Toutes catégories" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Toutes catégories</SelectItem>
+                    <SelectItem value="all">Toutes catégories</SelectItem>
                     {categories.map(category => (
                       <SelectItem key={category} value={category}>
                         {category}
