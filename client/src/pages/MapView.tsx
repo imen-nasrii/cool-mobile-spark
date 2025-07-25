@@ -13,7 +13,7 @@ import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
-import { useLocation } from 'wouter';
+import { useNavigate } from 'react-router-dom';
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -84,7 +84,7 @@ export default function MapView() {
   const { toast } = useToast();
   const { user } = useAuth();
   const { createConversation } = useMessaging();
-  const [, setLocation] = useLocation();
+  const navigate = useNavigate();
 
   // Get user's current location
   useEffect(() => {
@@ -187,18 +187,21 @@ export default function MapView() {
       const productDetails = await apiClient.getProduct(product.id);
       
       // Create conversation with seller
-      await createConversation({
+      const conversation = await createConversation({
         product_id: product.id,
         seller_id: productDetails.user_id,
       });
       
       toast({
         title: "Conversation créée",
-        description: "Vous pouvez maintenant discuter avec le vendeur.",
+        description: "Redirection vers les messages...",
       });
       
-      // Navigate to messages using wouter
-      setLocation('/messages');
+      // Navigate to messages after a short delay
+      setTimeout(() => {
+        navigate('/messages');
+      }, 1000);
+      
     } catch (error) {
       console.error('Error creating conversation:', error);
       toast({
@@ -413,8 +416,13 @@ export default function MapView() {
                         <div className="flex gap-2">
                           <Button
                             size="sm"
-                            onClick={() => handleContact(product)}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleContact(product);
+                            }}
                             className="flex-1 text-xs"
+                            disabled={!user}
                           >
                             <MessageCircle size={12} className="mr-1" />
                             Contacter
