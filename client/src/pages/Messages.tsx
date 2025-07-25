@@ -129,17 +129,27 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
     setChatMessages(prev => [...prev, message]);
     setNewChatMessage("");
 
-    // Simulate vendor response after a delay
+    // Simulate vendor response after a delay with contextual responses
     setTimeout(() => {
+      let responseContent = "Merci pour votre message ! Je vais vous répondre dans les plus brefs délais.";
+      
+      if (message.content.toLowerCase().includes("prix")) {
+        responseContent = "Le prix est négociable. Pouvons-nous discuter par téléphone ?";
+      } else if (message.content.toLowerCase().includes("intéressé")) {
+        responseContent = "Parfait ! Quand pouvez-vous venir voir le produit ?";
+      } else if (message.content.toLowerCase().includes("rencontrer")) {
+        responseContent = "Bien sûr ! Je suis disponible ce week-end. Quel jour vous convient le mieux ?";
+      }
+      
       const response: ChatMessage = {
         id: (Date.now() + 1).toString(),
         senderId: "vendor",
-        content: "Merci pour votre message ! Je vais vous répondre dans les plus brefs délais.",
+        content: responseContent,
         timestamp: new Date(),
         isOwn: false
       };
       setChatMessages(prev => [...prev, response]);
-    }, 1000);
+    }, 1500);
   };
 
   const handleConversationSelect = (conversationId: string) => {
@@ -185,11 +195,27 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
-              <Phone size={18} />
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => toast({
+                title: "Appel vocal",
+                description: "Fonctionnalité d'appel en cours de développement.",
+              })}
+              className="hover:bg-green-100"
+            >
+              <Phone size={18} className="text-green-600" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <Video size={18} />
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => toast({
+                title: "Appel vidéo",
+                description: "Fonctionnalité d'appel vidéo en cours de développement.",
+              })}
+              className="hover:bg-blue-100"
+            >
+              <Video size={18} className="text-blue-600" />
             </Button>
             <Button variant="ghost" size="sm">
               <MoreHorizontal size={18} />
@@ -220,30 +246,97 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {chatMessages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                message.isOwn 
-                  ? 'bg-primary text-primary-foreground' 
-                  : 'bg-gray-100 text-gray-900'
-              }`}>
-                <p className="text-sm">{message.content}</p>
-                <p className="text-xs opacity-70 mt-1">
-                  {message.timestamp.toLocaleTimeString('fr-FR', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                  })}
-                </p>
+          {chatMessages.map((message, index) => (
+            <div key={message.id}>
+              <div className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
+                <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  message.isOwn 
+                    ? 'bg-primary text-primary-foreground' 
+                    : 'bg-gray-100 text-gray-900'
+                }`}>
+                  <p className="text-sm">{message.content}</p>
+                  <p className="text-xs opacity-70 mt-1">
+                    {message.timestamp.toLocaleTimeString('fr-FR', { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                  </p>
+                </div>
               </div>
+              
+              {/* Quick Actions for received messages */}
+              {!message.isOwn && index === chatMessages.length - 1 && (
+                <div className="flex justify-start mt-2 ml-2">
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNewChatMessage("👍")}
+                      className="text-xs h-7 px-2"
+                    >
+                      👍
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNewChatMessage("Merci")}
+                      className="text-xs h-7 px-2"
+                    >
+                      Merci
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setNewChatMessage("D'accord")}
+                      className="text-xs h-7 px-2"
+                    >
+                      D'accord
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
 
         {/* Message Input */}
         <div className="p-4 border-t bg-white">
+          {/* Quick Reply Options */}
+          <div className="mb-3 flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setNewChatMessage("Oui, je suis intéressé(e)")}
+              className="text-xs"
+            >
+              Oui, je suis intéressé(e)
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setNewChatMessage("Quel est le prix final ?")}
+              className="text-xs"
+            >
+              Quel est le prix final ?
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setNewChatMessage("Pouvons-nous nous rencontrer ?")}
+              className="text-xs"
+            >
+              Pouvons-nous nous rencontrer ?
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setNewChatMessage("Merci pour l'information")}
+              className="text-xs"
+            >
+              Merci pour l'information
+            </Button>
+          </div>
+          
           <div className="flex items-center gap-2">
             <Input
               placeholder="Tapez votre message..."
@@ -252,6 +345,17 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
               className="flex-1"
             />
+            <Button 
+              variant="outline"
+              size="sm"
+              onClick={() => toast({
+                title: "Appel vocal",
+                description: "Fonctionnalité d'appel en cours de développement.",
+              })}
+              className="hover:bg-green-100"
+            >
+              <Phone size={16} className="text-green-600" />
+            </Button>
             <Button onClick={handleSendMessage} disabled={!newChatMessage.trim()}>
               <Send size={18} />
             </Button>
@@ -446,7 +550,13 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
                       variant="ghost" 
                       size="sm" 
                       className="w-8 h-8 p-0 hover:bg-green-100"
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast({
+                          title: "Appel",
+                          description: `Appel de ${conversation.name}...`,
+                        });
+                      }}
                     >
                       <Phone size={14} className="text-green-600" />
                     </Button>
