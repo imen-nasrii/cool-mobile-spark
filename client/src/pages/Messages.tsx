@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { MessageCircle, Phone, Video, MoreHorizontal, Send, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react";
+import { MessageCircle, Phone, Video, MoreHorizontal, Send, Plus, Edit2, Trash2, ArrowLeft, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -265,9 +265,24 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
               </div>
               
               {/* Quick Actions for received messages */}
-              {!message.isOwn && index === chatMessages.length - 1 && (
+              {!message.isOwn && (
                 <div className="flex justify-start mt-2 ml-2">
                   <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setNewChatMessage("");
+                        // Focus on input field
+                        setTimeout(() => {
+                          const input = document.querySelector('input[placeholder="Tapez votre message..."]') as HTMLInputElement;
+                          if (input) input.focus();
+                        }, 100);
+                      }}
+                      className="text-xs h-7 px-3 bg-primary/10 hover:bg-primary/20 text-primary font-medium"
+                    >
+                      Répondre
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -302,49 +317,64 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
         {/* Message Input */}
         <div className="p-4 border-t bg-white">
           {/* Quick Reply Options */}
-          <div className="mb-3 flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setNewChatMessage("Oui, je suis intéressé(e)")}
-              className="text-xs"
-            >
-              Oui, je suis intéressé(e)
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setNewChatMessage("Quel est le prix final ?")}
-              className="text-xs"
-            >
-              Quel est le prix final ?
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setNewChatMessage("Pouvons-nous nous rencontrer ?")}
-              className="text-xs"
-            >
-              Pouvons-nous nous rencontrer ?
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setNewChatMessage("Merci pour l'information")}
-              className="text-xs"
-            >
-              Merci pour l'information
-            </Button>
+          <div className="mb-3">
+            <p className="text-xs text-muted-foreground mb-2">Réponses rapides :</p>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNewChatMessage("Oui, je suis intéressé(e)")}
+                className="text-xs hover:bg-primary/10"
+              >
+                Oui, je suis intéressé(e)
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNewChatMessage("Quel est le prix final ?")}
+                className="text-xs hover:bg-primary/10"
+              >
+                Quel est le prix final ?
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNewChatMessage("Pouvons-nous nous rencontrer ?")}
+                className="text-xs hover:bg-primary/10"
+              >
+                Pouvons-nous nous rencontrer ?
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setNewChatMessage("Merci pour l'information")}
+                className="text-xs hover:bg-primary/10"
+              >
+                Merci pour l'information
+              </Button>
+            </div>
           </div>
           
           <div className="flex items-center gap-2">
-            <Input
-              placeholder="Tapez votre message..."
-              value={newChatMessage}
-              onChange={(e) => setNewChatMessage(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              className="flex-1"
-            />
+            <div className="flex-1 relative">
+              <Input
+                placeholder="Tapez votre message..."
+                value={newChatMessage}
+                onChange={(e) => setNewChatMessage(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                className="pr-12"
+              />
+              {newChatMessage && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setNewChatMessage("")}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 hover:bg-gray-200"
+                >
+                  <X size={14} />
+                </Button>
+              )}
+            </div>
             <Button 
               variant="outline"
               size="sm"
@@ -356,7 +386,11 @@ export const Messages = ({ activeTab, onTabChange }: { activeTab?: string; onTab
             >
               <Phone size={16} className="text-green-600" />
             </Button>
-            <Button onClick={handleSendMessage} disabled={!newChatMessage.trim()}>
+            <Button 
+              onClick={handleSendMessage} 
+              disabled={!newChatMessage.trim()}
+              className="bg-primary hover:bg-primary/90"
+            >
               <Send size={18} />
             </Button>
           </div>
