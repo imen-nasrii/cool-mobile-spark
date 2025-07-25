@@ -215,10 +215,10 @@ export default function Auth() {
                     />
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="pt-6">
                   <Button 
                     type="submit" 
-                    className="w-full bg-tomati-red hover:bg-tomati-red/90"
+                    className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md"
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
@@ -272,10 +272,10 @@ export default function Auth() {
                     />
                   </div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="pt-6">
                   <Button 
                     type="submit" 
-                    className="w-full bg-tomati-red hover:bg-tomati-red/90"
+                    className="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-md"
                     disabled={loading}
                   >
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
