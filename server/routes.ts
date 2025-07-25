@@ -149,7 +149,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/products", authenticateToken, requireAdmin, async (req, res) => {
+  app.post("/api/products", authenticateToken, async (req, res) => {
     try {
       const productData = insertProductSchema.parse({
         ...req.body,
