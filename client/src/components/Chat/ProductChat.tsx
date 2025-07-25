@@ -66,7 +66,7 @@ export const ProductChat = ({ productId, sellerId, onClose }: ProductChatProps) 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           product_id: productId,
@@ -85,7 +85,7 @@ export const ProductChat = ({ productId, sellerId, onClose }: ProductChatProps) 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
         },
         body: JSON.stringify({
           content: newMessage.trim()
