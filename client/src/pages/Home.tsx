@@ -53,47 +53,14 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 pb-20 relative overflow-hidden">
-      {/* Tomato Background Pattern */}
-      <div className="absolute inset-0 opacity-5 pointer-events-none">
-        <svg width="100%" height="100%" className="absolute inset-0">
-          <defs>
-            <pattern id="tomato-pattern" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-              {/* Tomate 1 */}
-              <circle cx="20" cy="20" r="15" fill="#FF6B6B" opacity="0.8"/>
-              <circle cx="20" cy="15" r="3" fill="#4CAF50" opacity="0.9"/>
-              <circle cx="15" cy="13" r="2" fill="#4CAF50" opacity="0.7"/>
-              <circle cx="25" cy="13" r="2" fill="#4CAF50" opacity="0.7"/>
-              
-              {/* Tomate 2 */}
-              <circle cx="80" cy="60" r="18" fill="#FF5722" opacity="0.6"/>
-              <circle cx="80" cy="54" r="4" fill="#4CAF50" opacity="0.8"/>
-              <circle cx="74" cy="52" r="2.5" fill="#4CAF50" opacity="0.6"/>
-              <circle cx="86" cy="52" r="2.5" fill="#4CAF50" opacity="0.6"/>
-              
-              {/* Tomate 3 */}
-              <circle cx="40" cy="90" r="12" fill="#D32F2F" opacity="0.7"/>
-              <circle cx="40" cy="86" r="2.5" fill="#388E3C" opacity="0.8"/>
-              <circle cx="36" cy="84" r="1.5" fill="#388E3C" opacity="0.6"/>
-              <circle cx="44" cy="84" r="1.5" fill="#388E3C" opacity="0.6"/>
-              
-              {/* Tomate 4 */}
-              <circle cx="100" cy="25" r="14" fill="#FF7043" opacity="0.5"/>
-              <circle cx="100" cy="20" r="3" fill="#66BB6A" opacity="0.7"/>
-              <circle cx="96" cy="18" r="2" fill="#66BB6A" opacity="0.5"/>
-              <circle cx="104" cy="18" r="2" fill="#66BB6A" opacity="0.5"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#tomato-pattern)"/>
-        </svg>
-      </div>
+    <div className="min-h-screen tomato-bg pb-20 relative overflow-hidden">
 
       {/* Header Ad Banner */}
       <AdBanner position="header" className="mb-4 relative z-10" showCloseButton={false} />
 
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-red-500/10 via-orange-500/5 to-transparent relative z-10">
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
               <div className="bg-primary/10 p-3 rounded-full">
