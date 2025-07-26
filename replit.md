@@ -10,7 +10,7 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - **Authentication**: Custom JWT-based system with bcrypt password hashing
 - **File Structure**: Clean separation between client and server code
 
-## Recent Changes (January 25, 2025)
+## Recent Changes (January 26, 2025)
 - ✅ **Successfully migrated from Supabase to PostgreSQL**: Complete database migration with all tables and relationships
 - ✅ **Replaced Supabase authentication with custom JWT system**: Secure user authentication and authorization
 - ✅ **Created comprehensive API layer**: RESTful endpoints replacing Supabase client calls
@@ -30,6 +30,10 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Real-time messaging system**: Complete WebSocket-based chat with PostgreSQL storage
 - ✅ **Map-to-messaging integration**: Direct "Contacter" button from product popups to start conversations
 - ✅ **Comprehensive messaging API**: Full REST endpoints for conversations, messages, and real-time sync
+- ✅ **Automatic product promotion system**: Products automatically become "promoted" after receiving 3 likes
+- ✅ **Comprehensive settings page**: User preferences, notifications, privacy, appearance, and account management
+- ✅ **Like system with automatic promotion**: API endpoint for liking products with anti-abuse protection
+- ✅ **Promotion testing interface**: Debug page to test automatic promotion functionality
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
@@ -59,11 +63,12 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 ## Database Schema
 - `users`: User accounts with authentication
 - `profiles`: User profile information
-- `products`: Product listings with details
+- `products`: Product listings with details, like_count, is_promoted, promoted_at
 - `categories`: Product categorization
 - `conversations`: Chat conversations between users
 - `messages`: Real-time messaging system with conversation threading
 - `message_reads`: Read status tracking for messages
+- `notifications`: Real-time user notifications with read status
 - All tables properly linked with foreign key relationships and indexes
 
 ## User Preferences

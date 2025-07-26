@@ -15,6 +15,8 @@ import Profile from "./pages/Profile";
 import MapView from "./pages/MapView";
 import MessagesPage from "./pages/Messages";
 import { AdminInfo } from "./components/Auth/AdminInfo";
+import { Settings } from "./pages/Settings";
+import { TestPromotion } from "./pages/TestPromotion";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -52,6 +54,22 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <MessagesPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/test-promotion" 
+                element={
+                  <ProtectedRoute>
+                    <TestPromotion />
                   </ProtectedRoute>
                 } 
               />
