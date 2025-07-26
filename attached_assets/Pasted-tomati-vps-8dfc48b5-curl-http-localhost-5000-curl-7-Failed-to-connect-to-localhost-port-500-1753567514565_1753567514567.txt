@@ -1,0 +1,64 @@
+tomati@vps-8dfc48b5:~$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ netstat -tlnp | grep :5000
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ pm2 logs start-tomati --lines 10
+[TAILING] Tailing last 10 lines for [start-tomati] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-tomati-out.log last 10 lines:
+/home/tomati/.pm2/logs/start-tomati-error.log last 10 lines:
+
+^C
+tomati@vps-8dfc48b5:~$ cd ~/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ ls -la dist/
+total 64
+drwxrwxr-x  3 tomati tomati  4096 Jul 26 21:36 .
+drwxrwxr-x 12 tomati tomati  4096 Jul 26 21:45 ..
+-rw-rw-r--  1 tomati tomati 52560 Jul 26 21:45 index.js
+drwxrwxr-x  4 tomati tomati  4096 Jul 26 21:45 public
+tomati@vps-8dfc48b5:~/tomati-market$ pwd
+/home/tomati/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ cat > start-tomati-fixed.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete start-tomati
+[PM2] Applying action deleteProcessId on app [start-tomati](ids: [ 0 ])
+[PM2] [start-tomati](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start start-tomati-fixed.cjs
+[PM2] Starting /home/tomati/tomati-market/start-tomati-fixed.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati-fixed    │ default     │ 1.0.0   │ fork    │ 225295   │ 0s     │ 0    │ online    │ 0%       │ 18.8mb   │ tomati   │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+curl http://localhost:5000
+
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+
