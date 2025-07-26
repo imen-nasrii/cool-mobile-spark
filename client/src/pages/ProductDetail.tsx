@@ -111,6 +111,41 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   }, [likedData]);
 
+  const handleShare = async () => {
+    if (!product) return;
+    
+    const shareData = {
+      title: product.title,
+      text: `${product.title} - ${product.price}`,
+      url: window.location.href,
+    };
+    
+    try {
+      // Try using Web Share API first (mobile/modern browsers)
+      if (navigator.share) {
+        await navigator.share(shareData);
+        toast({
+          title: "Partagé",
+          description: "Le produit a été partagé avec succès",
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(window.location.href);
+        toast({
+          title: "Lien copié",
+          description: "Le lien du produit a été copié dans le presse-papiers",
+        });
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de partager ce produit",
+        variant: "destructive"
+      });
+    }
+  };
+
   const handleLike = async () => {
     if (!user || !product) return;
     
@@ -167,13 +202,18 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </Button>
           
           <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="p-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="p-2 hover:bg-blue-50 hover:text-blue-600"
+              onClick={handleShare}
+            >
               <Share size={18} />
             </Button>
             <Button 
               variant="ghost" 
               size="sm" 
-              className={`p-2 ${isLiked ? "text-red-600" : ""}`}
+              className={`p-2 hover:bg-red-50 ${isLiked ? "text-red-600" : "hover:text-red-600"}`}
               onClick={handleLike}
             >
               <Heart size={18} className={isLiked ? "fill-current" : ""} />
@@ -205,7 +245,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Edit size={16} />
               </Button>
             )}
-            <Button variant="outline" size="sm" className="gap-2">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-2 hover:bg-blue-50 hover:text-blue-600"
+              onClick={handleShare}
+            >
               <Share size={16} />
               Partager
             </Button>
