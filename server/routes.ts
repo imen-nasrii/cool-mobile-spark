@@ -128,12 +128,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get promoted products FIRST - before any other product routes
+  app.get("/api/products/promoted", async (req, res) => {
+    try {
+      const promotedProducts = await promotionService.getPromotedProducts();
+      res.json(promotedProducts || []);
+    } catch (error: any) {
+      console.error('Error getting promoted products:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Products routes
   app.get("/api/products", async (req, res) => {
     try {
       const { category, search } = req.query;
       const products = await storage.getProducts(category as string, search as string);
       res.json(products);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Check if user liked a product - must be before generic :id route
+  app.get("/api/products/:id/liked", authenticateToken, async (req, res) => {
+    try {
+      const hasLiked = await promotionService.hasUserLikedProduct(req.params.id, (req as any).user.id);
+      res.json({ liked: hasLiked });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -347,34 +368,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Add like and check for automatic promotion
       await promotionService.addLikeAndCheckPromotion(req.params.id, (req as any).user.id);
 
-      // Create notification for product owner
-      await notificationService.notifyProductLiked(
-        product.user_id,
-        product.title,
-        product.id
-      );
+      // Update the product with new like count to get fresh data
+      const updatedProduct = await storage.getProduct(req.params.id);
 
-      res.json({ success: true, message: "Produit ajouté aux favoris" });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
+      // Create notification for product owner if user_id exists
+      if (product.user_id) {
+        await notificationService.notifyProductLiked(
+          product.user_id,
+          product.title,
+          product.id
+        );
+      }
 
-  // Check if user liked a product
-  app.get("/api/products/:id/liked", authenticateToken, async (req, res) => {
-    try {
-      const hasLiked = await promotionService.hasUserLikedProduct(req.params.id, (req as any).user.id);
-      res.json({ liked: hasLiked });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  // Get promoted products
-  app.get("/api/products/promoted", async (req, res) => {
-    try {
-      const promotedProducts = await promotionService.getPromotedProducts();
-      res.json(promotedProducts);
+      res.json({ 
+        success: true, 
+        message: "Produit ajouté aux favoris",
+        newLikeCount: updatedProduct?.like_count || 0
+      });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

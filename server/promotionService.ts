@@ -30,15 +30,17 @@ export class PromotionService {
         })
         .where(eq(products.id, productId));
 
-      // Notify product owner
-      await notificationService.createNotification({
-        user_id: currentProduct.user_id,
-        title: "🎉 Produit promu !",
-        message: `Félicitations ! Votre produit "${currentProduct.title}" a été automatiquement promu après avoir reçu 3 j'aimes !`,
-        type: "product_update",
-        related_id: productId,
-        is_read: false
-      });
+      // Notify product owner if user_id exists
+      if (currentProduct.user_id) {
+        await notificationService.createNotification({
+          user_id: currentProduct.user_id,
+          title: "🎉 Produit promu !",
+          message: `Félicitations ! Votre produit "${currentProduct.title}" a été automatiquement promu après avoir reçu 3 j'aimes !`,
+          type: "product_update",
+          related_id: productId,
+          is_read: false
+        });
+      }
 
       console.log(`Product ${productId} automatically promoted after reaching 3 likes`);
       return true;
@@ -106,7 +108,7 @@ export class PromotionService {
       .select()
       .from(products)
       .where(eq(products.is_promoted, true))
-      .orderBy(products.promoted_at);
+      .orderBy(products.created_at);
   }
 }
 

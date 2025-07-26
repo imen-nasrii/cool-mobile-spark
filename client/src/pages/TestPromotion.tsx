@@ -113,7 +113,7 @@ export const TestPromotion = () => {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {promotedProducts && promotedProducts.length > 0 ? (
+            {Array.isArray(promotedProducts) && promotedProducts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {promotedProducts.map((product: any) => (
                   <Card key={product.id} className="border-yellow-200 bg-yellow-50 dark:bg-yellow-950">
@@ -185,7 +185,7 @@ export const TestPromotion = () => {
                       <Button
                         size="sm"
                         variant={product.user_id === user?.id ? "secondary" : "outline"}
-                        disabled={product.user_id === user?.id || likeMutation.isPending}
+                        disabled={product.user_id === user?.id || (likeMutation.isPending && selectedProduct === product.id)}
                         onClick={() => handleLikeProduct(product.id)}
                         className="flex items-center gap-1"
                       >
