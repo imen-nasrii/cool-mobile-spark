@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   apps: [{
     name: 'tomati-market',
     script: 'server/index.ts',

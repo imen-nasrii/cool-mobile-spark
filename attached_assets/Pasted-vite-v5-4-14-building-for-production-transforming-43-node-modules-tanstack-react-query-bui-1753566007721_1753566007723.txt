@@ -1,0 +1,110 @@
+vite v5.4.14 building for production...
+transforming (43) ../node_modules/@tanstack/react-query/build/modern/isRestoring.jsBrowserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2671 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/index-DzpysTtv.css             97.57 kB │ gzip:  20.85 kB
+../dist/public/assets/index-D855KB25.js             910.27 kB │ gzip: 267.45 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 23.74s
+
+  dist/index.js  51.3kb
+
+⚡ Done in 48ms
+tomati@vps-8dfc48b5:~/tomati-market$ NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati_user:TomatiSecure2025!@localhost:5432/tomati_production
+JWT_SECRET=tomati_jwt_secret_super_securise_32_caracteres_minimum_pour_production_2025_france
+SESSION_SECRET=tomati_session_secret_securise_pour_authentification_utilisateurs_marketplace_2025
+-bash: !@localhost: event not found
+tomati@vps-8dfc48b5:~/tomati-market$ tou^C
+tomati@vps-8dfc48b5:~/tomati-market$ cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati_user:TomatiSecure2025!@localhost:5432/tomati_production
+JWT_SECRET=tomati_jwt_secret_super_securise_32_caracteres_minimum_pour_production_2025_france
+SESSION_SECRET=tomati_session_secret_securise_pour_authentification_utilisateurs_marketplace_2025
+BCRYPT_ROUNDS=12
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ npm run db:push
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/tomati/tomati-market/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[✓] Changes applied
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start ecosystem.config.js --env production
+pm2 save
+pm2 startup
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/home/tomati/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2][ERROR] File ecosystem.config.js malformated
+ReferenceError: module is not defined
+    at file:///home/tomati/tomati-market/ecosystem.config.js:1:1
+    at ModuleJobSync.runSync (node:internal/modules/esm/module_job:387:35)
+    at ModuleLoader.importSyncForRequire (node:internal/modules/esm/loader:323:47)
+    at loadESMFromCJS (node:internal/modules/cjs/loader:1371:24)
+    at Module._compile (node:internal/modules/cjs/loader:1511:5)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1572:16)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+[PM2] Saving current process list...
+[PM2][WARN] PM2 is not managing any process, skipping save...
+[PM2][WARN] To force saving use: pm2 save --force
+[PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u tomati --hp /home/tomati
+tomati@vps-8dfc48b5:~/tomati-market$
