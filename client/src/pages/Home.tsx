@@ -66,7 +66,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
               <div className="bg-primary/10 p-3 rounded-full">
                 <ShoppingBag className="text-primary" size={32} />
               </div>
-              <h1 className="text-4xl font-bold text-gray-900">
+              <h1 className="text-4xl font-heading font-bold text-gray-900">
                 Tomati <span className="text-primary">Market</span>
               </h1>
             </div>
@@ -104,7 +104,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Shield className="text-green-600" size={32} />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Transactions Sécurisées</h3>
+              <h3 className="text-xl font-heading font-semibold mb-2">Transactions Sécurisées</h3>
               <p className="text-gray-600">Tous les paiements sont protégés et les vendeurs sont vérifiés</p>
             </CardContent>
           </Card>

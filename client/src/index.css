@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,6 +35,10 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  * {
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  }
+  
   :root {
     --background: 0 0% 98%;
     --foreground: 220 13% 18%;
@@ -142,7 +148,24 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+  }
+  
+  /* Cute rounded styles */
+  .btn-cute {
+    @apply rounded-full px-6 py-3 font-medium transition-all duration-200 shadow-lg hover:shadow-xl;
+  }
+  
+  .card-cute {
+    @apply rounded-2xl shadow-md hover:shadow-lg transition-all duration-200;
+  }
+  
+  /* Smooth animations */
+  * {
+    transition: all 0.2s ease-in-out;
   }
 
   /* Glass morphism utilities */
