@@ -328,7 +328,7 @@ export default function MapView() {
                   position={[product.lat, product.lng]}
                   icon={categoryIcons[product.category] || categoryIcons["Électronique"]}
                 >
-                  <Popup maxWidth={300} className="custom-popup">
+                  <Popup maxWidth={320} className="custom-popup">
                     <Card className="border-0 shadow-none">
                       <CardHeader className="p-3 pb-2">
                         <CardTitle className="text-base">{product.title}</CardTitle>
@@ -344,34 +344,51 @@ export default function MapView() {
                       </CardHeader>
                       <CardContent className="p-3 pt-0">
                         {product.image_url && (
-                          <img 
-                            src={product.image_url} 
-                            alt={product.title}
-                            className="w-full h-24 object-cover rounded mb-2"
-                          />
+                          <div className="mb-3">
+                            <img 
+                              src={product.image_url} 
+                              alt={product.title}
+                              className="w-full h-32 object-cover rounded-lg border"
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
+                            />
+                          </div>
                         )}
                         <p className="text-sm text-muted-foreground mb-2 line-clamp-2">
                           {product.description}
                         </p>
-                        <div className="flex items-center justify-between mb-3">
-                          <div className="text-lg font-bold text-primary">
-                            {product.is_free ? (
-                              <Badge variant="secondary">Gratuit</Badge>
-                            ) : (
-                              product.price
-                            )}
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="text-lg font-bold text-primary">
+                              {product.is_free ? (
+                                <Badge variant="secondary">Gratuit</Badge>
+                              ) : (
+                                product.price
+                              )}
+                            </div>
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Heart size={12} />
+                              {product.like_count || 0}
+                            </div>
                           </div>
-                          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                            <Heart size={12} />
-                            {product.likes}
-                          </div>
-                        </div>
 
-                        {product.is_reserved && (
-                          <Badge variant="destructive" className="w-full mt-2 text-xs">
-                            Réservé
-                          </Badge>
-                        )}
+                          <div className="flex gap-2">
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleContactSeller(product)}
+                              className="flex-1 bg-primary hover:bg-primary/90"
+                            >
+                              Contacter
+                            </Button>
+                          </div>
+
+                          {product.is_reserved && (
+                            <Badge variant="destructive" className="w-full text-xs">
+                              Réservé
+                            </Badge>
+                          )}
+                        </div>
                       </CardContent>
                     </Card>
                   </Popup>
