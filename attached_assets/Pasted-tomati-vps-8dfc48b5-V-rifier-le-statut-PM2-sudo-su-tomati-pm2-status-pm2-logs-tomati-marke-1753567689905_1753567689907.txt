@@ -1,0 +1,226 @@
+tomati@vps-8dfc48b5:~$ # Vérifier le statut PM2
+sudo su - tomati
+pm2 status
+pm2 logs tomati-market --lines 10
+[sudo] password for tomati:
+tomati@vps-8dfc48b5:~$ # Vérifier le statut PM2
+sudo su - tomati
+pm2 status
+pm2 logs tomati-market --lines 10
+[sudo] password for tomati:
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ pm2 status
+pm2 logs tomati-market --lines 10
+┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ pm2.production    │ default     │ 1.0.0   │ fork    │ 224608   │ 10m    │ 0    │ online    │ 0%       │ 50.4mb   │ tomati   │ disabled │
+└────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-market] process (change the value with --lines option)
+# Vérifier si le port 5000 écoute
+netstat -tlnp | grep :5000
+^C
+tomati@vps-8dfc48b5:~$ # Vérifier si le port 5000 écoute
+netstat -tlnp | grep :5000
+Command 'netstat' not found, but can be installed with:
+sudo apt install net-tools
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ sudo apt install net-tools
+[sudo] password for tomati:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  net-tools
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 204 kB of archives.
+After this operation, 819 kB of additional disk space will be used.
+Get:1 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates/main amd64 net-tools amd64 1.60+git20181103.0eebece-1ubuntu5.4 [204 kB]
+Fetched 204 kB in 1s (226 kB/s)
+Selecting previously unselected package net-tools.
+(Reading database ... 107871 files and directories currently installed.)
+Preparing to unpack .../net-tools_1.60+git20181103.0eebece-1ubuntu5.4_amd64.deb ...
+Unpacking net-tools (1.60+git20181103.0eebece-1ubuntu5.4) ...
+Setting up net-tools (1.60+git20181103.0eebece-1ubuntu5.4) ...
+Processing triggers for man-db (2.10.2-1) ...
+Scanning processes...
+Scanning candidates...
+Scanning linux images...
+
+Restarting services...
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart getty@tty1.service
+ systemctl restart networkd-dispatcher.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+tomati@vps-8dfc48b5:~$ netstat -tlnp | grep :5000
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tomati@vps-8dfc48b5:~$ # Tester la connexion locale
+curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refuse                                                                                                             d
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ pm2 logs pm2.production --lines 20
+[TAILING] Tailing last 20 lines for [pm2.production] process (change the value w                                                                                                             ith --lines option)
+/home/tomati/.pm2/logs/pm2.production-out.log last 20 lines:
+/home/tomati/.pm2/logs/pm2.production-error.log last 20 lines:
+0|pm2.prod | ReferenceError: module is not defined in ES module scope
+0|pm2.prod | This file is being treated as an ES module because it has a '.js' f                                                                                                             ile extension and '/home/tomati/tomati-market/package.json' contains "type": "mo                                                                                                             dule". To treat it as a CommonJS script, rename it to use the '.cjs' file extens                                                                                                             ion.
+0|pm2.prod |     at file:///home/tomati/tomati-market/pm2.production.js:1:1
+0|pm2.prod |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|pm2.prod |     at async ModuleLoader.import (node:internal/modules/esm/loader:                                                                                                             540:24)
+
+^C
+tomati@vps-8dfc48b5:~$
+pm2 delete pm2.production
+[PM2] Applying action deleteProcessId on app [pm2.production](ids: [ 0 ])
+[PM2] [pm2.production](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ cat > start-tomati.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: 'dist/index.js',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~$ pm2 start start-tomati.cjs
+[PM2] Starting /home/tomati/start-tomati.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati    │ default     │ N/A     │ fork    │ 225185   │ 0s     │ 0    │ online    │ 0%       │ 3.4mb    │ tomati   │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+tomati@vps-8dfc48b5:~$ pm2 status
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati    │ default     │ N/A     │ fork    │ 225185   │ 15s    │ 0    │ online    │ 0%       │ 48.5mb   │ tomati   │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+tomati@vps-8dfc48b5:~$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ netstat -tlnp | grep :5000
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ pm2 logs start-tomati --lines 10
+[TAILING] Tailing last 10 lines for [start-tomati] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-tomati-out.log last 10 lines:
+/home/tomati/.pm2/logs/start-tomati-error.log last 10 lines:
+
+^C
+tomati@vps-8dfc48b5:~$ cd ~/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ ls -la dist/
+total 64
+drwxrwxr-x  3 tomati tomati  4096 Jul 26 21:36 .
+drwxrwxr-x 12 tomati tomati  4096 Jul 26 21:45 ..
+-rw-rw-r--  1 tomati tomati 52560 Jul 26 21:45 index.js
+drwxrwxr-x  4 tomati tomati  4096 Jul 26 21:45 public
+tomati@vps-8dfc48b5:~/tomati-market$ pwd
+/home/tomati/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ cat > start-tomati-fixed.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete start-tomati
+[PM2] Applying action deleteProcessId on app [start-tomati](ids: [ 0 ])
+[PM2] [start-tomati](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start start-tomati-fixed.cjs
+[PM2] Starting /home/tomati/tomati-market/start-tomati-fixed.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati-fixed    │ default     │ 1.0.0   │ fork    │ 225295   │ 0s     │ 0    │ online    │ 0%       │ 18.8mb   │ tomati   │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+curl http://localhost:5000
+
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs start-tomati-fixed --lines 10
+[TAILING] Tailing last 10 lines for [start-tomati-fixed] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-tomati-fixed-out.log last 10 lines:
+/home/tomati/.pm2/logs/start-tomati-fixed-error.log last 10 lines:
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ NODE_ENV=production node dist/index.js
+file:///home/tomati/tomati-market/dist/index.js:357
+  throw new Error(
+        ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at file:///home/tomati/tomati-market/dist/index.js:357:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.4
+tomati@vps-8dfc48b5:~/tomati-market$ ^C
+tomati@vps-8dfc48b5:~/tomati-market$ cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati:tomati_password@localhost:5432/tomati_market
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomati
+PGPASSWORD=tomati_password
+PGDATABASE=tomati_market
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ NODE_ENV=production node dist/index.js
+file:///home/tomati/tomati-market/dist/index.js:357
+  throw new Error(
+        ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at file:///home/tomati/tomati-market/dist/index.js:357:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.4
+tomati@vps-8dfc48b5:~/tomati-market$
