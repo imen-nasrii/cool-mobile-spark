@@ -140,7 +140,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         </Button>
       </div>
       
-      <div className="product-grid gap-6">
+      <div className="product-grid">
         {transformedProducts.map((product: any) => (
           <ProductCard
             key={product.id}
