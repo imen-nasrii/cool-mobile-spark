@@ -1,18 +1,20 @@
 module.exports = {
   apps: [{
     name: 'tomati-market',
-    script: 'server/index.js',
+    script: 'server/index.ts',
+    interpreter: 'node',
+    interpreter_args: '--loader tsx',
     instances: 'max',
     exec_mode: 'cluster',
     
     // Variables d'environnement
     env: {
       NODE_ENV: 'development',
-      PORT: 3000
+      PORT: 5000
     },
     env_production: {
       NODE_ENV: 'production',
-      PORT: 3000
+      PORT: 5000
     },
     
     // Logs

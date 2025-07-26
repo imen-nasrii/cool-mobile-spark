@@ -1,0 +1,57 @@
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+1 update can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+*** System restart required ***
+Last login: Thu Jul 17 08:46:43 2025 from 197.14.55.29
+ubuntu@vps-8dfc48b5:~$ apt update && apt upgrade -y
+Reading package lists... Done
+E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denie                                                                                                             d)
+E: Unable to lock directory /var/lib/apt/lists/
+W: Problem unlinking the file /var/cache/apt/pkgcache.bin - RemoveCaches (13: Pe                                                                                                             rmission denied)
+W: Problem unlinking the file /var/cache/apt/srcpkgcache.bin - RemoveCaches (13:                                                                                                              Permission denied)
+ubuntu@vps-8dfc48b5:~$ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -                                                                                                             E bash -
+2025-07-26 21:00:10 - Installing pre-requisites
+Hit:1 https://deb.nodesource.com/node_18.x nodistro InRelease
+Get:2 http://nova.clouds.archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:3 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates InRelease [128                                                                                                              kB]
+Get:4 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-backports InRelease [12                                                                                                             7 kB]
+Get:5 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Fetched 654 kB in 2s (403 kB/s)
+Reading package lists... Done
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+ca-certificates is already the newest version (20240203~22.04.1).
+curl is already the newest version (7.81.0-1ubuntu1.20).
+gnupg is already the newest version (2.2.27-3ubuntu2.4).
+apt-transport-https is already the newest version (2.4.14).
+0 upgraded, 0 newly installed, 0 to remove and 1 not upgraded.
+Hit:1 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Get:2 http://nova.clouds.archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Get:3 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
+Get:4 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates InRelease [128                                                                                                              kB]
+Hit:5 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-backports InRelease
+Get:6 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [12.2 kB                                                                                                             ]
+Fetched 423 kB in 1s (362 kB/s)
+Reading package lists... Done
+2025-07-26 21:00:25 - Repository configured successfully.
+2025-07-26 21:00:25 - To install Node.js, run: apt-get install nodejs -y
+2025-07-26 21:00:25 - You can use N|solid Runtime as a node.js alternative
+2025-07-26 21:00:25 - To install N|solid Runtime, run: apt-get install nsolid -y                                                                                                             
+
+ubuntu@vps-8dfc48b5:~$ node --version
+v18.20.6
+ubuntu@vps-8dfc48b5:~$ apt install postgresql postgresql-contrib -y
+E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission d                                                                                                             enied)
+E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are y                                                                                                             ou root?
+ubuntu@vps-8dfc48b5:~$
