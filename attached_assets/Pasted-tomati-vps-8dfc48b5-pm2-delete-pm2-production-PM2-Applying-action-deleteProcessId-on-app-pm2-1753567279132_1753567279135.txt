@@ -1,0 +1,44 @@
+tomati@vps-8dfc48b5:~$
+pm2 delete pm2.production
+[PM2] Applying action deleteProcessId on app [pm2.production](ids: [ 0 ])
+[PM2] [pm2.production](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ cat > start-tomati.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: 'dist/index.js',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~$ pm2 start start-tomati.cjs
+[PM2] Starting /home/tomati/start-tomati.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati    │ default     │ N/A     │ fork    │ 225185   │ 0s     │ 0    │ online    │ 0%       │ 3.4mb    │ tomati   │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+tomati@vps-8dfc48b5:~$ pm2 status
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati    │ default     │ N/A     │ fork    │ 225185   │ 15s    │ 0    │ online    │ 0%       │ 48.5mb   │ tomati   │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+tomati@vps-8dfc48b5:~$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~$
