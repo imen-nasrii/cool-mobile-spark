@@ -1,160 +1,237 @@
-# 🚀 Instructions de Déploiement - Tomati Market sur VPS OVH
+# 🚀 Instructions de Déploiement Final - Tomati Market
 
-## Résumé Rapide
+## Étape 1 : GitHub depuis Replit (Option 1 - Recommandée)
 
-Votre domaine **tomati.org** est déjà configuré (✅) et pointe vers **213.186.33.5**.
+### Dans Replit :
+1. **Cliquez sur l'onglet "Version Control"** (icône Git dans la barre latérale)
+2. **Connectez-vous à GitHub** si ce n'est pas fait
+3. **Créez un nouveau repository** : `tomati-market`
+4. **Description** : "Marketplace Tomati - Plateforme e-commerce française"
+5. **Cliquez sur "Push to GitHub"**
 
-## Étapes de Déploiement
+## Étape 2 : Déploiement sur le serveur VPS
 
-### 1. Préparation du code
+### 2.1 Installation PM2 (sur serveur)
 ```bash
-# Sur votre machine locale, préparez le code pour le déploiement
-git add .
-git commit -m "Ready for production deployment"
-git push origin main
+sudo npm install -g pm2
 ```
 
-### 2. Lancement du script automatisé
+### 2.2 Configuration firewall
 ```bash
-# Exécutez le script de déploiement
-./scripts/deploy-ovh.sh
+sudo ufw allow ssh
+sudo ufw allow 80
+sudo ufw allow 443  
+sudo ufw --force enable
 ```
 
-### 3. Connexion au serveur
+### 2.3 Configuration PostgreSQL
 ```bash
-ssh root@213.186.33.5
+sudo -u postgres psql
 ```
 
-### 4. Configuration de la base de données
-```bash
-# Exécutez le script de configuration DB
-./setup-database.sh
+Dans PostgreSQL :
+```sql
+CREATE DATABASE tomati_production;
+CREATE USER tomati_user WITH ENCRYPTED PASSWORD 'TomatiSecure2025!';
+GRANT ALL PRIVILEGES ON DATABASE tomati_production TO tomati_user;
+ALTER DATABASE tomati_production OWNER TO tomati_user;
+\q
 ```
 
-### 5. Déploiement de l'application
+### 2.4 Créer utilisateur application
 ```bash
-# Basculez sur l'utilisateur tomati
-su - tomati
+sudo adduser tomati
+sudo usermod -aG sudo tomati
+```
 
-# Clonez votre projet (remplacez par votre repo GitHub)
-git clone https://github.com/votre-username/tomati-market.git
+### 2.5 Installation SSL
+```bash
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+### 2.6 Cloner et configurer l'application
+```bash
+sudo su - tomati
+
+# Remplacez VOTRE-USERNAME par votre nom GitHub
+git clone https://github.com/VOTRE-USERNAME/tomati-market.git
 cd tomati-market
 
-# Installation et build
+# Installation
 npm install
 npm run build
 
-# Configuration des variables d'environnement
+# Configuration environnement
 nano .env
 ```
 
-Contenu du fichier `.env` :
+**Contenu du fichier .env :**
 ```env
 NODE_ENV=production
 PORT=5000
-DATABASE_URL=postgresql://tomati_user:VOTRE_PASSWORD@localhost:5432/tomati_production
-JWT_SECRET=votre_jwt_secret_super_long_et_securise_32_caracteres_minimum
-SESSION_SECRET=votre_session_secret_tres_securise
+DATABASE_URL=postgresql://tomati_user:TomatiSecure2025!@localhost:5432/tomati_production
+JWT_SECRET=tomati_jwt_secret_super_securise_32_caracteres_minimum_pour_production_2025_france
+SESSION_SECRET=tomati_session_secret_securise_pour_authentification_utilisateurs_marketplace_2025
+BCRYPT_ROUNDS=12
 ```
 
-### 6. Migration de la base de données
+### 2.7 Migration et démarrage
 ```bash
+# Migration base de données
 npm run db:push
-```
 
-### 7. Démarrage avec PM2
-```bash
+# Démarrage PM2
 pm2 start ecosystem.config.js --env production
 pm2 save
 pm2 startup
+
+# Exécutez la commande générée par pm2 startup (commence par sudo)
 ```
 
-### 8. Configuration SSL
+### 2.8 Configuration Nginx
 ```bash
-# Retour en root
+# Retour utilisateur ubuntu
 exit
+
+# Configuration Nginx
+sudo nano /etc/nginx/sites-available/tomati.org
+```
+
+**Configuration Nginx :**
+```nginx
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
+
+    # Headers sécurité
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    # Compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # WebSocket pour messagerie temps réel
+    location /ws {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### 2.9 Activation site et SSL
+```bash
+# Activer le site
+sudo ln -s /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+
+# SSL automatique
 sudo certbot --nginx -d tomati.org -d www.tomati.org
 ```
 
-### 9. Vérification
-```bash
-# Vérifier le statut
-pm2 status
-pm2 logs tomati-market
+## Étape 3 : Vérification finale
 
-# Tester l'accès
+```bash
+# Statut application  
+sudo su - tomati
+pm2 status
+pm2 logs tomati-market --lines 20
+
+# Test local
 curl http://localhost:5000
+
+# Test domaine
 curl https://tomati.org
 ```
 
-## ✅ Checklist Post-Déploiement
-
-- [ ] Application accessible sur https://tomati.org
-- [ ] SSL configuré et fonctionnel
-- [ ] Base de données connectée
-- [ ] Logs sans erreurs (`pm2 logs tomati-market`)
-- [ ] Inscription/connexion fonctionnelle
-- [ ] Création de produits opérationnelle
-- [ ] Messages en temps réel actifs
-
-## 🔧 Commandes de Maintenance
+## 📊 Commandes de maintenance
 
 ```bash
 # Redémarrer l'application
 pm2 restart tomati-market
 
 # Voir les logs en temps réel
-pm2 logs tomati-market --lines 50
+pm2 logs tomati-market
 
-# Voir l'utilisation des ressources
+# Monitoring
 pm2 monit
 
-# Mettre à jour l'application
+# Mise à jour de l'application
 cd ~/tomati-market
 git pull
-npm install
+npm install  
 npm run build
 pm2 restart tomati-market
-
-# Backup de la base de données
-./backup.sh
 ```
 
-## 🆘 Dépannage Rapide
+## 🔧 Dépannage
 
 **Application ne démarre pas :**
 ```bash
-pm2 logs tomati-market  # Voir les erreurs
-npm run db:push  # Réinitialiser la DB si nécessaire
+pm2 logs tomati-market
+# Vérifier les erreurs dans .env
 ```
 
 **Site inaccessible :**
 ```bash
-sudo nginx -t  # Tester la config Nginx
+sudo nginx -t
 sudo systemctl status nginx
 sudo systemctl reload nginx
 ```
 
-**Erreur de base de données :**
+**Problème SSL :**
 ```bash
-sudo -u postgres psql -l  # Lister les bases
-sudo systemctl status postgresql
+sudo certbot renew --dry-run
+sudo certbot certificates
 ```
 
-## 📱 Accès Final
+**Base de données :**
+```bash
+sudo -u postgres psql
+\l  # Lister les bases
+\c tomati_production  # Se connecter
+\dt  # Lister les tables
+```
 
-Une fois terminé, votre application sera accessible sur :
-- **https://tomati.org** (principal)
-- **https://www.tomati.org** (redirection automatique)
+## ✅ Résultat final
 
-Avec toutes les fonctionnalités :
-- ✅ Authentification sécurisée
-- ✅ Gestion des produits
-- ✅ Système de messages en temps réel
-- ✅ Likes et promotions automatiques
-- ✅ Interface d'administration
-- ✅ Géolocalisation et cartes
-- ✅ Système publicitaire
-- ✅ Sauvegardes automatiques
+Votre marketplace **Tomati Market** sera accessible sur :
+- **🌐 URL principale** : https://tomati.org
+- **🔒 SSL** : Certificat Let's Encrypt automatique
+- **💾 Base de données** : PostgreSQL sécurisée
+- **🚀 Performance** : PM2 cluster mode
+- **📱 Fonctionnalités** : Tous les modules opérationnels
 
-🎉 **Votre marketplace Tomati sera en ligne et opérationnelle !**
+**Fonctionnalités disponibles :**
+- ✅ Authentification utilisateurs
+- ✅ Catalogue produits avec géolocalisation
+- ✅ Système de likes et promotion automatique
+- ✅ Messagerie temps réel WebSocket
+- ✅ Dashboard administrateur complet
+- ✅ Système publicitaire avancé
+- ✅ Assistant IA chatbot
+- ✅ Cartes interactives Leaflet
+- ✅ Recherche et filtres avancés
+
+Votre plateforme est prête pour la production ! 🎉
