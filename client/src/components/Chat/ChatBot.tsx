@@ -29,10 +29,10 @@ export const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Bonjour ! Je suis l'assistant Tomati. Comment puis-je vous aider aujourd'hui ?",
+      content: "🍅 Bonjour et bienvenue sur Tomati Market ! Je suis votre assistant personnel. Je peux vous aider avec tout ce qui concerne notre plateforme. Que souhaitez-vous faire aujourd'hui ?",
       isBot: true,
       timestamp: new Date(),
-      suggestions: ["Comment vendre ?", "Comment acheter ?", "Créer un compte"]
+      suggestions: ["Comment vendre ?", "Comment acheter ?", "Créer un compte", "Sécurité et paiements", "Recherche avancée"]
     }
   ]);
   const [inputMessage, setInputMessage] = useState("");
@@ -79,9 +79,10 @@ export const ChatBot = () => {
     onError: () => {
       const errorMessage: Message = {
         id: Date.now().toString(),
-        content: "Désolé, je rencontre un problème technique. Veuillez réessayer plus tard.",
+        content: "🔧 Oups ! J'ai un petit souci technique momentané. Pas de panique, réessayez dans quelques secondes ! En attendant, vous pouvez naviguer sur le site ou utiliser la recherche.",
         isBot: true,
-        timestamp: new Date()
+        timestamp: new Date(),
+        suggestions: ["Réessayer", "Voir les produits", "Contacter support", "Rechercher"]
       };
       setMessages(prev => [...prev, errorMessage]);
     }
@@ -208,8 +209,15 @@ export const ChatBot = () => {
                       <div className="flex h-6 w-6 shrink-0 select-none items-center justify-center rounded-full bg-primary text-primary-foreground">
                         <Bot className="h-3 w-3" />
                       </div>
-                      <div className="rounded-lg px-3 py-2 bg-muted">
-                        <Loader2 className="h-4 w-4 animate-spin" />
+                      <div className="rounded-lg px-3 py-2 bg-primary/5 border border-primary/10">
+                        <div className="flex gap-1 items-center">
+                          <div className="flex gap-1">
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce"></div>
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                            <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                          </div>
+                          <span className="text-xs text-primary ml-2">Réflexion...</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -232,6 +240,7 @@ export const ChatBot = () => {
                   size="sm"
                   onClick={() => handleSendMessage()}
                   disabled={!inputMessage.trim() || chatMutation.isPending}
+                  className="bg-primary hover:bg-primary/90"
                 >
                   <Send className="h-4 w-4" />
                 </Button>

@@ -521,24 +521,59 @@ export async function registerRoutes(app: Express): Promise<Server> {
 function getChatbotResponse(message: string, userContext: any = {}) {
   const responses = {
     greetings: [
-      "Bonjour ! Je suis votre assistant Tomati. Comment puis-je vous aider aujourd'hui ?",
-      "Salut ! Bienvenue sur Tomati Market. Que puis-je faire pour vous ?",
-      "Bonjour ! Je suis là pour répondre à vos questions sur notre marketplace."
+      "🍅 Ravi de vous rencontrer ! Je suis l'assistant Tomati, votre guide personnel sur notre marketplace. Comment puis-je vous aider à réussir votre expérience ?",
+      "🌟 Salut ! Bienvenue dans la famille Tomati Market. Je suis là pour répondre à toutes vos questions et vous accompagner pas à pas !",
+      "👋 Bonjour ! Je suis votre assistant dédié sur Tomati. Que vous soyez acheteur ou vendeur, je vais vous simplifier la vie !"
     ],
     products: [
-      "Nous avons une large gamme de produits sur Tomati Market. Vous pouvez parcourir nos catégories ou utiliser la recherche pour trouver ce que vous cherchez.",
-      "Pour vendre un produit, connectez-vous à votre compte et accédez au tableau de bord admin. Pour acheter, parcourez nos offres.",
-      "Tous nos produits sont vérifiés par notre équipe. Vous pouvez voir les détails, photos et contacter le vendeur pour plus d'informations."
+      "🛍️ Excellente question ! Sur Tomati Market, nous avons des milliers de produits dans toutes les catégories. Utilisez notre recherche intelligente ou parcourez par catégorie. Besoin d'aide pour trouver quelque chose de spécifique ?",
+      "📱 Pour vendre : connectez-vous, cliquez sur 'Vendre' et suivez nos étapes simples. Pour acheter : parcourez, contactez le vendeur et négociez ! C'est aussi simple que ça.",
+      "✅ Tous nos produits passent par notre système de vérification. Photos authentiques, descriptions détaillées, vendeurs certifiés - votre sécurité est notre priorité !"
+    ],
+    selling: [
+      "💰 Vendre sur Tomati est gratuit et simple ! 1) Créez votre annonce avec de belles photos 2) Fixez un prix attractif 3) Répondez aux messages rapidement. Nos vendeurs gagnent en moyenne 300€/mois !",
+      "📸 Pour réussir votre vente : prenez des photos sous tous les angles, rédigez une description honnête, fixez un prix juste. Pro tip : les annonces avec 5+ photos se vendent 3x plus vite !",
+      "🚀 Secrets des vendeurs pro : répondez dans l'heure, proposez plusieurs moyens de paiement, soyez flexible sur les horaires de rencontre. Vous voulez que je vous donne plus de conseils ?"
+    ],
+    buying: [
+      "🛒 Acheter malin sur Tomati : 1) Vérifiez les photos et description 2) Posez vos questions au vendeur 3) Négociez le prix 4) Rencontrez dans un lieu public. Sécurité avant tout !",
+      "💡 Conseils d'achat : vérifiez le profil du vendeur, demandez des photos supplémentaires si besoin, testez l'article avant paiement. Notre système de notation vous aide à choisir !",
+      "🔍 Recherche avancée : utilisez les filtres par prix, localisation, état. Activez les alertes pour être notifié des nouvelles annonces qui vous intéressent !"
     ],
     help: [
-      "Je peux vous aider avec les produits, les comptes, les achats et ventes. Que voulez-vous savoir ?",
-      "Voici ce que je peux faire : vous aider à naviguer sur le site, expliquer comment vendre ou acheter, répondre aux questions sur les comptes.",
-      "N'hésitez pas à me poser vos questions sur Tomati Market !"
+      "🆘 Je suis votre assistant tout-terrain ! Je peux vous aider avec : navigation, vente/achat, problèmes techniques, conseils sécurité, optimisation d'annonces. Dites-moi tout !",
+      "🎯 Mes spécialités : expliquer les fonctionnalités, résoudre les problèmes, donner des conseils de vente, vous guider pas à pas. Quelle est votre préoccupation principale ?",
+      "💬 Pas de stress ! Je suis là 24h/24 pour vous accompagner sur Tomati. Questions techniques, conseils pratiques, aide à la navigation - je gère tout !"
     ],
     account: [
-      "Pour créer un compte, cliquez sur 'Se connecter' puis 'S'inscrire'. C'est gratuit et rapide !",
-      "Vous pouvez modifier vos informations de profil en vous connectant et en allant dans votre profil.",
-      "Si vous avez des problèmes de connexion, vérifiez votre email et mot de passe."
+      "🔐 Créer un compte Tomati : cliquez sur 'Se connecter' → 'S'inscrire' → remplissez vos infos → vérifiez votre email. C'est gratuit à vie et prend moins de 2 minutes !",
+      "⚙️ Gestion de profil : allez dans votre profil pour modifier vos infos, ajouter une photo, mettre à jour vos préférences. Un profil complet inspire plus confiance !",
+      "🔒 Problème de connexion ? Vérifiez votre email/mot de passe, regardez vos spams, essayez la récupération de mot de passe. Toujours bloqué ? Je peux vous aider autrement !"
+    ],
+    security: [
+      "🛡️ Votre sécurité, notre obsession ! Règles d'or : rencontrez dans un lieu public animé, vérifiez l'identité, payez à la remise. Nos 50 000+ utilisateurs nous font confiance !",
+      "⚠️ Alertes sécurité : jamais d'infos bancaires par message, méfiez-vous des 'super affaires', signaler = protéger la communauté. Vous êtes notre priorité absolue !",
+      "🔒 Protection 360° : comptes vérifiés, surveillance IA des fraudes, équipe de modération 24h/24. Sur Tomati, achetez et vendez l'esprit tranquille !"
+    ],
+    payment: [
+      "💳 Paiements sécurisés : privilégiez espèces à la remise, virement pour gros achats, évitez les avances. PayPal et cartes acceptés selon les vendeurs. Sécurité maximale !",
+      "💰 Conseils financiers : négociez toujours le prix, vérifiez l'article avant paiement, gardez les preuves de transaction. Smart shopping = économies garanties !",
+      "🏦 Options de paiement : la plupart des vendeurs acceptent espèces, virement, PayPal. Pour les gros montants, préférez les virements sécurisés."
+    ],
+    technical: [
+      "🔧 Problème technique ? Je suis votre SAV personnel ! Décrivez-moi le souci : navigation, upload photos, messages qui ne partent pas... Je trouve la solution !",
+      "💻 Aide technique express : rechargez la page, videz le cache, essayez un autre navigateur. 90% des problèmes se résolvent ainsi. Sinon, décrivez-moi tout !",
+      "📱 Optimisation mobile : utilisez l'app ou le site mobile, bonne connexion recommandée. Problème persistant ? Donnez-moi plus de détails !"
+    ],
+    promotion: [
+      "🚀 Booster vos ventes : photos HD multiples, titre accrocheur, prix juste, réponse rapide. Nos vendeurs stars suivent ces règles et vendent 5x plus !",
+      "⭐ Devenir vendeur premium : complétez votre profil à 100%, maintenez 5 étoiles, répondez en moins d'1h. Résultat : visibilité x10 et ventes garanties !",
+      "📈 Stats de réussite : annonces avec 5+ photos = +300% vues, prix négociable = +50% contacts, mise à jour hebdomadaire = top classement !"
+    ],
+    default: [
+      "🤔 Hmm, je n'ai pas tout à fait saisi ! Reformulez votre question ou choisissez un sujet : vendre, acheter, sécurité, technique, mon compte. Je suis là pour ça !",
+      "💭 Pas de souci, on reprend ! Dites-moi clairement ce que vous cherchez : aide vente/achat, problème technique, question sécurité, ou navigation. Je m'occupe de tout !",
+      "🎯 Recadrons ensemble ! Je maîtrise tout sur Tomati Market : ventes, achats, sécurité, techniques, promotions. Quel est votre besoin prioritaire aujourd'hui ?"
     ],
     default: [
       "Je ne suis pas sûr de comprendre votre question. Pouvez-vous la reformuler ?",
@@ -548,23 +583,42 @@ function getChatbotResponse(message: string, userContext: any = {}) {
   };
 
   const suggestions = {
-    greetings: ["Comment vendre ?", "Comment acheter ?", "Créer un compte"],
-    products: ["Types de produits", "Comment publier", "Rechercher un article"],
-    help: ["Navigation du site", "Gestion de compte", "Contacter support"],
-    account: ["Modifier profil", "Mot de passe oublié", "Supprimer compte"],
-    default: ["Aide générale", "Vendre un produit", "Créer un compte"]
+    greetings: ["Comment vendre ?", "Comment acheter ?", "Sécurité et paiements", "Créer un compte"],
+    selling: ["Conseils photos", "Fixer le prix", "Booster mes ventes", "Répondre aux acheteurs"],
+    buying: ["Négocier le prix", "Vérifier le vendeur", "Moyens de paiement", "Éviter les arnaques"],
+    products: ["Recherche avancée", "Catégories disponibles", "Alertes nouvelles annonces"],
+    security: ["Règles de sécurité", "Signaler un vendeur", "Lieux de rencontre", "Éviter les fraudes"],
+    payment: ["Moyens sécurisés", "PayPal ou espèces ?", "Virement pour gros achat"],
+    technical: ["Problème photos", "Site lent", "Messages bloqués", "App mobile"],
+    promotion: ["Devenir premium", "Photos parfaites", "Titre accrocheur", "Stats de vente"],
+    help: ["Navigation du site", "Gestion de compte", "Contacter support", "FAQ complète"],
+    account: ["Modifier profil", "Mot de passe oublié", "Vérification email", "Supprimer compte"],
+    default: ["Comment vendre ?", "Comment acheter ?", "Sécurité", "Créer un compte"]
   };
 
-  // Detect intent based on keywords
+  // Enhanced intent detection with better context understanding
   let intent = 'default';
+  const lowerMessage = message.toLowerCase();
   
-  if (/bonjour|salut|hello|hi|bonsoir/.test(message)) {
+  if (/bonjour|salut|hello|hi|bonsoir|ça va/.test(lowerMessage)) {
     intent = 'greetings';
-  } else if (/produit|article|vendre|acheter|vente|achat/.test(message)) {
+  } else if (/vendre|vente|vendeur|annonce|publier|prix|gagner/.test(lowerMessage)) {
+    intent = 'selling';
+  } else if (/acheter|achat|acheteuse|commander|payer|négocier/.test(lowerMessage)) {
+    intent = 'buying';
+  } else if (/produit|article|catalogue|recherche|trouver|cherche/.test(lowerMessage)) {
     intent = 'products';
-  } else if (/aide|help|comment|question|problème/.test(message)) {
+  } else if (/sécurité|sécurisé|arnaque|danger|risque|protection|vol/.test(lowerMessage)) {
+    intent = 'security';
+  } else if (/paiement|payer|argent|paypal|carte|virement|espèces/.test(lowerMessage)) {
+    intent = 'payment';
+  } else if (/problème|bug|erreur|marche pas|fonctionne pas|lent/.test(lowerMessage)) {
+    intent = 'technical';
+  } else if (/promotion|booster|visibilité|top|premium|réussir/.test(lowerMessage)) {
+    intent = 'promotion';
+  } else if (/aide|help|comment|question/.test(lowerMessage)) {
     intent = 'help';
-  } else if (/compte|profil|connexion|inscription|mot de passe/.test(message)) {
+  } else if (/compte|profil|connexion|inscription|mot de passe/.test(lowerMessage)) {
     intent = 'account';
   }
 
