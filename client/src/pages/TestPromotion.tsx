@@ -7,12 +7,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
-import { useNavigate } from "react-router-dom";
+import { Link } from "wouter";
 
 export const TestPromotion = () => {
   const { user } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
 
   // Get all products
@@ -65,15 +64,16 @@ export const TestPromotion = () => {
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft size={20} />
-                Retour
-              </Button>
+              <Link href="/">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft size={20} />
+                  Retour
+                </Button>
+              </Link>
               <h1 className="text-2xl font-bold text-foreground">Test Promotion Automatique</h1>
             </div>
             <Button onClick={handleRefresh} variant="outline" className="flex items-center gap-2">
