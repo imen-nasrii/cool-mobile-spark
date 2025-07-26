@@ -132,12 +132,12 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   return (
     <div className="px-4 py-3">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">
-          {category ? `Produits ${category}` : "Produits récents"}
-        </h2>
         <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
           Voir tout
         </Button>
+        <h2 className="text-lg font-semibold text-foreground">
+          {category ? `Produits ${category}` : "Produits récents"}
+        </h2>
       </div>
       
       <div className="product-grid">

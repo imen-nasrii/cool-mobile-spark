@@ -173,7 +173,7 @@ All colors MUST be HSL.
     display: flex !important;
     flex-direction: column !important;
     gap: 0.75rem !important;
-    align-items: flex-start !important;
+    align-items: flex-end !important;
   }
   
   /* Force horizontal card layout for list view */
