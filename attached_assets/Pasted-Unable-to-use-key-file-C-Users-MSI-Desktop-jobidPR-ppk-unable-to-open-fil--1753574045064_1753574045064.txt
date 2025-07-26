@@ -1,0 +1,136 @@
+Unable to use key file "C:\Users\MSI\Desktop\jobidPR.ppk" (unable to open fil                                                                                                             e)
+login as: ubuntu
+ubuntu@51.222.111.183's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-135-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Jul 26 22:15:38 UTC 2025
+
+  System load:           0.0
+  Usage of /:            6.5% of 77.35GB
+  Memory usage:          16%
+  Swap usage:            0%
+  Processes:             118
+  Users logged in:       2
+  IPv4 address for ens3: 51.222.111.183
+  IPv6 address for ens3: 2607:5300:205:200::3f85
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.2 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Sat Jul 26 21:26:28 2025 from 102.156.92.79
+ubuntu@vps-8dfc48b5:~$ sudo -u postgres createuser -s tomati
+could not change directory to "/home/ubuntu": Permission denied
+createuser: error: creation of new role failed: ERROR:  role "tomati" already ex                                                                                                             ists
+ubuntu@vps-8dfc48b5:~$ ^C
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+su: Authentication failure
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+tomati@vps-8dfc48b5:~$ cd ~/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ DATABASE_URL="postgresql://tomati:Tomati123                                                                                                             @localhost:5432/tomati_market" NODE_ENV=production PORT=5000 node dist/index.js
+10:16:53 PM [express] serving on port 5000
+cat > start-tomati-final.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomati',
+      PGPASSWORD: 'Tomati123',
+      PGDATABASE: 'tomati_market'
+    }
+  }]
+}
+EOF
+cat > start-tomati-final.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomati',
+      PGPASSWORD: 'Tomati123',
+      PGDATABASE: 'tomati_market'
+    }
+  }]
+}
+EOF^C
+tomati@vps-8dfc48b5:~/tomati-market$ cat > start-tomati-final.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomati',
+      PGPASSWORD: 'Tomati123',
+      PGDATABASE: 'tomati_market'
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete all
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [start-tomati-fixed](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start start-tomati-final.cjs
+[PM2] Starting /home/tomati/tomati-market/start-tomati-final.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬───────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                  │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼───────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ start-tomati-final    │ default     │ 1.0.0   │ fork    │ 225822   │ 0s     │ 0    │ online    │ 0%       │ 3.4mb    │ tomati   │ disabled │
+└────┴───────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 save
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$
