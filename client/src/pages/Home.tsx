@@ -91,48 +91,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
             </div>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-4 text-center">
-                <div className="bg-blue-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <ShoppingBag className="text-blue-600" size={24} />
-                </div>
-                <div className="text-2xl font-bold text-gray-900">{stats?.totalProducts || '1,234'}</div>
-                <div className="text-sm text-gray-600">Produits</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-4 text-center">
-                <div className="bg-green-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Users className="text-green-600" size={24} />
-                </div>
-                <div className="text-2xl font-bold text-gray-900">{stats?.totalUsers || '456'}</div>
-                <div className="text-sm text-gray-600">Membres</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-4 text-center">
-                <div className="bg-yellow-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <Star className="text-yellow-600" size={24} />
-                </div>
-                <div className="text-2xl font-bold text-gray-900">{promotedProducts?.length || '89'}</div>
-                <div className="text-sm text-gray-600">Favoris</div>
-              </CardContent>
-            </Card>
-            
-            <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-4 text-center">
-                <div className="bg-purple-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2">
-                  <MapPin className="text-purple-600" size={24} />
-                </div>
-                <div className="text-2xl font-bold text-gray-900">12</div>
-                <div className="text-sm text-gray-600">Villes</div>
-              </CardContent>
-            </Card>
-          </div>
+
         </div>
       </div>
 
