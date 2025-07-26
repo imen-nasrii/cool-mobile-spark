@@ -168,42 +168,20 @@ All colors MUST be HSL.
     transition: all 0.2s ease-in-out;
   }
   
-  /* Force grid layout for products */
+  /* Force list layout for products */
   .product-grid {
-    display: grid !important;
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-  }
-  
-  @media (min-width: 640px) {
-    .product-grid {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-  
-  @media (min-width: 768px) {
-    .product-grid {
-      grid-template-columns: repeat(3, 1fr) !important;
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .product-grid {
-      grid-template-columns: repeat(4, 1fr) !important;
-    }
-  }
-  
-  @media (min-width: 1280px) {
-    .product-grid {
-      grid-template-columns: repeat(5, 1fr) !important;
-    }
-  }
-  
-  /* Force vertical card layout */
-  .product-card {
     display: flex !important;
     flex-direction: column !important;
+    gap: 0.75rem !important;
+    align-items: flex-start !important;
+  }
+  
+  /* Force horizontal card layout for list view */
+  .product-card {
+    display: flex !important;
+    flex-direction: row !important;
     width: 100% !important;
+    max-width: none !important;
   }
 
   /* Glass morphism utilities */

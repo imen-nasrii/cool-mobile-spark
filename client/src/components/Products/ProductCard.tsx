@@ -42,9 +42,8 @@ export const ProductCard = ({
         className
       )}
       onClick={onClick}
-      style={{ display: 'flex', flexDirection: 'column' }}
     >
-      <div className="relative w-full h-48 bg-muted overflow-hidden">
+      <div className="relative w-24 h-24 bg-muted overflow-hidden flex-shrink-0">
         {/* Product image */}
         {product.image ? (
           <img 
@@ -69,53 +68,53 @@ export const ProductCard = ({
         </div>
       </div>
       
-      <CardContent className="p-4">
-        <div className="space-y-3">
-          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2 min-h-[2.5rem]">
+      <CardContent className="p-3 flex-1 flex flex-col justify-between">
+        <div>
+          <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
             {product.title}
           </h3>
           
-          <div className="text-xl font-bold text-primary">
+          <div className="text-lg font-bold text-primary mb-1">
             {product.isFree ? "Gratuit" : product.price}
           </div>
           
-          <div className="flex items-center text-xs text-muted-foreground">
-            <MapPin size={12} className="mr-1 flex-shrink-0" />
+          <div className="flex items-center text-xs text-muted-foreground mb-2">
+            <MapPin size={12} className="mr-1" />
             <span className="truncate">{product.location}</span>
           </div>
+        </div>
+        
+        <div className="flex items-center justify-between mt-auto pt-2">
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Clock size={12} className="mr-1" />
+            <span>{product.timeAgo}</span>
+          </div>
           
-          <div className="flex items-center justify-between pt-2 border-t border-border">
-            <div className="flex items-center text-xs text-muted-foreground">
-              <Clock size={12} className="mr-1" />
-              <span>{product.timeAgo}</span>
-            </div>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 hover:bg-destructive/10"
+              onClick={(e) => {
+                e.stopPropagation();
+                onLike?.();
+              }}
+            >
+              <Heart size={14} className="text-muted-foreground hover:text-destructive" />
+            </Button>
+            <span className="text-xs text-muted-foreground">{product.likes}</span>
             
-            <div className="flex items-center gap-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-destructive/10 rounded-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onLike?.();
-                }}
-              >
-                <Heart size={14} className="text-muted-foreground hover:text-destructive" />
-              </Button>
-              <span className="text-xs text-muted-foreground min-w-[1rem]">{product.likes}</span>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 w-8 p-0 hover:bg-primary/10 ml-1 rounded-full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMessage?.();
-                }}
-              >
-                <MessageCircle size={14} className="text-muted-foreground hover:text-primary" />
-              </Button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-7 w-7 p-0 hover:bg-primary/10 ml-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                onMessage?.();
+              }}
+            >
+              <MessageCircle size={14} className="text-muted-foreground hover:text-primary" />
+            </Button>
           </div>
         </div>
       </CardContent>
