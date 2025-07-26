@@ -112,8 +112,16 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         location: formData.location,
         category: selectedCategory,
         is_free: !formData.isPaid,
-        // For now, we'll use a placeholder image - later we can implement image upload
-        image_url: selectedImages[0] || '/src/assets/tesla-model3.jpg'
+        image_url: selectedImages[0] || '/src/assets/tesla-model3.jpg',
+        // Car-specific fields
+        ...(selectedCategory === "voiture" && {
+          car_brand: formData.brand,
+          car_model: formData.model,
+          car_year: formData.year,
+          car_condition: formData.condition,
+          car_mileage: formData.mileage,
+          car_transmission: formData.transmission
+        })
       });
 
       toast({
@@ -285,11 +293,109 @@ export const AddProduct = ({ activeTab, onTabChange }: {
               )}
             </div>
 
+            {/* Car-specific fields */}
+            {selectedCategory === "voiture" && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                  <Car size={20} className="text-primary" />
+                  Détails du véhicule
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Essential car fields */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Marque *</label>
+                    <Select value={formData.brand} onValueChange={(value) => setFormData(prev => ({ ...prev, brand: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Choisir une marque" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {carBrands.map((brand) => (
+                          <SelectItem key={brand} value={brand.toLowerCase()}>{brand}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Modèle *</label>
+                    <Input
+                      placeholder="Ex: Focus, 308, A4..."
+                      value={formData.model}
+                      onChange={(e) => setFormData(prev => ({ ...prev, model: e.target.value }))}
+                      className="h-12"
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Année *</label>
+                    <Input
+                      type="number"
+                      placeholder="Ex: 2018"
+                      value={formData.year}
+                      onChange={(e) => setFormData(prev => ({ ...prev, year: e.target.value }))}
+                      className="h-12"
+                      min="1990"
+                      max={new Date().getFullYear()}
+                      required
+                    />
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium mb-2">État *</label>
+                    <Select value={formData.condition} onValueChange={(value) => setFormData(prev => ({ ...prev, condition: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="État du véhicule" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {conditions.map((condition) => (
+                          <SelectItem key={condition.value} value={condition.value}>{condition.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                {/* Optional car details */}
+                <details className="mt-4">
+                  <summary className="cursor-pointer text-sm font-medium text-primary hover:text-primary/80 mb-3">
+                    Détails supplémentaires (optionnels)
+                  </summary>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Kilométrage</label>
+                      <Input
+                        type="number"
+                        placeholder="Ex: 80000"
+                        value={formData.mileage}
+                        onChange={(e) => setFormData(prev => ({ ...prev, mileage: e.target.value }))}
+                        className="h-12"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Transmission</label>
+                      <Select value={formData.transmission} onValueChange={(value) => setFormData(prev => ({ ...prev, transmission: value }))}>
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Type de boîte" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {transmissions.map((transmission) => (
+                            <SelectItem key={transmission.value} value={transmission.value}>{transmission.label}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </details>
+              </div>
+            )}
+
             {/* Description */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <label className="block text-base font-medium mb-3">Description *</label>
               <Textarea
-                placeholder="Description du produit"
+                placeholder={selectedCategory === "voiture" ? "Décrivez l'état du véhicule, équipements, historique..." : "Description du produit"}
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                 className="min-h-32 text-base resize-none"
