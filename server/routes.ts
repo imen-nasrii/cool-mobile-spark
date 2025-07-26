@@ -344,8 +344,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Vous ne pouvez pas aimer votre propre produit" });
       }
 
-      // Increment like count and check for automatic promotion
-      await promotionService.incrementLikeAndCheckPromotion(req.params.id);
+      // Add like and check for automatic promotion
+      await promotionService.addLikeAndCheckPromotion(req.params.id, (req as any).user.id);
 
       // Create notification for product owner
       await notificationService.notifyProductLiked(
@@ -355,6 +355,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
 
       res.json({ success: true, message: "Produit ajouté aux favoris" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Check if user liked a product
+  app.get("/api/products/:id/liked", authenticateToken, async (req, res) => {
+    try {
+      const hasLiked = await promotionService.hasUserLikedProduct(req.params.id, (req as any).user.id);
+      res.json({ liked: hasLiked });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

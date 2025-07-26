@@ -60,6 +60,14 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     staleTime: 5 * 60 * 1000,
   });
 
+  // Check if user has liked this product
+  const { data: likedData } = useQuery({
+    queryKey: ['/products', productId, 'liked'],
+    queryFn: () => apiClient.request(`/products/${productId}/liked`),
+    enabled: !!productId && !!user,
+    staleTime: 1 * 60 * 1000,
+  });
+
   // Like product mutation
   const likeMutation = useMutation({
     mutationFn: (id: string) => apiClient.request(`/products/${id}/like`, { method: 'POST' }),
@@ -71,6 +79,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       });
       // Refetch product to get updated like count
       queryClient.invalidateQueries({ queryKey: ['/products', productId] });
+      queryClient.invalidateQueries({ queryKey: ['/products', productId, 'liked'] });
     },
     onError: (error: any) => {
       toast({
@@ -93,6 +102,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       setLoading(false);
     }
   }, [productData, isLoading]);
+
+  useEffect(() => {
+    if (likedData) {
+      setIsLiked(likedData.liked);
+    }
+  }, [likedData]);
 
   const handleLike = async () => {
     if (!user || !product) return;

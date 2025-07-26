@@ -77,6 +77,14 @@ export const message_reads = pgTable("message_reads", {
   read_at: timestamp("read_at").defaultNow().notNull(),
 });
 
+// Product likes for tracking user likes on products
+export const product_likes = pgTable("product_likes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Notifications table for user notifications
 export const notifications = pgTable("notifications", {
   id: uuid("id").primaryKey().defaultRandom(),

@@ -1,6 +1,6 @@
 import { db } from "./db";
-import { products, notifications } from "@shared/schema";
-import { eq } from "drizzle-orm";
+import { products, notifications, product_likes } from "@shared/schema";
+import { eq, and, count } from "drizzle-orm";
 import { notificationService } from "./notifications";
 
 export class PromotionService {
@@ -47,21 +47,36 @@ export class PromotionService {
     return false;
   }
 
-  async incrementLikeAndCheckPromotion(productId: string): Promise<void> {
-    // Get current like count and increment it
-    const currentProduct = await db
-      .select({ like_count: products.like_count })
-      .from(products)
-      .where(eq(products.id, productId))
+  async addLikeAndCheckPromotion(productId: string, userId: string): Promise<void> {
+    // Check if user already liked this product
+    const existingLike = await db
+      .select()
+      .from(product_likes)
+      .where(and(
+        eq(product_likes.product_id, productId),
+        eq(product_likes.user_id, userId)
+      ))
       .limit(1);
 
-    if (currentProduct.length === 0) {
-      throw new Error("Product not found");
+    if (existingLike.length > 0) {
+      throw new Error("Vous avez déjà aimé ce produit");
     }
 
-    const newLikeCount = currentProduct[0].like_count + 1;
+    // Add the like
+    await db.insert(product_likes).values({
+      product_id: productId,
+      user_id: userId
+    });
 
-    // Update like count
+    // Count total likes for this product
+    const likeCountResult = await db
+      .select({ count: count() })
+      .from(product_likes)
+      .where(eq(product_likes.product_id, productId));
+
+    const newLikeCount = likeCountResult[0]?.count || 0;
+
+    // Update like count in products table
     await db
       .update(products)
       .set({ 
@@ -71,6 +86,19 @@ export class PromotionService {
 
     // Check for automatic promotion
     await this.checkAndPromoteProduct(productId);
+  }
+
+  async hasUserLikedProduct(productId: string, userId: string): Promise<boolean> {
+    const like = await db
+      .select()
+      .from(product_likes)
+      .where(and(
+        eq(product_likes.product_id, productId),
+        eq(product_likes.user_id, userId)
+      ))
+      .limit(1);
+
+    return like.length > 0;
   }
 
   async getPromotedProducts(): Promise<any[]> {
