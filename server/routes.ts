@@ -574,11 +574,6 @@ function getChatbotResponse(message: string, userContext: any = {}) {
       "🤔 Hmm, je n'ai pas tout à fait saisi ! Reformulez votre question ou choisissez un sujet : vendre, acheter, sécurité, technique, mon compte. Je suis là pour ça !",
       "💭 Pas de souci, on reprend ! Dites-moi clairement ce que vous cherchez : aide vente/achat, problème technique, question sécurité, ou navigation. Je m'occupe de tout !",
       "🎯 Recadrons ensemble ! Je maîtrise tout sur Tomati Market : ventes, achats, sécurité, techniques, promotions. Quel est votre besoin prioritaire aujourd'hui ?"
-    ],
-    default: [
-      "Je ne suis pas sûr de comprendre votre question. Pouvez-vous la reformuler ?",
-      "Pouvez-vous être plus précis ? Je peux vous aider avec les produits, les comptes ou la navigation.",
-      "Je suis là pour vous aider ! Posez-moi des questions sur Tomati Market."
     ]
   };
 

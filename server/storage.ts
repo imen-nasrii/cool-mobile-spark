@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, desc, or, sql } from "drizzle-orm";
+import { eq, desc, or, sql, and } from "drizzle-orm";
 import { 
   users, profiles, categories, products, advertisements, product_likes,
   type User, type InsertUser,
@@ -177,7 +177,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : sql`${conditions[0]} AND ${conditions.slice(1).join(' AND ')}`;
+    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
     return await query
       .where(whereClause)

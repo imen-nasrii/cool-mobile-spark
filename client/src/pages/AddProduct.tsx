@@ -117,9 +117,9 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         ...(selectedCategory === "voiture" && {
           car_brand: formData.brand,
           car_model: formData.model,
-          car_year: formData.year,
+          car_year: formData.year ? parseInt(formData.year) : undefined,
           car_condition: formData.condition,
-          car_mileage: formData.mileage,
+          car_mileage: formData.mileage ? parseInt(formData.mileage) : undefined,
           car_transmission: formData.transmission
         })
       });

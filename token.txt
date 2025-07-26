@@ -1,0 +1,1 @@
+{"user":{"id":"c3764e54-47ca-45b4-9563-91e7f1ed1695","email":"admin@tomati.com","display_name":"Administrateur","role":"admin"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjMzc2NGU1NC00N2NhLTQ1YjQtOTU2My05MWU3ZjFlZDE2OTUiLCJpYXQiOjE3NTM1NjIzNDksImV4cCI6MTc1NDE2NzE0OX0.J7UdxolneSOXyx5QTGxrX0mgla7HCv9NVrFiFhWu6zc"}
