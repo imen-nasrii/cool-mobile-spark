@@ -1,0 +1,69 @@
+tomati@vps-8dfc48b5:~$ # Vérifier le statut PM2
+sudo su - tomati
+pm2 status
+pm2 logs tomati-market --lines 10
+[sudo] password for tomati:
+tomati@vps-8dfc48b5:~$ # Vérifier le statut PM2
+sudo su - tomati
+pm2 status
+pm2 logs tomati-market --lines 10
+[sudo] password for tomati:
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ pm2 status
+pm2 logs tomati-market --lines 10
+┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬
+│ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │
+├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼
+│ 0  │ pm2.production    │ default     │ 1.0.0   │ fork    │ 224608   │ 10m    │
+└────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴
+[TAILING] Tailing last 10 lines for [tomati-market] process (change the value wi
+# Vérifier si le port 5000 écoute
+netstat -tlnp | grep :5000
+^C
+tomati@vps-8dfc48b5:~$ # Vérifier si le port 5000 écoute
+netstat -tlnp | grep :5000
+Command 'netstat' not found, but can be installed with:
+sudo apt install net-tools
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ sudo apt install net-tools
+[sudo] password for tomati:
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  net-tools
+0 upgraded, 1 newly installed, 0 to remove and 0 not upgraded.
+Need to get 204 kB of archives.
+After this operation, 819 kB of additional disk space will be used.
+Get:1 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates/main amd64 net-
+Fetched 204 kB in 1s (226 kB/s)
+Selecting previously unselected package net-tools.
+(Reading database ... 107871 files and directories currently installed.)
+Preparing to unpack .../net-tools_1.60+git20181103.0eebece-1ubuntu5.4_amd64.deb
+Unpacking net-tools (1.60+git20181103.0eebece-1ubuntu5.4) ...
+Setting up net-tools (1.60+git20181103.0eebece-1ubuntu5.4) ...
+Processing triggers for man-db (2.10.2-1) ...
+Scanning processes...
+Scanning candidates...
+Scanning linux images...
+
+Restarting services...
+Service restarts being deferred:
+ /etc/needrestart/restart.d/dbus.service
+ systemctl restart getty@tty1.service
+ systemctl restart networkd-dispatcher.service
+ systemctl restart systemd-logind.service
+ systemctl restart unattended-upgrades.service
+
+No containers need to be restarted.
+
+No user sessions are running outdated binaries.
+
+No VM guests are running outdated hypervisor (qemu) binaries on this host.
+tomati@vps-8dfc48b5:~$ netstat -tlnp | grep :5000
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tomati@vps-8dfc48b5:~$ # Tester la connexion locale
+curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~$
