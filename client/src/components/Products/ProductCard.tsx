@@ -38,12 +38,12 @@ export const ProductCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-md transition-shadow cursor-pointer w-full flex flex-row", 
+        "overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer w-full", 
         className
       )}
       onClick={onClick}
     >
-      <div className="relative w-24 h-24 bg-muted overflow-hidden flex-shrink-0">
+      <div className="relative w-full h-48 bg-muted overflow-hidden">
         {/* Product image */}
         {product.image ? (
           <img 
@@ -68,44 +68,53 @@ export const ProductCard = ({
         </div>
       </div>
       
-      <CardContent className="p-3 flex-1 flex flex-col justify-between">
-        <div>
-          <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
+      <CardContent className="p-4">
+        <div className="space-y-3">
+          <h3 className="font-semibold text-foreground text-sm leading-tight line-clamp-2 min-h-[2.5rem]">
             {product.title}
           </h3>
           
-          <div className="flex items-center gap-2 mb-2">
-            <div className="bg-tomati-red text-white px-2 py-1 rounded text-xs font-medium">
-              {product.isFree ? t('free') : t('sold')}
-            </div>
-            <span className="font-bold text-gray-900 text-sm">
-              {product.price}
-            </span>
+          <div className="text-xl font-bold text-primary">
+            {product.isFree ? "Gratuit" : product.price}
           </div>
-        </div>
-        
-        <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <div className="flex items-center gap-1">
-            <MapPin size={12} />
+          
+          <div className="flex items-center text-xs text-muted-foreground">
+            <MapPin size={12} className="mr-1 flex-shrink-0" />
             <span className="truncate">{product.location}</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Clock size={12} />
-            <span>{product.timeAgo}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="w-6 h-6 rounded-full p-0"
-              onClick={(e) => {
-                e.stopPropagation();
-                onLike?.();
-              }}
-            >
-              <Heart size={12} className="text-tomati-red hover:fill-tomati-red transition-all" />
-            </Button>
-            <span className="text-xs">{product.likes}</span>
+          
+          <div className="flex items-center justify-between pt-2 border-t border-border">
+            <div className="flex items-center text-xs text-muted-foreground">
+              <Clock size={12} className="mr-1" />
+              <span>{product.timeAgo}</span>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-destructive/10 rounded-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onLike?.();
+                }}
+              >
+                <Heart size={14} className="text-muted-foreground hover:text-destructive" />
+              </Button>
+              <span className="text-xs text-muted-foreground min-w-[1rem]">{product.likes}</span>
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 hover:bg-primary/10 ml-1 rounded-full"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMessage?.();
+                }}
+              >
+                <MessageCircle size={14} className="text-muted-foreground hover:text-primary" />
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>

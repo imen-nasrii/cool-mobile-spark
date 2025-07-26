@@ -140,7 +140,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         </Button>
       </div>
       
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {transformedProducts.map((product: any) => (
           <ProductCard
             key={product.id}
@@ -148,6 +148,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
             onClick={() => onProductClick?.(product.id)}
             onLike={() => console.log("Liked:", product.id)}
             onMessage={() => console.log("Message:", product.id)}
+            className="h-fit"
           />
         ))}
       </div>
