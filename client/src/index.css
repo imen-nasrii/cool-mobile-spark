@@ -172,7 +172,7 @@ All colors MUST be HSL.
   .product-grid {
     display: flex !important;
     flex-direction: column !important;
-    gap: 0.75rem !important;
+    gap: 0.25rem !important;
     align-items: flex-end !important;
   }
   

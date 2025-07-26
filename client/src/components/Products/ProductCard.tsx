@@ -68,7 +68,7 @@ export const ProductCard = ({
         </div>
       </div>
       
-      <CardContent className="p-3 flex-1 flex flex-col justify-between">
+      <CardContent className="p-2 flex-1 flex flex-col justify-between">
         <div>
           <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
             {product.title}

@@ -130,8 +130,8 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   }
 
   return (
-    <div className="px-4 py-3">
-      <div className="flex items-center justify-between mb-4">
+    <div className="px-4 py-2">
+      <div className="flex items-center justify-between mb-2">
         <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
           Voir tout
         </Button>
