@@ -58,9 +58,11 @@ interface ProductGridProps {
   sortBy?: string;
   searchTerm?: string;
   onProductClick?: (productId: string) => void;
+  onProductLike?: (productId: string) => void;
+  onProductMessage?: (productId: string) => void;
 }
 
-export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
@@ -146,8 +148,8 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
             key={product.id}
             product={product}
             onClick={() => onProductClick?.(product.id)}
-            onLike={() => console.log("Liked:", product.id)}
-            onMessage={() => console.log("Message:", product.id)}
+            onLike={() => onProductLike?.(product.id)}
+            onMessage={() => onProductMessage?.(product.id)}
             className="product-card"
           />
         ))}

@@ -6,9 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
 import { AdvancedFilters } from "@/components/Filters/AdvancedFilters";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 // Import product images
 import teslaImage from "@/assets/tesla-model3.jpg";
@@ -86,6 +88,9 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [activeFilters, setActiveFilters] = useState<FilterOptions>({
     category: "",
     minPrice: 0,
@@ -253,6 +258,50 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     );
   };
 
+  // Like product mutation
+  const likeProductMutation = useMutation({
+    mutationFn: async (productId: string) => {
+      const response = await fetch(`/api/products/${productId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to like product');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/products'] });
+      toast({
+        title: "Produit aimé !",
+        description: "Vous avez aimé ce produit"
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'aimer ce produit",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleProductLike = (productId: string) => {
+    likeProductMutation.mutate(productId);
+  };
+
+  const handleProductMessage = (productId: string) => {
+    // Navigate to messages with the product owner
+    navigate(`/messages?product=${productId}`);
+    toast({
+      title: "Redirection vers les messages",
+      description: "Ouverture de la conversation avec le vendeur"
+    });
+  };
+
   // Transform products for ProductCard component
   const transformedProducts = filteredProducts.map(product => ({
     id: product.id,
@@ -367,8 +416,8 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
               key={product.id}
               product={product}
               onClick={() => onProductClick?.(product.id)}
-              onLike={() => console.log("Liked:", product.id)}
-              onMessage={() => console.log("Message:", product.id)}
+              onLike={() => handleProductLike(product.id)}
+              onMessage={() => handleProductMessage(product.id)}
             />
           ))}
         </div>

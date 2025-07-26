@@ -9,8 +9,10 @@ import { ProductGrid } from "@/components/Products/ProductGrid";
 import { AdBanner } from "@/components/Ads/AdBanner";
 import { LikeButton } from "@/components/Likes/LikeButton";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 interface HomeProps {
   onProductClick?: (productId: string) => void;
@@ -24,6 +26,9 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { t } = useLanguage();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   // Fetch statistics for the homepage
   const { data: stats } = useQuery({
@@ -50,6 +55,50 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
 
   const handleCategorySelect = (categoryId: string) => {
     setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
+  };
+
+  // Like product mutation
+  const likeProductMutation = useMutation({
+    mutationFn: async (productId: string) => {
+      const response = await fetch(`/api/products/${productId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Failed to like product');
+      }
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/products'] });
+      toast({
+        title: "Produit aimé !",
+        description: "Vous avez aimé ce produit"
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'aimer ce produit",
+        variant: "destructive"
+      });
+    }
+  });
+
+  const handleProductLike = (productId: string) => {
+    likeProductMutation.mutate(productId);
+  };
+
+  const handleProductMessage = (productId: string) => {
+    // Navigate to messages with the product owner
+    navigate(`/messages?product=${productId}`);
+    toast({
+      title: "Redirection vers les messages",
+      description: "Ouverture de la conversation avec le vendeur"
+    });
   };
 
   return (
@@ -251,6 +300,8 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
           sortBy={sortBy}
           searchTerm={searchTerm}
           onProductClick={onProductClick}
+          onProductLike={handleProductLike}
+          onProductMessage={handleProductMessage}
         />
         
         {/* Between Products Ad */}
