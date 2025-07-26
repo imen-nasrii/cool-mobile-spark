@@ -369,14 +369,17 @@ export default function MapView() {
                             </div>
                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
                               <Heart size={12} />
-                              {product.like_count || 0}
+                              {product.likes || 0}
                             </div>
                           </div>
 
                           <div className="flex gap-2">
                             <Button 
                               size="sm" 
-                              onClick={() => handleContactSeller(product)}
+                              onClick={() => {
+                                // Open messaging
+                                console.log('Contact seller for product:', product.id);
+                              }}
                               className="flex-1 bg-primary hover:bg-primary/90"
                             >
                               Contacter

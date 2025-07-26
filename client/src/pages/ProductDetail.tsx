@@ -112,8 +112,16 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const handleLike = async () => {
     if (!user || !product) return;
     
-    // Toggle like (simplified - in real app you'd have a likes table)
-    setIsLiked(!isLiked);
+    if (isLiked) {
+      toast({
+        title: "Information",
+        description: "Vous avez déjà aimé ce produit",
+        variant: "default"
+      });
+      return;
+    }
+    
+    likeMutation.mutate(product.id);
   };
 
   const isOwner = user?.id === product?.user_id;
@@ -350,7 +358,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <CardContent className="p-6">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
-                    <div className="text-2xl font-bold text-primary">{product.likes}</div>
+                    <div className="text-2xl font-bold text-primary">{product.like_count || 0}</div>
                     <div className="text-sm text-muted-foreground">J'aime</div>
                   </div>
                   <div>
