@@ -44,6 +44,20 @@ export const products = pgTable("products", {
   is_promoted: boolean("is_promoted").default(false).notNull(),
   promoted_at: timestamp("promoted_at"),
   user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  
+  // Champs spécifiques aux voitures
+  car_fuel_type: text("car_fuel_type"), // Essence, Diesel, Électrique, Hybride
+  car_transmission: text("car_transmission"), // Manuelle, Automatique
+  car_year: integer("car_year"),
+  car_mileage: integer("car_mileage"), // Kilométrage
+  car_engine_size: text("car_engine_size"), // Cylindrée (ex: 1.6L)
+  car_doors: integer("car_doors"), // Nombre de portes
+  car_seats: integer("car_seats"), // Nombre de places
+  car_color: text("car_color"),
+  car_brand: text("car_brand"), // Marque
+  car_model: text("car_model"), // Modèle
+  car_condition: text("car_condition"), // Neuf, Occasion, Accidenté
+  
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });

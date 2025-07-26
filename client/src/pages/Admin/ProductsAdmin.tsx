@@ -45,6 +45,18 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
     is_free: false,
     is_reserved: false,
     image_url: '',
+    // Champs voiture
+    car_fuel_type: '',
+    car_transmission: '',
+    car_year: '',
+    car_mileage: '',
+    car_engine_size: '',
+    car_doors: '',
+    car_seats: '',
+    car_color: '',
+    car_brand: '',
+    car_model: '',
+    car_condition: '',
   });
 
   useEffect(() => {
@@ -53,12 +65,9 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const response = await fetch('/api/products');
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
       setProducts(data || []);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -76,28 +85,21 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
     e.preventDefault();
     
     try {
-      if (editingProduct) {
-        const { error } = await supabase
-          .from('products')
-          .update(formData)
-          .eq('id', editingProduct.id);
+      const url = editingProduct ? `/api/products/${editingProduct.id}` : '/api/products';
+      const method = editingProduct ? 'PUT' : 'POST';
+      
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
 
-        if (error) throw error;
-        toast({
-          title: "Succès",
-          description: "Produit mis à jour avec succès",
-        });
-      } else {
-        const { error } = await supabase
-          .from('products')
-          .insert([formData]);
+      if (!response.ok) throw new Error('Failed to save product');
 
-        if (error) throw error;
-        toast({
-          title: "Succès",
-          description: "Produit créé avec succès",
-        });
-      }
+      toast({
+        title: "Succès",
+        description: editingProduct ? "Produit mis à jour avec succès" : "Produit créé avec succès",
+      });
 
       setIsDialogOpen(false);
       resetForm();
@@ -117,12 +119,11 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
     if (!confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
 
     try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', productId);
+      const response = await fetch(`/api/products/${productId}`, {
+        method: 'DELETE',
+      });
 
-      if (error) throw error;
+      if (!response.ok) throw new Error('Failed to delete product');
       
       toast({
         title: "Succès",
@@ -151,6 +152,18 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
       is_free: false,
       is_reserved: false,
       image_url: '',
+      // Champs voiture
+      car_fuel_type: '',
+      car_transmission: '',
+      car_year: '',
+      car_mileage: '',
+      car_engine_size: '',
+      car_doors: '',
+      car_seats: '',
+      car_color: '',
+      car_brand: '',
+      car_model: '',
+      car_condition: '',
     });
     setEditingProduct(null);
   };
@@ -166,6 +179,18 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
       is_free: product.is_free,
       is_reserved: product.is_reserved,
       image_url: product.image_url || '',
+      // Champs voiture
+      car_fuel_type: (product as any).car_fuel_type || '',
+      car_transmission: (product as any).car_transmission || '',
+      car_year: (product as any).car_year || '',
+      car_mileage: (product as any).car_mileage || '',
+      car_engine_size: (product as any).car_engine_size || '',
+      car_doors: (product as any).car_doors || '',
+      car_seats: (product as any).car_seats || '',
+      car_color: (product as any).car_color || '',
+      car_brand: (product as any).car_brand || '',
+      car_model: (product as any).car_model || '',
+      car_condition: (product as any).car_condition || '',
     });
     setIsDialogOpen(true);
   };
@@ -189,7 +214,7 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
                 Ajouter un produit
               </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
                   {editingProduct ? 'Modifier le produit' : 'Nouveau produit'}
@@ -251,6 +276,108 @@ export function ProductsAdmin({ onStatsUpdate }: ProductsAdminProps) {
                     </SelectContent>
                   </Select>
                 </div>
+
+                {/* Champs spécifiques aux voitures */}
+                {formData.category === 'vehicles' && (
+                  <div className="space-y-4 border-t pt-4">
+                    <h4 className="font-semibold text-sm">Détails du véhicule</h4>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="car_brand">Marque</Label>
+                        <Input
+                          id="car_brand"
+                          value={formData.car_brand}
+                          onChange={(e) => setFormData({ ...formData, car_brand: e.target.value })}
+                          placeholder="Ex: Peugeot"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="car_model">Modèle</Label>
+                        <Input
+                          id="car_model"
+                          value={formData.car_model}
+                          onChange={(e) => setFormData({ ...formData, car_model: e.target.value })}
+                          placeholder="Ex: 208"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="car_fuel_type">Carburant</Label>
+                        <Select value={formData.car_fuel_type} onValueChange={(value) => setFormData({ ...formData, car_fuel_type: value })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Type de carburant" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="essence">Essence</SelectItem>
+                            <SelectItem value="diesel">Diesel</SelectItem>
+                            <SelectItem value="hybride">Hybride</SelectItem>
+                            <SelectItem value="electrique">Électrique</SelectItem>
+                            <SelectItem value="gpl">GPL</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="car_transmission">Transmission</Label>
+                        <Select value={formData.car_transmission} onValueChange={(value) => setFormData({ ...formData, car_transmission: value })}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Transmission" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="manuelle">Manuelle</SelectItem>
+                            <SelectItem value="automatique">Automatique</SelectItem>
+                            <SelectItem value="semi-automatique">Semi-automatique</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="car_year">Année</Label>
+                        <Input
+                          id="car_year"
+                          type="number"
+                          value={formData.car_year}
+                          onChange={(e) => setFormData({ ...formData, car_year: e.target.value })}
+                          placeholder="Ex: 2020"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="car_mileage">Kilométrage</Label>
+                        <Input
+                          id="car_mileage"
+                          type="number"
+                          value={formData.car_mileage}
+                          onChange={(e) => setFormData({ ...formData, car_mileage: e.target.value })}
+                          placeholder="Ex: 50000"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="car_condition">État</Label>
+                      <Select value={formData.car_condition} onValueChange={(value) => setFormData({ ...formData, car_condition: value })}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="État du véhicule" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="neuf">Neuf</SelectItem>
+                          <SelectItem value="tres-bon">Très bon état</SelectItem>
+                          <SelectItem value="bon">Bon état</SelectItem>
+                          <SelectItem value="correct">État correct</SelectItem>
+                          <SelectItem value="a-renover">À rénover</SelectItem>
+                          <SelectItem value="accidente">Accidenté</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
                 
                 <div>
                   <Label htmlFor="image_url">URL de l'image</Label>
