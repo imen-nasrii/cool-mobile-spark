@@ -42,6 +42,7 @@ export const ProductCard = ({
         className
       )}
       onClick={onClick}
+      style={{ display: 'flex', flexDirection: 'column' }}
     >
       <div className="relative w-full h-48 bg-muted overflow-hidden">
         {/* Product image */}

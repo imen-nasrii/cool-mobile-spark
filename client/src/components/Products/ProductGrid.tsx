@@ -140,7 +140,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="product-grid gap-6">
         {transformedProducts.map((product: any) => (
           <ProductCard
             key={product.id}
@@ -148,7 +148,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
             onClick={() => onProductClick?.(product.id)}
             onLike={() => console.log("Liked:", product.id)}
             onMessage={() => console.log("Message:", product.id)}
-            className="h-fit"
+            className="product-card"
           />
         ))}
       </div>
