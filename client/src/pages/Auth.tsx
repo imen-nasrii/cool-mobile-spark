@@ -162,9 +162,11 @@ export default function Auth() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="bg-tomati-red p-2 rounded-lg">
-              <ShoppingBag className="h-6 w-6 text-white" />
-            </div>
+            <img 
+              src="/tomati-logo.jpg" 
+              alt="Tomati Market Logo" 
+              className="w-10 h-10 rounded-full object-cover shadow-md"
+            />
             <h1 className="text-2xl font-bold text-gray-900">{currentText.title}</h1>
           </div>
           <p className="text-gray-600">{currentText.subtitle}</p>

@@ -112,9 +112,11 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
-              <div className="bg-primary/10 p-3 rounded-full">
-                <ShoppingBag className="text-primary" size={32} />
-              </div>
+              <img 
+                src="/tomati-logo.jpg" 
+                alt="Tomati Market Logo" 
+                className="w-16 h-16 rounded-full object-cover shadow-lg"
+              />
               <h1 className="text-4xl font-heading font-bold text-gray-900">
                 Tomati <span className="text-primary">Market</span>
               </h1>
