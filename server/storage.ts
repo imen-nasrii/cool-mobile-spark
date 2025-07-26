@@ -2,11 +2,12 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { eq, desc, or, sql } from "drizzle-orm";
 import { 
-  users, profiles, categories, products,
+  users, profiles, categories, products, advertisements, product_likes,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
-  type Product, type InsertProduct
+  type Product, type InsertProduct,
+  type Advertisement, type InsertAdvertisement
 } from "@shared/schema";
 
 const connectionString = process.env.DATABASE_URL!;
@@ -35,6 +36,16 @@ export interface IStorage {
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: string): Promise<boolean>;
+  
+  // Advertisements
+  getAdvertisements(position?: string, category?: string): Promise<Advertisement[]>;
+  trackAdImpression(adId: string): Promise<void>;
+  trackAdClick(adId: string): Promise<void>;
+  
+  // Likes
+  getUserProductLike(userId: string, productId: string): Promise<any>;
+  addProductLike(userId: string, productId: string): Promise<void>;
+  updateProductLikes(productId: string): Promise<Product | undefined>;
   
   // Legacy message methods removed - use MessagingService instead
 }
@@ -151,6 +162,76 @@ export class DatabaseStorage implements IStorage {
   async deleteProduct(id: string): Promise<boolean> {
     const result = await db.delete(products).where(eq(products.id, id));
     return result.length > 0;
+  }
+  
+  // Advertisements
+  async getAdvertisements(position?: string, category?: string): Promise<Advertisement[]> {
+    let query = db.select().from(advertisements);
+    let conditions = [eq(advertisements.is_active, true)];
+    
+    if (position) {
+      conditions.push(eq(advertisements.position, position));
+    }
+    if (category) {
+      conditions.push(or(eq(advertisements.category, category), sql`${advertisements.category} IS NULL`));
+    }
+    
+    // Build the where clause properly
+    const whereClause = conditions.length === 1 ? conditions[0] : sql`${conditions[0]} AND ${conditions.slice(1).join(' AND ')}`;
+    
+    return await query
+      .where(whereClause)
+      .orderBy(desc(advertisements.created_at));
+  }
+
+  async trackAdImpression(adId: string): Promise<void> {
+    await db.update(advertisements)
+      .set({ impression_count: sql`${advertisements.impression_count} + 1` })
+      .where(eq(advertisements.id, adId));
+  }
+
+  async trackAdClick(adId: string): Promise<void> {
+    await db.update(advertisements)
+      .set({ 
+        click_count: sql`${advertisements.click_count} + 1`,
+        impression_count: sql`${advertisements.impression_count} + 1`
+      })
+      .where(eq(advertisements.id, adId));
+  }
+  
+  // Likes
+  async getUserProductLike(userId: string, productId: string): Promise<any> {
+    const result = await db.select().from(product_likes)
+      .where(sql`${product_likes.user_id} = ${userId} AND ${product_likes.product_id} = ${productId}`)
+      .limit(1);
+    return result[0];
+  }
+
+  async addProductLike(userId: string, productId: string): Promise<void> {
+    await db.insert(product_likes).values({
+      user_id: userId,
+      product_id: productId
+    });
+  }
+
+  async updateProductLikes(productId: string): Promise<Product | undefined> {
+    // Count total likes for this product
+    const likesResult = await db.select({
+      count: sql<number>`count(*)`
+    }).from(product_likes).where(eq(product_likes.product_id, productId));
+    
+    const likeCount = likesResult[0]?.count || 0;
+    
+    // Update product like count
+    const result = await db.update(products)
+      .set({ 
+        like_count: likeCount,
+        updated_at: new Date()
+      })
+      .where(eq(products.id, productId))
+      .returning();
+    
+    return result[0];
   }
 
   // Legacy message methods removed - use MessagingService instead

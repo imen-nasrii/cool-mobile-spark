@@ -97,6 +97,27 @@ export const notifications = pgTable("notifications", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Advertisements table for promoted content
+export const advertisements = pgTable("advertisements", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  image_url: text("image_url"),
+  target_url: text("target_url"),
+  advertiser_name: text("advertiser_name").notNull(),
+  category: text("category"), // Target specific categories
+  position: text("position").notNull(), // 'header', 'sidebar', 'between_products', 'footer'
+  is_active: boolean("is_active").default(true).notNull(),
+  start_date: timestamp("start_date").defaultNow().notNull(),
+  end_date: timestamp("end_date"),
+  click_count: integer("click_count").default(0).notNull(),
+  impression_count: integer("impression_count").default(0).notNull(),
+  budget: integer("budget"), // in cents
+  cost_per_click: integer("cost_per_click").default(100), // in cents
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -142,12 +163,22 @@ export const insertNotificationSchema = createInsertSchema(notifications).omit({
   created_at: true,
 });
 
+export const insertAdvertisementSchema = createInsertSchema(advertisements).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+  click_count: true,
+  impression_count: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Profile = typeof profiles.$inferSelect;
 export type InsertProfile = z.infer<typeof insertProfileSchema>;
 export type Category = typeof categories.$inferSelect;
+export type Advertisement = typeof advertisements.$inferSelect;
+export type InsertAdvertisement = z.infer<typeof insertAdvertisementSchema>;
 export type InsertCategory = z.infer<typeof insertCategorySchema>;
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = z.infer<typeof insertProductSchema>;

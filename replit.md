@@ -34,6 +34,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Comprehensive settings page**: User preferences, notifications, privacy, appearance, and account management
 - ✅ **Like system with automatic promotion**: API endpoint for liking products with anti-abuse protection
 - ✅ **Promotion testing interface**: Debug page to test automatic promotion functionality
+- ✅ **Advanced advertising system**: Complete ad management with impression/click tracking and position-based display
+- ✅ **Enhanced likes system**: Smart LikeButton component with animations, promotion notifications, and milestone badges
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
@@ -69,6 +71,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - `messages`: Real-time messaging system with conversation threading
 - `message_reads`: Read status tracking for messages
 - `notifications`: Real-time user notifications with read status
+- `advertisements`: Advanced advertising system with impression/click tracking
+- `product_likes`: Enhanced user-product like relationships with analytics
 - All tables properly linked with foreign key relationships and indexes
 
 ## User Preferences

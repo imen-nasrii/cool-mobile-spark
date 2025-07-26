@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ImageGallery } from "@/components/UI/ImageGallery";
 import { ProductChat } from "@/components/Chat/ProductChat";
 import { ProductMap } from "@/components/Map/ProductMap";
+import { LikeButton } from "@/components/Likes/LikeButton";
+import { AdBanner } from "@/components/Ads/AdBanner";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
@@ -207,15 +209,15 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <Share size={16} />
               Partager
             </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className={`gap-2 ${isLiked ? "bg-red-50 border-red-200 text-red-600" : ""}`}
-              onClick={handleLike}
-            >
-              <Heart size={16} className={isLiked ? "fill-current" : ""} />
-              {isLiked ? "Aimé" : "J'aime"}
-            </Button>
+            <LikeButton 
+              productId={product.id}
+              initialLikeCount={product.like_count || 0}
+              isPromoted={product.is_promoted}
+              size="md"
+              variant="outline"
+              showCount={true}
+              showPromotedBadge={true}
+            />
           </div>
         </div>
       </div>
@@ -476,6 +478,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </CardContent>
             </Card>
 
+            {/* Sidebar Ad */}
+            <AdBanner position="sidebar" category={product.category} />
+
             {/* Action Buttons */}
             {!isOwner && (
               <div className="flex gap-4">
@@ -528,6 +533,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </div>
         </div>
       )}
+
+      {/* Footer Ad */}
+      <div className="mt-8 px-4">
+        <AdBanner position="footer" showCloseButton={false} />
+      </div>
     </div>
   );
 };

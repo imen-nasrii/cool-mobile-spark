@@ -417,6 +417,90 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Advertisements endpoints
+  app.get("/api/advertisements", async (req, res) => {
+    try {
+      const { position, category } = req.query;
+      const ads = await storage.getAdvertisements(position as string, category as string);
+      res.json(ads);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/advertisements/:id/impression", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.trackAdImpression(id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/advertisements/:id/click", async (req, res) => {
+    try {
+      const { id } = req.params;
+      await storage.trackAdClick(id);
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Enhanced like endpoint with promotion tracking
+  app.post("/api/products/:id/like", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+
+      // Check if user already liked this product
+      const existingLike = await storage.getUserProductLike(userId, id);
+      if (existingLike) {
+        return res.status(400).json({ error: "Vous avez déjà aimé ce produit" });
+      }
+
+      // Add like
+      await storage.addProductLike(userId, id);
+      
+      // Get updated product and check for promotion
+      const updatedProduct = await storage.updateProductLikes(id);
+      const wasPromoted = await promotionService.checkAndPromoteProduct(id);
+
+      // Send notification to product owner
+      if (updatedProduct && updatedProduct.user_id) {
+        await notificationService.notifyProductLiked(
+          updatedProduct.user_id,
+          updatedProduct.title,
+          updatedProduct.id
+        );
+      }
+
+      res.json({ 
+        success: true, 
+        message: "Produit ajouté aux favoris",
+        newLikeCount: updatedProduct?.like_count || 0,
+        wasPromoted,
+        isPromoted: updatedProduct?.is_promoted || false
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Check if user liked a product
+  app.get("/api/products/:id/liked", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const userId = req.user.id;
+
+      const like = await storage.getUserProductLike(userId, id);
+      res.json({ liked: !!like });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  

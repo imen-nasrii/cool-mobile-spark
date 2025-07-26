@@ -6,6 +6,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ProductGrid } from "@/components/Products/ProductGrid";
+import { AdBanner } from "@/components/Ads/AdBanner";
+import { LikeButton } from "@/components/Likes/LikeButton";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/queryClient";
@@ -52,6 +54,9 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 pb-20">
+      {/* Header Ad Banner */}
+      <AdBanner position="header" className="mb-4" showCloseButton={false} />
+
       {/* Hero Section */}
       <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-transparent">
         <div className="max-w-7xl mx-auto px-4 py-8">
@@ -201,10 +206,14 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
                     <Badge variant="outline" className="text-xs">
                       {product.category}
                     </Badge>
-                    <div className="flex items-center gap-1 text-xs text-gray-500">
-                      <Heart size={10} />
-                      {product.like_count || 0}
-                    </div>
+                    <LikeButton 
+                      productId={product.id}
+                      initialLikeCount={product.like_count || 0}
+                      isPromoted={product.is_promoted}
+                      size="sm"
+                      showCount={true}
+                      showPromotedBadge={false}
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -275,14 +284,37 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Products Grid with Integrated Ads */}
       <div className="max-w-7xl mx-auto px-4">
-        <ProductGrid 
-          category={selectedCategory}
-          sortBy={sortBy}
-          searchTerm={searchTerm}
-          onProductClick={onProductClick}
-        />
+        <div className="flex gap-6">
+          {/* Sidebar Ad */}
+          <div className="hidden lg:block w-80">
+            <div className="sticky top-4 space-y-4">
+              <AdBanner position="sidebar" category={selectedCategory} />
+              <AdBanner position="sidebar" />
+            </div>
+          </div>
+          
+          {/* Main Content */}
+          <div className="flex-1">
+            <ProductGrid 
+              category={selectedCategory}
+              sortBy={sortBy}
+              searchTerm={searchTerm}
+              onProductClick={onProductClick}
+            />
+            
+            {/* Between Products Ad */}
+            <div className="my-8">
+              <AdBanner position="between_products" category={selectedCategory} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer Ad */}
+      <div className="mt-12">
+        <AdBanner position="footer" showCloseButton={false} />
       </div>
     </div>
   );
