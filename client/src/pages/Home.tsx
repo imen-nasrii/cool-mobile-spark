@@ -244,31 +244,18 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         </div>
       </div>
 
-      {/* Products Grid with Integrated Ads */}
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="flex gap-6">
-          {/* Sidebar Ad */}
-          <div className="hidden lg:block w-80">
-            <div className="sticky top-4 space-y-4">
-              <AdBanner position="sidebar" category={selectedCategory} />
-              <AdBanner position="sidebar" />
-            </div>
-          </div>
-          
-          {/* Main Content */}
-          <div className="flex-1">
-            <ProductGrid 
-              category={selectedCategory}
-              sortBy={sortBy}
-              searchTerm={searchTerm}
-              onProductClick={onProductClick}
-            />
-            
-            {/* Between Products Ad */}
-            <div className="my-8">
-              <AdBanner position="between_products" category={selectedCategory} />
-            </div>
-          </div>
+      {/* Products Grid Full Width */}
+      <div className="w-full relative z-10">
+        <ProductGrid 
+          category={selectedCategory}
+          sortBy={sortBy}
+          searchTerm={searchTerm}
+          onProductClick={onProductClick}
+        />
+        
+        {/* Between Products Ad */}
+        <div className="my-4 px-2">
+          <AdBanner position="between_products" category={selectedCategory} />
         </div>
       </div>
 
