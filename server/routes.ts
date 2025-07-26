@@ -3,9 +3,10 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   insertUserSchema, insertProfileSchema, insertProductSchema, 
-  insertCategorySchema, insertMessageSchema 
+  insertCategorySchema, insertMessageSchema, insertNotificationSchema 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
+import { notificationService } from "./notifications";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -274,6 +275,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error sending message:", error);
       res.status(500).json({ error: "Failed to send message" });
+    }
+  });
+
+  // Notifications routes
+  app.get("/api/notifications", authenticateToken, async (req, res) => {
+    try {
+      const notifications = await notificationService.getUserNotifications((req as any).user.id);
+      res.json(notifications);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/notifications/unread-count", authenticateToken, async (req, res) => {
+    try {
+      const count = await notificationService.getUnreadCount((req as any).user.id);
+      res.json({ count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/notifications/:id/read", authenticateToken, async (req, res) => {
+    try {
+      const success = await notificationService.markAsRead(req.params.id, (req as any).user.id);
+      if (!success) {
+        return res.status(404).json({ error: "Notification not found" });
+      }
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/notifications/mark-all-read", authenticateToken, async (req, res) => {
+    try {
+      const count = await notificationService.markAllAsRead((req as any).user.id);
+      res.json({ markedCount: count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/notifications/:id", authenticateToken, async (req, res) => {
+    try {
+      const success = await notificationService.deleteNotification(req.params.id, (req as any).user.id);
+      if (!success) {
+        return res.status(404).json({ error: "Notification not found" });
+      }
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
   });
 

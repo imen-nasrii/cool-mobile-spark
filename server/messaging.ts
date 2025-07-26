@@ -2,6 +2,7 @@ import { db } from "./db";
 import { conversations, messages, users, products, type Conversation, type ChatMessage, type InsertConversation, type InsertChatMessage } from "@shared/schema";
 import { eq, and, desc, or } from "drizzle-orm";
 import { WebSocket } from "ws";
+import { notificationService } from "./notifications";
 
 export class MessagingService {
   private connectedClients = new Map<string, WebSocket>();
@@ -48,6 +49,28 @@ export class MessagingService {
   }
 
   async sendMessage(conversationId: string, senderId: string, content: string): Promise<ChatMessage> {
+    // Get conversation details for notification
+    const conversation = await db
+      .select()
+      .from(conversations)
+      .where(eq(conversations.id, conversationId))
+      .limit(1);
+
+    if (conversation.length === 0) {
+      throw new Error("Conversation not found");
+    }
+
+    // Determine receiver
+    const receiverId = conversation[0].buyer_id === senderId ? conversation[0].seller_id : conversation[0].buyer_id;
+
+    // Get sender name for notification
+    const senderResult = await db
+      .select({ display_name: users.display_name })
+      .from(users)
+      .where(eq(users.id, senderId))
+      .limit(1);
+
+    const senderName = senderResult[0]?.display_name || "Un utilisateur";
     const newMessage: InsertChatMessage = {
       conversation_id: conversationId,
       sender_id: senderId,
@@ -65,25 +88,15 @@ export class MessagingService {
       .set({ last_message_at: new Date() })
       .where(eq(conversations.id, conversationId));
 
-    // Get conversation details to notify the other party
-    const conversation = await db
-      .select()
-      .from(conversations)
-      .where(eq(conversations.id, conversationId))
-      .limit(1);
+    // Create notification for receiver
+    await notificationService.notifyNewMessage(receiverId, senderName, conversationId);
 
-    if (conversation.length > 0) {
-      const otherUserId = conversation[0].buyer_id === senderId 
-        ? conversation[0].seller_id 
-        : conversation[0].buyer_id;
-
-      // Send real-time notification
-      this.notifyUser(otherUserId, {
-        type: 'new_message',
-        message,
-        conversationId
-      });
-    }
+    // Send real-time notification via WebSocket
+    this.notifyUser(receiverId, {
+      type: 'new_message',
+      message,
+      conversationId
+    });
 
     return message;
   }

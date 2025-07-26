@@ -74,6 +74,18 @@ export const message_reads = pgTable("message_reads", {
   read_at: timestamp("read_at").defaultNow().notNull(),
 });
 
+// Notifications table for user notifications
+export const notifications = pgTable("notifications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  type: text("type").notNull(), // 'message', 'like', 'review', 'product_update'
+  related_id: uuid("related_id"), // ID of the related entity (message, product, etc.)
+  is_read: boolean("is_read").default(false).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -114,6 +126,11 @@ export const insertMessageReadSchema = createInsertSchema(message_reads).omit({
   read_at: true,
 });
 
+export const insertNotificationSchema = createInsertSchema(notifications).omit({
+  id: true,
+  created_at: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -129,3 +146,6 @@ export type ChatMessage = typeof messages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertMessageSchema>;
 export type MessageRead = typeof message_reads.$inferSelect;
 export type InsertMessageRead = z.infer<typeof insertMessageReadSchema>;
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = z.infer<typeof insertNotificationSchema>;

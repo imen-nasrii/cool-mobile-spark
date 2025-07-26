@@ -2,12 +2,14 @@ import { Search, Bell, SlidersHorizontal, Languages, MapPin, MessageCircle } fro
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useNotifications } from "@/hooks/useNotifications";
 import { UserMenu } from "@/components/Auth/UserMenu";
 import { useState, useEffect } from "react";
 
 export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
   const { user } = useAuth();
   const { language, setLanguage, t } = useLanguage();
+  const { unreadCount } = useNotifications();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -70,10 +72,14 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             variant="ghost" 
             size="icon"
             onClick={() => onTabChange?.('notifications')}
-            className={activeTab === 'notifications' ? 'bg-gray-100' : ''}
+            className={`relative ${activeTab === 'notifications' ? 'bg-gray-100' : ''}`}
           >
             <Bell size={20} />
-            <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                {unreadCount > 9 ? '9+' : unreadCount}
+              </span>
+            )}
           </Button>
 
           <UserMenu showAdminButton={isAdmin} />
