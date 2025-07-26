@@ -7,6 +7,7 @@ import {
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
+import { promotionService } from "./promotionService";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
@@ -325,6 +326,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Notification not found" });
       }
       res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Like a product and auto-promote at 3 likes
+  app.post("/api/products/:id/like", authenticateToken, async (req, res) => {
+    try {
+      const product = await storage.getProduct(req.params.id);
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+
+      // Prevent liking own product
+      if (product.user_id === (req as any).user.id) {
+        return res.status(400).json({ error: "Vous ne pouvez pas aimer votre propre produit" });
+      }
+
+      // Increment like count and check for automatic promotion
+      await promotionService.incrementLikeAndCheckPromotion(req.params.id);
+
+      // Create notification for product owner
+      await notificationService.notifyProductLiked(
+        product.user_id,
+        product.title,
+        product.id
+      );
+
+      res.json({ success: true, message: "Produit ajouté aux favoris" });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get promoted products
+  app.get("/api/products/promoted", async (req, res) => {
+    try {
+      const promotedProducts = await promotionService.getPromotedProducts();
+      res.json(promotedProducts);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

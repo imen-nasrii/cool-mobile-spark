@@ -60,6 +60,27 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     staleTime: 5 * 60 * 1000,
   });
 
+  // Like product mutation
+  const likeMutation = useMutation({
+    mutationFn: (id: string) => apiClient.request(`/products/${id}/like`, { method: 'POST' }),
+    onSuccess: (data: any) => {
+      setIsLiked(true);
+      toast({
+        title: "Succès",
+        description: data.message || "Produit ajouté aux favoris",
+      });
+      // Refetch product to get updated like count
+      queryClient.invalidateQueries({ queryKey: ['/products', productId] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible d'aimer ce produit",
+        variant: "destructive"
+      });
+    }
+  });
+
   useEffect(() => {
     if (productData) {
       setProduct(productData);
