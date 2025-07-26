@@ -45,6 +45,14 @@ class ApiClient {
     
     if (!response.ok) {
       const error = await response.json().catch(() => ({ error: 'Network error' }));
+      
+      // If unauthorized, clear token and redirect to login
+      if (response.status === 401 || response.status === 403) {
+        this.clearToken();
+        // The error will be caught by the calling component
+        throw new Error('Votre session a expiré. Veuillez vous reconnecter.');
+      }
+      
       throw new Error(error.error || 'Request failed');
     }
 

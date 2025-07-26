@@ -50,6 +50,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .catch(() => {
           // Token invalid, clear it
           apiClient.clearToken();
+          setUser(null);
           setLoading(false);
         });
     } else {
