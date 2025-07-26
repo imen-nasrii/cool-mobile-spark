@@ -56,10 +56,11 @@ const formatTimeAgo = (dateString: string) => {
 interface ProductGridProps {
   category?: string;
   sortBy?: string;
+  searchTerm?: string;
   onProductClick?: (productId: string) => void;
 }
 
-export const ProductGrid = ({ category, sortBy = "date", onProductClick }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
@@ -69,8 +70,20 @@ export const ProductGrid = ({ category, sortBy = "date", onProductClick }: Produ
     staleTime: 5 * 60 * 1000,
   });
 
-  // Apply sorting to products
-  const products = [...fetchedProducts].sort((a: Product, b: Product) => {
+  // Apply search filter and sorting to products
+  let filteredProducts = [...fetchedProducts];
+  
+  // Apply search filter if searchTerm is provided
+  if (searchTerm && searchTerm.trim() !== '') {
+    const searchLower = searchTerm.toLowerCase();
+    filteredProducts = filteredProducts.filter((product: Product) =>
+      product.title.toLowerCase().includes(searchLower) ||
+      product.category.toLowerCase().includes(searchLower) ||
+      product.location.toLowerCase().includes(searchLower)
+    );
+  }
+
+  const products = filteredProducts.sort((a: Product, b: Product) => {
     switch (sortBy) {
       case "price-asc":
         return parseFloat(a.price.replace(/[€,]/g, '')) - parseFloat(b.price.replace(/[€,]/g, ''));

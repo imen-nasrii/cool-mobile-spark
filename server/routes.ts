@@ -390,6 +390,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Stats endpoint
+  app.get("/api/stats", async (req, res) => {
+    try {
+      const products = await storage.getProducts();
+      const totalProducts = products.length;
+      const totalUsers = 100; // Placeholder - could be fetched from users table
+      
+      res.json({
+        totalProducts,
+        totalUsers,
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Promoted products endpoint
+  app.get("/api/products/promoted", async (req, res) => {
+    try {
+      const products = await storage.getProducts();
+      const promotedProducts = products.filter(p => p.is_promoted);
+      res.json(promotedProducts);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  
