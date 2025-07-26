@@ -39,6 +39,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Product sharing functionality**: Web Share API integration for mobile with clipboard fallback for desktop
 - ✅ **Enhanced AI chatbot assistant**: Natural conversational responses with 8 specialized categories, contextual suggestions, and improved animations
 - ✅ **Production deployment guide**: Complete VPS OVH deployment documentation with automated scripts
+- ✅ **Fixed car product database persistence**: Corrected schema validation and type conversion for car-specific fields
+- ✅ **Functional seller profile viewing**: Added "Voir profil" modal with seller information and contact integration
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript

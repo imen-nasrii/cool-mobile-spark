@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Share, Heart, MessageCircle, Phone, Shield, Star, MapPin, Edit, Trash2 } from "lucide-react";
+import { ArrowLeft, Share, Heart, MessageCircle, Phone, Shield, Star, MapPin, Edit, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ImageGallery } from "@/components/UI/ImageGallery";
 import { ProductChat } from "@/components/Chat/ProductChat";
 import { ProductMap } from "@/components/Map/ProductMap";
@@ -34,6 +35,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(false);
+  const [showSellerProfile, setShowSellerProfile] = useState(false);
   const [sellerProfile, setSellerProfile] = useState<any>(null);
   const { user } = useAuth();
   const { toast } = useToast();
@@ -59,6 +61,14 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     queryKey: ['/products', productId],
     queryFn: () => apiClient.getProduct(productId!),
     enabled: !!productId && productId.trim() !== '',
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Fetch seller profile when product is loaded
+  const { data: sellerData } = useQuery({
+    queryKey: ['/users', productData?.user_id, 'profile'],
+    queryFn: () => apiClient.request(`/users/${productData?.user_id}/profile`),
+    enabled: !!productData?.user_id,
     staleTime: 5 * 60 * 1000,
   });
 
@@ -96,8 +106,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     if (productData) {
       setProduct(productData);
       setLoading(false);
-      // TODO: Fetch seller profile if needed
-      setSellerProfile(null);
     } else if (isLoading) {
       setLoading(true);
     } else {
@@ -110,6 +118,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       setIsLiked(likedData.liked);
     }
   }, [likedData]);
+
+  useEffect(() => {
+    if (sellerData) {
+      setSellerProfile(sellerData);
+    }
+  }, [sellerData]);
 
   const handleShare = async () => {
     if (!product) return;
@@ -516,7 +530,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     </p>
                   </div>
                   
-                  <Button variant="outline" className="border-primary/20 text-primary hover:bg-primary/10">
+                  <Button 
+                    variant="outline" 
+                    className="border-primary/20 text-primary hover:bg-primary/10"
+                    onClick={() => setShowSellerProfile(true)}
+                  >
                     Voir profil
                   </Button>
                 </div>
@@ -583,6 +601,82 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       <div className="mt-8 px-4">
         <AdBanner position="footer" showCloseButton={false} />
       </div>
+
+      {/* Seller Profile Modal */}
+      <Dialog open={showSellerProfile} onOpenChange={setShowSellerProfile}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Profil du vendeur</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <Avatar className="w-16 h-16">
+                <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
+                  {sellerProfile?.display_name?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              
+              <div className="flex-1">
+                <h3 className="text-lg font-semibold">
+                  {sellerProfile?.display_name || 'Utilisateur'}
+                </h3>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                  <span>4.8</span>
+                  <span>•</span>
+                  <Shield size={14} className="text-success" />
+                  <span>Membre vérifié</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-3 text-sm">
+              <div>
+                <span className="font-medium">Email:</span>
+                <span className="ml-2 text-muted-foreground">
+                  {sellerProfile?.email || 'Non disponible'}
+                </span>
+              </div>
+              
+              <div>
+                <span className="font-medium">Membre depuis:</span>
+                <span className="ml-2 text-muted-foreground">
+                  {sellerProfile?.created_at ? 
+                    new Date(sellerProfile.created_at).toLocaleDateString('fr-FR') : 
+                    'Date inconnue'
+                  }
+                </span>
+              </div>
+              
+              {sellerProfile?.bio && (
+                <div>
+                  <span className="font-medium">Bio:</span>
+                  <p className="mt-1 text-muted-foreground">{sellerProfile.bio}</p>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex gap-3 pt-4">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => setShowSellerProfile(false)}
+              >
+                Fermer
+              </Button>
+              <Button 
+                className="flex-1"
+                onClick={() => {
+                  setShowSellerProfile(false);
+                  setShowChat(true);
+                }}
+              >
+                Contacter
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

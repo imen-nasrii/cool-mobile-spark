@@ -221,6 +221,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user profile by ID (for viewing seller profiles)
+  app.get("/api/users/:id/profile", async (req, res) => {
+    try {
+      const user = await storage.getUser(req.params.id);
+      const profile = await storage.getProfile(req.params.id);
+      
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Return public profile information only
+      res.json({
+        id: user.id,
+        display_name: user.display_name || profile?.display_name,
+        email: user.email,
+        created_at: user.created_at,
+        bio: profile?.bio,
+        avatar_url: profile?.avatar_url
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.put("/api/profile", authenticateToken, async (req, res) => {
     try {
       const profile = await storage.updateProfile((req as any).user.id, req.body);
