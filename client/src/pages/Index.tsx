@@ -163,7 +163,7 @@ const Index = () => {
           )}
 
           {/* Floating Action Button */}
-          <FloatingActionButton />
+          <FloatingActionButton onTabChange={handleTabChange} />
         </>
       )}
     </div>

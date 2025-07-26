@@ -1,15 +1,34 @@
-import { Plus, Camera, FileText, Car } from "lucide-react";
+import { Plus, Camera, FileText, Car, X, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export const FloatingActionButton = () => {
+interface FloatingActionButtonProps {
+  onTabChange?: (tab: string) => void;
+}
+
+export const FloatingActionButton = ({ onTabChange }: FloatingActionButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const quickActions = [
-    { icon: Camera, label: "Take Photo", color: "bg-blue-500" },
-    { icon: FileText, label: "Add Text", color: "bg-green-500" },
-    { icon: Car, label: "Sell Car", color: "bg-purple-500" },
+    { 
+      icon: MessageCircle, 
+      label: "Messages", 
+      color: "bg-blue-500",
+      action: () => onTabChange?.("messages")
+    },
+    { 
+      icon: FileText, 
+      label: "Ajouter", 
+      color: "bg-green-500",
+      action: () => onTabChange?.("add")
+    },
+    { 
+      icon: Car, 
+      label: "Vendre", 
+      color: "bg-purple-500",
+      action: () => onTabChange?.("add")
+    },
   ];
 
   return (
@@ -29,7 +48,10 @@ export const FloatingActionButton = () => {
                   "hover:scale-110 transition-all duration-200"
                 )}
                 style={{ animationDelay: `${index * 50}ms` }}
-                onClick={() => console.log(action.label)}
+                onClick={() => {
+                  action.action();
+                  setIsOpen(false);
+                }}
               >
                 <Icon size={20} className="text-white" />
               </Button>
@@ -42,12 +64,16 @@ export const FloatingActionButton = () => {
       <Button
         size="lg"
         className={cn(
-          "w-14 h-14 rounded-full shadow-xl bg-gradient-tomati hover:shadow-2xl transition-all duration-300",
+          "w-14 h-14 rounded-full shadow-xl bg-gradient-to-r from-red-500 to-red-600 hover:shadow-2xl transition-all duration-300",
           isOpen ? "rotate-45 scale-110" : "hover:scale-105"
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Plus size={24} className="text-white" />
+        {isOpen ? (
+          <X size={24} className="text-white" />
+        ) : (
+          <Plus size={24} className="text-white" />
+        )}
       </Button>
     </div>
   );
