@@ -1,0 +1,42 @@
+tomati@vps-8dfc48b5:~/tomati-market$ ./start-app.sh
+12:49:44 AM [express] serving on port 5000
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ ^C
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start tomati-production
+[PM2] Applying action restartProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+[PM2] Process successfully started
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ fork    │ 228240   │ 0s     │ 1    │ online    │ 0%       │ 3.2mb    │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-production --lines 10
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/.pm2/logs/tomati-production-error-0.log last 10 lines:
+0|tomati-p |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|tomati-p |       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|tomati-p |     errno: -111,
+0|tomati-p |     code: 'ECONNREFUSED',
+0|tomati-p |     syscall: 'connect',
+0|tomati-p |     address: '127.0.0.1',
+0|tomati-p |     port: 443
+0|tomati-p |   },
+0|tomati-p |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|tomati-p | }
+
+/home/tomati/.pm2/logs/tomati-production-out-0.log last 10 lines:
+0|tomati-p | 12:44:19 AM [express] GET /api/products 500 in 78ms :: {"error":"password authentication failed for u…
+0|tomati-p | 12:44:19 AM [express] GET /api/stats 500 in 113ms :: {"error":"password authentication failed for use…
+0|tomati-p | 12:44:19 AM [express] GET /api/advertisements 500 in 37ms :: {"error":"password authentication failed…
+0|tomati-p | 12:44:21 AM [express] GET /api/products/promoted 500 in 20ms :: {"error":"connect ECONNREFUSED 127.0.…
+0|tomati-p | 12:44:21 AM [express] GET /api/stats 500 in 54ms :: {"error":"password authentication failed for user…
+0|tomati-p | 12:44:21 AM [express] GET /api/advertisements 500 in 60ms :: {"error":"password authentication failed…
+0|tomati-p | 12:44:21 AM [express] GET /api/products 500 in 60ms :: {"error":"password authentication failed for u…
+0|tomati-p | 12:44:21 AM [express] GET /api/advertisements 500 in 50ms :: {"error":"password authentication failed…
+0|tomati-p | 12:44:21 AM [express] GET /api/advertisements 500 in 74ms :: {"error":"password authentication failed…
+0|tomati-p | 12:51:47 AM [express] serving on port 5000
+
+
