@@ -1,0 +1,49 @@
+mati@vps-8dfc48b5:~/tomati-market$ # 1. Créer un script de démarrage simple
+tomati@vps-8dfc48b5:~/tomati-market$ # 1. Créer un script de démarrage simple
+cat > start.sh << 'EOF'
+#!/bin/bashmati/tomati-market
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market"export DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market" ode dist/index.js
+node dist/index.js
+EOF
+chmod +x start.sh
+chmod +x start.sh
+# 2. Configuration PM2 avec le script
+# 2. Configuration PM2 avec le script
+cat > start-script.cjs << 'EOF'
+module.exports = {
+  apps: [{'tomati-market',
+    name: 'tomati-market',tomati-market/start.sh',
+    script: '/home/tomati/tomati-market/start.sh',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,ork'
+    exec_mode: 'fork'
+  }]
+}OF
+EOF
+# 3. Démarrer PM2 avec le script
+# 3. Démarrer PM2 avec le script
+pm2 delete allt-script.cjs
+pm2 start start-script.cjs
+pm2 save tomati-market --lines 5
+pm2 logs tomati-market --lines 5
+# 4. Tester la connexion
+# 4. Tester la connexion00
+curl http://localhost:5000
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [start-script](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /home/tomati/tomati-market/start-script.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ start-script       │ fork     │ 0    │ online    │ 0%       │ 11.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+
