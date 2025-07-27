@@ -1,0 +1,84 @@
+
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete tomati-production
+[PM2] Applying action deleteProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ NODE_ENV=production PORT=5000 DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market" pm2 start dist/index.js --name tomati-production
+[PM2] Starting /home/tomati/tomati-market/dist/index.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 0    │ online    │ 0%       │ 11.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 0    │ online    │ 0%       │ 99.2mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-production --lines 10
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/.pm2/logs/tomati-production-error.log last 10 lines:
+0|tomati-p | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|tomati-p |     at file:///home/tomati/tomati-market/dist/index.js:357:9
+0|tomati-p |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|tomati-p |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+
+/home/tomati/.pm2/logs/tomati-production-out.log last 10 lines:
+0|tomati-p | 11:28:07 AM [express] serving on port 5000
+
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-D855KB25.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DzpysTtv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>tomati@vps-8dfc48b5:~/tomati-market$ exit
+logout
+-bash: cd: too many arguments
+ubuntu@vps-8dfc48b5:~$ curl http://51.222.111.183
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-D855KB25.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DzpysTtv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>ubuntu@vps-8dfc48b5:~$ ^C
+ubuntu@vps-8dfc48b5:~$
