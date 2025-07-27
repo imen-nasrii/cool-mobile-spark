@@ -1,38 +1,64 @@
-# Correction Finale - Variables d'environnement manquantes
+# Correction Finale - Migration Base de Données VPS
 
-## Problème identifié :
-```
-Error: DATABASE_URL must be set. Did you forget to provision a database?
-```
+## Situation Actuelle
+- Erreurs 500 persistent sur toutes les API
+- Base de données pas encore migrée
+- Nouvelles colonnes manquantes
 
-## Solution :
+## Commandes Exactes VPS
 
 ```bash
-# 1. Créer le fichier .env avec les variables PostgreSQL
-cat > .env << 'EOF'
-NODE_ENV=production
-PORT=5000
-DATABASE_URL=postgresql://tomati:tomati_password@localhost:5432/tomati_market
-PGHOST=localhost
-PGPORT=5432
-PGUSER=tomati
-PGPASSWORD=tomati_password
-PGDATABASE=tomati_market
-EOF
+# Se connecter au VPS
+ssh ubuntu@51.222.111.183
+sudo su - tomati
+cd ~/tomati-market
 
-# 2. Tester manuellement
-NODE_ENV=production node dist/index.js
+# Vérifier l'état actuel PM2
+pm2 status
 
-# 3. Si ça fonctionne, redémarrer PM2
-pm2 restart start-tomati-fixed
-pm2 logs start-tomati-fixed --lines 5
+# Arrêter l'application
+pm2 stop tomati-production
 
-# 4. Tester la connexion
-curl http://localhost:5000
+# Appliquer la migration DB (CRITIQUE)
+npm run db:push
 
-# 5. Si ça marche, tester Nginx
-exit
-curl http://51.222.111.183
+# Si erreur, vérifier drizzle config
+cat drizzle.config.ts
+
+# Forcer la migration si nécessaire
+npx drizzle-kit push
+
+# Redémarrer l'application
+pm2 restart tomati-production
+
+# Vérifier les logs immédiatement
+pm2 logs tomati-production --lines 20
+
+# Test API direct
+curl -v http://localhost:5000/api/stats
+curl -v http://localhost:5000/api/products
+
+# Si toujours erreur 500, voir logs détaillés
+pm2 logs tomati-production --err --lines 50
 ```
 
-Note : Remplacez `tomati_password` par le vrai mot de passe PostgreSQL configuré lors de l'installation.
+## Diagnostic Avancé
+```bash
+# Vérifier connexion DB
+psql -U tomati -d tomati_market -c "\d products"
+
+# Voir les colonnes actuelles
+psql -U tomati -d tomati_market -c "SELECT column_name FROM information_schema.columns WHERE table_name = 'products';"
+
+# Test direct Node
+node -e "console.log(process.env.DATABASE_URL)"
+```
+
+## Solution Alternative
+Si npm run db:push échoue:
+```bash
+# Recréer complètement la DB
+dropdb -U tomati tomati_market
+createdb -U tomati tomati_market
+npm run db:push
+```

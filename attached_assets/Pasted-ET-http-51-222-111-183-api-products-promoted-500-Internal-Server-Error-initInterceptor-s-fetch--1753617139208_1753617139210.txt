@@ -1,0 +1,126 @@
+ET http://51.222.111.183/api/products/promoted 500 (Internal Server Error)
+initInterceptor.s.fetch @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+request @ index-BeVWCdut.js:381
+queryFn @ index-BeVWCdut.js:430
+a @ index-BeVWCdut.js:370
+N @ index-BeVWCdut.js:370
+start @ index-BeVWCdut.js:370
+fetch @ index-BeVWCdut.js:370
+Sc @ index-BeVWCdut.js:370
+onSubscribe @ index-BeVWCdut.js:370
+subscribe @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+oj @ index-BeVWCdut.js:38
+Nh @ index-BeVWCdut.js:40
+Za @ index-BeVWCdut.js:40
+W_ @ index-BeVWCdut.js:40
+io @ index-BeVWCdut.js:38
+AR @ index-BeVWCdut.js:40
+_o @ index-BeVWCdut.js:40
+zj @ index-BeVWCdut.js:40
+E @ index-BeVWCdut.js:25
+W @ index-BeVWCdut.js:25Understand this error
+requests.js:1  GET http://51.222.111.183/api/products/promoted 500 (Internal Server Error)
+initInterceptor.s.fetch @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+request @ index-BeVWCdut.js:381
+queryFn @ index-BeVWCdut.js:430
+a @ index-BeVWCdut.js:370
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+start @ index-BeVWCdut.js:370
+fetch @ index-BeVWCdut.js:370
+Sc @ index-BeVWCdut.js:370
+onSubscribe @ index-BeVWCdut.js:370
+subscribe @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+oj @ index-BeVWCdut.js:38
+Nh @ index-BeVWCdut.js:40
+Za @ index-BeVWCdut.js:40
+W_ @ index-BeVWCdut.js:40
+io @ index-BeVWCdut.js:38
+AR @ index-BeVWCdut.js:40
+_o @ index-BeVWCdut.js:40
+zj @ index-BeVWCdut.js:40
+E @ index-BeVWCdut.js:25
+W @ index-BeVWCdut.js:25Understand this error
+requests.js:1  GET http://51.222.111.183/api/products/promoted 500 (Internal Server Error)
+initInterceptor.s.fetch @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+request @ index-BeVWCdut.js:381
+queryFn @ index-BeVWCdut.js:430
+a @ index-BeVWCdut.js:370
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+start @ index-BeVWCdut.js:370
+fetch @ index-BeVWCdut.js:370
+Sc @ index-BeVWCdut.js:370
+onSubscribe @ index-BeVWCdut.js:370
+subscribe @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+oj @ index-BeVWCdut.js:38
+Nh @ index-BeVWCdut.js:40
+Za @ index-BeVWCdut.js:40
+W_ @ index-BeVWCdut.js:40
+io @ index-BeVWCdut.js:38
+AR @ index-BeVWCdut.js:40
+_o @ index-BeVWCdut.js:40
+zj @ index-BeVWCdut.js:40
+E @ index-BeVWCdut.js:25
+W @ index-BeVWCdut.js:25Understand this error
+requests.js:1  GET http://51.222.111.183/api/products/promoted 500 (Internal Server Error)
+initInterceptor.s.fetch @ requests.js:1
+(anonymous) @ traffic.js:1
+fetch @ traffic.js:1
+request @ index-BeVWCdut.js:381
+queryFn @ index-BeVWCdut.js:430
+a @ index-BeVWCdut.js:370
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+Promise.then
+(anonymous) @ index-BeVWCdut.js:370
+Promise.catch
+N @ index-BeVWCdut.js:370
+start @ index-BeVWCdut.js:370
+fetch @ index-BeVWCdut.js:370
+Sc @ index-BeVWCdut.js:370
+onSubscribe @ index-BeVWCdut.js:370
+subscribe @ index-BeVWCdut.js:370
+(anonymous) @ index-BeVWCdut.js:370
+oj @ index-BeVWCdut.js:38
+Nh @ index-BeVWCdut.js:40
+Za @ index-BeVWCdut.js:40
+W_ @ index-BeVWCdut.js:40
+io @ index-BeVWCdut.js:38
+AR @ index-BeVWCdut.js:40
+_o @ index-BeVWCdut.js:40
+zj @ index-BeVWCdut.js:40
+E @ index-BeVWCdut.js:25
+W @ index-BeVWCdut.js:25Understand this error
