@@ -1,0 +1,60 @@
+
+tomati@vps-8dfc48b5:~$ cat > /tmp/fix-deployment.sh << 'FIXEOF'
+#!/bin/bash
+
+echo "=== Diagnostic et correction du déploiement ==="
+
+# Vérifier les logs PM2
+echo "1. Logs PM2 actuels:"
+pm2 logs tomati-production --lines 10
+
+echo ""
+echo "2. Vérification de l'ecosystem.config.js:"
+cd /home/tomati/tomati-market
+if [ ! -f ecosystem.config.js ]; then
+    echo "Création ecosystem.config.js manquant..."
+    cat > ecosystem.config.js << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: 'dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+/tmp/fix-deployment.shoyment.shn --lines 20"iez les logs avec:"cessible"
+=== Diagnostic et correction du déploiement ===
+1. Logs PM2 actuels:
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/.pm2/logs/tomati-production-out.log last 10 lines:
+0|tomati-p | 12:29:02 PM [express] GET /api/products/47652e99-61c2-4fda-8b34-314d718562db/liked 500 in 12ms :: {"e…
+0|tomati-p | 12:29:04 PM [express] GET /api/products/47652e99-61c2-4fda-8b34-314d718562db/liked 500 in 8ms :: {"er…
+0|tomati-p | 12:29:06 PM [express] GET /api/products/47652e99-61c2-4fda-8b34-314d718562db/liked 500 in 17ms :: {"e…
+0|tomati-p | 12:29:10 PM [express] GET /api/users/7450f3da-34df-4837-be13-ce7c8c36d46d/profile 304 in 6ms :: {"id"…
+0|tomati-p | 12:29:10 PM [express] GET /api/advertisements 200 in 6ms :: []
+0|tomati-p | 12:29:10 PM [express] GET /api/products/47652e99-61c2-4fda-8b34-314d718562db/liked 500 in 6ms :: {"er…
+0|tomati-p | 12:29:22 PM [express] GET /api/products/promoted 500 in 8ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 12:29:24 PM [express] GET /api/products/promoted 500 in 16ms :: {"error":"connect ECONNREFUSED 127.0.…
+0|tomati-p | 12:29:26 PM [express] GET /api/products/promoted 500 in 7ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 12:29:31 PM [express] GET /api/products/promoted 500 in 7ms :: {"error":"connect ECONNREFUSED 127.0.0…
+
+/home/tomati/.pm2/logs/tomati-production-error.log last 10 lines:
+0|tomati-p |     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:642:12)
+0|tomati-p |     at #cachedDefaultResolve (node:internal/modules/esm/loader:591:25)
+0|tomati-p |     at ModuleLoader.resolve (node:internal/modules/esm/loader:574:38)
+0|tomati-p |     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:236:38)
+0|tomati-p |     at ModuleLoader.import (node:internal/modules/esm/loader:539:34)
+0|tomati-p |     at defaultImportModuleDynamicallyForScript (node:internal/modules/esm/utils:234:31)
+0|tomati-p |     at importModuleDynamicallyCallback (node:internal/modules/esm/utils:256:12) {
+0|tomati-p |   code: 'ERR_MODULE_NOT_FOUND',
+0|tomati-p |   url: 'file:///home/tomati/tomati-market/dist/index.js'
+0|tomati-p | }
+
