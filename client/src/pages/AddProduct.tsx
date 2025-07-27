@@ -180,7 +180,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen pb-20">
       <div className="px-4 py-6">
         <div className="space-y-6">
           {/* Image Upload */}

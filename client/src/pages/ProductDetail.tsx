@@ -179,7 +179,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="tomati-brand animate-pulse mb-4">Tomati</div>
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
@@ -191,7 +191,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Produit introuvable</h2>
           <p className="text-gray-600 mb-4">Ce produit n'existe pas ou a été supprimé</p>

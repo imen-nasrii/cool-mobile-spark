@@ -5,7 +5,7 @@ export const Favorites = ({ activeTab, onTabChange }: {
   onTabChange?: (tab: string) => void;
 }) => {
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen pb-20">
       <div className="flex items-center justify-center h-[60vh]">
         <div className="text-center px-6">
           <div className="flex justify-center mb-6">
