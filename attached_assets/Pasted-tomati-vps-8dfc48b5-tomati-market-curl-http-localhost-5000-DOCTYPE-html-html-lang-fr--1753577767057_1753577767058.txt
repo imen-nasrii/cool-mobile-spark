@@ -1,0 +1,111 @@
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-D855KB25.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DzpysTtv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>tomati@vps-8dfc48b5:~/tomati-mcurl -H "Cache-Control: no-cache" -H "Pragma: no-cache" http://51.222.111.183111.183
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-D855KB25.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DzpysTtv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>tomati@vps-8dfc48b5:~/tomati-mwget -O - http://51.222.111.183 | grep -i "tomati"tomati"
+--2025-07-27 00:55:05--  http://51.222.111.183/
+Connecting to 51.222.111.183:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1389 (1.4K) [text/html]
+Saving to: ‘STDOUT’
+
+-                                                 0%[                                                                                                     ]       0  --.-KB/s                   <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+-                                               100%[====================================================================================================>]   1.36K  --.-KB/s    in 0s
+
+2025-07-27 00:55:05 (168 MB/s) - written to stdout [1389/1389]
+
+tomati@vps-8dfc48b5:~/tomati-market$ sudo nginx -t
+sudo cat /etc/nginx/sites-available/tomati.org
+# Redémarrer complètement Nginx
+sudo systemctl restart nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header X-Content-Type-Options "nosniff" always;
+
+    # Gzip compression
+    gzip on;
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_read_timeout 86400;
+    }
+
+    # WebSocket pour messagerie temps réel
+    location /ws {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
+tomati@vps-8dfc48b5:~/tomati-market$
