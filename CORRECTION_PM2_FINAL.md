@@ -1,52 +1,63 @@
-# Correction PM2 - Application ne répond pas
+# Correction PM2 - Solution Alternative
 
-## Problème identifié :
-- PM2 tourne avec le nom `pm2.production` 
-- L'application ne répond pas sur le port 5000
-- Connexion refusée sur localhost:5000
+## Problème
+- Le fichier ecosystem.config.js n'a pas été créé correctement
+- Erreur de syntaxe lors de la création du fichier
 
-## Commandes de correction :
+## Solution: Méthode Alternative
 
+### Méthode 1: Créer le fichier correctement
 ```bash
-# 1. Voir les logs de l'application PM2
-pm2 logs pm2.production --lines 20
+# Supprimer le fichier corrompu
+rm ecosystem.config.js
 
-# 2. Redémarrer l'application
-pm2 restart pm2.production
+# Créer le fichier avec nano (plus sûr)
+nano ecosystem.config.js
+```
 
-# 3. Si ça ne fonctionne pas, supprimer et recréer
-pm2 delete pm2.production
-
-# 4. Recréer avec la bonne configuration
-cat > start-app.js << 'EOF'
+Contenu à coller dans nano :
+```javascript
 module.exports = {
   apps: [{
-    name: 'tomati-market',
+    name: 'tomati-production',
     script: 'dist/index.js',
     instances: 1,
     exec_mode: 'fork',
-    env: {
+    env_production: {
       NODE_ENV: 'production',
-      PORT: 5000
-    }
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market'
+    },
+    error_file: '/tmp/tomati-error.log',
+    out_file: '/tmp/tomati-out.log',
+    log_file: '/tmp/tomati-combined.log',
+    time: true
   }]
 }
-EOF
-
-# 5. Démarrer avec la nouvelle config
-pm2 start start-app.js
-pm2 save
-
-# 6. Vérifier le statut
-pm2 status
-pm2 logs tomati-market --lines 5
 ```
 
-## Test de l'application :
-```bash
-# Vérifier que le port écoute
-netstat -tlnp | grep :5000
+Puis : Ctrl+X, Y, Enter pour sauvegarder
 
-# Tester la connexion
+### Méthode 2: Démarrage Direct (Plus Simple)
+```bash
+# Démarrer directement avec PM2 sans fichier config
+pm2 start dist/index.js --name tomati-production --env production
+
+# Définir les variables d'environnement
+pm2 set pm2:tomati-production NODE_ENV production
+pm2 set pm2:tomati-production PORT 5000
+pm2 set pm2:tomati-production DATABASE_URL "postgresql://tomati:Tomati123@localhost:5432/tomati_market"
+
+# Redémarrer pour prendre en compte les variables
+pm2 restart tomati-production
+```
+
+### Vérification
+```bash
+pm2 status
+pm2 logs tomati-production --lines 10
 curl http://localhost:5000
 ```
+
+## Commandes Exactes à Exécuter
+Choisir une des deux méthodes ci-dessus.
