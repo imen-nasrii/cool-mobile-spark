@@ -1,71 +1,35 @@
-# Résolution du problème DNS - Déploiement final
+# Résolution Problèmes - WebSocket et Base de Données
 
-## Problème identifié
-Le domaine `tomati.org` ne pointe pas vers votre serveur IP `213.186.33.5`. C'est pourquoi Let's Encrypt ne peut pas valider le certificat SSL.
+## Problèmes Identifiés
 
-## Solutions possibles :
+### 1. Sur VPS (Production)
+- Erreur 500: colonnes manquantes (`real_estate_type`, etc.)
+- Solution: Migration base de données nécessaire
 
-### Option 1 : Configuration DNS (Recommandée)
-Vous devez configurer les enregistrements DNS de `tomati.org` pour pointer vers `213.186.33.5` :
+### 2. Sur Replit (Développement)  
+- WebSocket error: URL invalide `wss://localhost:undefined`
+- Solution: Configuration WebSocket à corriger
 
-**Chez votre registrar de domaine :**
-- Type A : `tomati.org` → `213.186.33.5`
-- Type A : `www.tomati.org` → `213.186.33.5`
-
-### Option 2 : Test temporaire avec IP directe
-En attendant la configuration DNS, testons directement :
-
+## Solution VPS (Priority 1)
 ```bash
-# Tester l'application directement sur IP
-curl http://213.186.33.5:5000
-
-# Ou créer une configuration temporaire
-sudo nano /etc/nginx/sites-available/ip-temp
-```
-
-Configuration temporaire :
-```nginx
-server {
-    listen 80 default_server;
-    server_name 213.186.33.5;
-
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-```bash
-sudo ln -s /etc/nginx/sites-available/ip-temp /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-```
-
-### Option 3 : Vérification du service
-```bash
-# Vérifier que l'application fonctionne
+ssh ubuntu@51.222.111.183
 sudo su - tomati
-pm2 status
-pm2 logs tomati-market --lines 5
-
-# Tester directement
-curl http://localhost:5000
+cd ~/tomati-market
+npm run db:push
+pm2 restart tomati-production
+curl http://localhost:5000/api/stats
 ```
 
-## Prochaines étapes :
+## Solution Replit WebSocket
+Le problème vient de la configuration WebSocket dans le code client qui essaie de se connecter à `localhost:undefined`.
 
-1. **Configurez DNS** chez votre registrar de domaine
-2. **Attendez propagation** (5-60 minutes)
-3. **Retry SSL** : `sudo certbot --nginx -d tomati.org -d www.tomati.org`
+## Étapes de Correction
+1. Corriger WebSocket config pour Replit
+2. Push vers GitHub
+3. Migrer base de données VPS
+4. Redéployer version corrigée
 
-## Vérification DNS :
-```bash
-# Vérifier la résolution DNS
-nslookup tomati.org
-dig tomati.org A
-```
-
-Une fois DNS configuré, votre marketplace sera accessible sur https://tomati.org !
+## Test Final
+Après corrections:
+- VPS: http://51.222.111.183 doit fonctionner sans erreur 500
+- Replit: Pas d'erreurs WebSocket en console
