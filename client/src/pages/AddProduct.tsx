@@ -314,11 +314,11 @@ export const AddProduct = ({ activeTab, onTabChange }: {
 
   return (
     <div className="min-h-screen pb-20">
-      <div className="px-4 py-6">
-        <div className="space-y-6">
+      <div className="px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
+        <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Image Upload */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6">
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center bg-gray-50">
+          <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-8 text-center bg-gray-50">
               <input
                 type="file"
                 multiple
@@ -328,23 +328,23 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                 id="image-upload"
               />
               <label htmlFor="image-upload" className="cursor-pointer">
-                <Upload size={48} className="mx-auto text-gray-400 mb-4" />
-                <p className="text-lg font-medium text-gray-700 mb-2">Aperçus de produit</p>
-                <Button type="button" variant="outline" className="mb-4">
-                  importer
+                <Upload size={32} className="sm:w-12 sm:h-12 mx-auto text-gray-400 mb-3 sm:mb-4" />
+                <p className="text-base sm:text-lg font-medium text-gray-700 mb-2">Aperçus de produit</p>
+                <Button type="button" variant="outline" className="mb-3 sm:mb-4 text-sm sm:text-base">
+                  Importer
                 </Button>
               </label>
-              <div className="text-sm text-gray-500 mb-4">
+              <div className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
                 {selectedImages.length}/8
               </div>
               {selectedImages.length > 0 && (
-                <div className="grid grid-cols-4 gap-4 mt-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4 mt-3 sm:mt-4">
                   {selectedImages.map((image, index) => (
                     <img
                       key={index}
                       src={image}
                       alt={`Preview ${index + 1}`}
-                      className="w-full h-24 object-cover rounded-lg border"
+                      className="w-full h-16 sm:h-20 md:h-24 object-cover rounded-lg border"
                     />
                   ))}
                 </div>
@@ -352,12 +352,12 @@ export const AddProduct = ({ activeTab, onTabChange }: {
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Category Selection */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <label className="block text-base font-medium mb-3">Catégorie *</label>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+              <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Catégorie *</label>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-12 text-base">
+                <SelectTrigger className="h-10 sm:h-12 text-sm sm:text-base">
                   <SelectValue placeholder="Choisir une catégorie" />
                 </SelectTrigger>
                 <SelectContent>
@@ -368,13 +368,13 @@ export const AddProduct = ({ activeTab, onTabChange }: {
               </Select>
             </div>
             {/* Title */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <label className="block text-base font-medium mb-3">Titre *</label>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+              <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Titre *</label>
               <Input
                 placeholder="Titre de produit"
                 value={formData.title}
                 onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                className="h-12 text-base"
+                className="h-10 sm:h-12 text-sm sm:text-base"
                 required
               />
             </div>
@@ -807,31 +807,31 @@ export const AddProduct = ({ activeTab, onTabChange }: {
             )}
 
             {/* Description */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <label className="block text-base font-medium mb-3">Description *</label>
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
+              <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Description *</label>
               <Textarea
                 placeholder={selectedCategory === "voiture" ? "Décrivez l'état du véhicule, équipements, historique..." : "Description du produit"}
                 value={formData.description}
                 onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                className="min-h-32 text-base resize-none"
+                className="min-h-24 sm:min-h-32 text-sm sm:text-base resize-none"
                 required
               />
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-4 pt-6">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 sm:pt-6">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="flex-1 h-14 text-lg bg-gray-200 text-gray-700 hover:bg-gray-300"
+                className="flex-1 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg bg-gray-200 text-gray-700 hover:bg-gray-300 order-2 sm:order-1"
               >
-                annuler
+                Annuler
               </Button>
               <Button
                 type="submit"
                 disabled={loading}
-                className="flex-1 h-14 text-lg bg-primary hover:bg-primary/90"
+                className="flex-1 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg bg-primary hover:bg-primary/90 order-1 sm:order-2"
               >
                 {loading ? "Publication..." : "Publier"}
               </Button>

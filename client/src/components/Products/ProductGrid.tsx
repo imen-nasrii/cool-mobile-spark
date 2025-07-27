@@ -132,17 +132,17 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   }
 
   return (
-    <div className="w-full px-2 py-2">
-      <div className="flex items-center justify-between mb-2">
-        <Button variant="ghost" size="sm" className="text-tomati-red text-sm font-medium">
-          Voir tout
-        </Button>
-        <h2 className="text-lg font-semibold text-foreground">
+    <div className="w-full px-2 sm:px-4 py-2">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-3 sm:mb-4 gap-2">
+        <h2 className="text-base sm:text-lg font-semibold text-foreground order-2 sm:order-1">
           {category ? `Produits ${category}` : "Produits récents"}
         </h2>
+        <Button variant="ghost" size="sm" className="text-tomati-red text-xs sm:text-sm font-medium order-1 sm:order-2 self-end sm:self-auto">
+          Voir tout
+        </Button>
       </div>
       
-      <div className="product-grid">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
         {transformedProducts.map((product: any) => (
           <ProductCard
             key={product.id}
@@ -150,14 +150,14 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
             onClick={() => onProductClick?.(product.id)}
             onLike={() => onProductLike?.(product.id)}
             onMessage={() => onProductMessage?.(product.id)}
-            className="product-card"
+            className="w-full"
           />
         ))}
       </div>
       
       {transformedProducts.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          <p>Aucun produit disponible</p>
+        <div className="text-center py-8 sm:py-12 text-muted-foreground">
+          <p className="text-sm sm:text-base">Aucun produit disponible</p>
         </div>
       )}
     </div>

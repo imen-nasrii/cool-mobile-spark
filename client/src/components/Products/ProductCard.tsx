@@ -43,7 +43,7 @@ export const ProductCard = ({
       )}
       onClick={onClick}
     >
-      <div className="relative w-24 h-24 bg-muted overflow-hidden flex-shrink-0">
+      <div className="relative aspect-square bg-muted overflow-hidden">
         {/* Product image */}
         {product.image ? (
           <img 
@@ -53,12 +53,12 @@ export const ProductCard = ({
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/10 flex items-center justify-center">
-            <span className="text-muted-foreground text-xs">{product.category}</span>
+            <span className="text-muted-foreground text-xs sm:text-sm">{product.category}</span>
           </div>
         )}
         
         {/* Status badges */}
-        <div className="absolute top-1 left-1 flex gap-1">
+        <div className="absolute top-1 sm:top-2 left-1 sm:left-2 flex gap-1">
           {product.isFree && (
             <Badge className="bg-success text-success-foreground text-xs">Free</Badge>
           )}
@@ -68,52 +68,52 @@ export const ProductCard = ({
         </div>
       </div>
       
-      <CardContent className="p-2 flex-1 flex flex-col justify-between">
+      <CardContent className="p-2 sm:p-3 flex-1 flex flex-col justify-between min-h-[120px] sm:min-h-[140px]">
         <div>
-          <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2">
+          <h3 className="font-medium text-foreground text-xs sm:text-sm leading-tight mb-1 sm:mb-2 line-clamp-2">
             {product.title}
           </h3>
           
-          <div className="text-lg font-bold text-primary mb-1">
+          <div className="text-sm sm:text-lg font-bold text-primary mb-1 sm:mb-2">
             {product.isFree ? "Gratuit" : product.price}
           </div>
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">
-            <MapPin size={12} className="mr-1" />
+            <MapPin size={10} className="mr-1 flex-shrink-0" />
             <span className="truncate">{product.location}</span>
           </div>
         </div>
         
-        <div className="flex items-center justify-between mt-auto pt-2">
+        <div className="flex items-center justify-between mt-auto pt-1 sm:pt-2">
           <div className="flex items-center text-xs text-muted-foreground">
-            <Clock size={12} className="mr-1" />
-            <span>{product.timeAgo}</span>
+            <Clock size={10} className="mr-1" />
+            <span className="truncate">{product.timeAgo}</span>
           </div>
           
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 hover:bg-destructive/10"
+              className="h-6 w-6 sm:h-7 sm:w-7 p-0 hover:bg-destructive/10"
               onClick={(e) => {
                 e.stopPropagation();
                 onLike?.();
               }}
             >
-              <Heart size={14} className="text-muted-foreground hover:text-destructive" />
+              <Heart size={12} className="text-muted-foreground hover:text-destructive" />
             </Button>
             <span className="text-xs text-muted-foreground">{product.likes}</span>
             
             <Button
               variant="ghost"
               size="sm"
-              className="h-7 w-7 p-0 hover:bg-primary/10 ml-2"
+              className="h-6 w-6 sm:h-7 sm:w-7 p-0 hover:bg-primary/10 ml-1 sm:ml-2"
               onClick={(e) => {
                 e.stopPropagation();
                 onMessage?.();
               }}
             >
-              <MessageCircle size={14} className="text-muted-foreground hover:text-primary" />
+              <MessageCircle size={12} className="text-muted-foreground hover:text-primary" />
             </Button>
           </div>
         </div>
