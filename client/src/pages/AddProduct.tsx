@@ -50,6 +50,54 @@ const realEstateConditions = [
   { value: "to_renovate", label: "À rénover" }
 ];
 
+const jobTypes = [
+  { value: "cdi", label: "CDI (Contrat à durée indéterminée)" },
+  { value: "cdd", label: "CDD (Contrat à durée déterminée)" },
+  { value: "stage", label: "Stage" },
+  { value: "freelance", label: "Freelance/Indépendant" },
+  { value: "part_time", label: "Temps partiel" },
+  { value: "internship", label: "Alternance" }
+];
+
+const jobSectors = [
+  { value: "informatique", label: "Informatique/IT" },
+  { value: "commerce", label: "Commerce/Vente" },
+  { value: "sante", label: "Santé/Médical" },
+  { value: "education", label: "Éducation/Formation" },
+  { value: "finance", label: "Finance/Banque" },
+  { value: "marketing", label: "Marketing/Communication" },
+  { value: "ingenierie", label: "Ingénierie" },
+  { value: "rh", label: "Ressources Humaines" },
+  { value: "juridique", label: "Juridique" },
+  { value: "restauration", label: "Restauration/Hôtellerie" },
+  { value: "construction", label: "Construction/BTP" },
+  { value: "transport", label: "Transport/Logistique" },
+  { value: "autre", label: "Autre secteur" }
+];
+
+const jobExperiences = [
+  { value: "debutant", label: "Débutant (0-1 an)" },
+  { value: "junior", label: "Junior (1-3 ans)" },
+  { value: "confirme", label: "Confirmé (3-5 ans)" },
+  { value: "senior", label: "Senior (5-10 ans)" },
+  { value: "expert", label: "Expert (10+ ans)" }
+];
+
+const jobEducations = [
+  { value: "bac", label: "Baccalauréat" },
+  { value: "bac2", label: "Bac+2 (BTS/DUT)" },
+  { value: "bac3", label: "Bac+3 (Licence)" },
+  { value: "bac5", label: "Bac+5 (Master/Ingénieur)" },
+  { value: "doctorat", label: "Doctorat/PhD" },
+  { value: "aucun", label: "Aucun diplôme requis" }
+];
+
+const jobUrgencies = [
+  { value: "normal", label: "Normal" },
+  { value: "urgent", label: "Urgent" },
+  { value: "tres_urgent", label: "Très urgent" }
+];
+
 export const AddProduct = ({ activeTab, onTabChange }: { 
   activeTab?: string; 
   onTabChange?: (tab: string) => void;
@@ -77,7 +125,18 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     parking: false,
     garden: false,
     balcony: false,
-    realEstateCondition: ""
+    realEstateCondition: "",
+    // Champs emploi
+    jobType: "",
+    jobSector: "",
+    jobExperience: "",
+    jobEducation: "",
+    jobSalaryMin: "",
+    jobSalaryMax: "",
+    jobRemote: false,
+    jobUrgency: "",
+    jobCompany: "",
+    jobBenefits: []
   });
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -160,6 +219,19 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           real_estate_garden: formData.garden,
           real_estate_balcony: formData.balcony,
           real_estate_condition: formData.realEstateCondition
+        }),
+        // Job specific fields
+        ...(selectedCategory === "emplois" && {
+          job_type: formData.jobType,
+          job_sector: formData.jobSector,
+          job_experience: formData.jobExperience,
+          job_education: formData.jobEducation,
+          job_salary_min: formData.jobSalaryMin ? parseInt(formData.jobSalaryMin) : undefined,
+          job_salary_max: formData.jobSalaryMax ? parseInt(formData.jobSalaryMax) : undefined,
+          job_remote: formData.jobRemote,
+          job_urgency: formData.jobUrgency,
+          job_company: formData.jobCompany,
+          job_benefits: JSON.stringify(formData.jobBenefits)
         })
       });
 
@@ -192,7 +264,18 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         parking: false,
         garden: false,
         balcony: false,
-        realEstateCondition: ""
+        realEstateCondition: "",
+        // Reset job fields
+        jobType: "",
+        jobSector: "",
+        jobExperience: "",
+        jobEducation: "",
+        jobSalaryMin: "",
+        jobSalaryMax: "",
+        jobRemote: false,
+        jobUrgency: "",
+        jobCompany: "",
+        jobBenefits: []
       });
       setSelectedImages([]);
       
@@ -580,6 +663,144 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                       />
                       <span className="text-sm">Balcon</span>
                     </label>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Job specific fields */}
+            {selectedCategory === "emplois" && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                  <Briefcase size={20} className="text-primary" />
+                  Détails de l'emploi
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Type de contrat */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Type de contrat *</label>
+                    <Select value={formData.jobType} onValueChange={(value) => setFormData(prev => ({ ...prev, jobType: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Type de contrat" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {jobTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Secteur d'activité */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Secteur d'activité *</label>
+                    <Select value={formData.jobSector} onValueChange={(value) => setFormData(prev => ({ ...prev, jobSector: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Secteur d'activité" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {jobSectors.map((sector) => (
+                          <SelectItem key={sector.value} value={sector.value}>{sector.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Expérience requise */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Expérience requise</label>
+                    <Select value={formData.jobExperience} onValueChange={(value) => setFormData(prev => ({ ...prev, jobExperience: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Niveau d'expérience" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {jobExperiences.map((exp) => (
+                          <SelectItem key={exp.value} value={exp.value}>{exp.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Niveau d'études */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Niveau d'études</label>
+                    <Select value={formData.jobEducation} onValueChange={(value) => setFormData(prev => ({ ...prev, jobEducation: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Niveau d'études requis" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {jobEducations.map((edu) => (
+                          <SelectItem key={edu.value} value={edu.value}>{edu.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Nom de l'entreprise */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Entreprise</label>
+                    <Input
+                      placeholder="Nom de l'entreprise"
+                      value={formData.jobCompany}
+                      onChange={(e) => setFormData(prev => ({ ...prev, jobCompany: e.target.value }))}
+                      className="h-12"
+                    />
+                  </div>
+                  
+                  {/* Urgence */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Urgence</label>
+                    <Select value={formData.jobUrgency} onValueChange={(value) => setFormData(prev => ({ ...prev, jobUrgency: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Niveau d'urgence" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {jobUrgencies.map((urgency) => (
+                          <SelectItem key={urgency.value} value={urgency.value}>{urgency.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                {/* Fourchette de salaire */}
+                <div className="mt-4">
+                  <label className="block text-sm font-medium mb-3">Fourchette de salaire (DT/mois)</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        type="number"
+                        placeholder="Salaire minimum"
+                        value={formData.jobSalaryMin}
+                        onChange={(e) => setFormData(prev => ({ ...prev, jobSalaryMin: e.target.value }))}
+                        className="h-12"
+                        min="0"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        type="number"
+                        placeholder="Salaire maximum"
+                        value={formData.jobSalaryMax}
+                        onChange={(e) => setFormData(prev => ({ ...prev, jobSalaryMax: e.target.value }))}
+                        className="h-12"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Options supplémentaires */}
+                <div className="mt-4">
+                  <label className="block text-sm font-medium mb-3">Options</label>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      checked={formData.jobRemote}
+                      onChange={(e) => setFormData(prev => ({ ...prev, jobRemote: e.target.checked }))}
+                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="text-sm">Télétravail possible</span>
                   </div>
                 </div>
               </div>

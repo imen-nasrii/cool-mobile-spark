@@ -70,6 +70,18 @@ export const products = pgTable("products", {
   real_estate_balcony: boolean("real_estate_balcony"), // Balcon
   real_estate_condition: text("real_estate_condition"), // État: Excellent, Bon, À rénover
   
+  // Champs spécifiques aux emplois
+  job_type: text("job_type"), // CDI, CDD, Stage, Freelance, Temps partiel
+  job_sector: text("job_sector"), // Informatique, Commerce, Santé, Éducation, etc.
+  job_experience: text("job_experience"), // Débutant, 1-3 ans, 3-5 ans, 5+ ans
+  job_education: text("job_education"), // Bac, Bac+2, Bac+3, Bac+5, etc.
+  job_salary_min: integer("job_salary_min"), // Salaire minimum
+  job_salary_max: integer("job_salary_max"), // Salaire maximum
+  job_remote: boolean("job_remote"), // Télétravail possible
+  job_urgency: text("job_urgency"), // Normal, Urgent, Très urgent
+  job_company: text("job_company"), // Nom de l'entreprise
+  job_benefits: text("job_benefits"), // Avantages (JSON string)
+  
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
