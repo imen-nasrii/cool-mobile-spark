@@ -57,7 +57,7 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             variant="ghost" 
             size="icon"
             onClick={() => onTabChange?.('search')}
-            className={`w-8 h-8 sm:w-10 sm:h-10 ${activeTab === 'search' ? 'bg-gray-100' : ''}`}
+            className={`w-8 h-8 sm:w-10 sm:h-10 ${activeTab === 'search' ? 'bg-white border border-gray-300' : ''}`}
           >
             <Search size={16} className="sm:hidden" />
             <Search size={20} className="hidden sm:block" />
@@ -92,7 +92,7 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
             variant="ghost" 
             size="icon"
             onClick={() => onTabChange?.('notifications')}
-            className={`relative w-8 h-8 sm:w-10 sm:h-10 ${activeTab === 'notifications' ? 'bg-gray-100' : ''}`}
+            className={`relative w-8 h-8 sm:w-10 sm:h-10 ${activeTab === 'notifications' ? 'bg-white border border-gray-300' : ''}`}
           >
             <Bell size={16} className="sm:hidden" />
             <Bell size={20} className="hidden sm:block" />

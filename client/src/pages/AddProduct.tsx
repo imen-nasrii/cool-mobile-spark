@@ -313,12 +313,12 @@ export const AddProduct = ({ activeTab, onTabChange }: {
   };
 
   return (
-    <div className="min-h-screen pb-20">
+    <div className="min-h-screen pb-20 bg-white">
       <div className="px-3 sm:px-4 lg:px-6 py-4 sm:py-6">
         <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Image Upload */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-8 text-center bg-gray-50">
+            <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-8 text-center bg-white">
               <input
                 type="file"
                 multiple
@@ -824,7 +824,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="flex-1 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg bg-gray-200 text-gray-700 hover:bg-gray-300 order-2 sm:order-1"
+                className="flex-1 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 order-2 sm:order-1"
               >
                 Annuler
               </Button>

@@ -43,7 +43,7 @@ export const ProductCard = ({
       )}
       onClick={onClick}
     >
-      <div className="relative aspect-square bg-muted overflow-hidden">
+      <div className="relative aspect-square bg-white overflow-hidden">
         {/* Product image */}
         {product.image ? (
           <img 
@@ -52,7 +52,7 @@ export const ProductCard = ({
             className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-muted to-muted-foreground/10 flex items-center justify-center">
+          <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
             <span className="text-muted-foreground text-xs sm:text-sm">{product.category}</span>
           </div>
         )}
