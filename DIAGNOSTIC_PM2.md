@@ -1,52 +1,102 @@
-# Diagnostic PM2 - Application en erreur
+# Diagnostic et Solution PM2 - Étapes Détaillées
 
-L'application PM2 est en erreur (status: errored, 15 restarts).
+## ✅ Ce qui fonctionne :
+- Application démarre manuellement : `./start-app.sh` → "serving on port 5000"
+- Base de données PostgreSQL connectée
+- Variables d'environnement correctes
 
-## Sur votre serveur, exécutez ces commandes pour diagnostiquer :
+## ❌ Problème actuel :
+- PM2 ne démarre pas l'application (logs vides)
+- Configuration ecosystem.config.js corrompue lors de la saisie
 
-### 1. Voir les logs d'erreur
+## 🔧 Solution étape par étape :
+
+### Étape 1 : Nettoyer PM2
 ```bash
-pm2 logs tomati-market --lines 20
+# Se connecter en tant qu'utilisateur tomati
+su - tomati
+cd ~/tomati-market
+
+# Supprimer toutes les instances PM2
+pm2 delete all
+pm2 kill
 ```
 
-### 2. Si les logs ne sont pas clairs, essayons de démarrer manuellement
+### Étape 2 : Créer une configuration PM2 propre
 ```bash
-# Arrêter PM2
-pm2 delete tomati-market
-
-# Tester le démarrage manuel
-NODE_ENV=production tsx server/index.ts
-```
-
-### 3. Si ça ne fonctionne pas, essayons avec Node directement
-```bash
-# Compiler d'abord
-npm run build
-
-# Démarrer le fichier compilé
-NODE_ENV=production node dist/index.js
-```
-
-### 4. Alternative : Démarrage simple sans cluster
-```bash
-# Créer un fichier PM2 plus simple
-cat > pm2.config.js << 'EOF'
+# Créer le fichier de configuration (IMPORTANT : copier exactement)
+cat > ecosystem.config.js << 'EOF'
 module.exports = {
   apps: [{
-    name: 'tomati-market',
-    script: 'dist/index.js',
+    name: 'tomati-production',
+    script: '/home/tomati/tomati-market/start-app.sh',
     instances: 1,
     exec_mode: 'fork',
-    env: {
-      NODE_ENV: 'production',
-      PORT: 5000
-    }
+    autorestart: true,
+    watch: false,
+    log_file: '/home/tomati/.pm2/logs/tomati-production.log',
+    out_file: '/home/tomati/.pm2/logs/tomati-production-out.log',
+    error_file: '/home/tomati/.pm2/logs/tomati-production-error.log'
   }]
 }
 EOF
 
-# Redémarrer avec cette config
-pm2 start pm2.config.js
+# Vérifier que le fichier est correct
+cat ecosystem.config.js
 ```
 
-Commencez par `pm2 logs tomati-market --lines 20` et montrez-moi le résultat pour identifier le problème exact.
+### Étape 3 : Vérifier que le script fonctionne
+```bash
+# Tester le script directement
+./start-app.sh
+# Vous devez voir : "serving on port 5000"
+# Appuyez sur Ctrl+C pour arrêter
+```
+
+### Étape 4 : Démarrer PM2
+```bash
+# Démarrer PM2 avec la nouvelle configuration
+pm2 start ecosystem.config.js
+
+# Vérifier le statut
+pm2 status
+
+# Voir les logs (IMPORTANT : utiliser le bon nom)
+pm2 logs tomati-production --lines 10
+
+# Sauvegarder la configuration
+pm2 save
+```
+
+### Étape 5 : Tests
+```bash
+# Test local
+curl http://localhost:5000
+# Vous devez voir du HTML
+
+# Si ça marche, tester Nginx
+exit
+curl http://51.222.111.183
+# Vous devez voir la page web
+```
+
+## 🚨 Points critiques :
+1. **Nom exact** : L'application s'appelle `tomati-production` (pas start-script)
+2. **Script testé** : `./start-app.sh` doit fonctionner avant PM2
+3. **Logs** : Utiliser `pm2 logs tomati-production` (pas start-script)
+4. **Configuration** : Le fichier ecosystem.config.js doit être syntaxiquement correct
+
+## 📋 Commandes de dépannage :
+```bash
+# Si PM2 ne fonctionne pas :
+pm2 restart tomati-production
+pm2 logs tomati-production --lines 20
+
+# Si l'application ne démarre toujours pas :
+pm2 describe tomati-production
+
+# Pour recommencer complètement :
+pm2 delete all
+pm2 kill
+# Puis reprendre à l'étape 2
+```
