@@ -1,0 +1,111 @@
+
+/tmp/fix-build-complete.shmplete.shaccès externe:"  API fonctionne" || echo "❌
+=== Correction du build manquant ===
+1. Arrêt complet de PM2:
+[PM2] Applying action stopProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+2. Nettoyage des builds précédents:
+
+3. Réinstallation complète:
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 107 packages, and audited 537 packages in 8s
+
+69 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+4. Build complet:
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+Browserslist: browsers data (caniuse-lite) is 9 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2672 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/index-C2N3j60e.css             97.95 kB │ gzip:  20.99 kB
+../dist/public/assets/index-BgxyuY35.js             927.77 kB │ gzip: 270.98 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 22.36s
+
+  dist/index.js  52.9kb
+
+⚡ Done in 18ms
+
+5. Vérification du build:
+✅ Build réussi - dist/index.js existe
+total 68
+drwxrwxr-x  3 tomati tomati  4096 Jul 27 12:34 .
+drwxrwxr-x 11 tomati tomati  4096 Jul 27 12:34 ..
+-rw-rw-r--  1 tomati tomati 54148 Jul 27 12:34 index.js
+drwxrwxr-x  4 tomati tomati  4096 Jul 27 12:34 public
+
+6. Création ecosystem.config.js correct:
+
+7. Création du répertoire logs:
+
+8. Démarrage avec PM2:
+[PM2][ERROR] File ecosystem.config.js malformated
+ReferenceError: module is not defined
+    at file:///home/tomati/tomati-market/ecosystem.config.js:1:1
+    at ModuleJobSync.runSync (node:internal/modules/esm/module_job:387:35)
+    at ModuleLoader.importSyncForRequire (node:internal/modules/esm/loader:323:47)
+    at loadESMFromCJS (node:internal/modules/cjs/loader:1371:24)
+    at Module._compile (node:internal/modules/cjs/loader:1511:5)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1572:16)
+    at Module.load (node:internal/modules/cjs/loader:1275:32)
+    at Module._load (node:internal/modules/cjs/loader:1096:12)
+    at Module.require (node:internal/modules/cjs/loader:1298:19)
+    at require (node:internal/modules/helpers:182:18)
+
+9. Attente du démarrage...
+
+10. Vérification finale:
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+Port 5000:
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+
+11. Test API:
+❌ API ne répond pas
+
+12. Logs récents:
+[TAILING] Tailing last 5 lines for [tomati-production] process (change the value with --lines option)
+
