@@ -1,0 +1,136 @@
+Unable to use key file "C:\Users\MSI\Desktop\jobidPR.ppk" (unable to open file)
+login as: ubuntu
+ubuntu@51.222.111.183's password:
+Access denied
+ubuntu@51.222.111.183's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-135-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Jul 26 23:58:14 UTC 2025
+
+  System load:           0.0
+  Usage of /:            6.5% of 77.35GB
+  Memory usage:          16%
+  Swap usage:            0%
+  Processes:             116
+  Users logged in:       2
+  IPv4 address for ens3: 51.222.111.183
+  IPv6 address for ens3: 2607:5300:205:200::3f85
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.2 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Sat Jul 26 22:15:39 2025 from 102.156.92.79
+ubuntu@vps-8dfc48b5:~$ ^C
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+tomati@vps-8dfc48b5:~$ pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ start-tomati-final │ fork     │ 0    │ online    │ 0%       │ 49.8mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ pm2 logs start-tomati-final
+[TAILING] Tailing last 15 lines for [start-tomati-final] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-tomati-final-out.log last 15 lines:
+/home/tomati/.pm2/logs/start-tomati-final-error.log last 15 lines:
+curl http://localhost:5000
+curl http://localhost:5000
+^C
+tomati@vps-8dfc48b5:~$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~$ ^C
+tomati@vps-8dfc48b5:~$ cd ~/tomati-market
+DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market" NODE_ENV=production PORT=5000 node dist/index.js
+12:00:57 AM [express] serving on port 5000
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ cat > start-tomati-final.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: '5000',
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market'
+    }
+  }]
+}
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete start-tomati-final
+[PM2] Applying action deleteProcessId on app [start-tomati-final](ids: [ 0 ])
+[PM2] [start-tomati-final](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start start-tomati-final.cjs
+[PM2] Starting /home/tomati/tomati-market/start-tomati-final.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ start-tomati-final │ fork     │ 0    │ online    │ 0%       │ 11.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-market --lines 5
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ netstat -tlnp | grep :5000
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tomati@vps-8dfc48b5:~/tomati-market$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ ^C
+tomati@vps-8dfc48b5:~/tomati-market$ # L'application PM2 s'appelle "start-tomati-final" mais le script le nomme "tomati-market"
+# Vérifions les logs du bon processus
+pm2 logs start-tomati-final --lines 5
+
+# Si les logs sont toujours vides, il y a un problème avec les variables d'environnement dans PM2
+# Testons avec une approche différente - utilisez le script que nous avons créé
+pm2 restart start-tomati-final
+sleep 2
+pm2 logs start-tomati-final --lines 5
+
+# Vérifier le port
+netstat -tlnp | grep :5000
+
+# Tester la connexion
+curl http://localhost:5000
+
+# Si ça ne marche toujours pas, créons un script de démarrage simple
+cat > start.sh << 'EOF'
+#!/bin/bash
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000
+export DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market"
+node dist/index.js
+EOF
+
+chmod +x start.sh
+
+# Nouvelle configuration PM2 avec le script
+cat > start-script.cjs << 'EOF'
+curl http://localhost:5000ines 5rket',t/start.sh',
+[TAILING] Tailing last 5 lines for [start-tomati-final] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-tomati-final-out.log last 5 lines:
+/home/tomati/.pm2/logs/start-tomati-final-error.log last 5 lines:

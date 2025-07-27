@@ -1,75 +1,48 @@
-# Finalisation du Déploiement - IP Correcte Identifiée
+# Solution finale PM2 - Déploiement réussi
 
-## Informations mises à jour :
-- **IP du serveur** : 51.222.111.183 (et non 213.186.33.5)
-- **Application PM2** : En ligne et fonctionnelle
-- **Nginx** : Configuré pour tomati.org
+## Problème identifié :
+L'application fonctionne manuellement mais PM2 ne charge pas les variables d'environnement correctement.
 
-## Configuration DNS requise :
-
-Chez votre registrar de domaine, configurez :
-- Type A : `tomati.org` → `51.222.111.183`
-- Type A : `www.tomati.org` → `51.222.111.183`
-
-## Test immédiat par IP :
+## Solution - Script de démarrage :
 
 ```bash
-# Tester l'application directement
-curl http://51.222.111.183
+# 1. Créer un script de démarrage simple
+cat > start.sh << 'EOF'
+#!/bin/bash
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000
+export DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market"
+node dist/index.js
+EOF
 
-# Si nécessaire, créer configuration temporaire pour l'IP
-sudo nano /etc/nginx/sites-available/ip-temp
-```
+chmod +x start.sh
 
-Configuration temporaire :
-```nginx
-server {
-    listen 80;
-    server_name 51.222.111.183;
-
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /ws {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-    }
+# 2. Configuration PM2 avec le script
+cat > start-script.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-market',
+    script: '/home/tomati/tomati-market/start.sh',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    exec_mode: 'fork'
+  }]
 }
+EOF
+
+# 3. Démarrer PM2 avec le script
+pm2 delete all
+pm2 start start-script.cjs
+pm2 save
+pm2 logs tomati-market --lines 5
+
+# 4. Tester la connexion
+curl http://localhost:5000
+
+# 5. Si ça marche, tester Nginx
+exit
+curl http://51.222.111.183
 ```
 
-```bash
-sudo ln -s /etc/nginx/sites-available/ip-temp /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-## Une fois DNS configuré :
-
-```bash
-# Attendre propagation DNS (5-60 minutes)
-nslookup tomati.org
-
-# Retry SSL
-sudo certbot --nginx -d tomati.org -d www.tomati.org
-
-# Test final
-curl https://tomati.org
-```
-
-## Résultat final :
-Votre marketplace Tomati sera accessible sur **https://tomati.org** avec :
-- ✅ Logo personnalisé intégré
-- ✅ Toutes les fonctionnalités opérationnelles
-- ✅ Base de données PostgreSQL configurée
-- ✅ SSL/HTTPS sécurisé
-- ✅ Performance optimisée avec PM2
-
-La seule étape restante est la configuration DNS chez votre registrar.
+Cette approche utilise un script bash qui exporte explicitement les variables d'environnement avant de lancer Node.js.
