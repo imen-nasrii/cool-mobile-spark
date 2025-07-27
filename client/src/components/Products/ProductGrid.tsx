@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+// import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 // Import product images
@@ -67,8 +67,11 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
 
   // Use react-query to fetch products
   const { data: fetchedProducts = [], isLoading: loading } = useQuery({
-    queryKey: ['/products', category],
-    queryFn: () => apiClient.getProducts(category),
+    queryKey: ['/api/products', category],
+    queryFn: () => {
+      const url = category && category !== 'all' ? `/api/products?category=${category}` : '/api/products';
+      return fetch(url).then(res => res.json());
+    },
     staleTime: 5 * 60 * 1000,
   });
 
