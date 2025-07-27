@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell, Car, Building, Briefcase, Grid3X3, X, Heart } from "lucide-react";
 import { Home as HomePage } from "./Home";
-import { Messages } from "./Messages";
+import MessagesPage from "./Messages";
 import { ProductDetail } from "./ProductDetail";
 import { Search } from "./Search";
 import { AddProduct } from "./AddProduct";
@@ -10,7 +10,7 @@ import { Favorites } from "./Favorites";
 import { Notifications } from "./Notifications";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
-import { FloatingActionButton } from "@/components/Layout/FloatingActionButton";
+
 import { ChatBot } from "@/components/Chat/ChatBot";
 import { AIChat, AIChatToggle } from "@/components/Chat/AIChat";
 import { useToast } from "@/hooks/use-toast";
@@ -95,7 +95,7 @@ const Index = () => {
       case "add":
         return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} />;
       case "messages":
-        return <Messages activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <MessagesPage />;
       case "profile":
         return <Profile />;
       case "favorites":
@@ -162,8 +162,7 @@ const Index = () => {
             <AIChatToggle onClick={() => setShowAIChat(true)} />
           )}
 
-          {/* Floating Action Button */}
-          <FloatingActionButton onTabChange={handleTabChange} />
+
         </>
       )}
     </div>
