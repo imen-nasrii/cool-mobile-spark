@@ -1,0 +1,180 @@
+tomati@vps-8dfc48b5:~/tomati-market$ # 1. Créer un script de démarrage simple
+tomati@vps-8dfc48b5:~/tomati-market$ # 1. Créer un script de démarrage simple
+cat > start.sh << 'EOF'
+#!/bin/bashmati/tomati-market
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market"export DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market" ode dist/index.js
+node dist/index.js
+EOF
+chmod +x start.sh
+chmod +x start.sh
+# 2. Configuration PM2 avec le script
+# 2. Configuration PM2 avec le script
+cat > start-script.cjs << 'EOF'
+module.exports = {
+  apps: [{'tomati-market',
+    name: 'tomati-market',tomati-market/start.sh',
+    script: '/home/tomati/tomati-market/start.sh',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,ork'
+    exec_mode: 'fork'
+  }]
+}OF
+EOF
+# 3. Démarrer PM2 avec le script
+# 3. Démarrer PM2 avec le script
+pm2 delete allt-script.cjs
+pm2 start start-script.cjs
+pm2 save tomati-market --lines 5
+pm2 logs tomati-market --lines 5
+# 4. Tester la connexion
+# 4. Tester la connexion00
+curl http://localhost:5000
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [start-script](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Starting /home/tomati/tomati-market/start-script.cjs in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ start-script       │ fork     │ 0    │ online    │ 0%       │ 11.1mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+[TAILING] Tailing last 5 lines for [tomati-market] process (change the value with --lines option)
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ # Vérifier les logs du bon processus
+pm2 logs start-script --lines 5
+
+# Tester la connexion
+curl http://localhost:5000
+
+# Si ça ne fonctionne pas, redémarrer le processus
+pm2 restart start-script
+sleep 2
+pm2 logs start-script --lines 5
+curl http://localhost:5000
+[TAILING] Tailing last 5 lines for [start-script] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-script-out.log last 5 lines:
+/home/tomati/.pm2/logs/start-script-error.log last 5 lines:
+
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [start-script](ids: [ 0 ])
+[PM2] [start-script](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ start-script       │ fork     │ 1    │ online    │ 0%       │ 7.0mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [start-script] process (change the value with --lines option)
+/home/tomati/.pm2/logs/start-script-out.log last 5 lines:
+/home/tomati/.pm2/logs/start-script-error.log last 5 lines:
+^C
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomati-market$ exit
+curl http://51.222.111.183
+logout
+ubuntu@vps-8dfc48b5:~$ ^C
+ubuntu@vps-8dfc48b5:~$ pm2 logs start-script --lines 5
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/home/ubuntu/.pm2
+[PM2] PM2 Successfully daemonized
+[TAILING] Tailing last 5 lines for [start-script] process (change the value with --lines option)
+^C
+ubuntu@vps-8dfc48b5:~$ curl http://localhost:5000
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+ubuntu@vps-8dfc48b5:~$ ^C
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+tomati@vps-8dfc48b5:~$ cd ~/tomati-market
+tomati@vps-8dfc48b5:~/tomati-market$ cat > start-app.sh << 'EOF'
+#!/bin/bash
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000
+export DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
+node dist/index.js
+EOF
+tomati@vps-8dfc48b5:~/tomati-market$ chmod +x start-app.sh
+tomati@vps-8dfc48b5:~/tomati-market$ ./start-app.sh
+12:18:53 AM [express] serving on port 5000
+
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ ^[[200~cat > ecosystem.config.js << 'EOF'
+> module.exports = {
+>   apps: [{
+>     name: 'tomati-production',
+>     script: '/home/tomati/tomati-market/start-app.sh',
+>     instances: 1,
+>     exec_mode: 'fork',
+>     autorestart: true,
+>     watch: false
+>   }]
+> }
+> EOF~
+> cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: '/home/tomati/tomati-market/start-app.sh',
+    instances: 1,
+    exec_mode: 'fork',
+    autorestart: true,
+    watch: false
+  }]
+}
+EOF
+cat: command not found
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 delete all
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [start-script](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 start ecosystem.config.js
+[PM2][WARN] Applications  not running, starting...
+[PM2][ERROR] Error: No script path - aborting
+tomati@vps-8dfc48b5:~/tomati-market$
