@@ -35,6 +35,21 @@ const transmissions = [
   { value: "semi-automatic", label: "Semi-automatique" }
 ];
 
+const realEstateTypes = [
+  { value: "apartment", label: "Appartement" },
+  { value: "house", label: "Maison" },
+  { value: "villa", label: "Villa" },
+  { value: "office", label: "Bureau" },
+  { value: "commercial", label: "Local commercial" },
+  { value: "land", label: "Terrain" }
+];
+
+const realEstateConditions = [
+  { value: "excellent", label: "Excellent état" },
+  { value: "good", label: "Bon état" },
+  { value: "to_renovate", label: "À rénover" }
+];
+
 export const AddProduct = ({ activeTab, onTabChange }: { 
   activeTab?: string; 
   onTabChange?: (tab: string) => void;
@@ -51,7 +66,18 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     price: "",
     condition: "",
     location: "",
-    isPaid: true
+    isPaid: true,
+    // Champs immobilier
+    realEstateType: "",
+    rooms: "",
+    bathrooms: "",
+    surface: "",
+    floor: "",
+    furnished: false,
+    parking: false,
+    garden: false,
+    balcony: false,
+    realEstateCondition: ""
   });
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -121,6 +147,19 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           car_condition: formData.condition,
           car_mileage: formData.mileage ? parseInt(formData.mileage) : undefined,
           car_transmission: formData.transmission
+        }),
+        // Real Estate specific fields
+        ...(selectedCategory === "immobilier" && {
+          real_estate_type: formData.realEstateType,
+          real_estate_rooms: formData.rooms ? parseInt(formData.rooms) : undefined,
+          real_estate_bathrooms: formData.bathrooms ? parseInt(formData.bathrooms) : undefined,
+          real_estate_surface: formData.surface ? parseInt(formData.surface) : undefined,
+          real_estate_floor: formData.floor ? parseInt(formData.floor) : undefined,
+          real_estate_furnished: formData.furnished,
+          real_estate_parking: formData.parking,
+          real_estate_garden: formData.garden,
+          real_estate_balcony: formData.balcony,
+          real_estate_condition: formData.realEstateCondition
         })
       });
 
@@ -142,7 +181,18 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         price: "",
         condition: "",
         location: "",
-        isPaid: true
+        isPaid: true,
+        // Reset real estate fields
+        realEstateType: "",
+        rooms: "",
+        bathrooms: "",
+        surface: "",
+        floor: "",
+        furnished: false,
+        parking: false,
+        garden: false,
+        balcony: false,
+        realEstateCondition: ""
       });
       setSelectedImages([]);
       
@@ -388,6 +438,150 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                     </div>
                   </div>
                 </details>
+              </div>
+            )}
+
+            {/* Real Estate specific fields */}
+            {selectedCategory === "immobilier" && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                  <Building size={20} className="text-primary" />
+                  Détails de l'immobilier
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Type de bien */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Type de bien *</label>
+                    <Select value={formData.realEstateType} onValueChange={(value) => setFormData(prev => ({ ...prev, realEstateType: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="Type de bien" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {realEstateTypes.map((type) => (
+                          <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Nombre de chambres */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Nombre de chambres *</label>
+                    <Input
+                      type="number"
+                      placeholder="Ex: 3"
+                      value={formData.rooms}
+                      onChange={(e) => setFormData(prev => ({ ...prev, rooms: e.target.value }))}
+                      className="h-12"
+                      min="0"
+                      max="20"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Nombre de salles de bains */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Salles de bains</label>
+                    <Input
+                      type="number"
+                      placeholder="Ex: 2"
+                      value={formData.bathrooms}
+                      onChange={(e) => setFormData(prev => ({ ...prev, bathrooms: e.target.value }))}
+                      className="h-12"
+                      min="0"
+                      max="10"
+                    />
+                  </div>
+                  
+                  {/* Surface */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Surface (m²) *</label>
+                    <Input
+                      type="number"
+                      placeholder="Ex: 120"
+                      value={formData.surface}
+                      onChange={(e) => setFormData(prev => ({ ...prev, surface: e.target.value }))}
+                      className="h-12"
+                      min="1"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Étage */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Étage</label>
+                    <Input
+                      type="number"
+                      placeholder="Ex: 2 (RDC = 0)"
+                      value={formData.floor}
+                      onChange={(e) => setFormData(prev => ({ ...prev, floor: e.target.value }))}
+                      className="h-12"
+                      min="0"
+                      max="50"
+                    />
+                  </div>
+                  
+                  {/* État */}
+                  <div>
+                    <label className="block text-sm font-medium mb-2">État du bien</label>
+                    <Select value={formData.realEstateCondition} onValueChange={(value) => setFormData(prev => ({ ...prev, realEstateCondition: value }))}>
+                      <SelectTrigger className="h-12">
+                        <SelectValue placeholder="État du bien" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {realEstateConditions.map((condition) => (
+                          <SelectItem key={condition.value} value={condition.value}>{condition.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                
+                {/* Options supplémentaires */}
+                <div className="mt-4">
+                  <label className="block text-sm font-medium mb-3">Options disponibles</label>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.furnished}
+                        onChange={(e) => setFormData(prev => ({ ...prev, furnished: e.target.checked }))}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm">Meublé</span>
+                    </label>
+                    
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.parking}
+                        onChange={(e) => setFormData(prev => ({ ...prev, parking: e.target.checked }))}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm">Parking</span>
+                    </label>
+                    
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.garden}
+                        onChange={(e) => setFormData(prev => ({ ...prev, garden: e.target.checked }))}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm">Jardin</span>
+                    </label>
+                    
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.balcony}
+                        onChange={(e) => setFormData(prev => ({ ...prev, balcony: e.target.checked }))}
+                        className="rounded border-gray-300 text-primary focus:ring-primary"
+                      />
+                      <span className="text-sm">Balcon</span>
+                    </label>
+                  </div>
+                </div>
               </div>
             )}
 

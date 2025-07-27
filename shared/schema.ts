@@ -58,6 +58,18 @@ export const products = pgTable("products", {
   car_model: text("car_model"), // Modèle
   car_condition: text("car_condition"), // Neuf, Occasion, Accidenté
   
+  // Champs spécifiques à l'immobilier
+  real_estate_type: text("real_estate_type"), // Appartement, Maison, Villa, Bureau, Local commercial
+  real_estate_rooms: integer("real_estate_rooms"), // Nombre de chambres
+  real_estate_bathrooms: integer("real_estate_bathrooms"), // Nombre de salles de bains
+  real_estate_surface: integer("real_estate_surface"), // Surface en m²
+  real_estate_floor: integer("real_estate_floor"), // Étage
+  real_estate_furnished: boolean("real_estate_furnished"), // Meublé ou non
+  real_estate_parking: boolean("real_estate_parking"), // Place de parking
+  real_estate_garden: boolean("real_estate_garden"), // Jardin
+  real_estate_balcony: boolean("real_estate_balcony"), // Balcon
+  real_estate_condition: text("real_estate_condition"), // État: Excellent, Bon, À rénover
+  
   created_at: timestamp("created_at").defaultNow().notNull(),
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
