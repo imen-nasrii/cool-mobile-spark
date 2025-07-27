@@ -1,0 +1,49 @@
+Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=Sport:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=Sport:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 400 (Bad Request)Understand this error
+index-BeVWCdut.js:437 Error creating product: Error: column "real_estate_type" of relation "products" does not exist
+    at ez.request (index-BeVWCdut.js:381:21337)
+    at async _ (index-BeVWCdut.js:437:200427)
+_ @ index-BeVWCdut.js:437Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/stats:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products?category=all:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)Understand this error
+/api/products:1  Failed to load resource: the server responded with a status of 400 (Bad Request)Understand this error
+index-BeVWCdut.js:437 Error creating product: Error: column "real_estate_type" of relation "products" does not exist
+    at ez.request (index-BeVWCdut.js:381:21337)
+    at async _ (index-BeVWCdut.js:437:200427)

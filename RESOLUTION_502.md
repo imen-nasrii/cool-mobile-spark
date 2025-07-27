@@ -1,34 +1,59 @@
-# Résolution Erreur 502 Bad Gateway
+# Résolution Erreur 500 - Migration Base de Données
 
-## Diagnostic requis
-
-L'erreur 502 indique que Nginx ne peut pas se connecter à l'application sur le port 5000.
-
-### Commandes à exécuter sur le serveur :
-
-```bash
-# 1. Vérifier le statut PM2
-sudo su - tomati
-pm2 status
-pm2 logs tomati-market --lines 10
-
-# 2. Vérifier si le port 5000 écoute
-netstat -tlnp | grep :5000
-ss -tlnp | grep :5000
-
-# 3. Tester la connexion locale
-curl http://localhost:5000
-
-# 4. Si PM2 est arrêté, le redémarrer
-pm2 restart tomati-market
-
-# 5. Si problème persiste, démarrer manuellement pour voir les erreurs
-NODE_ENV=production node dist/index.js
+## Problème Identifié
+```
+Error: column "real_estate_type" of relation "products" does not exist
 ```
 
-### Solutions possibles :
+La nouvelle version contient des colonnes qui n'existent pas dans la base de données de production.
 
-1. **Redémarrer PM2** si l'application s'est arrêtée
-2. **Vérifier les variables d'environnement** dans le fichier .env
-3. **Corriger la configuration Nginx** si nécessaire
-4. **Vérifier les permissions** et dépendances
+## Solution: Migration Base de Données sur VPS
+
+### Commandes à exécuter sur le VPS:
+```bash
+ssh ubuntu@51.222.111.183
+sudo su - tomati
+cd ~/tomati-market
+
+# Vérifier les logs PM2 pour confirmer l'erreur
+pm2 logs tomati-production --lines 20
+
+# Appliquer la migration de base de données
+npm run db:push
+
+# Redémarrer l'application
+pm2 restart tomati-production
+
+# Vérifier que ça fonctionne
+pm2 logs tomati-production --lines 10
+curl http://localhost:5000/api/stats
+```
+
+### Vérification finale:
+```bash
+exit
+curl http://51.222.111.183/api/stats
+```
+
+## Colonnes Manquantes Probables
+- `real_estate_type`
+- `job_contract_type`
+- `job_sector`
+- Autres champs category-specific ajoutés récemment
+
+## Alternative si Migration Échoue
+```bash
+# Voir le schéma actuel
+psql -U tomati -d tomati_market
+\d products
+\q
+
+# Forcer migration
+npm run db:push --force
+```
+
+## Test de Fonctionnement
+Une fois la migration appliquée:
+- `/api/stats` doit retourner 200
+- `/api/products` doit fonctionner
+- Interface doit charger sans erreurs 500
