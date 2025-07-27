@@ -67,13 +67,24 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
-  const { data: fetchedProducts = [], isLoading: loading } = useQuery({
+  const { data: fetchedProducts = [], isLoading: loading, error } = useQuery({
     queryKey: ['/api/products', category],
-    queryFn: () => {
-      const url = category && category !== 'all' ? `/api/products?category=${category}` : '/api/products';
-      return fetch(url).then(res => res.json());
+    queryFn: async () => {
+      try {
+        const url = category && category !== 'all' ? `/api/products?category=${category}` : '/api/products';
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        throw error;
+      }
     },
     staleTime: 5 * 60 * 1000,
+    retry: 3,
+    retryDelay: 1000,
   });
 
   // Apply search filter and sorting to products
@@ -129,6 +140,19 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
             <div className="tomati-brand animate-pulse mb-4">Tomati</div>
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
             <p className="text-sm text-muted-foreground mt-4">Chargement des produits...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="text-red-600 mb-4">Erreur de chargement</div>
+            <p className="text-sm text-muted-foreground">Impossible de charger les produits. Veuillez rafraîchir la page.</p>
           </div>
         </div>
       </div>
