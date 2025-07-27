@@ -21,7 +21,7 @@ interface HomeProps {
 }
 
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("date");
   const [showFilters, setShowFilters] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -126,20 +126,87 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
               Achetez et vendez en toute confiance.
             </p>
             
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto relative px-4">
-              <div className="relative">
-                <Search className="absolute left-6 sm:left-8 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
-                <Input
-                  placeholder="Rechercher des produits..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 sm:pl-16 pr-20 sm:pr-24 py-3 text-sm sm:text-base border-2 border-gray-200 focus:border-primary rounded-full"
-                />
-                <Button className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full px-3 sm:px-6 text-xs sm:text-sm">
-                  <span className="hidden sm:inline">Rechercher</span>
-                  <span className="sm:hidden">OK</span>
-                </Button>
+            {/* Enhanced Search Bar */}
+            <div className="max-w-4xl mx-auto px-4">
+              <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-lg p-4 sm:p-6">
+                <div className="flex flex-col lg:flex-row gap-3 sm:gap-4">
+                  {/* Search Input */}
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                    <Input
+                      placeholder="Rechercher des produits, marques, vendeurs..."
+                      className="pl-10 pr-4 py-3 sm:py-4 text-base sm:text-lg rounded-xl border-gray-200 focus:border-primary bg-white"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                          if (onTabChange) {
+                            onTabChange('search');
+                          }
+                          toast({
+                            title: "Recherche lancée",
+                            description: `Recherche pour "${searchTerm}"`
+                          });
+                        }
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Category Filter */}
+                  <div className="w-full lg:w-48">
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger className="py-3 sm:py-4 text-base rounded-xl border-gray-200">
+                        <SelectValue placeholder="Toutes catégories" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Toutes catégories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Search Button */}
+                  <Button 
+                    onClick={() => {
+                      // Filter products based on search and category
+                      if (onTabChange) {
+                        onTabChange('search');
+                      }
+                      toast({
+                        title: "Recherche lancée",
+                        description: `Recherche pour "${searchTerm}" ${selectedCategory && selectedCategory !== 'all' ? `dans ${selectedCategory}` : ''}`
+                      });
+                    }}
+                    className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg rounded-xl bg-primary hover:bg-primary/90 whitespace-nowrap"
+                  >
+                    <Search size={18} className="mr-2" />
+                    Rechercher
+                  </Button>
+                </div>
+                
+                {/* Quick Filters */}
+                <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-100">
+                  <span className="text-sm text-gray-500 mr-2">Recherches populaires:</span>
+                  {['Voitures', 'Téléphones', 'Immobilier', 'Emploi', 'Mode'].map((tag) => (
+                    <button
+                      key={tag}
+                      onClick={() => {
+                        setSearchTerm(tag);
+                        setSelectedCategory('all');
+                        if (onTabChange) {
+                          onTabChange('search');
+                        }
+                      }}
+                      className="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
