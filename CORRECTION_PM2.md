@@ -1,52 +1,76 @@
-# Correction PM2 et suite du déploiement
+# Correction PM2 - Création du Fichier de Configuration
 
-## Sur votre serveur, exécutez :
+## Situation
+- ✅ Build réussi (application construite)
+- ✅ Base de données à jour (no changes detected)
+- ❌ ecosystem.config.js manquant
 
-### 1. Créer un fichier PM2 simple
+## Commandes à Exécuter
+
+### Étape 1: Créer le fichier ecosystem.config.js
 ```bash
-cat > ecosystem.config.cjs << 'EOF'
+cat > ecosystem.config.js << 'EOF'
 module.exports = {
   apps: [{
-    name: 'tomati-market',
-    script: 'server/index.ts',
-    interpreter: 'node',
-    interpreter_args: '--loader tsx',
+    name: 'tomati-production',
+    script: 'dist/index.js',
     instances: 1,
     exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'development',
+      PORT: 5000
+    },
     env_production: {
       NODE_ENV: 'production',
-      PORT: 5000
-    }
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market'
+    },
+    error_file: '/tmp/tomati-error.log',
+    out_file: '/tmp/tomati-out.log',
+    log_file: '/tmp/tomati-combined.log',
+    time: true,
+    watch: false,
+    max_memory_restart: '500M',
+    min_uptime: '10s',
+    max_restarts: 5
   }]
 }
 EOF
 ```
 
-### 2. Démarrer avec PM2
+### Étape 2: Vérifier que le fichier existe
 ```bash
-pm2 start ecosystem.config.cjs --env production
-pm2 save
+ls -la ecosystem.config.js
 ```
 
-### 3. Exécuter la commande startup PM2
+### Étape 3: Démarrer l'application
 ```bash
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u tomati --hp /home/tomati
+pm2 start ecosystem.config.js --env production
 ```
 
-### 4. Vérifier que ça fonctionne
+### Étape 4: Vérifier le statut
 ```bash
 pm2 status
-pm2 logs tomati-market
 ```
 
-### 5. Retourner à ubuntu pour Nginx
+### Étape 5: Consulter les logs
+```bash
+pm2 logs tomati-production --lines 10
+```
+
+### Étape 6: Tester l'application
+```bash
+curl http://localhost:5000
+```
+
+### Étape 7: Test externe
 ```bash
 exit
+curl http://51.222.111.183
 ```
 
-### 6. Configuration Nginx
+## Alternative si problème
+Si PM2 ne démarre pas, utilisez directement Node.js :
 ```bash
-sudo nano /etc/nginx/sites-available/tomati.org
+NODE_ENV=production PORT=5000 node dist/index.js &
 ```
-
-Puis continuez avec la configuration Nginx du guide précédent.
