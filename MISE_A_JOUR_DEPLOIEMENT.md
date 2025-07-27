@@ -1,74 +1,72 @@
-# Mise à Jour Déploiement - Nouvelle Version
+# Mise à Jour - Déploiement Version Finale
 
-## 🔄 Commandes de Mise à Jour Rapide
+## 🔧 Corrections Appliquées
 
-### Étape 1: Se connecter au VPS
+### Problème résolu : "Unknown Error"
+- **ErrorBoundary global** : Capture toutes les erreurs React non gérées
+- **Messages en français** : Interface d'erreur conviviale avec option de récupération
+- **Gestion d'erreur robuste** : Retry automatique et états d'erreur détaillés
+
+### Améliorations techniques
+- **ProductGrid** : Meilleure gestion des erreurs API avec retry (3 tentatives)
+- **Logging** : Erreurs loggées dans la console pour diagnostic
+- **UX** : Messages d'erreur clairs et actions de récupération
+
+## 📋 Processus de Déploiement
+
+### Étape 1 : Push GitHub
 ```bash
+git add .
+git commit -m "Fix Unknown Error with ErrorBoundary and improved error handling
+
+- Added global ErrorBoundary component for error recovery
+- Enhanced ProductGrid error handling with retry mechanism  
+- Improved error messages in French with user-friendly interface
+- Added detailed error logging for debugging"
+
+git push origin main
+```
+
+### Étape 2 : Déploiement VPS Automatique
+```bash
+# Copier le script
+scp vps-deploy-latest.sh ubuntu@51.222.111.183:/tmp/
+
+# Exécuter le déploiement
 ssh ubuntu@51.222.111.183
 sudo su - tomati
-cd ~/tomati-market
+chmod +x /tmp/vps-deploy-latest.sh
+/tmp/vps-deploy-latest.sh
 ```
 
-### Étape 2: Sauvegarder et arrêter
+## ✅ Fonctionnalités Déployées
+
+1. **Layout horizontal** : Produits affichés en ligne avec image gauche + détails droite
+2. **Police Arial** : Appliquée globalement dans toute l'interface
+3. **ErrorBoundary** : Capture et gestion des erreurs avec récupération
+4. **API robuste** : Gestion d'erreur avec retry automatique
+5. **Messages français** : Interface d'erreur conviviale
+6. **Migration DB** : Automatique lors du déploiement
+
+## 🎯 Validation Post-Déploiement
+
 ```bash
-# Créer sauvegarde rapide
-cp -r dist dist-backup-$(date +%Y%m%d_%H%M%S)
+# Tests automatiques dans le script
+curl http://51.222.111.183/api/products
+curl http://51.222.111.183/api/stats
 
-# Arrêter l'application
-pm2 stop tomati-production
+# Vérification manuelle
+# Ouvrir : http://51.222.111.183
+# Tester navigation et fonctionnalités
 ```
 
-### Étape 3: Récupérer nouvelle version
-```bash
-# Récupérer les derniers changements
-git pull origin main
+## 📊 Résultat Attendu
 
-# Réinstaller les dépendances si nécessaire
-npm install --production
-```
+- ✅ Plus d'erreur "Unknown Error"
+- ✅ Interface stable et réactive
+- ✅ Layout horizontal fonctionnel
+- ✅ Police Arial partout
+- ✅ Messages d'erreur clairs en français
+- ✅ Récupération automatique en cas de problème
 
-### Étape 4: Rebuilder et redémarrer
-```bash
-# Rebuild l'application
-npm run build
-
-# Appliquer migrations DB si nécessaire
-npm run db:push
-
-# Redémarrer l'application
-pm2 restart tomati-production
-
-# Vérifier le statut
-pm2 status tomati-production
-pm2 logs tomati-production --lines 10
-```
-
-### Étape 5: Test final
-```bash
-# Test local
-curl http://localhost:5000
-
-# Sortir et tester externe
-exit
-curl http://51.222.111.183
-```
-
-## 🚀 Script de Mise à Jour Automatique
-
-Si vous préférez un script automatique, utilisez les commandes ci-dessus dans l'ordre.
-
-## ⚠️ En cas de problème
-
-### Restaurer l'ancienne version
-```bash
-pm2 stop tomati-production
-rm -rf dist
-mv dist-backup-YYYYMMDD_HHMMSS dist
-pm2 restart tomati-production
-```
-
-### Vérifier les logs
-```bash
-pm2 logs tomati-production --err
-tail -f /var/log/nginx/error.log
-```
+L'application est maintenant prête pour une utilisation en production stable.

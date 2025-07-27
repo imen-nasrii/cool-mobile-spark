@@ -1,26 +1,5 @@
 #!/bin/bash
 
-# Script de déploiement final avec corrections d'erreurs
-echo "🚀 Déploiement version finale avec ErrorBoundary..."
-
-# Créer l'archive avec toutes les corrections
-tar -czf tomati-latest-20250727_$(date +%H%M%S).tar.gz \
-  client/src/components/Products/ProductListCard.tsx \
-  client/src/components/Products/ProductGrid.tsx \
-  client/src/components/ErrorBoundary.tsx \
-  client/src/App.tsx \
-  client/src/index.css \
-  client/src/pages/ProductDetail.tsx \
-  shared/schema.ts \
-  package.json \
-  --exclude-vcs
-
-echo "📦 Archive créée : tomati-latest-20250727_$(date +%H%M%S).tar.gz"
-
-# Script de déploiement VPS mis à jour
-cat > vps-deploy-latest.sh << 'EOF'
-#!/bin/bash
-
 echo "🔄 Déploiement version finale sur VPS..."
 
 # Variables
@@ -108,29 +87,3 @@ echo "  - Gestion d'erreur améliorée"
 echo "  - Messages d'erreur en français"
 echo ""
 echo "📱 Application disponible: http://51.222.111.183"
-EOF
-
-chmod +x vps-deploy-latest.sh
-
-echo ""
-echo "🎯 Instructions de déploiement GitHub:"
-echo ""
-echo "# 1. Push vers GitHub (depuis votre machine locale):"
-echo "git add ."
-echo "git commit -m 'Fix Unknown Error with ErrorBoundary and improved error handling'"
-echo "git push origin main"
-echo ""
-echo "# 2. Déployer sur VPS:"
-echo "scp vps-deploy-latest.sh ubuntu@51.222.111.183:/tmp/"
-echo "ssh ubuntu@51.222.111.183"
-echo "sudo su - tomati"
-echo "chmod +x /tmp/vps-deploy-latest.sh"
-echo "/tmp/vps-deploy-latest.sh"
-echo ""
-echo "🎉 Cette version inclut:"
-echo "  ✅ Correction erreur 'Unknown Error'"
-echo "  ✅ ErrorBoundary global avec messages en français"
-echo "  ✅ Layout horizontal des produits"
-echo "  ✅ Police Arial partout"
-echo "  ✅ Gestion d'erreur robuste avec retry"
-echo "  ✅ Migration DB automatique"
