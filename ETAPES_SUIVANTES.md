@@ -1,59 +1,42 @@
-# Étapes Finales - Déploiement Tomati Market
+# Étapes Suivantes - Migration Base de Données
 
-## Situation actuelle :
-- Application fonctionne manuellement : ✅ `DATABASE_URL="..." node dist/index.js`
-- PM2 ne démarre pas l'application correctement : ❌ logs vides
-- Nginx configuré et prêt : ✅
+## Configuration Vérifiée ✅
+- Fichier .env correct avec DATABASE_URL
+- Variables PostgreSQL configurées
 
-## Solution immédiate :
+## Commandes à Exécuter Maintenant
 
 ```bash
-# Sur le serveur, en tant qu'utilisateur tomati
+# Appliquer la migration pour ajouter les nouvelles colonnes
+npm run db:push
 
-# 1. Créer un script propre (sans erreurs de formatage)
-cat > /home/tomati/tomati-market/start-app.sh << 'EOF'
-#!/bin/bash
-cd /home/tomati/tomati-market
-export NODE_ENV=production
-export PORT=5000
-export DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
-node dist/index.js
-EOF
+# Redémarrer l'application
+pm2 restart tomati-production
 
-chmod +x /home/tomati/tomati-market/start-app.sh
-
-# 2. Tester le script directement
-/home/tomati/tomati-market/start-app.sh
-
-# Si ça marche (Ctrl+C pour arrêter), configurer PM2 :
-
-# 3. Configuration PM2 simple
-cat > /home/tomati/tomati-market/ecosystem.config.js << 'EOF'
-module.exports = {
-  apps: [{
-    name: 'tomati-production',
-    script: '/home/tomati/tomati-market/start-app.sh',
-    instances: 1,
-    exec_mode: 'fork',
-    autorestart: true,
-    watch: false
-  }]
-}
-EOF
-
-# 4. Démarrer avec PM2
-pm2 delete all
-pm2 start ecosystem.config.js
-pm2 save
+# Vérifier les logs
 pm2 logs tomati-production --lines 10
 
-# 5. Test final
-curl http://localhost:5000
+# Tester l'API
+curl http://localhost:5000/api/stats
+curl http://localhost:5000/api/products
+
+# Test externe
 exit
-curl http://51.222.111.183
+curl http://51.222.111.183/api/stats
 ```
 
-## Une fois que ça marche :
-1. Configuration DNS : tomati.org → 51.222.111.183
-2. Certificat SSL avec Let's Encrypt
-3. Site accessible sur https://tomati.org
+## Colonnes à Ajouter
+La migration va créer ces nouvelles colonnes dans la table `products`:
+- `real_estate_type`
+- `real_estate_rooms`
+- `real_estate_bathrooms`
+- `real_estate_surface`
+- `job_type`
+- `job_sector`
+- Et toutes les autres nouvelles colonnes
+
+## Résultat Attendu
+- Erreurs 500 disparaissent
+- API retourne 200
+- Interface fonctionne sans erreurs
+- Nouvelles fonctionnalités immobilier/emploi opérationnelles
