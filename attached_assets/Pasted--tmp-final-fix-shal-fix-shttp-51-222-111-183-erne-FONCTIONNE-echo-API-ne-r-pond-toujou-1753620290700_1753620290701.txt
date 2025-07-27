@@ -1,0 +1,270 @@
+/tmp/final-fix.shal-fix.shttp://51.222.111.183"erne ==="FONCTIONNE!" || echo "❌ API ne répond toujours pas"
+=== Correction finale DATABASE_URL ===
+[PM2] Applying action stopProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ cluster │ 0        │ 0      │ 3    │ stopped   │ 0%       │ 0b       │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Applying action deleteProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+1. Création forcée du .env:
+2. Vérification .env:
+-rw-rw-r-- 1 tomati tomati 191 Jul 27 12:42 .env
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomati
+PGPASSWORD=Tomati123
+PGDATABASE=tomati_market
+
+3. Migration DB:
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/tomati/tomati-market/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[i] No changes detected
+
+4. Configuration PM2 avec variables intégrées:
+
+5. Démarrage PM2 avec variables d'environnement:
+[PM2][WARN] Applications tomati-production not running, starting...
+[PM2] App [tomati-production] launched (1 instances)
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ cluster │ 239458   │ 0s     │ 0    │ online    │ 0%       │ 38.4mb   │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+6. Attente 10 secondes...
+
+7. Status final:
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ cluster │ 239458   │ 10s    │ 0    │ online    │ 0%       │ 100.9mb  │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+
+8. Test port:
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:5000            0.0.0.0:*               LISTEN      227467/PM2 v6.0.8:
+
+9. Test API final:
+{"totalProducts":2,"totalUsers":100}✅ API FONCTIONNE!
+
+10. Logs détaillés si erreur:
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/tomati-market/logs/err-0.log last 10 lines:
+0|tomati-p | You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+0|tomati-p | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|tomati-p |     at file:///home/tomati/tomati-market/dist/index.js:399:9
+0|tomati-p |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|tomati-p |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+0|tomati-p | You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+0|tomati-p | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|tomati-p |     at file:///home/tomati/tomati-market/dist/index.js:399:9
+0|tomati-p |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|tomati-p |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+
+/home/tomati/tomati-market/logs/out-0.log last 10 lines:
+0|tomati-p | 2025-07-27T12:42:48: 12:42:48 PM [express] serving on port 5000
+0|tomati-p | 2025-07-27T12:42:57: 12:42:57 PM [express] GET /api/stats 200 in 76ms :: {"totalProducts":2,"totalUsers":100}
+
+cat > /tmp/final-fix.sh << 'FINALEOF'
+#!/bin/bash
+
+echo "=== Correction finale DATABASE_URL ==="
+
+cd /home/tomati/tomati-market
+
+# Arrêter et supprimer PM2
+pm2 stop tomati-production
+pm2 delete tomati-production
+
+# Forcer la création du .env
+echo "1. Création forcée du .env:"
+cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomati
+PGPASSWORD=Tomati123
+PGDATABASE=tomati_market
+ENVEOF
+
+# Vérifier le .env
+echo "2. Vérification .env:"
+ls -la .env
+cat .env
+
+# Migration DB depuis le bon répertoire
+echo ""
+echo "3. Migration DB:"
+npm run db:push
+
+# Créer ecosystem avec variables directes
+echo ""
+echo "4. Configuration PM2 avec variables intégrées:"
+cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: 'dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: '5000',
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomati',
+      PGPASSWORD: 'Tomati123',
+      PGDATABASE: 'tomati_market'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+ECOEOF
+
+# Créer logs
+mkdir -p logs
+
+# Démarrer PM2
+echo ""
+echo "5. Démarrage PM2 avec variables d'environnement:"
+pm2 start ecosystem.config.cjs
+
+echo ""
+echo "6. Attente 10 secondes..."
+sleep 10
+
+echo ""
+echo "7. Status final:"
+pm2 status
+
+echo ""
+echo "8. Test port:"
+netstat -tlnp | grep :5000
+
+echo ""
+echo "9. Test API final:"
+curl -s http://localhost:5000/api/stats && echo "✅ API FONCTIONNE!" || echo "❌ API ne répond toujours pas"
+
+echo ""
+echo "10. Logs détaillés si erreur:"
+pm2 logs tomati-production --lines 10
+
+echo ""
+echo "=== Si API fonctionne, testez l'accès externe ==="
+echo "curl http://51.222.111.183/"
+echo "Ouvrir navigateur: http://51.222.111.183"
+FINALEOF
+
+chmod +x /tmp/final-fix.sh
+/tmp/final-fix.shcat > /tmp/final-fix.sh << 'FINALEOF'
+#!/bin/bash
+
+echo "=== Correction finale DATABASE_URL ==="
+
+cd /home/tomati/tomati-market
+
+# Arrêter et supprimer PM2
+pm2 stop tomati-production
+pm2 delete tomati-production
+
+# Forcer la création du .env
+echo "1. Création forcée du .env:"
+cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomati
+PGPASSWORD=Tomati123
+PGDATABASE=tomati_market
+ENVEOF
+
+# Vérifier le .env
+echo "2. Vérification .env:"
+ls -la .env
+cat .env
+
+# Migration DB depuis le bon répertoire
+echo ""
+echo "3. Migration DB:"
+npm run db:push
+
+# Créer ecosystem avec variables directes
+echo ""
+echo "4. Configuration PM2 avec variables intégrées:"
+cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: 'dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: '5000',
+      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomati',
+      PGPASSWORD: 'Tomati123',
+      PGDATABASE: 'tomati_market'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+ECOEOF
+
+# Créer logs
+mkdir -p logs
+
+# Démarrer PM2
+echo ""
+echo "5. Démarrage PM2 avec variables d'environnement:"
+pm2 start ecosystem.config.cjs
+
+echo ""
+echo "6. Attente 10 secondes..."
+sleep 10
+
+echo ""
+echo "7. Status final:"
+pm2 status
+
+echo ""
+echo "8. Test port:"
+netstat -tlnp | grep :5000
+
+echo ""
+echo "9. Test API final:"
