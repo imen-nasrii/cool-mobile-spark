@@ -202,7 +202,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 pb-20 md:pb-0 tomati-font-override">
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -297,7 +297,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Price & Title */}
           <div className="space-y-3">
             <div>
-              <h2 className="text-2xl font-bold text-foreground mb-2">{product.title}</h2>
+              <h2 className="text-2xl font-bold text-foreground mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>{product.title}</h2>
               <div className="flex gap-2 mb-3">
                 <Badge variant="secondary">{product.category}</Badge>
                 {product.is_free && (
@@ -324,8 +324,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Description */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-foreground mb-3">Description</h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
+              <p className="text-muted-foreground leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
                 {product.description || "Aucune description fournie."}
               </p>
             </CardContent>
@@ -334,7 +334,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Seller Info */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-foreground mb-3">Vendeur</h3>
+              <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
               <div className="flex items-center gap-3">
                 <Avatar className="w-12 h-12">
                   <AvatarFallback className="bg-primary/10 text-primary font-medium">
@@ -344,7 +344,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-foreground">
+                    <h4 className="font-semibold text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {sellerProfile?.display_name || 'Utilisateur'}
                     </h4>
                     <Shield size={16} className="text-success" />
@@ -363,7 +363,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Map */}
           <Card>
             <CardContent className="p-4">
-              <h3 className="text-lg font-semibold mb-3">Localisation</h3>
+              <h3 className="text-lg font-semibold mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Localisation</h3>
               <ProductMap location={product.location} readonly className="w-full h-48" />
             </CardContent>
           </Card>
@@ -374,15 +374,15 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-xl font-bold text-primary">{product.likes}</div>
-                  <div className="text-xs text-muted-foreground">J'aime</div>
+                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
                 </div>
                 <div>
                   <div className="text-xl font-bold text-primary">-</div>
-                  <div className="text-xs text-muted-foreground">Vues</div>
+                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
                 </div>
                 <div>
                   <div className="text-xl font-bold text-primary">-</div>
-                  <div className="text-xs text-muted-foreground">Note</div>
+                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
                 </div>
               </div>
             </CardContent>

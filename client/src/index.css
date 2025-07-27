@@ -12,7 +12,17 @@ All colors MUST be HSL.
 
 @layer base {
   * {
-    font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-family: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  }
+  
+  /* Force Arial font on all text elements */
+  h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label, a {
+    font-family: Arial, sans-serif !important;
+  }
+  
+  /* Ensure all UI components use Arial */
+  .tomati-font-override * {
+    font-family: Arial, sans-serif !important;
   }
   
   :root {
