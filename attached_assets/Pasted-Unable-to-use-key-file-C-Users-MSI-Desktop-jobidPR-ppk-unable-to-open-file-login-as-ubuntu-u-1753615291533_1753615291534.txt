@@ -1,0 +1,121 @@
+Unable to use key file "C:\Users\MSI\Desktop\jobidPR.ppk" (unable to open file)
+login as: ubuntu
+ubuntu@51.222.111.183's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-135-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sun Jul 27 11:11:42 UTC 2025
+
+  System load:           0.0
+  Usage of /:            6.5% of 77.35GB
+  Memory usage:          17%
+  Swap usage:            0%
+  Processes:             114
+  Users logged in:       2
+  IPv4 address for ens3: 51.222.111.183
+  IPv6 address for ens3: 2607:5300:205:200::3f85
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.2 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Sat Jul 26 23:58:15 2025 from 102.159.174.47
+ubuntu@vps-8dfc48b5:~$ sudo su - tomati
+cd ~sudo su - tomati
+cd ~
+tomati@vps-8dfc48b5:~$
+tomati@vps-8dfc48b5:~$ pm2 stop tomati-production
+pm2 delete tomati-productionpm2 stop tomati-production
+pm2 delete tomati-production
+[PM2] Applying action stopProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 1    │ stopped   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[PM2][ERROR] Process or Namespace tomati-productionpm2 not found
+[PM2] Applying action deleteProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~$ git clone https://github.com/imen-nasrii/cool-mobile-spark.git tomati-marketgit clone https://github.com/imen-nasrii/cool-mobile-spark.git tomati-marketgit clone https://github.com/imen-nasrii/cool-mobile-spark.git tomati-market
+fatal: Too many arguments.
+
+usage: git clone [<options>] [--] <repo> [<dir>]
+
+    -v, --verbose         be more verbose
+    -q, --quiet           be more quiet
+    --progress            force progress reporting
+    --reject-shallow      don't clone shallow repository
+    -n, --no-checkout     don't create a checkout
+    --bare                create a bare repository
+    --mirror              create a mirror repository (implies bare)
+    -l, --local           to clone from a local repository
+    --no-hardlinks        don't use local hardlinks, always copy
+    -s, --shared          setup as shared repository
+    --recurse-submodules[=<pathspec>]
+                          initialize submodules in the clone
+    --recursive ...       alias of --recurse-submodules
+    -j, --jobs <n>        number of submodules cloned in parallel
+    --template <template-directory>
+                          directory from which templates will be used
+    --reference <repo>    reference repository
+    --reference-if-able <repo>
+                          reference repository
+    --dissociate          use --reference only while cloning
+    -o, --origin <name>   use <name> instead of 'origin' to track upstream
+    -b, --branch <branch>
+                          checkout <branch> instead of the remote's HEAD
+    -u, --upload-pack <path>
+                          path to git-upload-pack on the remote
+    --depth <depth>       create a shallow clone of that depth
+    --shallow-since <time>
+                          create a shallow clone since a specific time
+    --shallow-exclude <revision>
+                          deepen history of shallow clone, excluding rev
+    --single-branch       clone only one branch, HEAD or --branch
+    --no-tags             don't clone any tags, and make later fetches not to follow them
+    --shallow-submodules  any cloned submodules will be shallow
+    --separate-git-dir <gitdir>
+                          separate git dir from working tree
+    -c, --config <key=value>
+                          set config inside the new repository
+    --server-option <server-specific>
+                          option to transmit
+    -4, --ipv4            use IPv4 addresses only
+    -6, --ipv6            use IPv6 addresses only
+    --filter <args>       object filtering
+    --remote-submodules   any cloned submodules will use their remote-tracking branch
+    --sparse              initialize sparse-checkout file to include only files at root
+
+tomati@vps-8dfc48b5:~$ git clone https://github.com/imen-nasrii/cool-mobile-spark.git tomati-market
+fatal: destination path 'tomati-market' already exists and is not an empty directory.
+tomati@vps-8dfc48b5:~$ git pull origin main
+npm install --production
+fatal: not a git repository (or any of the parent directories): .git
+npm warn config production Use `--omit=dev` instead.
+npm error code ENOENT
+npm error syscall open
+npm error path /home/tomati/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/home/tomati/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /home/tomati/.npm/_logs/2025-07-27T11_20_39_104Z-debug-0.log
+tomati@vps-8dfc48b5:~$ git pull origin main
+fatal: not a git repository (or any of the parent directories): .git
+tomati@vps-8dfc48b5:~$
