@@ -102,13 +102,13 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   };
 
   return (
-    <div className="min-h-screen tomato-bg pb-20 relative overflow-hidden">
+    <div className="min-h-screen pb-20 relative overflow-hidden">
 
       {/* Header Ad Banner */}
       <AdBanner position="header" className="mb-4 relative z-10" showCloseButton={false} />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-red-500/10 via-orange-500/5 to-transparent relative z-10">
+      <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-3 mb-4">
