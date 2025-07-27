@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ProductCard } from "./ProductCard";
+import { ProductListCard } from "./ProductListCard";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@tanstack/react-query";
 // import { apiClient } from "@/lib/apiClient";
@@ -145,9 +146,9 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         </Button>
       </div>
       
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-col gap-2 sm:gap-3">
         {transformedProducts.map((product: any) => (
-          <ProductCard
+          <ProductListCard
             key={product.id}
             product={product}
             onClick={() => onProductClick?.(product.id)}
