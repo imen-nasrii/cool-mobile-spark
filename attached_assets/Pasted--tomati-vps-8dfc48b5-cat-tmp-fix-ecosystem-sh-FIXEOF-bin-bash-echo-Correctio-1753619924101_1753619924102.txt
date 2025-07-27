@@ -1,0 +1,67 @@
+
+tomati@vps-8dfc48b5:~$ cat > /tmp/fix-ecosystem.sh << 'FIXEOF'
+#!/bin/bash
+
+echo "=== Correction ecosystem.config.js ==="
+
+cd /home/tomati/tomati-market
+
+# Créer le bon fichier ecosystem.config.cjs (CommonJS)
+cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: 'dist/index.js',
+    cwd: '/home/tomati/tomati-market',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+ECOEOF
+
+# Supprimer l'ancien fichier
+/tmp/fix-ecosystem.shsystem.shcurl http://51.222.111.183/"nctionne" || echo "❌
+=== Correction ecosystem.config.js ===
+Démarrage avec PM2...
+[PM2][WARN] Applications tomati-production not running, starting...
+[PM2] App [tomati-production] launched (1 instances)
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ cluster  │ 0    │ online    │ 0%       │ 38.5mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+Attente du démarrage...
+Status PM2:
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ cluster  │ 0    │ online    │ 0%       │ 94.4mb   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+
+Test port 5000:
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+
+Test API:
+❌ API ne répond pas
+
+Logs récents:
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/tomati-market/logs/out-0.log last 10 lines:
+/home/tomati/tomati-market/logs/err-0.log last 10 lines:
+0|tomati-p | You have triggered an unhandledRejection, you may have forgotten to catch a Promise rejection:
+0|tomati-p | Error: DATABASE_URL must be set. Did you forget to provision a database?
+0|tomati-p |     at file:///home/tomati/tomati-market/dist/index.js:399:9
+0|tomati-p |     at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+0|tomati-p |     at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+
