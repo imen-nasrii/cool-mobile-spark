@@ -1,0 +1,195 @@
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 restart tomati-production
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 0    │ online    │ 0%       │ 3.1mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-production --lines 10
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the valu                                                                                                             e with --lines option)
+/home/tomati/.pm2/logs/tomati-production-error-0.log last 10 lines:
+/home/tomati/.pm2/logs/tomati-production-out-0.log last 10 lines:
+0|tomati-p | 12:29:42 AM [express] serving on port 5000
+0|tomati-p | 12:36:07 AM [express] serving on port 5000
+
+0|tomati-production  | 12:40:56 AM [express] serving on port 5000
+^C
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 restart tomati-production
+pm2 logs tomati-production --lines 10
+# Tester
+curl http://localhost:5000
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ fork     │ 1    │ online    │ 0%       │ 3.2mb    │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the valu                                                                                                             e with --lines option)
+/home/tomati/.pm2/logs/tomati-production-error-0.log last 10 lines:
+/home/tomati/.pm2/logs/tomati-production-out-0.log last 10 lines:
+0|tomati-p | 12:29:42 AM [express] serving on port 5000
+0|tomati-p | 12:36:07 AM [express] serving on port 5000
+0|tomati-p | 12:40:56 AM [express] serving on port 5000
+
+0|tomati-production  | 12:41:03 AM [express] serving on port 5000
+0|tomati-production  | 12:41:05 AM [express] GET /api/advertisements 500 in 136m                                                                                                             s :: {"error":"password authentication faile…
+0|tomati-production  | Error getting promoted products: ErrorEvent {
+0|tomati-production  |   [Symbol(kTarget)]: WebSocket {
+0|tomati-production  |     _events: [Object: null prototype] {
+0|tomati-production  |       error: [Function],
+0|tomati-production  |       message: [Function],
+0|tomati-production  |       close: [Function],
+0|tomati-production  |       open: [Function]
+0|tomati-production  |     },
+0|tomati-production  |     _eventsCount: 4,
+0|tomati-production  |     _maxListeners: undefined,
+0|tomati-production  |     _binaryType: 'arraybuffer',
+0|tomati-production  |     _closeCode: 1006,
+0|tomati-production  |     _closeFrameReceived: false,
+0|tomati-production  |     _closeFrameSent: false,
+0|tomati-production  |     _closeMessage: <Buffer >,
+0|tomati-production  |     _closeTimer: null,
+0|tomati-production  |     _errorEmitted: true,
+0|tomati-production  |     _extensions: {},
+0|tomati-production  |     _paused: false,
+0|tomati-production  |     _protocol: '',
+0|tomati-production  |     _readyState: 3,
+0|tomati-production  |     _receiver: null,
+0|tomati-production  |     _sender: null,
+0|tomati-production  |     _socket: null,
+0|tomati-production  |     _bufferedAmount: 0,
+0|tomati-production  |     _isServer: false,
+0|tomati-production  |     _redirects: 0,
+0|tomati-production  |     _autoPong: true,
+0|tomati-production  |     _url: 'wss://localhost/v2',
+0|tomati-production  |     _req: null,
+0|tomati-production  |     [Symbol(shapeMode)]: false,
+0|tomati-production  |     [Symbol(kCapture)]: false
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kType)]: 'error',
+0|tomati-production  |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1                                                                                                             :443
+0|tomati-production  |       at TCPConnectWrap.afterConnect [as oncomplete] (nod                                                                                                             e:net:1611:16) {
+0|tomati-production  |     errno: -111,
+0|tomati-production  |     code: 'ECONNREFUSED',
+0|tomati-production  |     syscall: 'connect',
+0|tomati-production  |     address: '127.0.0.1',
+0|tomati-production  |     port: 443
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443                                                                                                             '
+0|tomati-production  | }
+0|tomati-production  | 12:41:05 AM [express] GET /api/products/promoted 500 in 1                                                                                                             13ms :: {"error":"connect ECONNREFUSED 127.0…
+0|tomati-production  | 12:41:05 AM [express] GET /api/advertisements 500 in 158m                                                                                                             s :: {"error":"password authentication faile…
+0|tomati-production  | 12:41:05 AM [express] GET /api/advertisements 500 in 186m                                                                                                             s :: {"error":"password authentication faile…
+0|tomati-production  | 12:41:05 AM [express] GET /api/products 500 in 192ms :: {                                                                                                             "error":"password authentication failed for …
+0|tomati-production  | 12:41:05 AM [express] GET /api/stats 500 in 96ms :: {"err                                                                                                             or":"password authentication failed for user…
+0|tomati-production  | 12:41:06 AM [express] GET /api/advertisements 500 in 18ms                                                                                                              :: {"error":"password authentication failed…
+0|tomati-production  | Error getting promoted products: ErrorEvent {
+0|tomati-production  |   [Symbol(kTarget)]: WebSocket {
+0|tomati-production  |     _events: [Object: null prototype] {
+0|tomati-production  |       error: [Function],
+0|tomati-production  |       message: [Function],
+0|tomati-production  |       close: [Function],
+0|tomati-production  |       open: [Function]
+0|tomati-production  |     },
+0|tomati-production  |     _eventsCount: 4,
+0|tomati-production  |     _maxListeners: undefined,
+0|tomati-production  |     _binaryType: 'arraybuffer',
+0|tomati-production  |     _closeCode: 1006,
+0|tomati-production  |     _closeFrameReceived: false,
+0|tomati-production  |     _closeFrameSent: false,
+0|tomati-production  |     _closeMessage: <Buffer >,
+0|tomati-production  |     _closeTimer: null,
+0|tomati-production  |     _errorEmitted: true,
+0|tomati-production  |     _extensions: {},
+0|tomati-production  |     _paused: false,
+0|tomati-production  |     _protocol: '',
+0|tomati-production  |     _readyState: 3,
+0|tomati-production  |     _receiver: null,
+0|tomati-production  |     _sender: null,
+0|tomati-production  |     _socket: null,
+0|tomati-production  |     _bufferedAmount: 0,
+0|tomati-production  |     _isServer: false,
+0|tomati-production  |     _redirects: 0,
+0|tomati-production  |     _autoPong: true,
+0|tomati-production  |     _url: 'wss://localhost/v2',
+0|tomati-production  |     _req: null,
+0|tomati-production  |     [Symbol(shapeMode)]: false,
+0|tomati-production  |     [Symbol(kCapture)]: false
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kType)]: 'error',
+0|tomati-production  |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1                                                                                                             :443
+0|tomati-production  |       at TCPConnectWrap.afterConnect [as oncomplete] (nod                                                                                                             e:net:1611:16) {
+0|tomati-production  |     errno: -111,
+0|tomati-production  |     code: 'ECONNREFUSED',
+0|tomati-production  |     syscall: 'connect',
+0|tomati-production  |     address: '127.0.0.1',
+0|tomati-production  |     port: 443
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443                                                                                                             '
+0|tomati-production  | }
+0|tomati-production  | 12:41:06 AM [express] GET /api/products/promoted 500 in 1                                                                                                             5ms :: {"error":"connect ECONNREFUSED 127.0.…
+0|tomati-production  | 12:41:06 AM [express] GET /api/advertisements 500 in 17ms                                                                                                              :: {"error":"password authentication failed…
+0|tomati-production  | 12:41:06 AM [express] GET /api/advertisements 500 in 74ms                                                                                                              :: {"error":"password authentication failed…
+0|tomati-production  | 12:41:06 AM [express] GET /api/products 500 in 68ms :: {"                                                                                                             error":"password authentication failed for u…
+0|tomati-production  | 12:41:06 AM [express] GET /api/stats 500 in 47ms :: {"err                                                                                                             or":"password authentication failed for user…
+0|tomati-production  | 12:41:07 AM [express] GET /api/products 500 in 17ms :: {"                                                                                                             error":"password authentication failed for u…
+0|tomati-production  | 12:41:08 AM [express] GET /api/products 500 in 15ms :: {"                                                                                                             error":"password authentication failed for u…
+0|tomati-production  | 12:41:11 AM [express] GET /api/products 500 in 15ms :: {"                                                                                                             error":"password authentication failed for u…
+0|tomati-production  | 12:41:15 AM [express] GET /api/products 500 in 16ms :: {"                                                                                                             error":"password authentication failed for u…
+pm2 restart tomati-production
+pm2 logs tomati-production --lines 10
+# Tester
+curl http://localhost:50000|tomati-production  | Error getting promoted products: ErrorEvent {
+0|tomati-production  |   [Symbol(kTarget)]: WebSocket {
+0|tomati-production  |     _events: [Object: null prototype] {
+0|tomati-production  |       error: [Function],
+0|tomati-production  |       message: [Function],
+0|tomati-production  |       close: [Function],
+0|tomati-production  |       open: [Function]
+0|tomati-production  |     },
+0|tomati-production  |     _eventsCount: 4,
+0|tomati-production  |     _maxListeners: undefined,
+0|tomati-production  |     _binaryType: 'arraybuffer',
+0|tomati-production  |     _closeCode: 1006,
+0|tomati-production  |     _closeFrameReceived: false,
+0|tomati-production  |     _closeFrameSent: false,
+0|tomati-production  |     _closeMessage: <Buffer >,
+0|tomati-production  |     _closeTimer: null,
+0|tomati-production  |     _errorEmitted: true,
+0|tomati-production  |     _extensions: {},
+0|tomati-production  |     _paused: false,
+0|tomati-production  |     _protocol: '',
+0|tomati-production  |     _readyState: 3,
+0|tomati-production  |     _receiver: null,
+0|tomati-production  |     _sender: null,
+0|tomati-production  |     _socket: null,
+0|tomati-production  |     _bufferedAmount: 0,
+0|tomati-production  |     _isServer: false,
+0|tomati-production  |     _redirects: 0,
+0|tomati-production  |     _autoPong: true,
+0|tomati-production  |     _url: 'wss://localhost/v2',
+0|tomati-production  |     _req: null,
+0|tomati-production  |     [Symbol(shapeMode)]: false,
+0|tomati-production  |     [Symbol(kCapture)]: false
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kType)]: 'error',
+0|tomati-production  |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|tomati-production  |       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|tomati-production  |     errno: -111,
+0|tomati-production  |     code: 'ECONNREFUSED',
+0|tomati-production  |     syscall: 'connect',
+0|tomati-production  |     address: '127.0.0.1',
+0|tomati-production  |     port: 443
+0|tomati-production  |   },
+0|tomati-production  |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|tomati-production  | }
+0|tomati-production  | 12:41:29 AM [express] GET /api/products/promoted 500 in 26ms :: {"error":"connect ECONNREFUSED 127.0.…
+0|tomati-production  | 12:41:29 AM [express] GET /api/advertisements 500 in 49ms :: {"error":"password authentication failed…
+0|tomati-production  | 12:41:29 AM [express] GET /api/advertisements 500 in 49ms :: {"error":"password authentication failed…
+0|tomati-production  | 12:41:29 AM [express] GET /api/products 500 in 61ms :: {"error":"password authentication failed for u…
+0|tomati-production  | 12:41:29 AM [express] GET /api/advertisements 500 in 68ms :: {"error":"password authentication failed…
+0|tomati-production  | 12:41:29 AM [express] GET /api/stats 500 in 72ms :: {"error":"password authentication failed for user…

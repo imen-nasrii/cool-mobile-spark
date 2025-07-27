@@ -1,47 +1,51 @@
-# Correction du fichier .env
+# Correction Configuration Environnement - Serveur Production
 
-Le problème vient du caractère `!` dans le mot de passe qui est interprété par bash.
+## Problèmes identifiés :
+1. **Erreur PostgreSQL** : "password authentication failed for user"
+2. **Erreur WebSocket** : Connection refused 127.0.0.1:443
+3. **Configuration mixte** : Application utilise encore Supabase/Neon au lieu de PostgreSQL local
 
-## Solution : Créer le fichier .env avec nano
-
-```bash
-# Sur le serveur, dans le dossier tomati-market
-nano .env
-```
-
-Puis copiez-collez exactement ce contenu :
-
-```env
-NODE_ENV=production
-PORT=5000
-DATABASE_URL=postgresql://tomati_user:TomatiSecure2025\!@localhost:5432/tomati_production
-JWT_SECRET=tomati_jwt_secret_super_securise_32_caracteres_minimum_pour_production_2025_france
-SESSION_SECRET=tomati_session_secret_securise_pour_authentification_utilisateurs_marketplace_2025
-BCRYPT_ROUNDS=12
-```
-
-**Notez le `\!` pour échapper le caractère spécial.**
-
-Ensuite :
-- Sauvegardez avec `Ctrl+O`
-- Confirmez avec `Entrée`  
-- Quittez avec `Ctrl+X`
-
-## Ou alternative simple :
+## Solution immédiate :
 
 ```bash
-cat > .env << 'EOF'
-NODE_ENV=production
-PORT=5000
-DATABASE_URL=postgresql://tomati_user:TomatiSecure2025!@localhost:5432/tomati_production
-JWT_SECRET=tomati_jwt_secret_super_securise_32_caracteres_minimum_pour_production_2025_france
-SESSION_SECRET=tomati_session_secret_securise_pour_authentification_utilisateurs_marketplace_2025
-BCRYPT_ROUNDS=12
+# Sur le serveur, vérifier le script start-app.sh
+su - tomati
+cd ~/tomati-market
+cat start-app.sh
+
+# Le script doit contenir EXACTEMENT :
+cat > start-app.sh << 'EOF'
+#!/bin/bash
+cd /home/tomati/tomati-market
+export NODE_ENV=production
+export PORT=5000
+export DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
+export PGHOST=localhost
+export PGPORT=5432
+export PGUSER=tomati
+export PGPASSWORD=Tomati123
+export PGDATABASE=tomati_market
+node dist/index.js
 EOF
+
+chmod +x start-app.sh
+
+# Tester le script directement
+./start-app.sh
+# Doit afficher "serving on port 5000" sans erreurs
+
+# Si ça marche, redémarrer PM2
+pm2 restart tomati-production
+pm2 logs tomati-production --lines 10
+curl http://localhost:5000
 ```
 
-Puis continuez avec :
+## Vérifications base de données :
 ```bash
-npm run db:push
-pm2 start ecosystem.config.js --env production
+# Tester la connexion PostgreSQL
+psql -h localhost -U tomati -d tomati_market
+# Si erreur, recréer l'utilisateur :
+sudo -u postgres createuser -s tomati
+sudo -u postgres psql -c "ALTER USER tomati PASSWORD 'Tomati123';"
+sudo -u postgres createdb -O tomati tomati_market
 ```
