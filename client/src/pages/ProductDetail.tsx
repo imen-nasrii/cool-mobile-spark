@@ -186,13 +186,16 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     // Car details
     if (category === 'voitures' || category === 'véhicules') {
       const carDetails = [
-        { icon: Car, label: 'Marque', value: product.brand },
-        { icon: Settings, label: 'Modèle', value: product.model },
-        { icon: Calendar, label: 'Année', value: product.year },
-        { icon: Gauge, label: 'Kilométrage', value: product.mileage ? `${product.mileage} km` : null },
-        { icon: Fuel, label: 'Carburant', value: product.fuel_type },
-        { icon: Settings, label: 'Transmission', value: product.transmission },
-        { icon: Star, label: 'État', value: product.condition }
+        { icon: Car, label: 'Marque', value: product.brand, color: 'text-blue-600' },
+        { icon: Settings, label: 'Modèle', value: product.model, color: 'text-purple-600' },
+        { icon: Calendar, label: 'Année', value: product.year, color: 'text-green-600' },
+        { icon: Gauge, label: 'Kilométrage', value: product.mileage ? `${Number(product.mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
+        { icon: Fuel, label: 'Carburant', value: product.fuel_type, color: 'text-red-600' },
+        { icon: Settings, label: 'Transmission', value: product.transmission, color: 'text-indigo-600' },
+        { icon: Star, label: 'État', value: product.condition, color: 'text-yellow-600' },
+        { icon: Shield, label: 'Couleur', value: product.color, color: 'text-pink-600' },
+        { icon: Users, label: 'Portes', value: product.doors ? `${product.doors} portes` : null, color: 'text-teal-600' },
+        { icon: Car, label: 'Puissance', value: product.power ? `${product.power} CV` : null, color: 'text-cyan-600' }
       ].filter(detail => detail.value);
 
       if (carDetails.length === 0) return null;
@@ -203,15 +206,17 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Caractéristiques du véhicule
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {carDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                <div key={index} className="flex items-center gap-3 p-4 bg-white/70 dark:bg-gray-800/70 rounded-xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-200">
+                  <div className={`p-2 rounded-lg bg-gray-50 dark:bg-gray-800 ${detail.color || 'text-primary'}`}>
+                    <detail.icon size={20} className="flex-shrink-0" />
+                  </div>
                   <div className="flex-1">
-                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.label}
                     </span>
-                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <div className="text-sm font-semibold text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.value}
                     </div>
                   </div>

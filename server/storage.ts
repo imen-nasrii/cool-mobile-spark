@@ -98,9 +98,11 @@ export class DatabaseStorage implements IStorage {
 
   // Products
   async getProducts(category?: string, search?: string): Promise<Product[]> {
+    let rawProducts: Product[] = [];
+    
     if (category && search) {
       const searchTerm = `%${search.toLowerCase()}%`;
-      return await db.select().from(products)
+      rawProducts = await db.select().from(products)
         .where(
           sql`${products.category} = ${category} AND (
             LOWER(${products.title}) LIKE ${searchTerm} OR
@@ -110,17 +112,13 @@ export class DatabaseStorage implements IStorage {
           )`
         )
         .orderBy(desc(products.created_at));
-    }
-    
-    if (category) {
-      return await db.select().from(products)
+    } else if (category) {
+      rawProducts = await db.select().from(products)
         .where(eq(products.category, category))
         .orderBy(desc(products.created_at));
-    }
-    
-    if (search) {
+    } else if (search) {
       const searchTerm = `%${search.toLowerCase()}%`;
-      return await db.select().from(products)
+      rawProducts = await db.select().from(products)
         .where(
           or(
             sql`LOWER(${products.title}) LIKE ${searchTerm}`,
@@ -130,14 +128,62 @@ export class DatabaseStorage implements IStorage {
           )
         )
         .orderBy(desc(products.created_at));
+    } else {
+      rawProducts = await db.select().from(products).orderBy(desc(products.created_at));
     }
     
-    return await db.select().from(products).orderBy(desc(products.created_at));
+    // Map database fields to frontend properties for all products
+    return rawProducts.map(product => ({
+      ...product,
+      brand: product.car_brand,
+      model: product.car_model,
+      year: product.car_year,
+      mileage: product.car_mileage,
+      fuel_type: product.car_fuel_type,
+      transmission: product.car_transmission,
+      condition: product.car_condition,
+      color: product.car_color,
+      doors: product.car_doors,
+      power: product.car_engine_size,
+      // Real estate mappings
+      rooms: product.real_estate_rooms,
+      surface: product.real_estate_surface,
+      property_type: product.real_estate_type,
+      // Job mappings
+      contract_type: product.job_type,
+      salary_range: product.job_salary_min && product.job_salary_max ? 
+        `${product.job_salary_min}-${product.job_salary_max}€` : null
+    }));
   }
 
   async getProduct(id: string): Promise<Product | undefined> {
     const result = await db.select().from(products).where(eq(products.id, id)).limit(1);
-    return result[0];
+    const product = result[0];
+    
+    if (!product) return undefined;
+    
+    // Map car database fields to frontend properties
+    return {
+      ...product,
+      brand: product.car_brand,
+      model: product.car_model,
+      year: product.car_year,
+      mileage: product.car_mileage,
+      fuel_type: product.car_fuel_type,
+      transmission: product.car_transmission,
+      condition: product.car_condition,
+      color: product.car_color,
+      doors: product.car_doors,
+      power: product.car_engine_size,
+      // Real estate mappings
+      rooms: product.real_estate_rooms,
+      surface: product.real_estate_surface,
+      property_type: product.real_estate_type,
+      // Job mappings
+      contract_type: product.job_type,
+      salary_range: product.job_salary_min && product.job_salary_max ? 
+        `${product.job_salary_min}-${product.job_salary_max}€` : null
+    };
   }
 
   async getUserProducts(userId: string): Promise<Product[]> {

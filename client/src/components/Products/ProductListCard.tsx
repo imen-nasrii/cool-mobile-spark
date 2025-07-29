@@ -22,9 +22,15 @@ interface Product {
   year?: string;
   mileage?: string;
   fuel_type?: string;
+  transmission?: string;
+  condition?: string;
+  color?: string;
+  doors?: string;
+  power?: string;
   // Real estate details
   rooms?: string;
   surface?: string;
+  property_type?: string;
   // Job details
   contract_type?: string;
   salary_range?: string;
@@ -99,25 +105,31 @@ export const ProductListCard = ({
             </div>
             
             {/* Product specific details with icons */}
-            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-1">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-1">
               {product.category?.toLowerCase() === 'voitures' && (
                 <>
                   {product.brand && (
-                    <div className="flex items-center gap-1">
-                      <Car size={8} />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</span>
+                    <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
+                      <Car size={10} className="text-blue-600" />
+                      <span className="truncate font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</span>
                     </div>
                   )}
                   {product.fuel_type && (
-                    <div className="flex items-center gap-1">
-                      <Fuel size={8} />
+                    <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
+                      <Fuel size={10} className="text-red-600" />
                       <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.fuel_type}</span>
                     </div>
                   )}
                   {product.year && (
-                    <div className="flex items-center gap-1">
-                      <Calendar size={8} />
+                    <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
+                      <Calendar size={10} className="text-green-600" />
                       <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.year}</span>
+                    </div>
+                  )}
+                  {product.mileage && (
+                    <div className="flex items-center gap-1 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded">
+                      <Gauge size={10} className="text-orange-600" />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{Number(product.mileage).toLocaleString()} km</span>
                     </div>
                   )}
                 </>

@@ -122,7 +122,7 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
       setFilteredProducts([]);
     }
     setLoading(queryLoading);
-  }, [productsData, queryLoading]);
+  }, [productsData, queryLoading, activeFilters]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
