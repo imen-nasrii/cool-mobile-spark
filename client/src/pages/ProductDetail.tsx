@@ -184,7 +184,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     const category = product.category?.toLowerCase();
     
     // Car details  
-    console.log('Category check:', category, 'Product category:', product.category, 'Car details:', {
+    console.log('Category check:', category, 'Product category:', product.category, 'Product ID:', product.id, 'Car details:', {
       brand: product.brand, model: product.model, year: product.year, fuel_type: product.fuel_type
     });
     if (category === 'voitures' || category === 'véhicules' || category === 'voiture') {

@@ -106,7 +106,7 @@ export const ProductListCard = ({
             
             {/* Product specific details with icons */}
             <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-1">
-              {product.category?.toLowerCase() === 'voitures' && (
+              {(product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'voiture') && (
                 <>
                   {product.brand && (
                     <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
