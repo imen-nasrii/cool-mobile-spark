@@ -1,4 +1,4 @@
-import { Heart, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Heart, MapPin, Clock, MessageCircle, Car, Fuel, Calendar, Gauge, Home, Users, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +16,18 @@ interface Product {
   isReserved?: boolean;
   likes: number;
   category: string;
+  // Car details
+  brand?: string;
+  model?: string;
+  year?: string;
+  mileage?: string;
+  fuel_type?: string;
+  // Real estate details
+  rooms?: string;
+  surface?: string;
+  // Job details
+  contract_type?: string;
+  salary_range?: string;
 }
 
 interface ProductListCardProps {
@@ -84,6 +96,65 @@ export const ProductListCard = ({
             <div className="flex items-center text-xs text-muted-foreground mb-2">
               <MapPin size={10} className="mr-1 flex-shrink-0" />
               <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.location}</span>
+            </div>
+            
+            {/* Product specific details with icons */}
+            <div className="flex items-center gap-3 text-xs text-muted-foreground mb-1">
+              {product.category?.toLowerCase() === 'voitures' && (
+                <>
+                  {product.brand && (
+                    <div className="flex items-center gap-1">
+                      <Car size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</span>
+                    </div>
+                  )}
+                  {product.fuel_type && (
+                    <div className="flex items-center gap-1">
+                      <Fuel size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.fuel_type}</span>
+                    </div>
+                  )}
+                  {product.year && (
+                    <div className="flex items-center gap-1">
+                      <Calendar size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.year}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              
+              {product.category?.toLowerCase() === 'immobilier' && (
+                <>
+                  {product.rooms && (
+                    <div className="flex items-center gap-1">
+                      <Home size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.rooms} pièces</span>
+                    </div>
+                  )}
+                  {product.surface && (
+                    <div className="flex items-center gap-1">
+                      <Users size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.surface} m²</span>
+                    </div>
+                  )}
+                </>
+              )}
+              
+              {product.category?.toLowerCase() === 'emploi' && (
+                <>
+                  {product.contract_type && (
+                    <div className="flex items-center gap-1">
+                      <Briefcase size={8} />
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.contract_type}</span>
+                    </div>
+                  )}
+                  {product.salary_range && (
+                    <div className="flex items-center gap-1">
+                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.salary_range}</span>
+                    </div>
+                  )}
+                </>
+              )}
             </div>
           </div>
           

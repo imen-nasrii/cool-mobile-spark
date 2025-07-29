@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Share, Heart, MessageCircle, Phone, Shield, Star, MapPin, Edit, Trash2, X } from "lucide-react";
+import { ArrowLeft, Share, Heart, MessageCircle, Phone, Shield, Star, MapPin, Edit, Trash2, X, Car, Fuel, Settings, Calendar, Gauge, Users, Home, Briefcase, GraduationCap, DollarSign, MapPinIcon, Layers } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -177,6 +177,136 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   const isOwner = user?.id === product?.user_id;
 
+  // Function to render product details with icons based on category
+  const renderProductDetails = () => {
+    if (!product) return null;
+
+    const category = product.category?.toLowerCase();
+    
+    // Car details
+    if (category === 'voitures' || category === 'véhicules') {
+      const carDetails = [
+        { icon: Car, label: 'Marque', value: product.brand },
+        { icon: Settings, label: 'Modèle', value: product.model },
+        { icon: Calendar, label: 'Année', value: product.year },
+        { icon: Gauge, label: 'Kilométrage', value: product.mileage ? `${product.mileage} km` : null },
+        { icon: Fuel, label: 'Carburant', value: product.fuel_type },
+        { icon: Settings, label: 'Transmission', value: product.transmission },
+        { icon: Star, label: 'État', value: product.condition }
+      ].filter(detail => detail.value);
+
+      if (carDetails.length === 0) return null;
+
+      return (
+        <Card className="glass-card">
+          <CardContent className="p-4 md:p-6">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Caractéristiques du véhicule
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {carDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // Real Estate details
+    if (category === 'immobilier' || category === 'logement') {
+      const realEstateDetails = [
+        { icon: Home, label: 'Type', value: product.property_type },
+        { icon: Users, label: 'Chambres', value: product.rooms ? `${product.rooms} pièces` : null },
+        { icon: Users, label: 'Salles de bain', value: product.bathrooms },
+        { icon: Layers, label: 'Surface', value: product.surface ? `${product.surface} m²` : null },
+        { icon: Layers, label: 'Étage', value: product.floor },
+        { icon: Car, label: 'Parking', value: product.parking ? 'Oui' : 'Non' },
+        { icon: Layers, label: 'Jardin', value: product.garden ? 'Oui' : 'Non' },
+        { icon: Home, label: 'Balcon', value: product.balcony ? 'Oui' : 'Non' }
+      ].filter(detail => detail.value);
+
+      if (realEstateDetails.length === 0) return null;
+
+      return (
+        <Card className="glass-card">
+          <CardContent className="p-4 md:p-6">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Caractéristiques du bien
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {realEstateDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    // Job details
+    if (category === 'emploi' || category === 'travail' || category === 'job') {
+      const jobDetails = [
+        { icon: Briefcase, label: 'Type de contrat', value: product.contract_type },
+        { icon: Layers, label: 'Secteur', value: product.sector },
+        { icon: Star, label: 'Expérience', value: product.experience_level },
+        { icon: GraduationCap, label: 'Formation', value: product.education_level },
+        { icon: DollarSign, label: 'Salaire', value: product.salary_range },
+        { icon: Home, label: 'Télétravail', value: product.remote_work ? 'Possible' : 'Non' },
+        { icon: Briefcase, label: 'Entreprise', value: product.company }
+      ].filter(detail => detail.value);
+
+      if (jobDetails.length === 0) return null;
+
+      return (
+        <Card className="glass-card">
+          <CardContent className="p-4 md:p-6">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Détails de l'offre d'emploi
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {jobDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return null;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -320,6 +450,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <span>{formatTimeAgo(product.created_at)}</span>
             </div>
           </div>
+
+          {/* Product Details with Icons */}
+          {renderProductDetails()}
 
           {/* Description */}
           <Card>
@@ -490,6 +623,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 </div>
               </CardContent>
             </Card>
+
+            {/* Product Details with Icons */}
+            {renderProductDetails()}
 
             {/* Description */}
             <Card className="glass-card">
