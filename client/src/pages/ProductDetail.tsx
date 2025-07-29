@@ -463,10 +463,86 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Product Details with Icons */}
           {renderProductDetails()}
 
-          {/* Description */}
+          {/* Description with Car Details */}
           <Card>
             <CardContent className="p-4">
               <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
+              
+              {/* Car specifications in description */}
+              {(product.category?.toLowerCase() === 'voiture' || product.category?.toLowerCase() === 'voitures') && (
+                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <Car size={18} />
+                    Caractéristiques du véhicule
+                  </h4>
+                  <div className="grid grid-cols-2 gap-3 text-sm">
+                    {product.brand && (
+                      <div className="flex items-center gap-2">
+                        <Car size={14} className="text-blue-600" />
+                        <span className="font-medium">Marque:</span>
+                        <span className="text-blue-800 dark:text-blue-200">{product.brand}</span>
+                      </div>
+                    )}
+                    {product.model && (
+                      <div className="flex items-center gap-2">
+                        <Settings size={14} className="text-purple-600" />
+                        <span className="font-medium">Modèle:</span>
+                        <span className="text-purple-800 dark:text-purple-200">{product.model}</span>
+                      </div>
+                    )}
+                    {product.year && (
+                      <div className="flex items-center gap-2">
+                        <Calendar size={14} className="text-green-600" />
+                        <span className="font-medium">Année:</span>
+                        <span className="text-green-800 dark:text-green-200">{product.year}</span>
+                      </div>
+                    )}
+                    {product.mileage && (
+                      <div className="flex items-center gap-2">
+                        <Gauge size={14} className="text-orange-600" />
+                        <span className="font-medium">Kilométrage:</span>
+                        <span className="text-orange-800 dark:text-orange-200">{Number(product.mileage).toLocaleString()} km</span>
+                      </div>
+                    )}
+                    {product.fuel_type && (
+                      <div className="flex items-center gap-2">
+                        <Fuel size={14} className="text-red-600" />
+                        <span className="font-medium">Carburant:</span>
+                        <span className="text-red-800 dark:text-red-200">{product.fuel_type}</span>
+                      </div>
+                    )}
+                    {product.transmission && (
+                      <div className="flex items-center gap-2">
+                        <Settings size={14} className="text-indigo-600" />
+                        <span className="font-medium">Transmission:</span>
+                        <span className="text-indigo-800 dark:text-indigo-200">{product.transmission}</span>
+                      </div>
+                    )}
+                    {product.condition && (
+                      <div className="flex items-center gap-2">
+                        <Star size={14} className="text-yellow-600" />
+                        <span className="font-medium">État:</span>
+                        <span className="text-yellow-800 dark:text-yellow-200">{product.condition}</span>
+                      </div>
+                    )}
+                    {product.color && (
+                      <div className="flex items-center gap-2">
+                        <Shield size={14} className="text-pink-600" />
+                        <span className="font-medium">Couleur:</span>
+                        <span className="text-pink-800 dark:text-pink-200">{product.color}</span>
+                      </div>
+                    )}
+                    {product.doors && (
+                      <div className="flex items-center gap-2">
+                        <Users size={14} className="text-teal-600" />
+                        <span className="font-medium">Portes:</span>
+                        <span className="text-teal-800 dark:text-teal-200">{product.doors} portes</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              
               <p className="text-muted-foreground leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
                 {product.description || "Aucune description fournie."}
               </p>
