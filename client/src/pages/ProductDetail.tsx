@@ -183,8 +183,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
     const category = product.category?.toLowerCase();
     
-    // Car details
-    if (category === 'voitures' || category === 'véhicules') {
+    // Car details  
+    console.log('Category check:', category, 'Product category:', product.category, 'Car details:', {
+      brand: product.brand, model: product.model, year: product.year, fuel_type: product.fuel_type
+    });
+    if (category === 'voitures' || category === 'véhicules' || category === 'voiture') {
       const carDetails = [
         { icon: Car, label: 'Marque', value: product.brand, color: 'text-blue-600' },
         { icon: Settings, label: 'Modèle', value: product.model, color: 'text-purple-600' },
@@ -198,6 +201,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         { icon: Car, label: 'Puissance', value: product.power ? `${product.power} CV` : null, color: 'text-cyan-600' }
       ].filter(detail => detail.value);
 
+      console.log('Car details found:', carDetails.length, carDetails);
       if (carDetails.length === 0) return null;
 
       return (
