@@ -151,10 +151,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Check if user liked a product - must be before generic :id route
-  app.get("/api/products/:id/liked", authenticateToken, async (req, res) => {
+  app.get("/api/products/:id/liked", async (req, res) => {
     try {
-      const hasLiked = await promotionService.hasUserLikedProduct(req.params.id, (req as any).user.id);
-      res.json({ liked: hasLiked });
+      // If no auth token, return not liked
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+      
+      if (!token) {
+        return res.json({ liked: false });
+      }
+      
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        const user = await storage.getUser(decoded.userId);
+        if (!user) {
+          return res.json({ liked: false });
+        }
+        
+        const hasLiked = await promotionService.hasUserLikedProduct(req.params.id, user.id);
+        res.json({ liked: hasLiked });
+      } catch (authError) {
+        res.json({ liked: false });
+      }
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -274,10 +292,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Messaging routes
-  app.get("/api/conversations", authenticateToken, async (req: any, res) => {
+  app.get("/api/conversations", async (req: any, res) => {
     try {
-      const conversations = await messagingService.getConversations(req.user.id);
-      res.json(conversations);
+      // If no auth token, return empty array
+      const authHeader = req.headers['authorization'];
+      const token = authHeader && authHeader.split(' ')[1];
+      
+      if (!token) {
+        return res.json([]);
+      }
+      
+      try {
+        const decoded = jwt.verify(token, JWT_SECRET) as any;
+        const user = await storage.getUser(decoded.userId);
+        if (!user) {
+          return res.json([]);
+        }
+        
+        const conversations = await messagingService.getConversations(user.id);
+        res.json(conversations);
+      } catch (authError) {
+        res.json([]);
+      }
     } catch (error) {
       console.error("Error fetching conversations:", error);
       res.status(500).json({ error: "Failed to fetch conversations" });
@@ -376,43 +412,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Like a product and auto-promote at 3 likes
-  app.post("/api/products/:id/like", authenticateToken, async (req, res) => {
-    try {
-      const product = await storage.getProduct(req.params.id);
-      if (!product) {
-        return res.status(404).json({ error: "Product not found" });
-      }
 
-      // Prevent liking own product
-      if (product.user_id === (req as any).user.id) {
-        return res.status(400).json({ error: "Vous ne pouvez pas aimer votre propre produit" });
-      }
-
-      // Add like and check for automatic promotion
-      await promotionService.addLikeAndCheckPromotion(req.params.id, (req as any).user.id);
-
-      // Update the product with new like count to get fresh data
-      const updatedProduct = await storage.getProduct(req.params.id);
-
-      // Create notification for product owner if user_id exists
-      if (product.user_id) {
-        await notificationService.notifyProductLiked(
-          product.user_id,
-          product.title,
-          product.id
-        );
-      }
-
-      res.json({ 
-        success: true, 
-        message: "Produit ajouté aux favoris",
-        newLikeCount: updatedProduct?.like_count || 0
-      });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
 
   // Stats endpoint
   app.get("/api/stats", async (req, res) => {
@@ -512,18 +512,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Check if user liked a product
-  app.get("/api/products/:id/liked", authenticateToken, async (req: any, res: any) => {
-    try {
-      const { id } = req.params;
-      const userId = req.user.id;
 
-      const like = await storage.getUserProductLike(userId, id);
-      res.json({ liked: !!like });
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
 
   const httpServer = createServer(app);
   
