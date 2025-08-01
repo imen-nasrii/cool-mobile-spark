@@ -351,24 +351,24 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
                   <div 
                     key={equipment.key} 
                     className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${
-                      formData[equipment.key] 
-                        ? 'bg-green-50 border-green-300 text-green-800' 
-                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                      (formData as any)[equipment.key] 
+                        ? 'bg-green-50 border-green-300 text-green-800 hover:bg-green-100' 
+                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-300'
                     }`}
-                    onClick={() => updateFormData(equipment.key as keyof typeof formData, !formData[equipment.key as keyof typeof formData])}
+                    onClick={() => updateFormData(equipment.key as keyof typeof formData, !(formData as any)[equipment.key])}
                   >
                     <input
                       type="checkbox"
                       id={equipment.key}
-                      checked={formData[equipment.key as keyof typeof formData] as boolean}
+                      checked={(formData as any)[equipment.key] as boolean}
                       onChange={(e) => updateFormData(equipment.key as keyof typeof formData, e.target.checked)}
                       className="rounded border-gray-300 text-primary focus:ring-primary"
                     />
                     <span 
                       className="text-lg"
                       style={{ 
-                        filter: formData[equipment.key as keyof typeof formData] ? 'none' : 'grayscale(100%) brightness(0.7)',
-                        color: formData[equipment.key as keyof typeof formData] ? '#000' : '#999'
+                        filter: (formData as any)[equipment.key] ? 'none' : 'grayscale(100%) brightness(0.7)',
+                        color: (formData as any)[equipment.key] ? '#000' : '#999'
                       }}
                     >
                       {equipment.icon}
