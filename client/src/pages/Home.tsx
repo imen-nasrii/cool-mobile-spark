@@ -215,40 +215,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         </div>
       </div>
 
-      {/* Features Section */}
-      <div className="max-w-7xl mx-auto px-4 py-6 sm:py-8 relative z-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 border border-gray-200">
-                <Shield className="text-gray-600" size={24} />
-              </div>
-              <h3 className="text-lg sm:text-xl font-heading font-semibold mb-2 text-gray-900">Transactions Sécurisées</h3>
-              <p className="text-sm sm:text-base text-gray-600">Tous les paiements sont protégés et les vendeurs sont vérifiés</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 border border-gray-200">
-                <Zap className="text-gray-600" size={24} />
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-900">Livraison Rapide</h3>
-              <p className="text-sm sm:text-base text-gray-600">Recevez vos achats rapidement avec notre réseau local</p>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white border border-gray-200 hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
-            <CardContent className="p-4 sm:p-6 text-center">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 border border-gray-200">
-                <Clock className="text-gray-600" size={24} />
-              </div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-900">Support 24/7</h3>
-              <p className="text-sm sm:text-base text-gray-600">Notre équipe est disponible pour vous aider à tout moment</p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+
 
       {/* Promoted Products Section */}
       {promotedProducts && promotedProducts.length > 0 && (
