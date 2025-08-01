@@ -183,52 +183,106 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
     const category = product.category?.toLowerCase();
     
-    // Car details  
+    // Car details with complete equipment system
     console.log('Category check:', category, 'Product category:', product.category, 'Product ID:', product.id, 'Car details:', {
-      brand: product.brand, model: product.model, year: product.year, fuel_type: product.fuel_type
+      brand: product.car_brand, model: product.car_model, year: product.car_year, fuel_type: product.car_fuel_type
     });
     if (category === 'voitures' || category === 'véhicules' || category === 'voiture') {
       const carDetails = [
-        { icon: Car, label: 'Marque', value: product.brand, color: 'text-blue-600' },
-        { icon: Settings, label: 'Modèle', value: product.model, color: 'text-purple-600' },
-        { icon: Calendar, label: 'Année', value: product.year, color: 'text-green-600' },
-        { icon: Gauge, label: 'Kilométrage', value: product.mileage ? `${Number(product.mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
-        { icon: Fuel, label: 'Carburant', value: product.fuel_type, color: 'text-red-600' },
-        { icon: Settings, label: 'Transmission', value: product.transmission, color: 'text-indigo-600' },
-        { icon: Star, label: 'État', value: product.condition, color: 'text-yellow-600' },
-        { icon: Shield, label: 'Couleur', value: product.color, color: 'text-pink-600' },
-        { icon: Users, label: 'Portes', value: product.doors ? `${product.doors} portes` : null, color: 'text-teal-600' },
-        { icon: Car, label: 'Puissance', value: product.power ? `${product.power} CV` : null, color: 'text-cyan-600' }
+        { icon: Car, label: 'Marque', value: product.car_brand, color: 'text-blue-600' },
+        { icon: Settings, label: 'Modèle', value: product.car_model, color: 'text-purple-600' },
+        { icon: Calendar, label: 'Année', value: product.car_year, color: 'text-green-600' },
+        { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
+        { icon: Fuel, label: 'Carburant', value: product.car_fuel_type, color: 'text-red-600' },
+        { icon: Settings, label: 'Transmission', value: product.car_transmission, color: 'text-indigo-600' },
+        { icon: Star, label: 'État', value: product.car_condition, color: 'text-yellow-600' },
+        { icon: Shield, label: 'Couleur', value: product.car_color, color: 'text-pink-600' },
+        { icon: Users, label: 'Portes', value: product.car_doors ? `${product.car_doors} portes` : null, color: 'text-teal-600' },
+        { icon: Car, label: 'Puissance', value: product.car_engine_size ? `${product.car_engine_size}` : null, color: 'text-cyan-600' }
       ].filter(detail => detail.value);
 
+      // Complete equipment list with icons (black if available, gray if not)
+      const equipmentList = [
+        { key: 'car_ventilated_seats', icon: '🪑', label: 'Sièges ventilés', available: !!product.car_ventilated_seats },
+        { key: 'car_heated_steering', icon: '🔥', label: 'Volant chauffant', available: !!product.car_heated_steering },
+        { key: 'car_navigation', icon: '🧭', label: 'Navigation', available: !!product.car_navigation },
+        { key: 'car_cruise_control', icon: '⏱️', label: 'Régulateur de vitesse', available: !!product.car_cruise_control },
+        { key: 'car_parking_sensors', icon: '📡', label: 'Capteurs stationnement', available: !!product.car_parking_sensors },
+        { key: 'car_rear_camera', icon: '📹', label: 'Caméra arrière', available: !!product.car_rear_camera },
+        { key: 'car_traffic_assist', icon: '🛡️', label: 'Aide trafic transversal', available: !!product.car_traffic_assist },
+        { key: 'car_emergency_braking', icon: '🛑', label: 'Freinage d\'urgence', available: !!product.car_emergency_braking },
+        { key: 'car_360_view', icon: '👁️', label: 'Vue 360°', available: !!product.car_360_view },
+        { key: 'car_lane_departure', icon: '🛣️', label: 'Avertissement voie', available: !!product.car_lane_departure },
+        { key: 'car_sunroof', icon: '☀️', label: 'Toit ouvrant', available: !!product.car_sunroof },
+        { key: 'car_non_smoking', icon: '🚭', label: product.car_non_smoking ? 'Non fumeur' : 'Fumeur autorisé', available: true }
+      ];
+
       console.log('Car details found:', carDetails.length, carDetails);
-      if (carDetails.length === 0) return null;
 
       return (
-        <Card className="glass-card">
-          <CardContent className="p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Caractéristiques du véhicule
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {carDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-4 bg-white/70 dark:bg-gray-800/70 rounded-xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-200">
-                  <div className={`p-2 rounded-lg bg-gray-50 dark:bg-gray-800 ${detail.color || 'text-primary'}`}>
-                    <detail.icon size={20} className="flex-shrink-0" />
-                  </div>
-                  <div className="flex-1">
-                    <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
-                    </span>
-                    <div className="text-sm font-semibold text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.value}
+        <div className="space-y-4">
+          {/* Basic car characteristics */}
+          {carDetails.length > 0 && (
+            <Card className="glass-card">
+              <CardContent className="p-4 md:p-6">
+                <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  Caractéristiques du véhicule
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {carDetails.map((detail, index) => (
+                    <div key={index} className="flex items-center gap-3 p-4 bg-white/70 dark:bg-gray-800/70 rounded-xl border border-gray-200/50 dark:border-gray-700/50 hover:shadow-md transition-all duration-200">
+                      <div className={`p-2 rounded-lg bg-gray-50 dark:bg-gray-800 ${detail.color || 'text-primary'}`}>
+                        <detail.icon size={20} className="flex-shrink-0" />
+                      </div>
+                      <div className="flex-1">
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide" style={{ fontFamily: 'Arial, sans-serif' }}>
+                          {detail.label}
+                        </span>
+                        <div className="text-sm font-semibold text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                          {detail.value}
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Equipment section with all features */}
+          <Card className="glass-card">
+            <CardContent className="p-4 md:p-6">
+              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Équipements disponibles
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                {equipmentList.map((equipment) => (
+                  <div 
+                    key={equipment.key} 
+                    className={`flex items-center gap-2 p-3 rounded-lg border transition-all ${
+                      equipment.available 
+                        ? 'bg-green-50 border-green-200 text-green-800' 
+                        : 'bg-gray-50 border-gray-200 text-gray-500'
+                    }`}
+                  >
+                    <span 
+                      className="text-lg"
+                      style={{ 
+                        filter: equipment.available ? 'none' : 'grayscale(100%) brightness(0.7)',
+                        color: equipment.available ? '#000' : '#999'
+                      }}
+                    >
+                      {equipment.icon}
+                    </span>
+                    <span className="text-xs font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {equipment.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       );
     }
 
