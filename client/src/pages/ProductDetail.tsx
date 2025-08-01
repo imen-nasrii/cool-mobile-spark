@@ -545,102 +545,90 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-700">
                     <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Équipements disponibles</h5>
                     <div className="grid grid-cols-2 gap-2 text-xs">
-                      {product.car_ventilated_seats && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🪑</span>
-                          </div>
-                          <span>Sièges ventilés</span>
+                      {/* Toujours afficher toutes les caractéristiques */}
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_ventilated_seats ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_ventilated_seats ? 'text-black' : 'text-gray-400'}`}>🪑</span>
                         </div>
-                      )}
-                      {product.car_heated_steering && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🔥</span>
-                          </div>
-                          <span>Volant chauffant</span>
+                        <span>Sièges ventilés</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_heated_steering ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_heated_steering ? 'text-black' : 'text-gray-400'}`}>🔥</span>
                         </div>
-                      )}
-                      {product.car_navigation && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🧭</span>
-                          </div>
-                          <span>Navigation</span>
+                        <span>Volant chauffant</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_navigation ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_navigation ? 'text-black' : 'text-gray-400'}`}>🧭</span>
                         </div>
-                      )}
-                      {product.car_cruise_control && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">⏱️</span>
-                          </div>
-                          <span>Régulateur de vitesse</span>
+                        <span>Navigation</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_cruise_control ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_cruise_control ? 'text-black' : 'text-gray-400'}`}>⏱️</span>
                         </div>
-                      )}
-                      {product.car_parking_sensors && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">📡</span>
-                          </div>
-                          <span>Capteurs stationnement</span>
+                        <span>Régulateur de vitesse</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_parking_sensors ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_parking_sensors ? 'text-black' : 'text-gray-400'}`}>📡</span>
                         </div>
-                      )}
-                      {product.car_rear_camera && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">📹</span>
-                          </div>
-                          <span>Caméra arrière</span>
+                        <span>Capteurs stationnement</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_rear_camera ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_rear_camera ? 'text-black' : 'text-gray-400'}`}>📹</span>
                         </div>
-                      )}
-                      {product.car_traffic_assist && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🛡️</span>
-                          </div>
-                          <span>Aide trafic transversal</span>
+                        <span>Caméra arrière</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_traffic_assist ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_traffic_assist ? 'text-black' : 'text-gray-400'}`}>🛡️</span>
                         </div>
-                      )}
-                      {product.car_emergency_braking && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🛑</span>
-                          </div>
-                          <span>Freinage d'urgence</span>
+                        <span>Aide trafic transversal</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_emergency_braking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_emergency_braking ? 'text-black' : 'text-gray-400'}`}>🛑</span>
                         </div>
-                      )}
-                      {product.car_360_view && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">👁️</span>
-                          </div>
-                          <span>Vue 360°</span>
+                        <span>Freinage d'urgence</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_360_view ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_360_view ? 'text-black' : 'text-gray-400'}`}>👁️</span>
                         </div>
-                      )}
-                      {product.car_lane_departure && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">🛣️</span>
-                          </div>
-                          <span>Avertissement voie</span>
+                        <span>Vue 360°</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_lane_departure ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_lane_departure ? 'text-black' : 'text-gray-400'}`}>🛣️</span>
                         </div>
-                      )}
-                      {product.car_sunroof && (
-                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-black text-xs">☀️</span>
-                          </div>
-                          <span>Toit ouvrant</span>
+                        <span>Avertissement voie</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_sunroof ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_sunroof ? 'text-black' : 'text-gray-400'}`}>☀️</span>
                         </div>
-                      )}
-                      {product.car_non_smoking && (
-                        <div className="flex items-center gap-2 p-2 bg-red-600 text-white rounded-md">
-                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                            <span className="text-red-600 text-xs">🚭</span>
-                          </div>
-                          <span>Non fumeur</span>
+                        <span>Toit ouvrant</span>
+                      </div>
+
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_non_smoking ? 'bg-red-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                          <span className={`text-xs ${product.car_non_smoking ? 'text-red-600' : 'text-gray-400'}`}>🚭</span>
                         </div>
-                      )}
+                        <span>Non fumeur</span>
+                      </div>
                     </div>
                   </div>
                 </div>

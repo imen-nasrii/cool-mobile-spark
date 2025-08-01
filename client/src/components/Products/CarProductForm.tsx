@@ -328,140 +328,140 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
           {/* Caractéristiques avancées */}
           <Card className="bg-blue-50 dark:bg-blue-900/20">
             <CardHeader>
-              <CardTitle className="text-lg text-blue-800 dark:text-blue-200">Caractéristiques du véhicule</CardTitle>
+              <CardTitle className="text-lg text-blue-800 dark:text-blue-200">Équipements disponibles</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_ventilated_seats"
-                    checked={formData.car_ventilated_seats}
-                    onChange={(e) => updateFormData('car_ventilated_seats', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_ventilated_seats">Sièges ventilés</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {/* Sièges ventilés */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_ventilated_seats ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_ventilated_seats', !formData.car_ventilated_seats)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_ventilated_seats ? 'text-black' : 'text-gray-400'}`}>🪑</span>
+                  </div>
+                  <span className="text-xs">Sièges ventilés</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_heated_steering"
-                    checked={formData.car_heated_steering}
-                    onChange={(e) => updateFormData('car_heated_steering', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_heated_steering">Volant chauffant</Label>
+                {/* Volant chauffant */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_heated_steering ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_heated_steering', !formData.car_heated_steering)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_heated_steering ? 'text-black' : 'text-gray-400'}`}>🔥</span>
+                  </div>
+                  <span className="text-xs">Volant chauffant</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_navigation"
-                    checked={formData.car_navigation}
-                    onChange={(e) => updateFormData('car_navigation', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_navigation">Navigation</Label>
+                {/* Navigation */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_navigation ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_navigation', !formData.car_navigation)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_navigation ? 'text-black' : 'text-gray-400'}`}>🧭</span>
+                  </div>
+                  <span className="text-xs">Navigation</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_cruise_control"
-                    checked={formData.car_cruise_control}
-                    onChange={(e) => updateFormData('car_cruise_control', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_cruise_control">Régulateur de vitesse</Label>
+                {/* Régulateur de vitesse */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_cruise_control ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_cruise_control', !formData.car_cruise_control)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_cruise_control ? 'text-black' : 'text-gray-400'}`}>⏱️</span>
+                  </div>
+                  <span className="text-xs">Régulateur de vitesse</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_parking_sensors"
-                    checked={formData.car_parking_sensors}
-                    onChange={(e) => updateFormData('car_parking_sensors', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_parking_sensors">Capteurs de stationnement</Label>
+                {/* Capteurs de stationnement */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_parking_sensors ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_parking_sensors', !formData.car_parking_sensors)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_parking_sensors ? 'text-black' : 'text-gray-400'}`}>📡</span>
+                  </div>
+                  <span className="text-xs">Capteurs stationnement</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_rear_camera"
-                    checked={formData.car_rear_camera}
-                    onChange={(e) => updateFormData('car_rear_camera', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_rear_camera">Caméra arrière</Label>
+                {/* Caméra arrière */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_rear_camera ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_rear_camera', !formData.car_rear_camera)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_rear_camera ? 'text-black' : 'text-gray-400'}`}>📹</span>
+                  </div>
+                  <span className="text-xs">Caméra arrière</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_traffic_assist"
-                    checked={formData.car_traffic_assist}
-                    onChange={(e) => updateFormData('car_traffic_assist', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_traffic_assist">Aide au trafic transversal</Label>
+                {/* Aide au trafic transversal */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_traffic_assist ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_traffic_assist', !formData.car_traffic_assist)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_traffic_assist ? 'text-black' : 'text-gray-400'}`}>🛡️</span>
+                  </div>
+                  <span className="text-xs">Aide trafic transversal</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_emergency_braking"
-                    checked={formData.car_emergency_braking}
-                    onChange={(e) => updateFormData('car_emergency_braking', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_emergency_braking">Freinage d'urgence</Label>
+                {/* Freinage d'urgence */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_emergency_braking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_emergency_braking', !formData.car_emergency_braking)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_emergency_braking ? 'text-black' : 'text-gray-400'}`}>🛑</span>
+                  </div>
+                  <span className="text-xs">Freinage d'urgence</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_360_view"
-                    checked={formData.car_360_view}
-                    onChange={(e) => updateFormData('car_360_view', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_360_view">Vue à 360 degrés</Label>
+                {/* Vue à 360 degrés */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_360_view ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_360_view', !formData.car_360_view)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_360_view ? 'text-black' : 'text-gray-400'}`}>👁️</span>
+                  </div>
+                  <span className="text-xs">Vue 360°</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_lane_departure"
-                    checked={formData.car_lane_departure}
-                    onChange={(e) => updateFormData('car_lane_departure', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_lane_departure">Avertissement sortie de voie</Label>
+                {/* Avertissement sortie de voie */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_lane_departure ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_lane_departure', !formData.car_lane_departure)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_lane_departure ? 'text-black' : 'text-gray-400'}`}>🛣️</span>
+                  </div>
+                  <span className="text-xs">Avertissement voie</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_sunroof"
-                    checked={formData.car_sunroof}
-                    onChange={(e) => updateFormData('car_sunroof', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_sunroof">Toit ouvrant</Label>
+                {/* Toit ouvrant */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_sunroof ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_sunroof', !formData.car_sunroof)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_sunroof ? 'text-black' : 'text-gray-400'}`}>☀️</span>
+                  </div>
+                  <span className="text-xs">Toit ouvrant</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="car_non_smoking"
-                    checked={formData.car_non_smoking}
-                    onChange={(e) => updateFormData('car_non_smoking', e.target.checked)}
-                    className="rounded"
-                  />
-                  <Label htmlFor="car_non_smoking">Non fumeur</Label>
+                {/* Non fumeur */}
+                <div 
+                  className={`flex items-center gap-2 p-2 rounded-md cursor-pointer transition-colors ${formData.car_non_smoking ? 'bg-red-600 text-white' : 'bg-gray-300 text-gray-600'}`}
+                  onClick={() => updateFormData('car_non_smoking', !formData.car_non_smoking)}
+                >
+                  <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <span className={`text-xs ${formData.car_non_smoking ? 'text-red-600' : 'text-gray-400'}`}>🚭</span>
+                  </div>
+                  <span className="text-xs">Non fumeur</span>
                 </div>
               </div>
             </CardContent>
