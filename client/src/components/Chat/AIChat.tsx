@@ -255,7 +255,7 @@ export const AIChatToggle = ({ onClick }: { onClick: () => void }) => {
   return (
     <Button
       onClick={onClick}
-      className="fixed bottom-4 right-4 z-40 h-14 w-14 rounded-full shadow-2xl"
+      className="fixed bottom-8 right-4 z-40 h-14 w-14 rounded-full shadow-2xl"
       size="lg"
     >
       <MessageCircle size={24} />
