@@ -25,8 +25,8 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
 
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-      <div className="flex items-center justify-between px-3 sm:px-4 py-2 sm:py-3">
-        <div className="flex items-center gap-2">
+      <div className="flex items-start justify-between px-3 sm:px-4 py-1 sm:py-2">
+        <div className="flex items-start gap-2 pt-1">
           <img 
             src="/tomati-logo.jpg" 
             alt="Market Logo" 
