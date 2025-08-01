@@ -540,6 +540,109 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       </div>
                     )}
                   </div>
+                  
+                  {/* Advanced Car Features */}
+                  <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-700">
+                    <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Équipements disponibles</h5>
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      {product.car_ventilated_seats && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🪑</span>
+                          </div>
+                          <span>Sièges ventilés</span>
+                        </div>
+                      )}
+                      {product.car_heated_steering && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🔥</span>
+                          </div>
+                          <span>Volant chauffant</span>
+                        </div>
+                      )}
+                      {product.car_navigation && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🧭</span>
+                          </div>
+                          <span>Navigation</span>
+                        </div>
+                      )}
+                      {product.car_cruise_control && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">⏱️</span>
+                          </div>
+                          <span>Régulateur de vitesse</span>
+                        </div>
+                      )}
+                      {product.car_parking_sensors && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">📡</span>
+                          </div>
+                          <span>Capteurs stationnement</span>
+                        </div>
+                      )}
+                      {product.car_rear_camera && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">📹</span>
+                          </div>
+                          <span>Caméra arrière</span>
+                        </div>
+                      )}
+                      {product.car_traffic_assist && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🛡️</span>
+                          </div>
+                          <span>Aide trafic transversal</span>
+                        </div>
+                      )}
+                      {product.car_emergency_braking && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🛑</span>
+                          </div>
+                          <span>Freinage d'urgence</span>
+                        </div>
+                      )}
+                      {product.car_360_view && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">👁️</span>
+                          </div>
+                          <span>Vue 360°</span>
+                        </div>
+                      )}
+                      {product.car_lane_departure && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">🛣️</span>
+                          </div>
+                          <span>Avertissement voie</span>
+                        </div>
+                      )}
+                      {product.car_sunroof && (
+                        <div className="flex items-center gap-2 p-2 bg-black text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-black text-xs">☀️</span>
+                          </div>
+                          <span>Toit ouvrant</span>
+                        </div>
+                      )}
+                      {product.car_non_smoking && (
+                        <div className="flex items-center gap-2 p-2 bg-red-600 text-white rounded-md">
+                          <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                            <span className="text-red-600 text-xs">🚭</span>
+                          </div>
+                          <span>Non fumeur</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
               

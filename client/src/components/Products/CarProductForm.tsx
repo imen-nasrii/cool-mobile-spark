@@ -37,6 +37,19 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
     car_brand: initialData?.car_brand || '',
     car_model: initialData?.car_model || '',
     car_condition: initialData?.car_condition || '',
+    // Caractéristiques avancées
+    car_ventilated_seats: initialData?.car_ventilated_seats || false,
+    car_heated_steering: initialData?.car_heated_steering || false,
+    car_navigation: initialData?.car_navigation || false,
+    car_cruise_control: initialData?.car_cruise_control || false,
+    car_parking_sensors: initialData?.car_parking_sensors || false,
+    car_rear_camera: initialData?.car_rear_camera || false,
+    car_traffic_assist: initialData?.car_traffic_assist || false,
+    car_emergency_braking: initialData?.car_emergency_braking || false,
+    car_360_view: initialData?.car_360_view || false,
+    car_lane_departure: initialData?.car_lane_departure || false,
+    car_sunroof: initialData?.car_sunroof || false,
+    car_non_smoking: initialData?.car_non_smoking || false,
   });
 
   const { toast } = useToast();
@@ -311,6 +324,148 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
               </div>
             </div>
           </div>
+
+          {/* Caractéristiques avancées */}
+          <Card className="bg-blue-50 dark:bg-blue-900/20">
+            <CardHeader>
+              <CardTitle className="text-lg text-blue-800 dark:text-blue-200">Caractéristiques du véhicule</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_ventilated_seats"
+                    checked={formData.car_ventilated_seats}
+                    onChange={(e) => updateFormData('car_ventilated_seats', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_ventilated_seats">Sièges ventilés</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_heated_steering"
+                    checked={formData.car_heated_steering}
+                    onChange={(e) => updateFormData('car_heated_steering', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_heated_steering">Volant chauffant</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_navigation"
+                    checked={formData.car_navigation}
+                    onChange={(e) => updateFormData('car_navigation', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_navigation">Navigation</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_cruise_control"
+                    checked={formData.car_cruise_control}
+                    onChange={(e) => updateFormData('car_cruise_control', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_cruise_control">Régulateur de vitesse</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_parking_sensors"
+                    checked={formData.car_parking_sensors}
+                    onChange={(e) => updateFormData('car_parking_sensors', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_parking_sensors">Capteurs de stationnement</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_rear_camera"
+                    checked={formData.car_rear_camera}
+                    onChange={(e) => updateFormData('car_rear_camera', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_rear_camera">Caméra arrière</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_traffic_assist"
+                    checked={formData.car_traffic_assist}
+                    onChange={(e) => updateFormData('car_traffic_assist', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_traffic_assist">Aide au trafic transversal</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_emergency_braking"
+                    checked={formData.car_emergency_braking}
+                    onChange={(e) => updateFormData('car_emergency_braking', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_emergency_braking">Freinage d'urgence</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_360_view"
+                    checked={formData.car_360_view}
+                    onChange={(e) => updateFormData('car_360_view', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_360_view">Vue à 360 degrés</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_lane_departure"
+                    checked={formData.car_lane_departure}
+                    onChange={(e) => updateFormData('car_lane_departure', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_lane_departure">Avertissement sortie de voie</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_sunroof"
+                    checked={formData.car_sunroof}
+                    onChange={(e) => updateFormData('car_sunroof', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_sunroof">Toit ouvrant</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="car_non_smoking"
+                    checked={formData.car_non_smoking}
+                    onChange={(e) => updateFormData('car_non_smoking', e.target.checked)}
+                    className="rounded"
+                  />
+                  <Label htmlFor="car_non_smoking">Non fumeur</Label>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* URL Image */}
           <div className="space-y-2">

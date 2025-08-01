@@ -58,6 +58,20 @@ export const products = pgTable("products", {
   car_model: text("car_model"), // Modèle
   car_condition: text("car_condition"), // Neuf, Occasion, Accidenté
   
+  // Caractéristiques avancées des voitures
+  car_ventilated_seats: boolean("car_ventilated_seats"), // Sièges ventilés
+  car_heated_steering: boolean("car_heated_steering"), // Volant chauffant
+  car_navigation: boolean("car_navigation"), // Navigation
+  car_cruise_control: boolean("car_cruise_control"), // Régulateur de vitesse
+  car_parking_sensors: boolean("car_parking_sensors"), // Capteurs de stationnement
+  car_rear_camera: boolean("car_rear_camera"), // Caméra arrière
+  car_traffic_assist: boolean("car_traffic_assist"), // Aide au trafic transversal
+  car_emergency_braking: boolean("car_emergency_braking"), // Freinage d'urgence
+  car_360_view: boolean("car_360_view"), // Vue à 360 degrés
+  car_lane_departure: boolean("car_lane_departure"), // Avertissement de sortie de voie
+  car_sunroof: boolean("car_sunroof"), // Toit ouvrant
+  car_non_smoking: boolean("car_non_smoking"), // Non fumeur
+  
   // Champs spécifiques à l'immobilier
   real_estate_type: text("real_estate_type"), // Appartement, Maison, Villa, Bureau, Local commercial
   real_estate_rooms: integer("real_estate_rooms"), // Nombre de chambres
