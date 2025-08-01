@@ -595,93 +595,69 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     )}
                   </div>
                   
-                  {/* Advanced Car Features */}
+                  {/* Complete Equipment List like Tesla Model 3 */}
                   <div className="mt-4 pt-4 border-t border-blue-200 dark:border-blue-700">
-                    <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-3">Équipements disponibles</h5>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      {/* Toujours afficher toutes les caractéristiques */}
+                    <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Équipements disponibles</h5>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      {/* All equipment items with icons - black for available, gray for unavailable */}
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_ventilated_seats ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_ventilated_seats ? 'text-black' : 'text-gray-400'}`}>🪑</span>
-                        </div>
-                        <span>Sièges ventilés</span>
+                        <span className="text-lg">🪑</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Sièges ventilés</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_heated_steering ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_heated_steering ? 'text-black' : 'text-gray-400'}`}>🔥</span>
-                        </div>
-                        <span>Volant chauffant</span>
+                        <span className="text-lg">🔥</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Volant chauffant</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_navigation ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_navigation ? 'text-black' : 'text-gray-400'}`}>🧭</span>
-                        </div>
-                        <span>Navigation</span>
+                        <span className="text-lg">🧭</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Navigation</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_cruise_control ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_cruise_control ? 'text-black' : 'text-gray-400'}`}>⏱️</span>
-                        </div>
-                        <span>Régulateur de vitesse</span>
+                        <span className="text-lg">⏱️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Régulateur de vitesse</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_parking_sensors ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_parking_sensors ? 'text-black' : 'text-gray-400'}`}>📡</span>
-                        </div>
-                        <span>Capteurs stationnement</span>
+                        <span className="text-lg">📡</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Capteurs stationnement</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_rear_camera ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_rear_camera ? 'text-black' : 'text-gray-400'}`}>📹</span>
-                        </div>
-                        <span>Caméra arrière</span>
+                        <span className="text-lg">📹</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Caméra arrière</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_traffic_assist ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_traffic_assist ? 'text-black' : 'text-gray-400'}`}>🛡️</span>
-                        </div>
-                        <span>Aide trafic transversal</span>
+                        <span className="text-lg">🛡️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Aide trafic transversal</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_emergency_braking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_emergency_braking ? 'text-black' : 'text-gray-400'}`}>🛑</span>
-                        </div>
-                        <span>Freinage d'urgence</span>
+                        <span className="text-lg">🛑</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Freinage d'urgence</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_360_view ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_360_view ? 'text-black' : 'text-gray-400'}`}>👁️</span>
-                        </div>
-                        <span>Vue 360°</span>
+                        <span className="text-lg">👁️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Vue 360°</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_lane_departure ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_lane_departure ? 'text-black' : 'text-gray-400'}`}>🛣️</span>
-                        </div>
-                        <span>Avertissement voie</span>
+                        <span className="text-lg">🛣️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Avertissement voie</span>
                       </div>
 
                       <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_sunroof ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_sunroof ? 'text-black' : 'text-gray-400'}`}>☀️</span>
-                        </div>
-                        <span>Toit ouvrant</span>
+                        <span className="text-lg">☀️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Toit ouvrant</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_non_smoking ? 'bg-red-600 text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
-                          <span className={`text-xs ${product.car_non_smoking ? 'text-red-600' : 'text-gray-400'}`}>🚭</span>
-                        </div>
-                        <span>Non fumeur</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_non_smoking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                        <span className="text-lg">🚭</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Non fumeur</span>
                       </div>
                     </div>
                   </div>
@@ -691,43 +667,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <p className="text-muted-foreground leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
                 {product.description || "Aucune description fournie."}
               </p>
-            </CardContent>
-          </Card>
-
-          {/* Seller Info */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
-              <div className="flex items-center gap-3">
-                <Avatar className="w-12 h-12">
-                  <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                    {sellerProfile?.display_name?.charAt(0) || 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="font-semibold text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {sellerProfile?.display_name || 'Utilisateur'}
-                    </h4>
-                    <Shield size={16} className="text-success" />
-                  </div>
-                  <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                    <Star size={12} className="text-yellow-500 fill-yellow-500" />
-                    <span>4.8</span>
-                    <span>•</span>
-                    <span>Vérifié</span>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Map */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Localisation</h3>
-              <ProductMap location={product.location} readonly className="w-full h-48" />
             </CardContent>
           </Card>
 

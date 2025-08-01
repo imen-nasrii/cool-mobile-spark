@@ -27,6 +27,19 @@ interface Product {
   color?: string;
   doors?: string;
   power?: string;
+  // Car equipment
+  car_ventilated_seats?: boolean;
+  car_heated_steering?: boolean;
+  car_navigation?: boolean;
+  car_cruise_control?: boolean;
+  car_parking_sensors?: boolean;
+  car_rear_camera?: boolean;
+  car_traffic_assist?: boolean;
+  car_emergency_braking?: boolean;
+  car_360_view?: boolean;
+  car_lane_departure?: boolean;
+  car_sunroof?: boolean;
+  car_non_smoking?: boolean;
   // Real estate details
   rooms?: string;
   surface?: string;
@@ -104,70 +117,181 @@ export const ProductListCard = ({
               <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.location}</span>
             </div>
             
-            {/* Product specific details with icons */}
-            <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
-              {(product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'voiture') && (
-                <>
+            {/* Complete vehicle characteristics like Tesla Model 3 example */}
+            {(product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'voiture' || product.category?.toLowerCase() === 'vehicles') && (
+              <div className="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 text-xs flex items-center gap-1" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  <Car size={12} />
+                  Caractéristiques du véhicule
+                </h4>
+                
+                {/* Main vehicle details */}
+                <div className="grid grid-cols-2 gap-1 text-xs mb-2">
                   {product.brand && (
-                    <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded">
-                      <Car size={10} className="text-blue-600" />
-                      <span className="truncate font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</span>
+                    <div>
+                      <span className="text-gray-600">Marque</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</div>
                     </div>
                   )}
-                  {product.fuel_type && (
-                    <div className="flex items-center gap-1 bg-red-50 dark:bg-red-900/20 px-2 py-1 rounded">
-                      <Fuel size={10} className="text-red-600" />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.fuel_type}</span>
+                  {product.model && (
+                    <div>
+                      <span className="text-gray-600">Modèle</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.model}</div>
                     </div>
                   )}
                   {product.year && (
-                    <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/20 px-2 py-1 rounded">
-                      <Calendar size={10} className="text-green-600" />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.year}</span>
+                    <div>
+                      <span className="text-gray-600">Année</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.year}</div>
                     </div>
                   )}
                   {product.mileage && (
-                    <div className="flex items-center gap-1 bg-orange-50 dark:bg-orange-900/20 px-2 py-1 rounded">
-                      <Gauge size={10} className="text-orange-600" />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{Number(product.mileage).toLocaleString()} km</span>
+                    <div>
+                      <span className="text-gray-600">Kilométrage</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{Number(product.mileage).toLocaleString()} km</div>
                     </div>
                   )}
-                </>
-              )}
-              
-              {product.category?.toLowerCase() === 'immobilier' && (
-                <>
-                  {product.rooms && (
-                    <div className="flex items-center gap-1">
-                      <Home size={8} />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.rooms} pièces</span>
+                  {product.fuel_type && (
+                    <div>
+                      <span className="text-gray-600">Carburant</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.fuel_type}</div>
                     </div>
                   )}
-                  {product.surface && (
-                    <div className="flex items-center gap-1">
-                      <Users size={8} />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.surface} m²</span>
+                  {product.transmission && (
+                    <div>
+                      <span className="text-gray-600">Transmission</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.transmission}</div>
                     </div>
                   )}
-                </>
-              )}
-              
-              {product.category?.toLowerCase() === 'emploi' && (
-                <>
-                  {product.contract_type && (
-                    <div className="flex items-center gap-1">
-                      <Briefcase size={8} />
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.contract_type}</span>
+                  {product.condition && (
+                    <div>
+                      <span className="text-gray-600">État</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.condition}</div>
                     </div>
                   )}
-                  {product.salary_range && (
-                    <div className="flex items-center gap-1">
-                      <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.salary_range}</span>
+                  {product.color && (
+                    <div>
+                      <span className="text-gray-600">Couleur</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.color}</div>
                     </div>
                   )}
-                </>
-              )}
-            </div>
+                  {product.doors && (
+                    <div>
+                      <span className="text-gray-600">Portes</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.doors} portes</div>
+                    </div>
+                  )}
+                  {product.power && (
+                    <div>
+                      <span className="text-gray-600">Puissance</span>
+                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.power}</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Equipment available section */}
+                <div className="border-t border-blue-200 dark:border-blue-700 pt-1">
+                  <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-1 text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Équipements disponibles</h5>
+                  <div className="grid grid-cols-2 gap-1">
+                    {/* Always show all equipment with black (available) or gray (unavailable) styling */}
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_ventilated_seats ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🪑</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Sièges ventilés</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_heated_steering ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🔥</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Volant chauffant</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_navigation ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🧭</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Navigation</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_cruise_control ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">⏱️</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Régulateur de vitesse</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_parking_sensors ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">📡</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Capteurs stationnement</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_rear_camera ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">📹</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Caméra arrière</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_traffic_assist ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🛡️</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Aide trafic transversal</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_emergency_braking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🛑</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Freinage d'urgence</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_360_view ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">👁️</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Vue 360°</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_lane_departure ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🛣️</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Avertissement voie</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_sunroof ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">☀️</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Toit ouvrant</span>
+                    </div>
+
+                    <div className={`flex items-center gap-1 px-1 py-1 rounded text-xs ${product.car_non_smoking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
+                      <span className="text-xs">🚭</span>
+                      <span style={{ fontFamily: 'Arial, sans-serif' }}>Non fumeur</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Real estate details */}
+            {product.category?.toLowerCase() === 'immobilier' && (
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
+                {product.rooms && (
+                  <div className="flex items-center gap-1">
+                    <Home size={8} />
+                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.rooms} pièces</span>
+                  </div>
+                )}
+                {product.surface && (
+                  <div className="flex items-center gap-1">
+                    <Users size={8} />
+                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.surface} m²</span>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Job details */}
+            {product.category?.toLowerCase() === 'emploi' && (
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
+                {product.contract_type && (
+                  <div className="flex items-center gap-1">
+                    <Briefcase size={8} />
+                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.contract_type}</span>
+                  </div>
+                )}
+                {product.salary_range && (
+                  <div className="flex items-center gap-1">
+                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.salary_range}</span>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
           
           <div className="flex items-center justify-between">

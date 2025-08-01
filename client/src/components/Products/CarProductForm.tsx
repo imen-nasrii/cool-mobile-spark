@@ -5,9 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiRequest } from '@/lib/queryClient';
+import { Car, Fuel, Calendar, Gauge, Settings, Star, Shield, Users } from 'lucide-react';
 
 interface CarProductFormProps {
   initialData?: any;
@@ -325,88 +328,219 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
             </div>
           </div>
 
-          {/* Équipements disponibles avec icônes */}
-          <Card className="bg-blue-50 dark:bg-blue-900/20">
-            <CardHeader>
-              <CardTitle className="text-lg text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Équipements disponibles
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {[
-                  { key: 'car_ventilated_seats', icon: '🪑', label: 'Sièges ventilés' },
-                  { key: 'car_heated_steering', icon: '🔥', label: 'Volant chauffant' },
-                  { key: 'car_navigation', icon: '🧭', label: 'Navigation' },
-                  { key: 'car_cruise_control', icon: '⏱️', label: 'Régulateur de vitesse' },
-                  { key: 'car_parking_sensors', icon: '📡', label: 'Capteurs stationnement' },
-                  { key: 'car_rear_camera', icon: '📹', label: 'Caméra arrière' },
-                  { key: 'car_traffic_assist', icon: '🛡️', label: 'Aide trafic transversal' },
-                  { key: 'car_emergency_braking', icon: '🛑', label: 'Freinage d\'urgence' },
-                  { key: 'car_360_view', icon: '👁️', label: 'Vue 360°' },
-                  { key: 'car_lane_departure', icon: '🛣️', label: 'Avertissement voie' },
-                  { key: 'car_sunroof', icon: '☀️', label: 'Toit ouvrant' },
-                  { key: 'car_non_smoking', icon: '🚭', label: 'Non fumeur' },
-                ].map((equipment) => (
-                  <div 
-                    key={equipment.key} 
-                    className={`equipment-item flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${
-                      (formData as any)[equipment.key] 
-                        ? 'selected bg-green-50 border-green-300 text-green-800' 
-                        : 'bg-gray-50 border-gray-200 text-gray-600'
-                    }`}
-                    onClick={() => updateFormData(equipment.key as keyof typeof formData, !(formData as any)[equipment.key])}
-                  >
-                    <input
-                      type="checkbox"
-                      id={equipment.key}
-                      checked={(formData as any)[equipment.key] as boolean}
-                      onChange={(e) => updateFormData(equipment.key as keyof typeof formData, e.target.checked)}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
+          {/* Section Équipements */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Équipements disponibles
+            </h3>
+            <p className="text-sm text-muted-foreground mb-4">
+              Sélectionnez tous les équipements présents dans votre véhicule
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Confort */}
+              <Card className="p-4">
+                <h4 className="font-medium mb-3 text-blue-800">Confort</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_ventilated_seats"
+                      checked={formData.car_ventilated_seats}
+                      onCheckedChange={(checked) => updateFormData('car_ventilated_seats', checked)}
                     />
-                    <span 
-                      className="text-lg"
-                      style={{ 
-                        filter: (formData as any)[equipment.key] ? 'none' : 'grayscale(100%) brightness(0.7)',
-                        color: (formData as any)[equipment.key] ? '#000' : '#999'
-                      }}
-                    >
-                      {equipment.icon}
-                    </span>
-                    <Label htmlFor={equipment.key} className="text-sm font-medium cursor-pointer" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {equipment.label}
+                    <Label htmlFor="car_ventilated_seats" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🪑</span>
+                      Sièges ventilés
                     </Label>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_heated_steering"
+                      checked={formData.car_heated_steering}
+                      onCheckedChange={(checked) => updateFormData('car_heated_steering', checked)}
+                    />
+                    <Label htmlFor="car_heated_steering" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🔥</span>
+                      Volant chauffant
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_sunroof"
+                      checked={formData.car_sunroof}
+                      onCheckedChange={(checked) => updateFormData('car_sunroof', checked)}
+                    />
+                    <Label htmlFor="car_sunroof" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">☀️</span>
+                      Toit ouvrant
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_non_smoking"
+                      checked={formData.car_non_smoking}
+                      onCheckedChange={(checked) => updateFormData('car_non_smoking', checked)}
+                    />
+                    <Label htmlFor="car_non_smoking" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🚭</span>
+                      Non fumeur
+                    </Label>
+                  </div>
+                </div>
+              </Card>
 
-          {/* URL Image */}
-          <div className="space-y-2">
-            <Label htmlFor="image_url">URL de l'image (optionnel)</Label>
-            <Input
-              id="image_url"
-              value={formData.image_url}
-              onChange={(e) => updateFormData('image_url', e.target.value)}
-              placeholder="https://example.com/image.jpg"
-            />
+              {/* Navigation & Technologie */}
+              <Card className="p-4">
+                <h4 className="font-medium mb-3 text-green-800">Navigation & Technologie</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_navigation"
+                      checked={formData.car_navigation}
+                      onCheckedChange={(checked) => updateFormData('car_navigation', checked)}
+                    />
+                    <Label htmlFor="car_navigation" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🧭</span>
+                      Navigation
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_cruise_control"
+                      checked={formData.car_cruise_control}
+                      onCheckedChange={(checked) => updateFormData('car_cruise_control', checked)}
+                    />
+                    <Label htmlFor="car_cruise_control" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">⏱️</span>
+                      Régulateur de vitesse
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_360_view"
+                      checked={formData.car_360_view}
+                      onCheckedChange={(checked) => updateFormData('car_360_view', checked)}
+                    />
+                    <Label htmlFor="car_360_view" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">👁️</span>
+                      Vue 360°
+                    </Label>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Sécurité */}
+              <Card className="p-4">
+                <h4 className="font-medium mb-3 text-red-800">Sécurité</h4>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_parking_sensors"
+                      checked={formData.car_parking_sensors}
+                      onCheckedChange={(checked) => updateFormData('car_parking_sensors', checked)}
+                    />
+                    <Label htmlFor="car_parking_sensors" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">📡</span>
+                      Capteurs stationnement
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_rear_camera"
+                      checked={formData.car_rear_camera}
+                      onCheckedChange={(checked) => updateFormData('car_rear_camera', checked)}
+                    />
+                    <Label htmlFor="car_rear_camera" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">📹</span>
+                      Caméra arrière
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_traffic_assist"
+                      checked={formData.car_traffic_assist}
+                      onCheckedChange={(checked) => updateFormData('car_traffic_assist', checked)}
+                    />
+                    <Label htmlFor="car_traffic_assist" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🛡️</span>
+                      Aide trafic transversal
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_emergency_braking"
+                      checked={formData.car_emergency_braking}
+                      onCheckedChange={(checked) => updateFormData('car_emergency_braking', checked)}
+                    />
+                    <Label htmlFor="car_emergency_braking" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🛑</span>
+                      Freinage d'urgence
+                    </Label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="car_lane_departure"
+                      checked={formData.car_lane_departure}
+                      onCheckedChange={(checked) => updateFormData('car_lane_departure', checked)}
+                    />
+                    <Label htmlFor="car_lane_departure" className="flex items-center gap-2 cursor-pointer">
+                      <span className="text-lg">🛣️</span>
+                      Avertissement voie
+                    </Label>
+                  </div>
+                </div>
+              </Card>
+            </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex gap-4 pt-6">
-            <Button 
-              type="submit" 
-              className="flex-1" 
+          {/* URL de l'image */}
+          <div className="border-t pt-6">
+            <div className="space-y-2">
+              <Label htmlFor="image_url">URL de l'image</Label>
+              <Input
+                id="image_url"
+                value={formData.image_url}
+                onChange={(e) => updateFormData('image_url', e.target.value)}
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+          </div>
+
+          {/* Boutons d'action */}
+          <div className="flex gap-4 pt-6 border-t">
+            <Button
+              type="submit"
               disabled={saveMutation.isPending}
-            >
-              {saveMutation.isPending ? 'Sauvegarde...' : (isEdit ? 'Modifier' : 'Ajouter')}
-            </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={onCancel}
               className="flex-1"
+            >
+              {saveMutation.isPending ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  {isEdit ? 'Mise à jour...' : 'Ajout...'}
+                </>
+              ) : (
+                <>
+                  <Car className="w-4 h-4 mr-2" />
+                  {isEdit ? 'Mettre à jour' : 'Ajouter la voiture'}
+                </>
+              )}
+            </Button>
+            
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onCancel}
+              disabled={saveMutation.isPending}
             >
               Annuler
             </Button>
