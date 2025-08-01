@@ -142,7 +142,7 @@ export const AIChat = ({ isOpen, onToggle, onClose }: AIChatProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed bottom-16 right-4 z-50">
       <Card className={`w-96 shadow-2xl border-2 ${isMinimized ? 'h-16' : 'h-[500px]'} transition-all duration-300`}>
         <CardHeader className="p-3 bg-primary text-primary-foreground">
           <div className="flex items-center justify-between">
@@ -255,7 +255,7 @@ export const AIChatToggle = ({ onClick }: { onClick: () => void }) => {
   return (
     <Button
       onClick={onClick}
-      className="fixed bottom-8 right-4 z-40 h-14 w-14 rounded-full shadow-2xl"
+      className="fixed bottom-16 right-4 z-40 h-14 w-14 rounded-full shadow-2xl"
       size="lg"
     >
       <MessageCircle size={24} />
