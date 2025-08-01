@@ -19,6 +19,7 @@ import { AdminInfo } from "./components/Auth/AdminInfo";
 import { Settings } from "./pages/Settings";
 import { TestPromotion } from "./pages/TestPromotion";
 import { ProductManagement } from "./pages/ProductManagement";
+import { OrganizedProducts } from "./pages/OrganizedProducts";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -86,6 +87,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
+              <Route path="/products" element={<OrganizedProducts />} />
               <Route path="/admin-info" element={<AdminInfo />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />

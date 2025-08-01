@@ -61,9 +61,11 @@ interface ProductGridProps {
   onProductClick?: (productId: string) => void;
   onProductLike?: (productId: string) => void;
   onProductMessage?: (productId: string) => void;
+  viewMode?: 'grid' | 'list';
+  filters?: any;
 }
 
-export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'grid', filters }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
@@ -170,16 +172,26 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         </Button>
       </div>
       
-      <div className="flex flex-col gap-2 sm:gap-3">
+      <div className={viewMode === 'list' ? "flex flex-col gap-2 sm:gap-3" : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"}>
         {transformedProducts.map((product: any) => (
-          <ProductListCard
-            key={product.id}
-            product={product}
-            onClick={() => onProductClick?.(product.id)}
-            onLike={() => onProductLike?.(product.id)}
-            onMessage={() => onProductMessage?.(product.id)}
-            className="w-full"
-          />
+          viewMode === 'list' ? (
+            <ProductListCard
+              key={product.id}
+              product={product}
+              onClick={() => onProductClick?.(product.id)}
+              onLike={() => onProductLike?.(product.id)}
+              onMessage={() => onProductMessage?.(product.id)}
+              className="w-full"
+            />
+          ) : (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onClick={() => onProductClick?.(product.id)}
+              onLike={() => onProductLike?.(product.id)}
+              onMessage={() => onProductMessage?.(product.id)}
+            />
+          )
         ))}
       </div>
       
