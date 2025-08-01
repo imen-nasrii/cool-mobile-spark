@@ -350,10 +350,10 @@ export function CarProductForm({ initialData, onSuccess, onCancel, isEdit = fals
                 ].map((equipment) => (
                   <div 
                     key={equipment.key} 
-                    className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${
+                    className={`equipment-item flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${
                       (formData as any)[equipment.key] 
-                        ? 'bg-green-50 border-green-300 text-green-800 hover:bg-green-100' 
-                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-blue-50 hover:border-blue-300'
+                        ? 'selected bg-green-50 border-green-300 text-green-800' 
+                        : 'bg-gray-50 border-gray-200 text-gray-600'
                     }`}
                     onClick={() => updateFormData(equipment.key as keyof typeof formData, !(formData as any)[equipment.key])}
                   >

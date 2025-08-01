@@ -155,6 +155,22 @@ All colors MUST be HSL.
     transition: all 0.2s ease-in-out;
   }
   
+  /* Prevent unwanted white hover effects */
+  .no-white-hover:hover {
+    background-color: transparent !important;
+  }
+  
+  /* Fix form equipment hover styles */
+  .equipment-item:hover {
+    background-color: hsl(217 91% 95%) !important;
+    border-color: hsl(217 91% 85%) !important;
+  }
+  
+  .equipment-item.selected:hover {
+    background-color: hsl(142 76% 88%) !important;
+    border-color: hsl(142 76% 70%) !important;
+  }
+  
   /* Responsive scrollbar hiding */
   .scrollbar-hide {
     -ms-overflow-style: none;
