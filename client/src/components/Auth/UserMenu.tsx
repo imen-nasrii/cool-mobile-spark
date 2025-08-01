@@ -74,6 +74,10 @@ export const UserMenu = ({ showAdminButton = false }: UserMenuProps) => {
               <Shield className="w-4 h-4 mr-2" />
               Administration
             </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/products-management")}>
+              <Settings className="w-4 h-4 mr-2" />
+              Gestion Produits
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
           </>
         )}

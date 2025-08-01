@@ -18,6 +18,7 @@ import MessagesPage from "./pages/Messages";
 import { AdminInfo } from "./components/Auth/AdminInfo";
 import { Settings } from "./pages/Settings";
 import { TestPromotion } from "./pages/TestPromotion";
+import { ProductManagement } from "./pages/ProductManagement";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -72,6 +73,16 @@ const App = () => (
                 element={
                   <ProtectedRoute>
                     <TestPromotion />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/products-management" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <ProductManagement />
+                    </AdminRoute>
                   </ProtectedRoute>
                 } 
               />
