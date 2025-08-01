@@ -469,7 +469,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
               
               {/* Car specifications in description */}
-              {(product.category?.toLowerCase() === 'voiture' || product.category?.toLowerCase() === 'voitures') && (
+              {(product.category?.toLowerCase() === 'voiture' || product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'vehicles') && (
                 <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-3 flex items-center gap-2" style={{ fontFamily: 'Arial, sans-serif' }}>
                     <Car size={18} />
