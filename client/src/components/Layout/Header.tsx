@@ -29,10 +29,9 @@ export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabCh
         <div className="flex items-center gap-2">
           <img 
             src="/tomati-logo.jpg" 
-            alt="Tomati Market Logo" 
+            alt="Market Logo" 
             className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover shadow-sm"
           />
-          <div className="tomati-brand text-sm sm:text-base">{t('tomati')}</div>
         </div>
         
         <div className="flex items-center gap-1 sm:gap-2 md:gap-3">
