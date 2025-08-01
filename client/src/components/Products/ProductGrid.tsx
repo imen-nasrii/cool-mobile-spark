@@ -65,7 +65,7 @@ interface ProductGridProps {
   filters?: any;
 }
 
-export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'grid', filters }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'list', filters }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
@@ -121,7 +121,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   });
 
   // Transform products for ProductCard component
-  const transformedProducts = products.map((product: Product) => ({
+  const transformedProducts = products.map((product: any) => ({
     id: product.id,
     title: product.title,
     price: product.price,
@@ -129,9 +129,27 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
     timeAgo: formatTimeAgo(product.created_at),
     image: imageMap[product.image_url] || product.image_url,
     category: product.category,
-    likes: product.likes,
+    likes: product.likes || 0,
     isReserved: product.is_reserved,
-    isFree: product.is_free
+    isFree: product.is_free,
+    // Car details
+    brand: product.brand,
+    model: product.model,
+    year: product.year,
+    mileage: product.mileage,
+    fuel_type: product.fuel_type,
+    transmission: product.transmission,
+    condition: product.condition,
+    color: product.color,
+    doors: product.doors,
+    power: product.power,
+    // Real estate details
+    rooms: product.rooms,
+    surface: product.surface,
+    property_type: product.property_type,
+    // Job details
+    contract_type: product.contract_type,
+    salary_range: product.salary_range
   }));
 
   if (loading) {

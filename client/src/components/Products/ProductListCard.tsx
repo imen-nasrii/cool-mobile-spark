@@ -62,9 +62,9 @@ export const ProductListCard = ({
       onClick={onClick}
       style={{ fontFamily: 'Arial, sans-serif' }}
     >
-      <CardContent className="p-3 flex gap-4">
-        {/* Product image - Fixed size on left */}
-        <div className="relative w-24 h-24 bg-white overflow-hidden rounded-lg flex-shrink-0">
+      <CardContent className="p-3 flex gap-3 sm:gap-4">
+        {/* Product image - Responsive size */}
+        <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-white overflow-hidden rounded-lg flex-shrink-0">
           {product.image ? (
             <img 
               src={product.image} 
@@ -89,7 +89,7 @@ export const ProductListCard = ({
         </div>
         
         {/* Product details - Takes remaining space */}
-        <div className="flex-1 flex flex-col justify-between min-h-[90px]">
+        <div className="flex-1 flex flex-col justify-between min-h-[60px] sm:min-h-[90px]">
           <div>
             <h3 className="font-medium text-foreground text-sm leading-tight mb-1 line-clamp-2" style={{ fontFamily: 'Arial, sans-serif' }}>
               {product.title}
@@ -105,7 +105,7 @@ export const ProductListCard = ({
             </div>
             
             {/* Product specific details with icons */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mb-1">
+            <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
               {(product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'voiture') && (
                 <>
                   {product.brand && (
