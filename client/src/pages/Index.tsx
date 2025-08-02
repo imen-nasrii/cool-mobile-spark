@@ -78,6 +78,24 @@ const Index = () => {
     setSelectedProduct(null);
   };
 
+  const handleProductEdit = (productId: string) => {
+    // Switch to add product tab with edit mode
+    setActiveTab("add");
+    setCurrentView("main");
+    setSelectedProduct(null);
+    
+    // Add productId to URL for editing
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', 'add');
+    url.searchParams.set('edit', productId);
+    window.history.replaceState({}, '', url.toString());
+    
+    toast({
+      title: "Mode édition",
+      description: "Vous pouvez maintenant modifier votre produit",
+    });
+  };
+
   const handleCategorySelect = (categoryId: string) => {
     setShowCategoryModal(false);
     toast({
@@ -113,6 +131,7 @@ const Index = () => {
         <ProductDetail 
           productId={selectedProduct}
           onBack={handleBackToMain}
+          onEdit={handleProductEdit}
         />
       ) : (
         <>
