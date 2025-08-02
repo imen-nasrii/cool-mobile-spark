@@ -1,0 +1,43 @@
+ubuntu@vps-8dfc48b5:~$ sudo -u tomati pm2 status
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-production  │ cluster  │ 0    │ online    │ 0%       │ 118.3mb  │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+ubuntu@vps-8dfc48b5:~$ sudo -u tomati pm2 logs tomati-production
+[TAILING] Tailing last 15 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/tomati-market/logs/err-0.log last 15 lines:
+0|tomati-p |     _req: null,
+0|tomati-p |     [Symbol(shapeMode)]: false,
+0|tomati-p |     [Symbol(kCapture)]: false
+0|tomati-p |   },
+0|tomati-p |   [Symbol(kType)]: 'error',
+0|tomati-p |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|tomati-p |       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|tomati-p |     errno: -111,
+0|tomati-p |     code: 'ECONNREFUSED',
+0|tomati-p |     syscall: 'connect',
+0|tomati-p |     address: '127.0.0.1',
+0|tomati-p |     port: 443
+0|tomati-p |   },
+0|tomati-p |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|tomati-p | }
+
+/home/tomati/tomati-market/logs/out-0.log last 15 lines:
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/products/promoted 500 in 6ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/advertisements 304 in 8ms :: []
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/products 304 in 17ms :: [{"id":"53c159e5-2942-4dde-a4da-760e67caa976",…
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/advertisements 304 in 4ms :: []
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/stats 304 in 5ms :: {"totalProducts":5,"totalUsers":100}
+0|tomati-p | 2025-08-02T09:55:23: 9:55:23 AM [express] GET /api/profile 304 in 10ms :: {"id":"1ca27d9f-d8d8-4148-894c-048cc7d3e714","u…
+0|tomati-p | 2025-08-02T09:55:24: 9:55:24 AM [express] GET /api/products/promoted 500 in 5ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T09:55:26: 9:55:26 AM [express] GET /api/products/promoted 500 in 8ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T09:55:31: 9:55:31 AM [express] GET /api/products/promoted 500 in 7ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T09:55:42: 9:55:42 AM [express] GET /api/products/53c159e5-2942-4dde-a4da-760e67caa976 304 in 5ms :: {"id":"53c…
+0|tomati-p | 2025-08-02T09:55:42: 9:55:42 AM [express] GET /api/products/53c159e5-2942-4dde-a4da-760e67caa976/liked 500 in 14ms :: {"e…
+0|tomati-p | 2025-08-02T09:55:42: 9:55:42 AM [express] GET /api/users/7450f3da-34df-4837-be13-ce7c8c36d46d/profile 304 in 3ms :: {"id"…
+0|tomati-p | 2025-08-02T09:55:42: 9:55:42 AM [express] GET /api/advertisements 304 in 8ms :: []
+0|tomati-p | 2025-08-02T09:55:43: 9:55:43 AM [express] GET /api/products/53c159e5-2942-4dde-a4da-760e67caa976/liked 500 in 9ms :: {"er…
+0|tomati-p | 2025-08-02T09:55:46: 9:55:46 AM [express] GET /api/products/53c159e5-2942-4dde-a4da-760e67caa976/liked 500 in 5ms :: {"er…
+
+
