@@ -37,7 +37,10 @@ export function useMessaging() {
     if (!user) return;
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    // Use the same host as the current page to avoid port issues
     const wsUrl = `${protocol}//${window.location.host}/ws?userId=${user.id}`;
+    
+    console.log('WebSocket URL:', wsUrl);
     
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
