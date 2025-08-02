@@ -55,8 +55,23 @@ export const LikeButton = ({
     mutationFn: async (id: string) => {
       console.log('Like mutation called for product:', id);
       const token = localStorage.getItem('authToken');
-      console.log('Token available for like:', token ? 'Yes' : 'No');
-      return apiClient.request(`/products/${id}/like`, { method: 'POST' });
+      console.log('Token for like request:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
+      
+      // Direct fetch to ensure token is sent
+      const response = await fetch(`/api/products/${id}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || 'Request failed');
+      }
+      
+      return response.json();
     },
     onSuccess: (data: any) => {
       setIsLiked(true);
