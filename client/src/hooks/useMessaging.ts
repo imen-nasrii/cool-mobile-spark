@@ -32,10 +32,16 @@ export function useMessaging() {
   const wsRef = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  // WebSocket connection
+  // WebSocket connection (temporarily disabled to prevent localhost:undefined errors)
   useEffect(() => {
     if (!user) return;
 
+    // Disable WebSocket for now to prevent errors
+    console.log('WebSocket temporarily disabled to prevent localhost:undefined errors');
+    setIsConnected(false);
+    
+    // TODO: Re-enable WebSocket with proper environment configuration
+    /*
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const host = window.location.hostname;
     const port = window.location.port;
@@ -84,6 +90,7 @@ export function useMessaging() {
     return () => {
       ws.close();
     };
+    */
   }, [user, queryClient]);
 
   // Get conversations

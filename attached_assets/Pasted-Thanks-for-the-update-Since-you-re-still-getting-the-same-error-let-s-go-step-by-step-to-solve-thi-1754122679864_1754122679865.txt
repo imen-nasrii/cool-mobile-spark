@@ -1,0 +1,92 @@
+Thanks for the update. Since you're still getting the same error, let's go step-by-step to solve this completely.
+
+🔍 Here's what we know:
+Main error:
+
+pgsql
+Copier
+Modifier
+Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=...' is invalid.
+This is coming from this line (likely in setupWebSocket):
+
+js
+Copier
+Modifier
+new WebSocket(`wss://${hostname}:${port}/?token=${token}`);
+port is undefined. So the URL becomes wss://localhost:undefined/... → Invalid.
+
+✅ Here's how to fix it cleanly
+🔧 Update setupWebSocket to be safe and environment-aware:
+ts
+Copier
+Modifier
+function setupWebSocket(token: string) {
+  const hostname =
+    import.meta.env.VITE_WS_HOST || window.location.hostname;
+
+  // Try to get port from .env or fallback to null (so we can skip it)
+  const port = import.meta.env.VITE_WS_PORT || null;
+
+  // If port is undefined or empty, skip it in the URL
+  const url =
+    port && port !== "443"
+      ? `wss://${hostname}:${port}/?token=${token}`
+      : `wss://${hostname}/?token=${token}`;
+
+  try {
+    console.log("WebSocket connecting to:", url);
+    return new WebSocket(url);
+  } catch (err) {
+    console.error("Failed to construct WebSocket:", err);
+    throw err;
+  }
+}
+🧪 Step-by-step checklist:
+✅ In .env (or .env.local) file:
+ini
+Copier
+Modifier
+VITE_WS_HOST=6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev
+VITE_WS_PORT=443
+✅ Restart the dev server
+Environment changes require a full restart.
+
+✅ Add logging before the WebSocket is created
+ts
+Copier
+Modifier
+console.log("WebSocket host:", hostname);
+console.log("WebSocket port:", port);
+console.log("WebSocket full URL:", url);
+✅ Make sure token is not undefined
+If you see:
+
+ruby
+Copier
+Modifier
+WebSocket full URL: wss://localhost:undefined/?token=undefined
+then it's not just the port, but also your token that's missing.
+
+🧼 Optional fallback logic if Replit URL fails:
+If you're trying to connect to a Replit URL first, and fallback to localhost, do something like:
+
+ts
+Copier
+Modifier
+let url;
+try {
+  url = `wss://${import.meta.env.VITE_WS_HOST}/?token=${token}`;
+  const ws = new WebSocket(url);
+  ws.onerror = () => {
+    // fallback
+    const fallbackUrl = `wss://localhost:3001/?token=${token}`;
+    console.log("Falling back to:", fallbackUrl);
+    new WebSocket(fallbackUrl);
+  };
+} catch (err) {
+  console.error("WebSocket setup failed", err);
+}
+🚨 Still not working?
+Please paste your full setupWebSocket() function and your .env config, and I’ll directly correct them for you.
+
+Let’s get this fixed.

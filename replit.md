@@ -72,6 +72,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Product details with icons**: Added comprehensive icon system for car, real estate, and job details with visual indicators
 - ✅ **Enhanced UI with category-specific icons**: Cars show brand/fuel/year, real estate shows rooms/surface, jobs show contract/salary
 - ✅ **Complete equipment display in product details**: "Équipements disponibles" section fully functional ONLY in product detail pages (not in product list) with all 12 equipment items, professional black/gray color coding, transitions, and Arial font styling exactly matching Tesla Model 3 example
+- ✅ **Heart button functionality fixed**: Resolved localStorage key issues (token vs authToken) and added visual heart animations with red fill state
+- ✅ **WebSocket error resolution**: Fixed localhost:undefined WebSocket URL construction errors with temporary disable and proper environment configuration
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
