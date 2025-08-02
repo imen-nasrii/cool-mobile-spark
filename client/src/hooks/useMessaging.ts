@@ -37,12 +37,19 @@ export function useMessaging() {
     if (!user) return;
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    // Ensure we have a valid host and port 
     const host = window.location.hostname;
-    const port = window.location.port || "5000"; // Default to 5000 for development
-    const wsUrl = `${protocol}//${host}:${port}/ws?userId=${user.id}`;
+    const port = window.location.port;
     
-    console.log('WebSocket URL:', wsUrl);
+    // Construct WebSocket URL safely
+    let wsUrl: string;
+    if (port && port !== '443' && port !== '80') {
+      wsUrl = `${protocol}//${host}:${port}/ws?userId=${user.id}`;
+    } else {
+      // Don't include port for standard ports or when port is undefined
+      wsUrl = `${protocol}//${host}/ws?userId=${user.id}`;
+    }
+    
+    console.log('WebSocket Host:', host, 'Port:', port, 'Final URL:', wsUrl);
     
     const ws = new WebSocket(wsUrl);
     wsRef.current = ws;
@@ -71,6 +78,7 @@ export function useMessaging() {
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error);
+      console.error('Failed to connect to WebSocket URL:', wsUrl);
     };
 
     return () => {
