@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3 } from "lucide-react";
+import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -521,6 +521,61 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                     </div>
                   </div>
                 </details>
+
+                {/* Équipements disponibles section */}
+                <div className="mt-6 bg-gray-50 rounded-xl border border-gray-200 p-6">
+                  <h4 className="text-lg font-medium mb-4 flex items-center gap-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <Settings size={20} className="text-primary" />
+                    Équipements disponibles
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {[
+                      { key: 'seats_ventilated', label: 'Sièges ventilés', icon: '🪑' },
+                      { key: 'steering_heated', label: 'Volant chauffant', icon: '🌡️' },
+                      { key: 'navigation', label: 'Navigation', icon: '🧭' },
+                      { key: 'speed_regulator', label: 'Régulateur de vitesse', icon: '⚡' },
+                      { key: 'parking_sensors', label: 'Capteurs stationnement', icon: '📡' },
+                      { key: 'camera_rear', label: 'Caméra arrière', icon: '📷' },
+                      { key: 'traffic_aid', label: 'Aide trafic transversal', icon: '🚦' },
+                      { key: 'emergency_brake', label: 'Freinage d\'urgence', icon: '🛑' },
+                      { key: 'view_360', label: 'Vue 360°', icon: '👁️' },
+                      { key: 'voice_alert', label: 'Avertissement voie', icon: '🔊' },
+                      { key: 'roof_opening', label: 'Toit ouvrant', icon: '🌤️' },
+                      { key: 'smoking_allowed', label: 'Fumeur autorisé', icon: '🚭' }
+                    ].map((equipment) => (
+                      <div key={equipment.key} className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
+                        <input
+                          type="checkbox"
+                          id={equipment.key}
+                          checked={formData.equipment?.includes(equipment.key) || false}
+                          onChange={(e) => {
+                            const currentEquipment = formData.equipment || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                equipment: [...currentEquipment, equipment.key]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                equipment: currentEquipment.filter(item => item !== equipment.key)
+                              }));
+                            }
+                          }}
+                          className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary focus:ring-2"
+                        />
+                        <label 
+                          htmlFor={equipment.key} 
+                          className="text-sm font-medium text-gray-900 cursor-pointer flex items-center gap-2"
+                          style={{ fontFamily: 'Arial, sans-serif' }}
+                        >
+                          <span className="text-lg">{equipment.icon}</span>
+                          {equipment.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             )}
 
