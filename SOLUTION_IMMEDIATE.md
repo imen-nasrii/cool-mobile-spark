@@ -1,31 +1,48 @@
-# Solution Immédiate - Variables d'Environnement
+# 🚨 Solution Immédiate - Erreur Authentification PostgreSQL
 
-## Problème Identifié
-❌ `Error: DATABASE_URL must be set`
-- L'application démarre mais sans les variables d'environnement
-- DATABASE_URL manquante
+## Problème
+L'utilisateur `tomati` existe mais le mot de passe ne fonctionne pas dans PostgreSQL.
 
-## Solution: Redémarrage avec Variables
+## Solution Radicale
 
-### Commandes à exécuter :
+### 1. Entrer dans PostgreSQL
 ```bash
-pm2 delete tomati-production
-NODE_ENV=production PORT=5000 DATABASE_URL="postgresql://tomati:Tomati123@localhost:5432/tomati_market" pm2 start dist/index.js --name tomati-production
-pm2 status
-pm2 logs tomati-production --lines 10
-curl http://localhost:5000
-exit
+sudo -u postgres psql
+```
+
+### 2. Recréer complètement l'utilisateur (copier-coller tout d'un coup)
+```sql
+-- Supprimer objets dépendants et recréer utilisateur
+ALTER DATABASE tomati_market OWNER TO postgres;
+DROP USER IF EXISTS tomati;
+CREATE USER tomati WITH PASSWORD 'tomati123';
+ALTER USER tomati CREATEDB;
+ALTER USER tomati WITH SUPERUSER;
+CREATE DATABASE tomati_db OWNER tomati;
+GRANT ALL PRIVILEGES ON DATABASE tomati_db TO tomati;
+\l
+\q
+```
+
+### 3. Tester la connexion
+```bash
+psql -h localhost -U tomati -d tomati_db -c "SELECT 'OK';"
+```
+**Mot de passe:** `tomati123`
+
+### 4. Si connexion OK, migration
+```bash
+npm run db:push && pm2 restart tomati-production
+```
+
+### 5. Test final
+```bash
 curl http://51.222.111.183
 ```
 
-## Alternative: Créer fichier .env
-```bash
-cat > .env << 'EOF'
-NODE_ENV=production
-PORT=5000
-DATABASE_URL=postgresql://tomati:Tomati123@localhost:5432/tomati_market
-EOF
+## Résultat Attendu
+- Connexion PostgreSQL OK
+- Migration réussie
+- Application accessible sur http://51.222.111.183
 
-pm2 delete tomati-production
-pm2 start dist/index.js --name tomati-production
-```
+Cette méthode supprime toutes les dépendances et recrée l'utilisateur proprement.
