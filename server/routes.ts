@@ -18,27 +18,37 @@ const authenticateToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  console.log('Auth middleware - Header:', authHeader);
-  console.log('Auth middleware - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
+  // Only log for like endpoints to reduce noise
+  if (req.path.includes('/like')) {
+    console.log('Like request - Auth header:', authHeader);
+    console.log('Like request - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
+  }
 
   if (!token || token === 'null' || token === 'undefined') {
-    console.log('No valid token provided');
+    if (req.path.includes('/like')) {
+      console.log('Like request - No valid token provided');
+    }
     return res.status(401).json({ error: 'Access token required' });
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as any;
-    console.log('Token decoded successfully, userId:', decoded.userId);
     const user = await storage.getUser(decoded.userId);
     if (!user) {
-      console.log('User not found for userId:', decoded.userId);
+      if (req.path.includes('/like')) {
+        console.log('Like request - User not found for userId:', decoded.userId);
+      }
       return res.status(401).json({ error: 'Invalid token' });
     }
-    console.log('User authenticated successfully:', user.email);
+    if (req.path.includes('/like')) {
+      console.log('Like request - User authenticated successfully:', user.email);
+    }
     req.user = user;
     next();
   } catch (error) {
-    console.log('Token verification failed:', error);
+    if (req.path.includes('/like')) {
+      console.log('Like request - Token verification failed:', error);
+    }
     return res.status(403).json({ error: 'Invalid token' });
   }
 };

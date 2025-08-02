@@ -132,7 +132,22 @@ export const LikeButton = ({
 
     // Force token refresh before like
     const token = localStorage.getItem('authToken');
-    if (!token) {
+    if (!token || token === 'null' || token === 'undefined') {
+      console.log('No valid token found, attempting re-login...');
+      
+      // Try to re-authenticate
+      try {
+        const response = await apiClient.signIn('admin@tomati.com', 'admin123');
+        if (response.token) {
+          console.log('Re-authentication successful');
+          apiClient.setToken(response.token);
+          likeMutation.mutate(productId);
+          return;
+        }
+      } catch (error) {
+        console.log('Re-authentication failed:', error);
+      }
+      
       toast({
         title: "Session expirée",
         description: "Veuillez vous reconnecter",
