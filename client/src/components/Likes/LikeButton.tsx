@@ -52,7 +52,12 @@ export const LikeButton = ({
 
   // Like product mutation
   const likeMutation = useMutation({
-    mutationFn: (id: string) => apiClient.request(`/products/${id}/like`, { method: 'POST' }),
+    mutationFn: async (id: string) => {
+      console.log('Like mutation called for product:', id);
+      const token = localStorage.getItem('authToken');
+      console.log('Token available for like:', token ? 'Yes' : 'No');
+      return apiClient.request(`/products/${id}/like`, { method: 'POST' });
+    },
     onSuccess: (data: any) => {
       setIsLiked(true);
       setLikeCount(data.newLikeCount || likeCount + 1);
