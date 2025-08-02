@@ -600,64 +600,64 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     <h5 className="font-semibold text-blue-800 dark:text-blue-200 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Équipements disponibles</h5>
                     <div className="grid grid-cols-2 gap-2 text-sm">
                       {/* All equipment items with icons - black for available, gray for unavailable */}
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_ventilated_seats ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🪑</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Sièges ventilés</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_ventilated_seats ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_ventilated_seats ? 'opacity-100' : 'opacity-60'}`}>🪑</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Sièges ventilés</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_heated_steering ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🔥</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Volant chauffant</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_heated_steering ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_heated_steering ? 'opacity-100' : 'opacity-60'}`}>🔥</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Volant chauffant</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_navigation ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🧭</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Navigation</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_navigation ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_navigation ? 'opacity-100' : 'opacity-60'}`}>🧭</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Navigation</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_cruise_control ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">⏱️</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Régulateur de vitesse</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_cruise_control ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_cruise_control ? 'opacity-100' : 'opacity-60'}`}>⏱️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Régulateur de vitesse</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_parking_sensors ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">📡</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Capteurs stationnement</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_parking_sensors ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_parking_sensors ? 'opacity-100' : 'opacity-60'}`}>📡</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Capteurs stationnement</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_rear_camera ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">📹</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Caméra arrière</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_rear_camera ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_rear_camera ? 'opacity-100' : 'opacity-60'}`}>📹</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Caméra arrière</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_traffic_assist ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🛡️</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Aide trafic transversal</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_traffic_assist ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_traffic_assist ? 'opacity-100' : 'opacity-60'}`}>🛡️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Aide trafic transversal</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_emergency_braking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🛑</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Freinage d'urgence</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_emergency_braking ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_emergency_braking ? 'opacity-100' : 'opacity-60'}`}>🛑</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Freinage d'urgence</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_360_view ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">👁️</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Vue 360°</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_360_view ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_360_view ? 'opacity-100' : 'opacity-60'}`}>👁️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Vue 360°</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_lane_departure ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🛣️</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Avertissement voie</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_lane_departure ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_lane_departure ? 'opacity-100' : 'opacity-60'}`}>🛣️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Avertissement voie</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_sunroof ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">☀️</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Toit ouvrant</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_sunroof ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_sunroof ? 'opacity-100' : 'opacity-60'}`}>☀️</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Toit ouvrant</span>
                       </div>
 
-                      <div className={`flex items-center gap-2 p-2 rounded-md ${product.car_non_smoking ? 'bg-black text-white' : 'bg-gray-300 text-gray-600'}`}>
-                        <span className="text-lg">🚭</span>
-                        <span style={{ fontFamily: 'Arial, sans-serif' }}>Non fumeur</span>
+                      <div className={`flex items-center gap-2 p-2 rounded-md transition-all ${product.car_non_smoking ? 'bg-black text-white border border-black' : 'bg-gray-200 text-gray-700 border border-gray-300'}`}>
+                        <span className={`text-lg ${product.car_non_smoking ? 'opacity-100' : 'opacity-60'}`}>🚭</span>
+                        <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs font-medium">Non fumeur</span>
                       </div>
                     </div>
                   </div>
