@@ -118,10 +118,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
                 Tomati <span className="text-primary">Market</span>
               </h1>
             </div>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 max-w-2xl mx-auto px-4">
-              Découvrez des milliers de produits exceptionnels vendus par notre communauté locale.
-              Achetez et vendez en toute confiance.
-            </p>
+
           </div>
         </div>
       </div>
