@@ -71,6 +71,7 @@ export const products = pgTable("products", {
   car_lane_departure: boolean("car_lane_departure"), // Avertissement de sortie de voie
   car_sunroof: boolean("car_sunroof"), // Toit ouvrant
   car_non_smoking: boolean("car_non_smoking"), // Non fumeur
+  car_equipment: text("car_equipment"), // Equipment array as JSON string
   
   // Champs spécifiques à l'immobilier
   real_estate_type: text("real_estate_type"), // Appartement, Maison, Villa, Bureau, Local commercial

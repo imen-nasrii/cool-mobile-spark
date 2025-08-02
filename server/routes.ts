@@ -210,8 +210,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/products", authenticateToken, async (req, res) => {
     try {
+      // Convert car_equipment array to JSON string if it exists
+      const requestData = { ...req.body };
+      if (requestData.car_equipment && Array.isArray(requestData.car_equipment)) {
+        requestData.car_equipment = JSON.stringify(requestData.car_equipment);
+      }
+      
       const productData = insertProductSchema.parse({
-        ...req.body,
+        ...requestData,
         user_id: (req as any).user.id
       });
       const product = await storage.createProduct(productData);

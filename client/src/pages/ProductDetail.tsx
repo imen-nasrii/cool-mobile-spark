@@ -220,19 +220,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       ].filter(detail => detail.value);
 
       // Complete equipment list with icons (black if available, gray if not)
+      // Get equipment array from car_equipment field (parse JSON string)
+      let selectedEquipment = [];
+      try {
+        selectedEquipment = product.car_equipment ? JSON.parse(product.car_equipment) : [];
+      } catch (error) {
+        console.error('Error parsing car_equipment:', error);
+        selectedEquipment = [];
+      }
+      console.log('Equipment from database:', selectedEquipment);
+      
       const equipmentList = [
-        { key: 'car_ventilated_seats', icon: '🪑', label: 'Sièges ventilés', available: !!product.car_ventilated_seats },
-        { key: 'car_heated_steering', icon: '🔥', label: 'Volant chauffant', available: !!product.car_heated_steering },
-        { key: 'car_navigation', icon: '🧭', label: 'Navigation', available: !!product.car_navigation },
-        { key: 'car_cruise_control', icon: '⏱️', label: 'Régulateur de vitesse', available: !!product.car_cruise_control },
-        { key: 'car_parking_sensors', icon: '📡', label: 'Capteurs stationnement', available: !!product.car_parking_sensors },
-        { key: 'car_rear_camera', icon: '📹', label: 'Caméra arrière', available: !!product.car_rear_camera },
-        { key: 'car_traffic_assist', icon: '🛡️', label: 'Aide trafic transversal', available: !!product.car_traffic_assist },
-        { key: 'car_emergency_braking', icon: '🛑', label: 'Freinage d\'urgence', available: !!product.car_emergency_braking },
-        { key: 'car_360_view', icon: '👁️', label: 'Vue 360°', available: !!product.car_360_view },
-        { key: 'car_lane_departure', icon: '🛣️', label: 'Avertissement voie', available: !!product.car_lane_departure },
-        { key: 'car_sunroof', icon: '☀️', label: 'Toit ouvrant', available: !!product.car_sunroof },
-        { key: 'car_non_smoking', icon: '🚭', label: product.car_non_smoking ? 'Non fumeur' : 'Fumeur autorisé', available: true }
+        { key: 'seats_ventilated', icon: '🪑', label: 'Sièges ventilés', available: selectedEquipment.includes('seats_ventilated') },
+        { key: 'steering_heated', icon: '🔥', label: 'Volant chauffant', available: selectedEquipment.includes('steering_heated') },
+        { key: 'navigation', icon: '🧭', label: 'Navigation', available: selectedEquipment.includes('navigation') },
+        { key: 'speed_regulator', icon: '⏱️', label: 'Régulateur de vitesse', available: selectedEquipment.includes('speed_regulator') },
+        { key: 'parking_sensors', icon: '📡', label: 'Capteurs stationnement', available: selectedEquipment.includes('parking_sensors') },
+        { key: 'camera_rear', icon: '📹', label: 'Caméra arrière', available: selectedEquipment.includes('camera_rear') },
+        { key: 'traffic_aid', icon: '🛡️', label: 'Aide trafic transversal', available: selectedEquipment.includes('traffic_aid') },
+        { key: 'emergency_brake', icon: '🛑', label: 'Freinage d\'urgence', available: selectedEquipment.includes('emergency_brake') },
+        { key: 'view_360', icon: '👁️', label: 'Vue 360°', available: selectedEquipment.includes('view_360') },
+        { key: 'voice_alert', icon: '🛣️', label: 'Avertissement voie', available: selectedEquipment.includes('voice_alert') },
+        { key: 'roof_opening', icon: '☀️', label: 'Toit ouvrant', available: selectedEquipment.includes('roof_opening') },
+        { key: 'smoking_allowed', icon: '🚭', label: 'Fumeur autorisé', available: selectedEquipment.includes('smoking_allowed') }
       ];
 
       console.log('Car details found:', carDetails.length, carDetails);
