@@ -1,0 +1,72 @@
+You're getting two key types of errors here — a WebSocket construction error and a 401 Unauthorized on a POST request — along with lots of normal-looking token-based API calls. Here's what each issue means and how to fix it:
+
+🔴 1. WebSocket URL Error
+pgsql
+Copier
+Modifier
+Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=...' is invalid.
+💡 Cause:
+The WebSocket URL is using undefined for the port, which makes the URL invalid.
+
+✅ Fix:
+Check the function where the WebSocket URL is created, probably something like this:
+
+js
+Copier
+Modifier
+const port = process.env.WEBSOCKET_PORT;
+const socket = new WebSocket(`wss://localhost:${port}/?token=${token}`);
+You're likely missing or incorrectly passing the port value.
+
+If you’re using Vite, Webpack, or Create React App, ensure the env variable is correctly prefixed:
+
+VITE_WEBSOCKET_PORT for Vite
+
+REACT_APP_WEBSOCKET_PORT for CRA
+
+Double-check how port is being set or passed into setupWebSocket.
+
+🟠 2. 401 Unauthorized on Like Request
+bash
+Copier
+Modifier
+POST /api/products/<id>/like 401 (Unauthorized)
+💡 Cause:
+Your request to like a product is unauthorized — probably missing or invalid auth headers.
+
+✅ Fix:
+Check your apiClient or wherever the fetch or Axios call happens:
+
+Make sure the Authorization header is present:
+
+ts
+Copier
+Modifier
+headers: {
+  Authorization: `Bearer ${token}`,
+  ...
+}
+Make sure the token is not expired or malformed.
+
+Check that the like endpoint requires authentication and whether you're logged in at the time of clicking the "like" button.
+
+You can log the token at the point of the request to verify:
+
+ts
+Copier
+Modifier
+console.log('Token used in like request:', token);
+🟢 Normal Logs:
+ts
+Copier
+Modifier
+Using token for request: /products/promoted Token length: 192
+These are fine and helpful for debugging — they show that tokens are generally being used.
+
+Summary of Fixes:
+Issue	Fix
+WebSocket URL is undefined	Ensure correct port is passed and loaded from .env
+401 Unauthorized on /like	Ensure user is logged in and token is valid & present in headers
+All other requests seem normal	No issue unless any of them return 4xx or 5xx responses
+
+If you want to share your setupWebSocket or auth logic, I can help pinpoint the exact fix.
