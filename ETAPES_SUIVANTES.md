@@ -13,7 +13,7 @@ La base de données `tomati_db` est maintenant correctement créée avec :
 ```bash
 psql -h localhost -U tomati -d tomati_db -c "SELECT 'Connection OK';"
 ```
-**Mot de passe :** `tomati123`
+**Mot de passe :** `Tomati123`
 
 ### 2. Migration du schéma
 ```bash

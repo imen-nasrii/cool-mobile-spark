@@ -28,7 +28,7 @@ GRANT ALL PRIVILEGES ON DATABASE tomati_db TO tomati;
 ```bash
 psql -h localhost -U tomati -d tomati_db -c "SELECT 'OK';"
 ```
-**Mot de passe:** `tomati123`
+**Mot de passe:** `Tomati123`
 
 ### 4. Si connexion OK, migration
 ```bash
