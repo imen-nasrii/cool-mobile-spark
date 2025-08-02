@@ -125,7 +125,12 @@ export const LikeButton = ({
   }, [productData]);
 
   const handleLike = async () => {
+    console.log('=== LIKE BUTTON CLICKED ===');
+    console.log('User state:', user ? 'Logged in' : 'Not logged in');
+    console.log('Product ID:', productId);
+    
     if (!user) {
+      console.log('No user, showing toast');
       toast({
         title: "Connexion requise",
         description: "Vous devez être connecté pour aimer des produits",
@@ -135,6 +140,7 @@ export const LikeButton = ({
     }
 
     if (isLiked) {
+      console.log('Already liked, showing toast');
       toast({
         title: "Déjà aimé",
         description: "Vous avez déjà aimé ce produit",
@@ -143,36 +149,12 @@ export const LikeButton = ({
       return;
     }
 
-    if (likeMutation.isPending) return;
-
-    // Force token refresh before like
-    const token = localStorage.getItem('authToken');
-    if (!token || token === 'null' || token === 'undefined') {
-      console.log('No valid token found, attempting re-login...');
-      
-      // Try to re-authenticate
-      try {
-        const response = await apiClient.signIn('admin@tomati.com', 'admin123');
-        if (response.token) {
-          console.log('Re-authentication successful');
-          apiClient.setToken(response.token);
-          likeMutation.mutate(productId);
-          return;
-        }
-      } catch (error) {
-        console.log('Re-authentication failed:', error);
-      }
-      
-      toast({
-        title: "Session expirée",
-        description: "Veuillez vous reconnecter",
-        variant: "destructive"
-      });
+    if (likeMutation.isPending) {
+      console.log('Mutation already pending, return');
       return;
     }
 
-    console.log('About to like, token length:', token.length);
-    apiClient.setToken(token);
+    console.log('Proceeding with like...');
     likeMutation.mutate(productId);
   };
 
