@@ -111,19 +111,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       {/* Header Ad Banner */}
       <AdBanner position="header" className="mb-4 relative z-10" showCloseButton={false} />
 
-      {/* Hero Section - Sans barre de recherche */}
-      <div className="relative z-10">
-        <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
-          <div className="text-center mb-8">
-            <div className="flex flex-col items-center justify-center mb-4">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-gray-900 text-center">
-                Tomati <span className="text-primary">Market</span>
-              </h1>
-            </div>
 
-          </div>
-        </div>
-      </div>
 
       {/* Promoted Products Section */}
       {promotedProducts && promotedProducts.length > 0 && (

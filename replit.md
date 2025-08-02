@@ -81,6 +81,7 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Homepage description removal**: Eliminated the descriptive text under the title for an ultra-minimalist design with only logo and title
 - ✅ **Category filtering system fully functional**: Fixed "Voir tout" button behavior and server-side category filtering with proper logging and debugging
 - ✅ **Logo removal from homepage**: Removed Tomati logo from homepage header for even more minimalist design with title only
+- ✅ **Complete title removal**: Eliminated "Tomati Market" title from homepage for ultra-minimalist interface with only content
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
