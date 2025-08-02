@@ -239,9 +239,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/products/:id", authenticateToken, requireAdmin, async (req, res) => {
+  app.delete("/api/products/:id", authenticateToken, async (req, res) => {
     try {
-      const success = await storage.deleteProduct(req.params.id);
+      const productId = req.params.id;
+      const userId = (req as any).user.id;
+      const userRole = (req as any).user.role;
+      
+      // Get product to check ownership
+      const product = await storage.getProduct(productId);
+      if (!product) {
+        return res.status(404).json({ error: "Product not found" });
+      }
+      
+      // Check if user is owner or admin
+      if (product.user_id !== userId && userRole !== 'admin') {
+        return res.status(403).json({ error: "You can only delete your own products" });
+      }
+      
+      const success = await storage.deleteProduct(productId);
       if (!success) {
         return res.status(404).json({ error: "Product not found" });
       }

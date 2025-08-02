@@ -120,6 +120,42 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   });
 
+  const deleteProductMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to delete product');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Produit supprimé",
+        description: "Votre produit a été supprimé avec succès",
+      });
+      // Go back to main page
+      onBack?.();
+      // Invalidate products cache to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible de supprimer le produit",
+        variant: "destructive",
+      });
+    }
+  });
+
   useEffect(() => {
     if (productData) {
       setProduct(productData);
@@ -191,6 +227,14 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
     
     likeMutation.mutate(product.id);
+  };
+
+  const handleDelete = () => {
+    if (!user || !product) return;
+    
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ? Cette action est irréversible.")) {
+      deleteProductMutation.mutate(product.id);
+    }
   };
 
   const isOwner = user?.id === product?.user_id;
@@ -476,9 +520,20 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           
           <div className="flex gap-3">
             {isOwner && (
-              <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)}>
-                <Edit size={16} />
-              </Button>
+              <>
+                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)}>
+                  <Edit size={16} />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleDelete}
+                  disabled={deleteProductMutation.isPending}
+                  className="hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                >
+                  <Trash2 size={16} />
+                </Button>
+              </>
             )}
             <Button 
               variant="outline" 
@@ -895,6 +950,31 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 >
                   <MessageCircle size={20} className="mr-2" />
                   Envoyer message
+                </Button>
+              </div>
+            )}
+
+            {/* Owner Action Buttons */}
+            {isOwner && (
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 border-blue-500/20 text-blue-600 hover:bg-blue-50 h-14 text-lg"
+                  onClick={() => onEdit?.(product.id)}
+                >
+                  <Edit size={20} className="mr-2" />
+                  Modifier
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 border-red-500/20 text-red-600 hover:bg-red-50 h-14 text-lg"
+                  onClick={handleDelete}
+                  disabled={deleteProductMutation.isPending}
+                >
+                  <Trash2 size={20} className="mr-2" />
+                  {deleteProductMutation.isPending ? "Suppression..." : "Supprimer"}
                 </Button>
               </div>
             )}
