@@ -54,10 +54,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setLoading(false);
         });
     } else {
-      // Auto-login for testing - connect as regular user
+      // Auto-login for testing - connect as admin user
       const autoLogin = async () => {
         try {
-          const response = await apiClient.signIn('user@tomati.com', 'user123');
+          const response = await apiClient.signIn('admin@tomati.com', 'admin123');
           if (response.user) {
             setUser(response.user);
           }
