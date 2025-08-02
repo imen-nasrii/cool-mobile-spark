@@ -19,7 +19,7 @@ interface HomeProps {
 }
 
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("date");
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
@@ -246,7 +246,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 mb-6">
         <ProductGrid 
-          category={selectedCategory}
+          category={selectedCategory === "" ? undefined : selectedCategory}
           sortBy={sortBy}
           searchTerm=""
           onProductClick={onProductClick}

@@ -98,6 +98,7 @@ export class DatabaseStorage implements IStorage {
 
   // Products
   async getProducts(category?: string, search?: string): Promise<Product[]> {
+    console.log('Storage.getProducts called with category:', category, 'search:', search);
     let rawProducts: Product[] = [];
     
     if (category && search) {
@@ -135,8 +136,6 @@ export class DatabaseStorage implements IStorage {
     // Map database fields to frontend properties for all products
     return rawProducts.map(product => ({
       ...product,
-      brand: product.car_brand,
-      model: product.car_model,
       year: product.car_year,
       mileage: product.car_mileage,
       fuel_type: product.car_fuel_type,
@@ -162,11 +161,9 @@ export class DatabaseStorage implements IStorage {
     
     if (!product) return undefined;
     
-    // Map car database fields to frontend properties
+    // Map car database fields to frontend properties (explicitly typed as any for flexibility)
     return {
       ...product,
-      model: product.car_model,
-      year: product.car_year,
       mileage: product.car_mileage,
       fuel_type: product.car_fuel_type,
       transmission: product.car_transmission,
@@ -207,7 +204,7 @@ export class DatabaseStorage implements IStorage {
   async deleteProduct(id: string): Promise<boolean> {
     try {
       const result = await db.delete(products).where(eq(products.id, id));
-      return result.rowCount !== null && result.rowCount > 0;
+      return Array.isArray(result) ? result.length > 0 : true;
     } catch (error) {
       console.error('Error deleting product:', error);
       return false;
@@ -222,16 +219,17 @@ export class DatabaseStorage implements IStorage {
     if (position) {
       conditions.push(eq(advertisements.position, position));
     }
-    if (category) {
+    if (category && category !== 'all') {
       conditions.push(or(eq(advertisements.category, category), sql`${advertisements.category} IS NULL`));
     }
     
-    // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
+    // Build the where clause properly - handle empty conditions
+    if (conditions.length > 0) {
+      const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
+      query = query.where(whereClause);
+    }
     
-    return await query
-      .where(whereClause)
-      .orderBy(desc(advertisements.created_at));
+    return await query.orderBy(desc(advertisements.created_at));
   }
 
   async trackAdImpression(adId: string): Promise<void> {

@@ -161,9 +161,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/products", async (req, res) => {
     try {
       const { category, search } = req.query;
+      console.log('GET /api/products - category:', category, 'search:', search);
       const products = await storage.getProducts(category as string, search as string);
+      console.log('Returning', products.length, 'products for category:', category);
       res.json(products);
     } catch (error: any) {
+      console.error('Error in GET /api/products:', error);
       res.status(500).json({ error: error.message });
     }
   });

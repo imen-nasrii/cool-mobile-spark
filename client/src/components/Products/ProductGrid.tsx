@@ -73,18 +73,21 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
     queryKey: ['/api/products', category],
     queryFn: async () => {
       try {
-        const url = category && category !== 'all' ? `/api/products?category=${category}` : '/api/products';
+        const url = category ? `/api/products?category=${encodeURIComponent(category)}` : '/api/products';
+        console.log('Fetching products with URL:', url);
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        return await response.json();
+        const result = await response.json();
+        console.log('Fetched products:', result.length, 'items for category:', category);
+        return result;
       } catch (error) {
         console.error('Error fetching products:', error);
         throw error;
       }
     },
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 1000, // Reduce cache time for testing
     retry: 3,
     retryDelay: 1000,
   });
