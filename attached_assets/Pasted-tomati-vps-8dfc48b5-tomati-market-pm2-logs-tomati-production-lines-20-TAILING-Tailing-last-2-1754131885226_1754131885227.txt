@@ -1,0 +1,45 @@
+tomati@vps-8dfc48b5:~/tomati-market$ pm2 logs tomati-production --lines 20
+[TAILING] Tailing last 20 lines for [tomati-production] process (change the value with --lines option)
+/home/tomati/tomati-market/logs/out-0.log last 20 lines:
+0|tomati-p | 2025-08-02T10:50:11: Returning 4 products for category: undefined
+0|tomati-p | 2025-08-02T10:50:11: 10:50:11 AM [express] GET /api/products 304 in 28ms :: [{"id":"604820db-9ea8-4154-b138-6e06d220888b",…
+0|tomati-p | 2025-08-02T10:50:14: GET /api/products - category: undefined search: iPhone
+0|tomati-p | 2025-08-02T10:50:14: Storage.getProducts called with category: undefined search: iPhone
+0|tomati-p | 2025-08-02T10:50:14: Returning 0 products for category: undefined
+0|tomati-p | 2025-08-02T10:50:14: 10:50:14 AM [express] GET /api/products 200 in 9ms :: []
+0|tomati-p | 2025-08-02T10:50:22: 10:50:22 AM [express] GET /api/advertisements 304 in 2ms :: []
+0|tomati-p | 2025-08-02T10:50:22: 10:50:22 AM [express] GET /api/advertisements 304 in 5ms :: []
+0|tomati-p | 2025-08-02T10:50:22: GET /api/products - category: undefined search: undefined
+0|tomati-p | 2025-08-02T10:50:22: Storage.getProducts called with category: undefined search: undefined
+0|tomati-p | 2025-08-02T10:50:22: Returning 4 products for category: undefined
+0|tomati-p | 2025-08-02T10:50:23: 10:50:23 AM [express] GET /api/products 304 in 59ms :: [{"id":"604820db-9ea8-4154-b138-6e06d220888b",…
+0|tomati-p | 2025-08-02T10:50:23: Storage.getProducts called with category: undefined search: undefined
+0|tomati-p | 2025-08-02T10:50:23: 10:50:23 AM [express] GET /api/advertisements 304 in 9ms :: []
+0|tomati-p | 2025-08-02T10:50:23: 10:50:23 AM [express] GET /api/stats 304 in 15ms :: {"totalProducts":4,"totalUsers":100}
+0|tomati-p | 2025-08-02T10:50:23: 10:50:23 AM [express] GET /api/products/promoted 500 in 22ms :: {"error":"connect ECONNREFUSED 127.0.…
+0|tomati-p | 2025-08-02T10:50:23: 10:50:23 AM [express] GET /api/profile 304 in 21ms :: {"id":"09032c48-a047-40bd-a04e-3b4a7b3d8a37","u…
+0|tomati-p | 2025-08-02T10:50:24: 10:50:24 AM [express] GET /api/products/promoted 500 in 6ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T10:50:26: 10:50:26 AM [express] GET /api/products/promoted 500 in 9ms :: {"error":"connect ECONNREFUSED 127.0.0…
+0|tomati-p | 2025-08-02T10:50:30: 10:50:30 AM [express] GET /api/products/promoted 500 in 10ms :: {"error":"connect ECONNREFUSED 127.0.…
+
+/home/tomati/tomati-market/logs/err-0.log last 20 lines:
+0|tomati-p |     _bufferedAmount: 0,
+0|tomati-p |     _isServer: false,
+0|tomati-p |     _redirects: 0,
+0|tomati-p |     _autoPong: true,
+0|tomati-p |     _url: 'wss://localhost/v2',
+0|tomati-p |     _req: null,
+0|tomati-p |     [Symbol(shapeMode)]: false,
+0|tomati-p |     [Symbol(kCapture)]: false
+0|tomati-p |   },
+0|tomati-p |   [Symbol(kType)]: 'error',
+0|tomati-p |   [Symbol(kError)]: Error: connect ECONNREFUSED 127.0.0.1:443
+0|tomati-p |       at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1611:16) {
+0|tomati-p |     errno: -111,
+0|tomati-p |     code: 'ECONNREFUSED',
+0|tomati-p |     syscall: 'connect',
+0|tomati-p |     address: '127.0.0.1',
+0|tomati-p |     port: 443
+0|tomati-p |   },
+0|tomati-p |   [Symbol(kMessage)]: 'connect ECONNREFUSED 127.0.0.1:443'
+0|tomati-p | }
