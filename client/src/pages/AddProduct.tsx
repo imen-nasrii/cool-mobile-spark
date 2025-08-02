@@ -136,7 +136,9 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     jobRemote: false,
     jobUrgency: "",
     jobCompany: "",
-    jobBenefits: []
+    jobBenefits: [] as string[],
+    // Car equipment
+    equipment: [] as string[]
   });
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -205,7 +207,8 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           car_year: formData.year ? parseInt(formData.year) : undefined,
           car_condition: formData.condition,
           car_mileage: formData.mileage ? parseInt(formData.mileage) : undefined,
-          car_transmission: formData.transmission
+          car_transmission: formData.transmission,
+          car_equipment: formData.equipment
         }),
         // Real Estate specific fields
         ...(selectedCategory === "immobilier" && {
@@ -531,16 +534,16 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
                       { key: 'seats_ventilated', label: 'Sièges ventilés', icon: '🪑' },
-                      { key: 'steering_heated', label: 'Volant chauffant', icon: '🌡️' },
+                      { key: 'steering_heated', label: 'Volant chauffant', icon: '🔥' },
                       { key: 'navigation', label: 'Navigation', icon: '🧭' },
-                      { key: 'speed_regulator', label: 'Régulateur de vitesse', icon: '⚡' },
+                      { key: 'speed_regulator', label: 'Régulateur de vitesse', icon: '⏱️' },
                       { key: 'parking_sensors', label: 'Capteurs stationnement', icon: '📡' },
-                      { key: 'camera_rear', label: 'Caméra arrière', icon: '📷' },
-                      { key: 'traffic_aid', label: 'Aide trafic transversal', icon: '🚦' },
+                      { key: 'camera_rear', label: 'Caméra arrière', icon: '📹' },
+                      { key: 'traffic_aid', label: 'Aide trafic transversal', icon: '🛡️' },
                       { key: 'emergency_brake', label: 'Freinage d\'urgence', icon: '🛑' },
                       { key: 'view_360', label: 'Vue 360°', icon: '👁️' },
-                      { key: 'voice_alert', label: 'Avertissement voie', icon: '🔊' },
-                      { key: 'roof_opening', label: 'Toit ouvrant', icon: '🌤️' },
+                      { key: 'voice_alert', label: 'Avertissement voie', icon: '🛣️' },
+                      { key: 'roof_opening', label: 'Toit ouvrant', icon: '☀️' },
                       { key: 'smoking_allowed', label: 'Fumeur autorisé', icon: '🚭' }
                     ].map((equipment) => (
                       <div key={equipment.key} className="flex items-center space-x-3 p-3 bg-white rounded-lg border border-gray-100 hover:border-gray-200 transition-colors">
@@ -558,7 +561,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                             } else {
                               setFormData(prev => ({
                                 ...prev,
-                                equipment: currentEquipment.filter(item => item !== equipment.key)
+                                equipment: currentEquipment.filter((item: string) => item !== equipment.key)
                               }));
                             }
                           }}
