@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useState } from "react";
 
 interface Product {
   id: string;
@@ -16,6 +17,7 @@ interface Product {
   isReserved?: boolean;
   likes: number;
   category: string;
+  isLiked?: boolean;
   // Car details
   brand?: string;
   model?: string;
@@ -65,6 +67,14 @@ export const ProductListCard = ({
   className 
 }: ProductListCardProps) => {
   const { t } = useLanguage();
+  const [isLiked, setIsLiked] = useState(product.isLiked || false);
+  const [likesCount, setLikesCount] = useState(product.likes);
+
+  const handleLike = () => {
+    setIsLiked(!isLiked);
+    setLikesCount(prev => isLiked ? prev - 1 : prev + 1);
+    onLike?.();
+  };
   
   return (
     <Card 
@@ -239,15 +249,22 @@ export const ProductListCard = ({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-6 w-6 p-0 hover:bg-destructive/10"
+                className="h-6 w-6 p-0 hover:bg-destructive/10 transition-all duration-200"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onLike?.();
+                  handleLike();
                 }}
               >
-                <Heart size={12} className="text-muted-foreground hover:text-destructive" />
+                <Heart 
+                  size={12} 
+                  className={`transition-all duration-200 ${
+                    isLiked 
+                      ? 'text-red-500 fill-red-500 scale-110' 
+                      : 'text-muted-foreground hover:text-red-500'
+                  }`} 
+                />
               </Button>
-              <span className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>{product.likes}</span>
+              <span className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>{likesCount}</span>
               
               <Button
                 variant="ghost"
