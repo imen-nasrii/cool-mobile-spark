@@ -1,0 +1,47 @@
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=header&category= Token length: 192
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category= Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category= Token length: 192
+index-De4CZ0e6.js:421 Using token for request: /stats Token length: 192
+index-De4CZ0e6.js:421 Using token for request: /products/promoted Token length: 192
+index-De4CZ0e6.js:421 Using token for request: /profile Token length: 192
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-De4CZ0e6.js:421 Fetched products: 4 items for category: undefined
+index-De4CZ0e6.js:421 Using token for request: /products/promoted Token length: 192
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-De4CZ0e6.js:421 Using token for request: /products/promoted Token length: 192
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-De4CZ0e6.js:430 Category selected: Mobilier current: 
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Mobilier Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=Mobilier
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Mobilier Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Mobilier
+index-De4CZ0e6.js:430 Category selected: Jeux vidéo current: Mobilier
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Jeux vidéo Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=Jeux%20vid%C3%A9o
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Jeux vidéo Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Jeux vidéo
+index-De4CZ0e6.js:430 Category selected: Bureautique current: Jeux vidéo
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Bureautique Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=Bureautique
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Bureautique Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Bureautique
+index-De4CZ0e6.js:430 Category selected: Voiture current: Bureautique
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Voiture Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=Voiture
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Voiture Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Voiture
+index-De4CZ0e6.js:421 Using token for request: /products/promoted Token length: 192
+/api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-De4CZ0e6.js:430 Category selected: Sport current: Voiture
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Sport Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=Sport
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Sport Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Sport
+index-De4CZ0e6.js:430 Category selected: Électronique current: Sport
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=between_products&category=Électronique Token length: 192
+index-De4CZ0e6.js:421 Fetching products with URL: /api/products?category=%C3%89lectronique
+index-De4CZ0e6.js:421 Using token for request: /advertisements?position=footer&category=Électronique Token length: 192
+index-De4CZ0e6.js:421 Fetched products: 0 items for category: Électronique
+index-De4CZ0e6.js:430 Toutes les catégories clicked - resetting category
+index-De4CZ0e6.js:430 Category selected:  current: Électronique
