@@ -130,6 +130,19 @@ export const LikeButton = ({
 
     if (likeMutation.isPending) return;
 
+    // Force token refresh before like
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      toast({
+        title: "Session expirée",
+        description: "Veuillez vous reconnecter",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('About to like, token length:', token.length);
+    apiClient.setToken(token);
     likeMutation.mutate(productId);
   };
 
