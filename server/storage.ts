@@ -165,7 +165,6 @@ export class DatabaseStorage implements IStorage {
     // Map car database fields to frontend properties
     return {
       ...product,
-      brand: product.car_brand,
       model: product.car_model,
       year: product.car_year,
       mileage: product.car_mileage,
@@ -206,8 +205,13 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteProduct(id: string): Promise<boolean> {
-    const result = await db.delete(products).where(eq(products.id, id));
-    return result.length > 0;
+    try {
+      const result = await db.delete(products).where(eq(products.id, id));
+      return result.rowCount !== null && result.rowCount > 0;
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      return false;
+    }
   }
   
   // Advertisements
