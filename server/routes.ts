@@ -18,23 +18,23 @@ const authenticateToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  console.log('Auth header:', authHeader);
-  console.log('Token extracted:', token ? 'Token present' : 'No token');
+  console.log('Auth middleware - Header:', authHeader);
+  console.log('Auth middleware - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
 
-  if (!token) {
-    console.log('No token provided');
+  if (!token || token === 'null' || token === 'undefined') {
+    console.log('No valid token provided');
     return res.status(401).json({ error: 'Access token required' });
   }
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as any;
-    console.log('Token decoded, userId:', decoded.userId);
+    console.log('Token decoded successfully, userId:', decoded.userId);
     const user = await storage.getUser(decoded.userId);
     if (!user) {
       console.log('User not found for userId:', decoded.userId);
       return res.status(401).json({ error: 'Invalid token' });
     }
-    console.log('User authenticated:', user.email);
+    console.log('User authenticated successfully:', user.email);
     req.user = user;
     next();
   } catch (error) {

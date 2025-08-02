@@ -57,9 +57,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Auto-login for testing - connect as admin user
       const autoLogin = async () => {
         try {
+          console.log('Attempting auto-login...');
           const response = await apiClient.signIn('admin@tomati.com', 'admin123');
-          if (response.user) {
+          console.log('Auto-login response:', response);
+          if (response.user && response.token) {
             setUser(response.user);
+            // Ensure token is saved
+            apiClient.setToken(response.token);
+            localStorage.setItem('authToken', response.token);
+            console.log('Auto-login successful, token saved');
           }
         } catch (error) {
           console.log('Auto-login failed:', error);

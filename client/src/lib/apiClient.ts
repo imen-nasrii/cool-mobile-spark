@@ -35,10 +35,13 @@ class ApiClient {
     };
 
     if (this.token) {
+      console.log('Using token for request:', endpoint, 'Token length:', this.token.length);
       config.headers = {
         ...config.headers,
         Authorization: `Bearer ${this.token}`,
       };
+    } else {
+      console.log('No token available for request:', endpoint);
     }
 
     const response = await fetch(url, config);
