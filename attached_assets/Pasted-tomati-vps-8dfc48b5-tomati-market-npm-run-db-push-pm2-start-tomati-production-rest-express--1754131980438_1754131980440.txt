@@ -1,0 +1,42 @@
+tomati@vps-8dfc48b5:~/tomati-market$ npm run db:push
+pm2 start tomati-production
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/tomati/tomati-market/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+error: password authentication failed for user "tomati"
+    at /home/tomati/tomati-market/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.query (/home/tomati/tomati-market/node_modules/drizzle-kit/bin.cjs:66575:26)
+    at async fromDatabase2 (/home/tomati/tomati-market/node_modules/drizzle-kit/bin.cjs:18700:25) {
+  length: 102,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '335',
+  routine: 'auth_failed'
+}
+[PM2] Applying action restartProcessId on app [tomati-production](ids: [ 0 ])
+[PM2] [tomati-production](0) ✓
+[PM2] Process successfully started
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ cluster │ 358605   │ 0s     │ 0    │ online    │ 0%       │ 38.5mb   │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomati-market$
