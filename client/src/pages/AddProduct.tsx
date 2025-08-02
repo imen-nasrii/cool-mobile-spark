@@ -141,7 +141,6 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     equipment: [] as string[]
   });
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useLanguage();
@@ -168,6 +167,72 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     });
   };
 
+  // React Query mutation for creating products
+  const createProductMutation = useMutation({
+    mutationFn: (productData: any) => apiClient.createProduct(productData),
+    onSuccess: () => {
+      toast({
+        title: "Succès!",
+        description: "Votre annonce a été publiée avec succès",
+      });
+      
+      // Reset form
+      setSelectedCategory("");
+      setFormData({
+        title: "",
+        brand: "",
+        model: "",
+        year: "",
+        mileage: "",
+        transmission: "",
+        description: "",
+        price: "",
+        condition: "",
+        location: "",
+        isPaid: true,
+        // Reset real estate fields
+        realEstateType: "",
+        rooms: "",
+        bathrooms: "",
+        surface: "",
+        floor: "",
+        furnished: false,
+        parking: false,
+        garden: false,
+        balcony: false,
+        realEstateCondition: "",
+        // Reset job fields
+        jobType: "",
+        jobSector: "",
+        jobExperience: "",
+        jobEducation: "",
+        jobSalaryMin: "",
+        jobSalaryMax: "",
+        jobRemote: false,
+        jobUrgency: "",
+        jobCompany: "",
+        jobBenefits: [] as string[],
+        // Car equipment
+        equipment: [] as string[]
+      });
+      setSelectedImages([]);
+      
+      // Invalidate queries to refresh product lists
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      
+      // Redirect to home or products list
+      onTabChange?.("home");
+    },
+    onError: (error: any) => {
+      console.error('Error creating product:', error);
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible de publier l'annonce",
+        variant: "destructive"
+      });
+    }
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -189,10 +254,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
       return;
     }
 
-    setLoading(true);
-
-    try {
-      await apiClient.createProduct({
+    createProductMutation.mutate({
         title: formData.title,
         description: formData.description,
         price: formData.isPaid ? formData.price : "Free",
@@ -237,64 +299,6 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           job_benefits: JSON.stringify(formData.jobBenefits)
         })
       });
-
-      toast({
-        title: "Succès!",
-        description: "Votre annonce a été publiée avec succès",
-      });
-      
-      // Reset form
-      setSelectedCategory("");
-      setFormData({
-        title: "",
-        brand: "",
-        model: "",
-        year: "",
-        mileage: "",
-        transmission: "",
-        description: "",
-        price: "",
-        condition: "",
-        location: "",
-        isPaid: true,
-        // Reset real estate fields
-        realEstateType: "",
-        rooms: "",
-        bathrooms: "",
-        surface: "",
-        floor: "",
-        furnished: false,
-        parking: false,
-        garden: false,
-        balcony: false,
-        realEstateCondition: "",
-        // Reset job fields
-        jobType: "",
-        jobSector: "",
-        jobExperience: "",
-        jobEducation: "",
-        jobSalaryMin: "",
-        jobSalaryMax: "",
-        jobRemote: false,
-        jobUrgency: "",
-        jobCompany: "",
-        jobBenefits: []
-      });
-      setSelectedImages([]);
-      
-      // Redirect to home or products list
-      onTabChange?.("home");
-      
-    } catch (error: any) {
-      console.error('Error creating product:', error);
-      toast({
-        title: "Erreur",
-        description: error.message || "Impossible de publier l'annonce",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
   };
 
   const handleCancel = () => {
@@ -310,7 +314,31 @@ export const AddProduct = ({ activeTab, onTabChange }: {
       price: "",
       condition: "",
       location: "",
-      isPaid: true
+      isPaid: true,
+      // Reset real estate fields
+      realEstateType: "",
+      rooms: "",
+      bathrooms: "",
+      surface: "",
+      floor: "",
+      furnished: false,
+      parking: false,
+      garden: false,
+      balcony: false,
+      realEstateCondition: "",
+      // Reset job fields
+      jobType: "",
+      jobSector: "",
+      jobExperience: "",
+      jobEducation: "",
+      jobSalaryMin: "",
+      jobSalaryMax: "",
+      jobRemote: false,
+      jobUrgency: "",
+      jobCompany: "",
+      jobBenefits: [] as string[],
+      // Car equipment
+      equipment: [] as string[]
     });
     setSelectedImages([]);
   };
@@ -888,10 +916,10 @@ export const AddProduct = ({ activeTab, onTabChange }: {
               </Button>
               <Button
                 type="submit"
-                disabled={loading}
+                disabled={createProductMutation.isPending}
                 className="flex-1 h-10 sm:h-12 lg:h-14 text-sm sm:text-base lg:text-lg bg-primary hover:bg-primary/90 order-1 sm:order-2"
               >
-                {loading ? "Publication..." : "Publier"}
+                {createProductMutation.isPending ? "Publication..." : "Publier"}
               </Button>
             </div>
           </form>
