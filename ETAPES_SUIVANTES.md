@@ -1,65 +1,64 @@
-# Étapes Suivantes Après Clonage
+# 🚀 Étapes Suivantes - Déploiement VPS 51.222.111.183
 
-## Après avoir collé les commandes sur le VPS
+## ✅ État Actuel
+- Code mis à jour depuis GitHub (583 objets)
+- Vous êtes dans `/home/tomati/tomati-market`
+- Prêt pour la correction finale
 
-Une fois que vous avez collé et exécuté le bloc de commandes sur le VPS, voici ce qui va se passer :
-
-### 1. Vérification du déploiement
+## 🔧 Étape 1: Correction Application
 ```bash
+# Télécharger et exécuter le script de correction
+wget -O fix-now.sh https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/correction-immediate-vps.sh
+chmod +x fix-now.sh
+./fix-now.sh
+```
+
+## 📊 Étape 2: Vérification
+```bash
+# Vérifier le statut
 pm2 status
+
+# Voir les logs
+pm2 logs tomati-production --lines 10
+
+# Tester l'application
+curl http://localhost:5000
+curl http://51.222.111.183
 ```
-- Vous devriez voir `tomati-production` avec le statut `online`
 
-### 2. Test des API
+## 🌐 Étape 3: Accès Final
+Une fois terminé, votre application sera accessible :
+- **Application**: http://51.222.111.183
+- **Administration**: http://51.222.111.183/admin
+- **Connexion admin**: admin@tomati.com / admin123
+
+## 🔧 Étape 4: Maintenance
 ```bash
-curl http://localhost:5000/api/stats
-curl http://localhost:5000/api/products
-```
-- Ces commandes devraient retourner des données JSON
-
-### 3. Test de l'accès externe
-```bash
-exit  # Pour sortir du user tomati
-curl http://51.222.111.183/
-```
-- Devrait retourner du HTML de l'application
-
-### 4. Ouvrir dans le navigateur
-- Aller sur : http://51.222.111.183
-- Vérifier que l'interface s'affiche avec :
-  - Layout horizontal des produits
-  - Police Arial
-  - Pas d'erreur "Unknown Error"
-
-## Si des erreurs apparaissent
-
-### Problème PM2
-```bash
+# Redémarrage si nécessaire
 pm2 restart tomati-production
-pm2 logs tomati-production --lines 20
-```
 
-### Problème de build
-```bash
-cd /home/tomati/tomati-market
+# Monitoring en temps réel
+pm2 monit
+
+# Mise à jour future
+git pull origin main
+npm install
 npm run build
-pm2 restart tomati-production
-```
-
-### Problème de base de données
-```bash
-cd /home/tomati/tomati-market
 npm run db:push
 pm2 restart tomati-production
 ```
 
-## Résultat attendu
+## 🎯 Résultat Final
+Votre marketplace Tomati sera complètement fonctionnelle avec :
+- ✅ Interface utilisateur complète
+- ✅ Base de données PostgreSQL
+- ✅ Système d'administration
+- ✅ Authentification sécurisée
+- ✅ Gestion des produits
+- ✅ Système de likes et promotions
 
-Après un déploiement réussi, l'application Tomati Market sera accessible avec :
-- Interface moderne avec layout horizontal
-- Police Arial appliquée globalement
-- Gestion d'erreur robuste avec ErrorBoundary
-- Messages d'erreur en français
-- Toutes les fonctionnalités opérationnelles
-
-L'application sera stable et prête pour l'utilisation en production sur http://51.222.111.183
+## 📞 Support
+Si vous rencontrez des problèmes :
+1. Vérifiez les logs : `pm2 logs tomati-production`
+2. Redémarrez : `pm2 restart tomati-production`
+3. Vérifiez la base de données : `psql -h localhost -U tomati -d tomati_db -c "SELECT version();"`
