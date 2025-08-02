@@ -198,11 +198,25 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         });
       } else {
         // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(window.location.href);
-        toast({
-          title: "Lien copié",
-          description: "Le lien du produit a été copié dans le presse-papiers",
-        });
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          toast({
+            title: "Lien copié",
+            description: "Le lien du produit a été copié dans le presse-papiers",
+          });
+        } catch (clipboardError) {
+          // Fallback pour HTTP (non-HTTPS)
+          const textArea = document.createElement('textarea');
+          textArea.value = window.location.href;
+          document.body.appendChild(textArea);
+          textArea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textArea);
+          toast({
+            title: "Lien copié",
+            description: "Le lien du produit a été copié dans le presse-papiers",
+          });
+        }
       }
     } catch (error) {
       console.error('Error sharing:', error);
