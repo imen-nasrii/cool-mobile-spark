@@ -82,7 +82,25 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   // Like product mutation
   const likeMutation = useMutation({
-    mutationFn: (id: string) => apiClient.request(`/products/${id}/like`, { method: 'POST' }),
+    mutationFn: async (id: string) => {
+      const token = localStorage.getItem('authToken');
+      console.log('ProductDetail like - Token:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
+      
+      const response = await fetch(`/api/products/${id}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || 'Request failed');
+      }
+      
+      return response.json();
+    },
     onSuccess: (data: any) => {
       setIsLiked(true);
       toast({

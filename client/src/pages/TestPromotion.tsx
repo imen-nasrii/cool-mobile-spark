@@ -22,7 +22,25 @@ export const TestPromotion = () => {
 
   // Like product mutation
   const likeMutation = useMutation({
-    mutationFn: (productId: string) => apiClient.request(`/products/${productId}/like`, { method: 'POST' }),
+    mutationFn: async (productId: string) => {
+      const token = localStorage.getItem('authToken');
+      console.log('TestPromotion like - Token:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
+      
+      const response = await fetch(`/api/products/${productId}/like`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || 'Request failed');
+      }
+      
+      return response.json();
+    },
     onSuccess: (data: any, productId: string) => {
       toast({
         title: "✅ Produit aimé !",
