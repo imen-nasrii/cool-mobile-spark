@@ -79,6 +79,7 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Product delete functionality**: Added comprehensive delete feature with secure API endpoint, confirmation dialog, owner/admin authorization, and automatic cache invalidation
 - ✅ **Homepage search bar removal**: Completely removed the search section from the homepage for a cleaner, minimalist interface as requested
 - ✅ **Homepage description removal**: Eliminated the descriptive text under the title for an ultra-minimalist design with only logo and title
+- ✅ **Category filtering system fully functional**: Fixed "Voir tout" button behavior and server-side category filtering with proper logging and debugging
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript

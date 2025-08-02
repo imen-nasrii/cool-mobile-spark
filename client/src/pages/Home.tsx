@@ -51,7 +51,14 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   ];
 
   const handleCategorySelect = (categoryId: string) => {
-    setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
+    console.log('Category selected:', categoryId, 'current:', selectedCategory);
+    if (categoryId === "") {
+      // "Toutes les catégories" clicked - always set to empty
+      setSelectedCategory("");
+    } else {
+      // Other category clicked - toggle if same, otherwise set
+      setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
+    }
   };
 
   // Like product mutation
@@ -182,7 +189,10 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-4 scrollbar-hide">
           <Button
             variant={selectedCategory === "" ? "default" : "outline"}
-            onClick={() => handleCategorySelect("")}
+            onClick={() => {
+              console.log('Toutes les catégories clicked - resetting category');
+              handleCategorySelect("");
+            }}
             className="whitespace-nowrap rounded-full px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium shadow-lg"
           >
             <Grid3X3 size={16} className="mr-2" />
