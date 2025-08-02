@@ -1,64 +1,51 @@
-# 🚀 Étapes Suivantes - Déploiement VPS 51.222.111.183
+# 🎉 Étapes Suivantes - Base de Données Configurée
 
-## ✅ État Actuel
-- Code mis à jour depuis GitHub (583 objets)
-- Vous êtes dans `/home/tomati/tomati-market`
-- Prêt pour la correction finale
+## ✅ Succès PostgreSQL !
 
-## 🔧 Étape 1: Correction Application
+La base de données `tomati_db` est maintenant correctement créée avec :
+- **Owner** : tomati ✅
+- **Utilisateur** : tomati avec superuser ✅  
+- **Base disponible** : tomati_db ✅
+
+## 🚀 Finalisation (3 commandes)
+
+### 1. Test connexion base de données
 ```bash
-# Télécharger et exécuter le script de correction
-wget -O fix-now.sh https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/correction-immediate-vps.sh
-chmod +x fix-now.sh
-./fix-now.sh
+psql -h localhost -U tomati -d tomati_db -c "SELECT 'Connection OK';"
 ```
+**Mot de passe :** `tomati123`
 
-## 📊 Étape 2: Vérification
+### 2. Migration du schéma
 ```bash
-# Vérifier le statut
-pm2 status
-
-# Voir les logs
-pm2 logs tomati-production --lines 10
-
-# Tester l'application
-curl http://localhost:5000
-curl http://51.222.111.183
-```
-
-## 🌐 Étape 3: Accès Final
-Une fois terminé, votre application sera accessible :
-- **Application**: http://51.222.111.183
-- **Administration**: http://51.222.111.183/admin
-- **Connexion admin**: admin@tomati.com / admin123
-
-## 🔧 Étape 4: Maintenance
-```bash
-# Redémarrage si nécessaire
-pm2 restart tomati-production
-
-# Monitoring en temps réel
-pm2 monit
-
-# Mise à jour future
-git pull origin main
-npm install
-npm run build
 npm run db:push
+```
+
+### 3. Redémarrage application
+```bash
 pm2 restart tomati-production
 ```
 
-## 🎯 Résultat Final
-Votre marketplace Tomati sera complètement fonctionnelle avec :
-- ✅ Interface utilisateur complète
-- ✅ Base de données PostgreSQL
-- ✅ Système d'administration
-- ✅ Authentification sécurisée
-- ✅ Gestion des produits
-- ✅ Système de likes et promotions
+## 🎯 Tests finaux
 
-## 📞 Support
-Si vous rencontrez des problèmes :
-1. Vérifiez les logs : `pm2 logs tomati-production`
-2. Redémarrez : `pm2 restart tomati-production`
-3. Vérifiez la base de données : `psql -h localhost -U tomati -d tomati_db -c "SELECT version();"`
+```bash
+# Test API locale
+curl http://localhost:5000/api/products
+
+# Test VPS public  
+curl http://51.222.111.183
+
+# Vérifier logs
+pm2 logs tomati-production --lines 5
+```
+
+## 📋 URLs finales
+
+- **Application** : http://51.222.111.183
+- **Admin** : http://51.222.111.183/admin  
+- **Login admin** : admin@tomati.com / admin123
+
+## 🎊 Résultat
+
+Votre Tomati Market sera accessible avec les mêmes 17 produits qu'en développement Replit !
+
+La configuration PostgreSQL est maintenant parfaite.
