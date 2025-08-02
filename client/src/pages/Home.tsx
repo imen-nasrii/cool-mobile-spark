@@ -115,12 +115,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
           <div className="text-center mb-8">
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-              <img 
-                src="/tomati-logo.jpg" 
-                alt="Tomati Market Logo" 
-                className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover shadow-lg"
-              />
+            <div className="flex flex-col items-center justify-center mb-4">
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-heading font-bold text-gray-900 text-center">
                 Tomati <span className="text-primary">Market</span>
               </h1>

@@ -80,6 +80,7 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Homepage search bar removal**: Completely removed the search section from the homepage for a cleaner, minimalist interface as requested
 - ✅ **Homepage description removal**: Eliminated the descriptive text under the title for an ultra-minimalist design with only logo and title
 - ✅ **Category filtering system fully functional**: Fixed "Voir tout" button behavior and server-side category filtering with proper logging and debugging
+- ✅ **Logo removal from homepage**: Removed Tomati logo from homepage header for even more minimalist design with title only
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript
