@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 
 interface HeaderProps {
   activeTab?: string;
@@ -14,7 +14,7 @@ interface HeaderProps {
 export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,21 +24,26 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
         onSearch(searchQuery.trim());
       } else {
         // Otherwise navigate to a search results page
-        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        setLocation(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
       }
     }
   };
 
   const handlePublishAd = () => {
-    // Navigate to home with add tab active
-    navigate('/?tab=add');
+    // Use the onTabChange callback to switch to add tab
+    if (onTabChange) {
+      onTabChange('add');
+    } else {
+      // Fallback to navigation
+      setLocation('/post');
+    }
   };
 
   const handleConnect = () => {
     if (user) {
-      navigate('/profile');
+      setLocation('/profile');
     } else {
-      navigate('/auth');
+      setLocation('/auth');
     }
   };
 
