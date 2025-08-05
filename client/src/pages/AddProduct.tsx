@@ -440,10 +440,11 @@ export const AddProduct = ({ activeTab, onTabChange }: {
                 <Button
                   type="button"
                   onClick={() => setShowIconMenu(true)}
-                  className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                  className="bg-red-500 hover:bg-red-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
                   size="sm"
+                  style={{ animation: 'pulse 2s infinite' }}
                 >
-                  <Plus size={16} />
+                  <Plus size={18} />
                 </Button>
               </div>
               
@@ -490,77 +491,58 @@ export const AddProduct = ({ activeTab, onTabChange }: {
 
               {/* Floating Icon Menu */}
               {showIconMenu && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-                  <div className="bg-white rounded-2xl p-6 w-full max-w-md">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-semibold">Ajouter une catégorie</h3>
-                      <Button
-                        onClick={() => setShowIconMenu(false)}
-                        variant="ghost"
-                        size="sm"
-                        className="p-1"
-                      >
-                        <X size={20} />
-                      </Button>
+                <div className="fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center p-4">
+                  <div className="relative">
+                    {/* Central Add Button */}
+                    <div className="relative w-16 h-16 bg-red-500 rounded-full flex items-center justify-center shadow-lg">
+                      <Plus size={24} className="text-white" />
                     </div>
                     
-                    <Input
-                      placeholder="Nom de la catégorie"
-                      value={newCategoryName}
-                      onChange={(e) => setNewCategoryName(e.target.value)}
-                      className="mb-4"
-                    />
+                    {/* Floating Icons in Circle */}
+                    {availableIcons.map((iconItem, index) => {
+                      const Icon = iconItem.icon;
+                      const angle = (index * 360) / availableIcons.length;
+                      const radius = 120;
+                      const x = Math.cos((angle * Math.PI) / 180) * radius;
+                      const y = Math.sin((angle * Math.PI) / 180) * radius;
+                      const isSelected = selectedIcon === iconItem.name;
+                      
+                      return (
+                        <div
+                          key={iconItem.name}
+                          onClick={() => {
+                            setSelectedIcon(iconItem.name);
+                            // Optionally open input for category name
+                            const categoryName = prompt("Nom de la catégorie:");
+                            if (categoryName && categoryName.trim()) {
+                              createCategoryMutation.mutate({
+                                name: categoryName.trim(),
+                                icon: iconItem.name
+                              });
+                            }
+                          }}
+                          className={`
+                            absolute w-14 h-14 rounded-full flex items-center justify-center cursor-pointer
+                            transition-all duration-300 transform hover:scale-110 shadow-lg
+                            ${iconItem.color}
+                          `}
+                          style={{
+                            left: `calc(50% + ${x}px - 28px)`,
+                            top: `calc(50% + ${y}px - 28px)`,
+                            animation: `fadeInScale 0.3s ease-out ${index * 0.1}s both`
+                          }}
+                        >
+                          <Icon size={20} className="text-white" />
+                        </div>
+                      );
+                    })}
                     
-                    <p className="text-sm text-gray-600 mb-3">Choisir une icône :</p>
-                    <div className="grid grid-cols-4 gap-3 mb-4">
-                      {availableIcons.map((iconItem) => {
-                        const Icon = iconItem.icon;
-                        const isSelected = selectedIcon === iconItem.name;
-                        return (
-                          <div
-                            key={iconItem.name}
-                            onClick={() => setSelectedIcon(iconItem.name)}
-                            className={`
-                              p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 text-center
-                              ${isSelected 
-                                ? 'border-red-500 bg-red-50' 
-                                : 'border-gray-200 hover:border-gray-300'
-                              }
-                            `}
-                          >
-                            <div className={`
-                              w-8 h-8 mx-auto rounded-full flex items-center justify-center
-                              ${isSelected ? iconItem.color : 'bg-gray-100'}
-                            `}>
-                              <Icon size={16} className={isSelected ? 'text-white' : 'text-gray-600'} />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => setShowIconMenu(false)}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        Annuler
-                      </Button>
-                      <Button
-                        onClick={() => {
-                          if (newCategoryName.trim() && selectedIcon) {
-                            createCategoryMutation.mutate({
-                              name: newCategoryName.trim(),
-                              icon: selectedIcon
-                            });
-                          }
-                        }}
-                        disabled={!newCategoryName.trim() || !selectedIcon || createCategoryMutation.isPending}
-                        className="flex-1 bg-red-500 hover:bg-red-600"
-                      >
-                        {createCategoryMutation.isPending ? 'Création...' : 'Créer'}
-                      </Button>
+                    {/* Close Button */}
+                    <div
+                      onClick={() => setShowIconMenu(false)}
+                      className="absolute -top-4 -right-4 w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center cursor-pointer hover:bg-gray-700 transition-colors shadow-lg"
+                    >
+                      <X size={16} className="text-white" />
                     </div>
                   </div>
                 </div>
