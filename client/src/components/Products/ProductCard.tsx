@@ -6,6 +6,13 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useState } from "react";
 
+// Format price in TND (Tunisian Dinar)
+const formatPrice = (price: string | number) => {
+  const numPrice = Number(price);
+  if (numPrice === 0) return "Gratuit";
+  return `${numPrice.toLocaleString()} TND`;
+};
+
 interface Product {
   id: string;
   title: string;
@@ -85,7 +92,7 @@ export const ProductCard = ({
           </h3>
           
           <div className="text-sm sm:text-lg font-bold text-primary mb-1 sm:mb-2">
-            {product.isFree ? "Gratuit" : `${product.price} TND`}
+            {product.isFree ? "Gratuit" : formatPrice(product.price)}
           </div>
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">

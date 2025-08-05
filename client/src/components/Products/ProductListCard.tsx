@@ -6,6 +6,13 @@ import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useState } from "react";
 
+// Format price in TND (Tunisian Dinar)
+const formatPrice = (price: string | number) => {
+  const numPrice = Number(price);
+  if (numPrice === 0) return "Gratuit";
+  return `${numPrice.toLocaleString()} TND`;
+};
+
 interface Product {
   id: string;
   title: string;
@@ -119,7 +126,7 @@ export const ProductListCard = ({
             </h3>
             
             <div className="text-lg font-bold text-primary mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-              {product.isFree ? "Gratuit" : `${product.price} TND`}
+              {product.isFree ? "Gratuit" : formatPrice(product.price)}
             </div>
             
             <div className="flex items-center text-xs text-muted-foreground mb-2">
@@ -127,81 +134,7 @@ export const ProductListCard = ({
               <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.location}</span>
             </div>
             
-            {/* Complete vehicle characteristics like Tesla Model 3 example */}
-            {(product.category?.toLowerCase() === 'voitures' || product.category?.toLowerCase() === 'voiture' || product.category?.toLowerCase() === 'vehicles') && (
-              <div className="mb-2 p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2 text-xs flex items-center gap-1" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  <Car size={12} />
-                  Caractéristiques du véhicule
-                </h4>
-                
-                {/* Main vehicle details */}
-                <div className="grid grid-cols-2 gap-1 text-xs mb-2">
-                  {product.brand && (
-                    <div>
-                      <span className="text-gray-600">Marque</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.brand}</div>
-                    </div>
-                  )}
-                  {product.model && (
-                    <div>
-                      <span className="text-gray-600">Modèle</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.model}</div>
-                    </div>
-                  )}
-                  {product.year && (
-                    <div>
-                      <span className="text-gray-600">Année</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.year}</div>
-                    </div>
-                  )}
-                  {product.mileage && (
-                    <div>
-                      <span className="text-gray-600">Kilométrage</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{Number(product.mileage).toLocaleString()} km</div>
-                    </div>
-                  )}
-                  {product.fuel_type && (
-                    <div>
-                      <span className="text-gray-600">Carburant</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.fuel_type}</div>
-                    </div>
-                  )}
-                  {product.transmission && (
-                    <div>
-                      <span className="text-gray-600">Transmission</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.transmission}</div>
-                    </div>
-                  )}
-                  {product.condition && (
-                    <div>
-                      <span className="text-gray-600">État</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.condition}</div>
-                    </div>
-                  )}
-                  {product.color && (
-                    <div>
-                      <span className="text-gray-600">Couleur</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.color}</div>
-                    </div>
-                  )}
-                  {product.doors && (
-                    <div>
-                      <span className="text-gray-600">Portes</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.doors} portes</div>
-                    </div>
-                  )}
-                  {product.power && (
-                    <div>
-                      <span className="text-gray-600">Puissance</span>
-                      <div className="font-medium text-blue-800 dark:text-blue-200" style={{ fontFamily: 'Arial, sans-serif' }}>{product.power}</div>
-                    </div>
-                  )}
-                </div>
 
-
-              </div>
-            )}
             
             {/* Real estate details */}
             {product.category?.toLowerCase() === 'immobilier' && (
