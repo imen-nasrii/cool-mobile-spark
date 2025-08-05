@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Car, Building, Briefcase, Grid3X3, SlidersHorizontal, TrendingUp, MapPin, Users, Star, Heart, ShoppingBag, Zap, Shield, Clock } from "lucide-react";
+import { Car, Building, Briefcase, Grid3X3, SlidersHorizontal, TrendingUp, MapPin, Star, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,12 +27,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  // Fetch statistics for the homepage
-  const { data: stats } = useQuery({
-    queryKey: ['/stats'],
-    queryFn: () => apiClient.request('/stats'),
-    staleTime: 5 * 60 * 1000,
-  });
+
 
   // Fetch promoted products
   const { data: promotedProducts } = useQuery({
@@ -251,36 +246,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       {/* Footer Ad Banner */}
       <AdBanner position="footer" category={selectedCategory} className="mt-8 relative z-10" />
       
-      {/* Statistics Section */}
-      {stats && (
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="bg-gradient-to-r from-primary/5 to-blue-50 rounded-2xl p-6 sm:p-8">
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6 text-center">Notre Communauté</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="text-center p-4 bg-white rounded-xl shadow-sm">
-                <ShoppingBag className="mx-auto mb-2 text-primary" size={24} />
-                <div className="text-2xl font-bold text-gray-900">{stats.totalProducts}</div>
-                <div className="text-sm text-gray-600">Produits</div>
-              </div>
-              <div className="text-center p-4 bg-white rounded-xl shadow-sm">
-                <Users className="mx-auto mb-2 text-green-600" size={24} />
-                <div className="text-2xl font-bold text-gray-900">{stats.totalUsers}</div>
-                <div className="text-sm text-gray-600">Utilisateurs</div>
-              </div>
-              <div className="text-center p-4 bg-white rounded-xl shadow-sm">
-                <Zap className="mx-auto mb-2 text-yellow-600" size={24} />
-                <div className="text-2xl font-bold text-gray-900">24h</div>
-                <div className="text-sm text-gray-600">Support</div>
-              </div>
-              <div className="text-center p-4 bg-white rounded-xl shadow-sm">
-                <Shield className="mx-auto mb-2 text-blue-600" size={24} />
-                <div className="text-2xl font-bold text-gray-900">100%</div>
-                <div className="text-sm text-gray-600">Sécurisé</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
