@@ -27,8 +27,7 @@ node --version  # Vérifier la version
 
 ### Installation de PostgreSQL
 ```bash
-apt install postgresql postgresql-contrib -y
-systemctl start postgresql
+Qsystemctl start postgresql
 systemctl enable postgresql
 
 # Créer utilisateur et base de données
