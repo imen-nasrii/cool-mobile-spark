@@ -56,6 +56,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   };
 
+  const formatPrice = (price: string) => {
+    if (!price) return '';
+    // Remove any existing currency symbols
+    const cleanPrice = price.replace(/[€$TND]/g, '').trim();
+    return `${cleanPrice} TND`;
+  };
+
   // Use React Query to fetch product
   const { data: productData, isLoading } = useQuery({
     queryKey: ['/products', productId],
@@ -580,6 +587,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="space-y-3">
             <div>
               <h2 className="text-2xl font-bold text-foreground mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>{product.title}</h2>
+              <div className="text-2xl font-bold text-primary mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                {product.is_free ? 'Gratuit' : formatPrice(product.price)}
+              </div>
               <div className="flex gap-2 mb-3">
                 <Badge variant="secondary">{product.category}</Badge>
                 {product.is_free && (
@@ -869,7 +879,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   </div>
                   
                   <div className="flex items-baseline gap-3">
-                    <span className="text-4xl font-bold text-primary">{product.price}</span>
+                    <span className="text-4xl font-bold text-primary">{product.is_free ? 'Gratuit' : formatPrice(product.price)}</span>
                   </div>
                   
                   <div className="flex items-center gap-2 text-muted-foreground">

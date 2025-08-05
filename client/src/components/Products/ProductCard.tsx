@@ -85,7 +85,7 @@ export const ProductCard = ({
           </h3>
           
           <div className="text-sm sm:text-lg font-bold text-primary mb-1 sm:mb-2">
-            {product.isFree ? "Gratuit" : product.price}
+            {product.isFree ? "Gratuit" : `${product.price} TND`}
           </div>
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">

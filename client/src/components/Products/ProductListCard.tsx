@@ -119,7 +119,7 @@ export const ProductListCard = ({
             </h3>
             
             <div className="text-lg font-bold text-primary mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-              {product.isFree ? "Gratuit" : product.price}
+              {product.isFree ? "Gratuit" : `${product.price} TND`}
             </div>
             
             <div className="flex items-center text-xs text-muted-foreground mb-2">
