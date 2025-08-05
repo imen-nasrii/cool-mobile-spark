@@ -16,15 +16,25 @@ interface HomeProps {
   onProductClick?: (productId: string) => void;
   activeTab?: string;
   onTabChange?: (tab: string) => void;
+  searchTerm?: string;
 }
 
-export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
+export const Home = ({ onProductClick, activeTab, onTabChange, searchTerm: externalSearchTerm }: HomeProps) => {
   const [sortBy, setSortBy] = useState<string>("date");
   const [showFilters, setShowFilters] = useState(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+
+  // Use external search term if provided, otherwise use local state
+  const effectiveSearchTerm = externalSearchTerm || searchTerm;
+
+  const handleSearch = (query: string) => {
+    setSearchTerm(query);
+    // The ProductGrid will automatically update with the new search term
+  };
 
   // Fetch promoted products
   const { data: promotedProducts } = useQuery({
@@ -182,7 +192,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       <div className="max-w-7xl mx-auto px-4 mb-6">
         <ProductGrid 
           sortBy={sortBy}
-          searchTerm=""
+          searchTerm={effectiveSearchTerm}
           onProductClick={onProductClick}
           onProductLike={handleProductLike}
           onProductMessage={handleProductMessage}

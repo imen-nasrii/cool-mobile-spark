@@ -3,28 +3,41 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Header = ({ activeTab, onTabChange }: { activeTab?: string; onTabChange?: (tab: string) => void }) => {
+interface HeaderProps {
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+  onSearch?: (query: string) => void;
+}
+
+export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle search functionality here
-    console.log("Searching for:", searchQuery);
+    if (searchQuery.trim()) {
+      // If we have a search callback, use it (for home page)
+      if (onSearch) {
+        onSearch(searchQuery.trim());
+      } else {
+        // Otherwise navigate to a search results page
+        navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    }
   };
 
   const handlePublishAd = () => {
-    window.location.href = '/post';
+    navigate('/post');
   };
 
   const handleConnect = () => {
     if (user) {
-      // User is logged in, show profile menu or logout
-      window.location.href = '/profile';
+      navigate('/profile');
     } else {
-      // User is not logged in, redirect to login
-      window.location.href = '/auth';
+      navigate('/auth');
     }
   };
 

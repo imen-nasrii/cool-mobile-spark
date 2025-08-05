@@ -32,9 +32,20 @@ const Index = () => {
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
+  const [homeSearchTerm, setHomeSearchTerm] = useState<string>("");
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  const handleSearch = (query: string) => {
+    if (activeTab === "home") {
+      setHomeSearchTerm(query);
+    } else {
+      // Switch to search tab and perform search
+      setActiveTab("search");
+      // The Search component will handle its own search state
+    }
+  };
 
   // Check URL for tab parameter
   useEffect(() => {
@@ -107,7 +118,7 @@ const Index = () => {
   const renderContent = () => {
     switch (activeTab) {
       case "home":
-        return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} searchTerm={homeSearchTerm} />;
       case "search":
         return <Search activeTab={activeTab} onTabChange={handleTabChange} onProductClick={handleProductClick} />;
       case "add":
@@ -121,7 +132,7 @@ const Index = () => {
       case "notifications":
         return <Notifications activeTab={activeTab} onTabChange={handleTabChange} />;
       default:
-        return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} searchTerm={homeSearchTerm} />;
     }
   };
 
@@ -135,7 +146,7 @@ const Index = () => {
         />
       ) : (
         <>
-          <Header activeTab={activeTab} onTabChange={handleTabChange} />
+          <Header activeTab={activeTab} onTabChange={handleTabChange} onSearch={handleSearch} />
           
           {renderContent()}
           
