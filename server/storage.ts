@@ -1,5 +1,4 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
+import { db } from "./db";
 import { eq, desc, or, sql, and, isNull } from "drizzle-orm";
 import { 
   users, profiles, categories, products, advertisements, product_likes,
@@ -9,10 +8,6 @@ import {
   type Product, type InsertProduct,
   type Advertisement, type InsertAdvertisement
 } from "@shared/schema";
-
-const connectionString = process.env.DATABASE_URL!;
-const client = postgres(connectionString);
-export const db = drizzle(client);
 
 export interface IStorage {
   // Users
@@ -226,7 +221,7 @@ export class DatabaseStorage implements IStorage {
     const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
     return await db.select().from(advertisements)
-      .where(whereClause!)
+      .where(whereClause)
       .orderBy(desc(advertisements.created_at));
   }
 
