@@ -166,7 +166,7 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
 
     // Price filtering
     filtered = filtered.filter(p => {
-      const price = parseFloat(p.price.replace(/[€,]/g, ''));
+      const price = parseFloat(p.price.replace(/[TND,]/g, ''));
       return price >= activeFilters.minPrice && price <= activeFilters.maxPrice;
     });
 
@@ -199,8 +199,8 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
       
       switch (activeFilters.sortBy) {
         case "price":
-          const priceA = parseFloat(a.price.replace(/[€,]/g, ''));
-          const priceB = parseFloat(b.price.replace(/[€,]/g, ''));
+          const priceA = parseFloat(a.price.replace(/[TND,]/g, ''));
+          const priceB = parseFloat(b.price.replace(/[TND,]/g, ''));
           comparison = priceA - priceB;
           break;
         case "title":

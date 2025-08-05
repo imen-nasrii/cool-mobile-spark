@@ -272,7 +272,7 @@ export const ProductManager = () => {
                       <FormItem>
                         <FormLabel>Prix *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Ex: 1200€" {...field} />
+                          <Input placeholder="Ex: 1200TND" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -518,7 +518,7 @@ export const ProductManager = () => {
                     <FormItem>
                       <FormLabel>Prix *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Ex: 1200€" {...field} />
+                        <Input placeholder="Ex: 1200TND" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

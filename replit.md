@@ -92,6 +92,8 @@ A full-stack e-commerce marketplace application successfully migrated from Lovab
 - ✅ **Full application accessibility**: HTML page loading with proper assets (index-De4CZ0e6.js, index-D_9e7_37.css)
 - ✅ **PM2 production stable**: tomati-production process online and functional with 17 products data sync
 - ✅ **Notre Communauté section removed**: Eliminated statistics block (products, users, support, security) for ultra-minimalist design
+- ✅ **Vehicle characteristics simplified**: Reduced to only year and mileage in product detail pages
+- ✅ **Currency converted to TND**: Changed all price displays from EUR (euros) to TND (Tunisian dinars) across the application
 
 ## Technical Stack
 - **Languages**: TypeScript, JavaScript

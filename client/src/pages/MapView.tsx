@@ -249,7 +249,7 @@ export default function MapView() {
               {/* Price Range */}
               <div>
                 <label className="text-sm font-medium mb-2 block">
-                  Prix: {priceRange[0]}€ - {priceRange[1]}€
+                  Prix: {priceRange[0]}TND - {priceRange[1]}TND
                 </label>
                 <Slider
                   value={priceRange}

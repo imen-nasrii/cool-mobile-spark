@@ -264,8 +264,8 @@ export const AdvancedFilters = ({ onFiltersChange, onClearFilters, isOpen, onTog
                     className="w-full"
                   />
                   <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                    <span>{priceRange[0]}€</span>
-                    <span>{priceRange[1]}€</span>
+                    <span>{priceRange[0]}TND</span>
+                    <span>{priceRange[1]}TND</span>
                   </div>
                 </div>
               </div>
@@ -340,7 +340,7 @@ export const AdvancedFilters = ({ onFiltersChange, onClearFilters, isOpen, onTog
                     )}
                     {(filters.minPrice > 0 || filters.maxPrice < 10000) && (
                       <Badge variant="outline" className="text-xs">
-                        💰 {filters.minPrice}€ - {filters.maxPrice}€
+                        💰 {filters.minPrice}TND - {filters.maxPrice}TND
                       </Badge>
                     )}
                     {filters.freeOnly && (
