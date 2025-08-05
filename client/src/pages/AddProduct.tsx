@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings, Smartphone, Dumbbell, Shirt } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings, Smartphone, Dumbbell, Shirt, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,18 +8,32 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
-const categories = [
-  { id: "auto", name: "Voiture", icon: Car, color: "bg-blue-500" },
-  { id: "immobilier", name: "Immobilier", icon: Building, color: "bg-green-500" },
-  { id: "emplois", name: "Emplois", icon: Briefcase, color: "bg-purple-500" },
-  { id: "electronique", name: "Électronique", icon: Smartphone, color: "bg-orange-500" },
-  { id: "sport", name: "Sport", icon: Dumbbell, color: "bg-red-500" },
-  { id: "mode", name: "Mode", icon: Shirt, color: "bg-pink-500" },
-  { id: "autres", name: "Autres", icon: Grid3X3, color: "bg-gray-500" }
+// Icon mapping for categories
+const iconMap: Record<string, any> = {
+  'Car': Car,
+  'Building': Building,
+  'Briefcase': Briefcase,
+  'Smartphone': Smartphone,
+  'Dumbbell': Dumbbell,
+  'Shirt': Shirt,
+  'Grid3X3': Grid3X3,
+  'Settings': Settings
+};
+
+// Available icons for floating menu
+const availableIcons = [
+  { name: 'Car', icon: Car, color: 'bg-blue-500' },
+  { name: 'Building', icon: Building, color: 'bg-green-500' },
+  { name: 'Briefcase', icon: Briefcase, color: 'bg-purple-500' },
+  { name: 'Smartphone', icon: Smartphone, color: 'bg-orange-500' },
+  { name: 'Dumbbell', icon: Dumbbell, color: 'bg-red-500' },
+  { name: 'Shirt', icon: Shirt, color: 'bg-pink-500' },
+  { name: 'Settings', icon: Settings, color: 'bg-indigo-500' },
+  { name: 'Grid3X3', icon: Grid3X3, color: 'bg-gray-500' }
 ];
 
 const carBrands = [
@@ -106,6 +120,9 @@ export const AddProduct = ({ activeTab, onTabChange }: {
   onTabChange?: (tab: string) => void;
 }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [showIconMenu, setShowIconMenu] = useState(false);
+  const [selectedIcon, setSelectedIcon] = useState<string>("");
+  const [newCategoryName, setNewCategoryName] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     brand: "",
@@ -147,6 +164,35 @@ export const AddProduct = ({ activeTab, onTabChange }: {
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useLanguage();
+
+  // Load categories from database
+  const { data: categoriesData = [], isLoading: categoriesLoading } = useQuery({
+    queryKey: ['/api/categories'],
+    queryFn: () => apiClient.getCategories(),
+  });
+
+  // Create category mutation
+  const createCategoryMutation = useMutation({
+    mutationFn: (categoryData: { name: string; icon: string }) => 
+      apiClient.createCategory(categoryData),
+    onSuccess: () => {
+      toast({
+        title: "Succès!",
+        description: "Nouvelle catégorie créée avec succès",
+      });
+      queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
+      setShowIconMenu(false);
+      setNewCategoryName("");
+      setSelectedIcon("");
+    },
+    onError: () => {
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de la création de la catégorie",
+        variant: "destructive"
+      });
+    }
+  });
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -388,43 +434,137 @@ export const AddProduct = ({ activeTab, onTabChange }: {
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Category Selection */}
-            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
-              <label className="block text-sm sm:text-base font-medium mb-4">Catégorie *</label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {categories.map((category) => {
-                  const Icon = category.icon;
-                  const isSelected = selectedCategory === category.id;
-                  return (
-                    <div
-                      key={category.id}
-                      onClick={() => setSelectedCategory(category.id)}
-                      className={`
-                        p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center
-                        ${isSelected 
-                          ? 'border-red-500 bg-red-50 shadow-lg scale-105' 
-                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
-                        }
-                      `}
-                    >
-                      <div className={`
-                        w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center
-                        ${isSelected ? category.color : 'bg-gray-100'}
-                      `}>
-                        <Icon 
-                          size={24} 
-                          className={isSelected ? 'text-white' : 'text-gray-600'} 
-                        />
-                      </div>
-                      <p className={`
-                        text-sm font-medium
-                        ${isSelected ? 'text-red-600' : 'text-gray-700'}
-                      `}>
-                        {category.name}
-                      </p>
-                    </div>
-                  );
-                })}
+            <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 relative">
+              <div className="flex justify-between items-center mb-4">
+                <label className="block text-sm sm:text-base font-medium">Catégorie *</label>
+                <Button
+                  type="button"
+                  onClick={() => setShowIconMenu(true)}
+                  className="bg-red-500 hover:bg-red-600 text-white p-2 rounded-full"
+                  size="sm"
+                >
+                  <Plus size={16} />
+                </Button>
               </div>
+              
+              {categoriesLoading ? (
+                <div className="text-center py-8">Chargement des catégories...</div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {categoriesData.map((category: any) => {
+                    const Icon = iconMap[category.icon] || Grid3X3;
+                    const isSelected = selectedCategory === category.name;
+                    const colorClass = availableIcons.find(icon => icon.name === category.icon)?.color || 'bg-gray-500';
+                    return (
+                      <div
+                        key={category.id}
+                        onClick={() => setSelectedCategory(category.name)}
+                        className={`
+                          p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center
+                          ${isSelected 
+                            ? 'border-red-500 bg-red-50 shadow-lg scale-105' 
+                            : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                          }
+                        `}
+                      >
+                        <div className={`
+                          w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center
+                          ${isSelected ? colorClass : 'bg-gray-100'}
+                        `}>
+                          <Icon 
+                            size={24} 
+                            className={isSelected ? 'text-white' : 'text-gray-600'} 
+                          />
+                        </div>
+                        <p className={`
+                          text-sm font-medium
+                          ${isSelected ? 'text-red-600' : 'text-gray-700'}
+                        `}>
+                          {category.name}
+                        </p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {/* Floating Icon Menu */}
+              {showIconMenu && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                  <div className="bg-white rounded-2xl p-6 w-full max-w-md">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-lg font-semibold">Ajouter une catégorie</h3>
+                      <Button
+                        onClick={() => setShowIconMenu(false)}
+                        variant="ghost"
+                        size="sm"
+                        className="p-1"
+                      >
+                        <X size={20} />
+                      </Button>
+                    </div>
+                    
+                    <Input
+                      placeholder="Nom de la catégorie"
+                      value={newCategoryName}
+                      onChange={(e) => setNewCategoryName(e.target.value)}
+                      className="mb-4"
+                    />
+                    
+                    <p className="text-sm text-gray-600 mb-3">Choisir une icône :</p>
+                    <div className="grid grid-cols-4 gap-3 mb-4">
+                      {availableIcons.map((iconItem) => {
+                        const Icon = iconItem.icon;
+                        const isSelected = selectedIcon === iconItem.name;
+                        return (
+                          <div
+                            key={iconItem.name}
+                            onClick={() => setSelectedIcon(iconItem.name)}
+                            className={`
+                              p-3 rounded-lg border-2 cursor-pointer transition-all duration-200 text-center
+                              ${isSelected 
+                                ? 'border-red-500 bg-red-50' 
+                                : 'border-gray-200 hover:border-gray-300'
+                              }
+                            `}
+                          >
+                            <div className={`
+                              w-8 h-8 mx-auto rounded-full flex items-center justify-center
+                              ${isSelected ? iconItem.color : 'bg-gray-100'}
+                            `}>
+                              <Icon size={16} className={isSelected ? 'text-white' : 'text-gray-600'} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => setShowIconMenu(false)}
+                        variant="outline"
+                        className="flex-1"
+                      >
+                        Annuler
+                      </Button>
+                      <Button
+                        onClick={() => {
+                          if (newCategoryName.trim() && selectedIcon) {
+                            createCategoryMutation.mutate({
+                              name: newCategoryName.trim(),
+                              icon: selectedIcon
+                            });
+                          }
+                        }}
+                        disabled={!newCategoryName.trim() || !selectedIcon || createCategoryMutation.isPending}
+                        className="flex-1 bg-red-500 hover:bg-red-600"
+                      >
+                        {createCategoryMutation.isPending ? 'Création...' : 'Créer'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             {/* Title */}
             <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
