@@ -216,10 +216,7 @@ const Index = () => {
             <AIChatToggle onClick={() => setShowAIChat(true)} />
           )}
 
-          {/* Floating Add Button - Only show on home tab */}
-          {activeTab === "home" && (
-            <FloatingAddButton onCategorySelect={handleFloatingCategorySelect} />
-          )}
+
 
 
         </>
