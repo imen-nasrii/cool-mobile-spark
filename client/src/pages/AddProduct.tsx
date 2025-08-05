@@ -116,11 +116,12 @@ const jobUrgencies = [
   { value: "tres_urgent", label: "Très urgent" }
 ];
 
-export const AddProduct = ({ activeTab, onTabChange }: { 
+export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelectedCategory }: { 
   activeTab?: string; 
   onTabChange?: (tab: string) => void;
+  selectedCategory?: string;
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState(preSelectedCategory || "");
   const [showIconMenu, setShowIconMenu] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<string>("");
   const [newCategoryName, setNewCategoryName] = useState("");

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { FloatingAddButton } from "@/components/UI/FloatingAddButton";
 import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell, Car, Building, Briefcase, Grid3X3, X, Heart } from "lucide-react";
 import { Home as HomePage } from "./Home";
 import MessagesPage from "./Messages";
@@ -33,6 +34,7 @@ const Index = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showAIChat, setShowAIChat] = useState(false);
   const [homeSearchTerm, setHomeSearchTerm] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
@@ -119,6 +121,24 @@ const Index = () => {
     });
   };
 
+  const handleFloatingCategorySelect = (categoryId: string) => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour publier une annonce.",
+        variant: "destructive",
+      });
+      navigate("/auth");
+      return;
+    }
+    setActiveTab("add");
+    setSelectedCategory(categoryId);
+    toast({
+      title: "Catégorie sélectionnée",
+      description: `Ajout d'une annonce: ${categories.find(c => c.id === categoryId)?.name}`,
+    });
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case "home":
@@ -126,7 +146,7 @@ const Index = () => {
       case "search":
         return <Search activeTab={activeTab} onTabChange={handleTabChange} onProductClick={handleProductClick} />;
       case "add":
-        return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} />;
+        return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} selectedCategory={selectedCategory} />;
       case "messages":
         return <MessagesPage />;
       case "profile":
@@ -194,6 +214,11 @@ const Index = () => {
             />
           ) : (
             <AIChatToggle onClick={() => setShowAIChat(true)} />
+          )}
+
+          {/* Floating Add Button - Only show on home tab */}
+          {activeTab === "home" && (
+            <FloatingAddButton onCategorySelect={handleFloatingCategorySelect} />
           )}
 
 
