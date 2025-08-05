@@ -36,6 +36,7 @@ export const products = pgTable("products", {
   price: text("price").notNull(),
   location: text("location").notNull(),
   image_url: text("image_url"),
+  images: text("images"), // JSON array of image URLs
   category: text("category").notNull(),
   likes: integer("likes").default(0).notNull(),
   like_count: integer("like_count").default(0).notNull(),

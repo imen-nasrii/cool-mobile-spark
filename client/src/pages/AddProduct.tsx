@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings, Smartphone, Dumbbell, Shirt, Plus, X } from "lucide-react";
+import { ImageManager } from "@/components/Products/ImageManager";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -194,27 +195,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
     }
   });
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (selectedImages.length + files.length > 8) {
-      toast({
-        title: "Limite atteinte",
-        description: "Maximum 8 images autorisées",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    files.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setSelectedImages(prev => [...prev, event.target!.result as string]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
+
 
   // React Query mutation for creating products
   const createProductMutation = useMutation({
@@ -311,6 +292,7 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         category: selectedCategory,
         is_free: !formData.isPaid,
         image_url: selectedImages[0] || '/src/assets/tesla-model3.jpg',
+        images: JSON.stringify(selectedImages),
         // Car-specific fields
         ...(selectedCategory === "voiture" && {
           car_brand: formData.brand,
@@ -398,38 +380,12 @@ export const AddProduct = ({ activeTab, onTabChange }: {
         <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
           {/* Image Upload */}
           <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
-            <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 sm:p-8 text-center bg-white">
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="hidden"
-                id="image-upload"
-              />
-              <label htmlFor="image-upload" className="cursor-pointer">
-                <Upload size={32} className="sm:w-12 sm:h-12 mx-auto text-gray-400 mb-3 sm:mb-4" />
-                <p className="text-base sm:text-lg font-medium text-gray-700 mb-2">Aperçus de produit</p>
-                <Button type="button" variant="outline" className="mb-3 sm:mb-4 text-sm sm:text-base">
-                  Importer
-                </Button>
-              </label>
-              <div className="text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4">
-                {selectedImages.length}/8
-              </div>
-              {selectedImages.length > 0 && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-4 mt-3 sm:mt-4">
-                  {selectedImages.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-16 sm:h-20 md:h-24 object-cover rounded-lg border"
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Photos du produit</h3>
+            <ImageManager
+              images={selectedImages}
+              onImagesChange={setSelectedImages}
+              maxImages={8}
+            />
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">

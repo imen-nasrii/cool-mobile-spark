@@ -1,283 +1,286 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useLanguage } from "@/hooks/useLanguage";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { useAuth } from "@/hooks/useAuth";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiClient, queryClient } from "@/lib/queryClient";
-import { useLanguage } from "@/hooks/useLanguage";
-import { ProductMap } from "@/components/Map/ProductMap";
-
-const categories = [
-  { id: "voiture", name: "Voiture" },
-  { id: "immobilier", name: "Immobilier" },
-  { id: "emplois", name: "Emplois" },
-  { id: "autres", name: "Autres" }
-];
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ImageManager } from "@/components/Products/ImageManager";
+import { ArrowLeft, Save } from "lucide-react";
+import type { Product } from "@shared/schema";
+import { apiClient } from "@/lib/apiClient";
 
 interface EditProductProps {
   productId: string;
-  onBack?: () => void;
-  onSave?: () => void;
+  onBack: () => void;
+  onSave: () => void;
 }
 
 export const EditProduct = ({ productId, onBack, onSave }: EditProductProps) => {
-  const [loading, setLoading] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [product, setProduct] = useState<any>(null);
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     price: "",
     location: "",
     category: "",
-    is_free: false
+    is_free: false,
   });
+
   const { toast } = useToast();
   const { user } = useAuth();
   const { t } = useLanguage();
+  const queryClient = useQueryClient();
 
+  // Load product data
+  const { data: product, isLoading } = useQuery({
+    queryKey: ['/api/products', productId],
+    queryFn: () => apiClient.getProduct(productId),
+  });
+
+  // Load categories
+  const { data: categoriesData = [] } = useQuery({
+    queryKey: ['/api/categories'],
+    queryFn: () => apiClient.getCategories(),
+  });
+
+  // Update form when product loads
   useEffect(() => {
-    const fetchProduct = async () => {
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('id', productId)
-        .eq('user_id', user.id)
-        .single();
-
-      if (error) {
-        toast({
-          title: "Erreur",
-          description: "Produit non trouvé ou accès refusé",
-          variant: "destructive"
-        });
-        onBack?.();
-        return;
-      }
-
-      setProduct(data);
+    if (product) {
       setFormData({
-        title: data.title || "",
-        description: data.description || "",
-        price: data.price || "",
-        location: data.location || "",
-        category: data.category || "",
-        is_free: data.is_free || false
+        title: product.title || "",
+        description: product.description || "",
+        price: product.price || "",
+        location: product.location || "",
+        category: product.category || "",
+        is_free: product.is_free || false,
       });
-    };
 
-    fetchProduct();
-  }, [productId, user, onBack, toast]);
+      // Load existing images
+      const images = product.images ? JSON.parse(product.images) : [];
+      if (images.length > 0) {
+        setSelectedImages(images);
+      } else if (product.image_url) {
+        setSelectedImages([product.image_url]);
+      }
+    }
+  }, [product]);
 
-  const handleSave = async () => {
-    if (!user || !product) return;
-
-    setLoading(true);
-    try {
-      const { error } = await supabase
-        .from('products')
-        .update({
-          title: formData.title,
-          description: formData.description,
-          price: formData.is_free ? "Free" : formData.price,
-          location: formData.location,
-          category: formData.category,
-          is_free: formData.is_free,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', productId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
+  // Update product mutation
+  const updateProductMutation = useMutation({
+    mutationFn: (updateData: any) => apiClient.updateProduct(productId, updateData),
+    onSuccess: () => {
       toast({
-        title: "Succès",
-        description: "Produit mis à jour avec succès"
+        title: "Succès!",
+        description: "Produit mis à jour avec succès",
       });
-
-      onSave?.();
-    } catch (error: any) {
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/products', productId] });
+      onSave();
+    },
+    onError: (error: any) => {
+      console.error('Error updating product:', error);
       toast({
         title: "Erreur",
         description: error.message || "Impossible de mettre à jour le produit",
         variant: "destructive"
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  });
 
-  const handleDelete = async () => {
-    if (!user || !product) return;
-
-    const confirmed = window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?");
-    if (!confirmed) return;
-
-    setDeleting(true);
-    try {
-      const { error } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', productId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Succès",
-        description: "Produit supprimé avec succès"
-      });
-
-      onBack?.();
-    } catch (error: any) {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!user) {
       toast({
         title: "Erreur",
-        description: error.message || "Impossible de supprimer le produit",
+        description: "Vous devez être connecté pour modifier un produit",
         variant: "destructive"
       });
-    } finally {
-      setDeleting(false);
+      return;
     }
+
+    if (!formData.title || !formData.description || !formData.location) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    updateProductMutation.mutate({
+      title: formData.title,
+      description: formData.description,
+      price: formData.is_free ? "Free" : formData.price,
+      location: formData.location,
+      category: formData.category,
+      is_free: formData.is_free,
+      image_url: selectedImages[0] || product?.image_url,
+      images: JSON.stringify(selectedImages),
+    });
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg font-medium">Chargement...</div>
+        </div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-lg font-medium text-red-600">Produit non trouvé</div>
+          <Button onClick={onBack} className="mt-4">
+            Retour
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pb-20">
-      <div className="sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-200 z-40 px-4 py-4">
+    <div className="min-h-screen pb-20 bg-white">
+      {/* Header */}
+      <div className="sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 px-4 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={onBack}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-xl font-semibold">Modifier le produit</h1>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={handleDelete}
-              disabled={deleting}
-              className="text-red-600 hover:text-red-700"
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="p-2 hover:bg-gray-100 rounded-full"
+              onClick={onBack}
             >
-              <Trash2 className="w-4 h-4" />
+              <ArrowLeft size={20} />
             </Button>
-            <Button
-              onClick={handleSave}
-              disabled={loading}
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {loading ? "Sauvegarde..." : "Sauvegarder"}
-            </Button>
+            <h1 className="text-lg font-semibold">Modifier le produit</h1>
           </div>
+          
+          <Button
+            onClick={handleSubmit}
+            disabled={updateProductMutation.isPending}
+            className="bg-red-500 hover:bg-red-600 text-white gap-2"
+          >
+            <Save size={16} />
+            {updateProductMutation.isPending ? "Sauvegarde..." : "Sauvegarder"}
+          </Button>
         </div>
       </div>
 
-      <div className="px-4 py-6 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Informations du produit</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Titre *</label>
-              <Input
-                value={formData.title}
-                onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                placeholder="Titre du produit"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Catégorie *</label>
-              <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Choisir une catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Prix</label>
-              <div className="flex gap-4 mb-4">
-                <Button
-                  type="button"
-                  variant={!formData.is_free ? "default" : "outline"}
-                  onClick={() => setFormData(prev => ({ ...prev, is_free: false }))}
-                >
-                  Payant
-                </Button>
-                <Button
-                  type="button"
-                  variant={formData.is_free ? "default" : "outline"}
-                  onClick={() => setFormData(prev => ({ ...prev, is_free: true }))}
-                >
-                  Gratuit
-                </Button>
-              </div>
-              {!formData.is_free && (
-                <Input
-                  value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
-                  placeholder="Prix en DT"
-                />
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Localisation *</label>
-              <Input
-                value={formData.location}
-                onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                placeholder="Ville, région"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium mb-2">Description</label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                placeholder="Description du produit"
-                rows={4}
-              />
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Localisation sur la carte</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ProductMap
-              location={formData.location}
-              onLocationSelect={(location) => setFormData(prev => ({ ...prev, location }))}
-              className="w-full"
+      <div className="px-4 py-6">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {/* Image Management */}
+          <Card className="p-6">
+            <h3 className="text-lg font-medium text-gray-900 mb-4">Photos du produit</h3>
+            <ImageManager
+              images={selectedImages}
+              onImagesChange={setSelectedImages}
+              maxImages={8}
             />
-          </CardContent>
-        </Card>
+          </Card>
+
+          {/* Product Form */}
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Information */}
+            <Card className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Informations de base</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Titre *</label>
+                  <Input
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="Titre de votre annonce"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Description *</label>
+                  <Textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Décrivez votre produit..."
+                    rows={4}
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Prix</label>
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={formData.is_free}
+                          onChange={(e) => setFormData({ ...formData, is_free: e.target.checked })}
+                        />
+                        <span className="text-sm">Gratuit</span>
+                      </label>
+                      {!formData.is_free && (
+                        <Input
+                          type="number"
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          placeholder="Prix en TND"
+                          className="flex-1"
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Localisation *</label>
+                    <Input
+                      value={formData.location}
+                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      placeholder="Ville, région..."
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Category */}
+            <Card className="p-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-4">Catégorie</h3>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {categoriesData.map((category: any) => (
+                  <div
+                    key={category.id}
+                    onClick={() => setFormData({ ...formData, category: category.name })}
+                    className={`
+                      p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center
+                      ${formData.category === category.name
+                        ? 'border-red-500 bg-red-50 shadow-lg' 
+                        : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                      }
+                    `}
+                  >
+                    <div className={`
+                      w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center
+                      ${formData.category === category.name ? 'bg-red-500' : 'bg-gray-100'}
+                    `}>
+                      <span className="text-white text-lg">{category.icon || "📦"}</span>
+                    </div>
+                    <span className="text-sm font-medium">{category.name}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </form>
+        </div>
       </div>
     </div>
   );

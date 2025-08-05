@@ -81,17 +81,26 @@ export const ProductCard = ({
     >
       <div className="relative aspect-square bg-white overflow-hidden">
         {/* Product image */}
-        {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.title}
-            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-          />
-        ) : (
-          <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
-            <span className="text-muted-foreground text-xs sm:text-sm">{product.category}</span>
-          </div>
-        )}
+        {(() => {
+          const images = (product as any).images ? JSON.parse((product as any).images) : [];
+          const mainImage = images.length > 0 ? images[0] : product.image;
+          
+          if (mainImage) {
+            return (
+              <img 
+                src={mainImage} 
+                alt={product.title}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            );
+          } else {
+            return (
+              <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
+                <span className="text-muted-foreground text-xs sm:text-sm">{product.category}</span>
+              </div>
+            );
+          }
+        })()}
         
         {/* Status badges */}
         <div className="absolute top-1 sm:top-2 left-1 sm:left-2 flex gap-1">
