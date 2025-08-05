@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { eq, desc, or, sql, and } from "drizzle-orm";
+import { eq, desc, or, sql, and, isNull } from "drizzle-orm";
 import { 
   users, profiles, categories, products, advertisements, product_likes,
   type User, type InsertUser,
@@ -164,7 +164,7 @@ export class DatabaseStorage implements IStorage {
     // Map car database fields to frontend properties (explicitly typed as any for flexibility)
     return {
       ...product,
-      mileage: product.car_mileage,
+      year: product.car_year,
       fuel_type: product.car_fuel_type,
       transmission: product.car_transmission,
       condition: product.car_condition,
@@ -179,7 +179,7 @@ export class DatabaseStorage implements IStorage {
       contract_type: product.job_type,
       salary_range: product.job_salary_min && product.job_salary_max ? 
         `${product.job_salary_min}-${product.job_salary_max}€` : null
-    };
+    } as any;
   }
 
   async getUserProducts(userId: string): Promise<Product[]> {
@@ -213,23 +213,21 @@ export class DatabaseStorage implements IStorage {
   
   // Advertisements
   async getAdvertisements(position?: string, category?: string): Promise<Advertisement[]> {
-    let query = db.select().from(advertisements);
     let conditions = [eq(advertisements.is_active, true)];
     
     if (position) {
       conditions.push(eq(advertisements.position, position));
     }
     if (category && category !== 'all') {
-      conditions.push(or(eq(advertisements.category, category), sql`${advertisements.category} IS NULL`));
+      conditions.push(or(eq(advertisements.category, category), isNull(advertisements.category)));
     }
     
-    // Build the where clause properly - handle empty conditions
-    if (conditions.length > 0) {
-      const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
-      query = query.where(whereClause);
-    }
+    // Build the where clause properly
+    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
-    return await query.orderBy(desc(advertisements.created_at));
+    return await db.select().from(advertisements)
+      .where(whereClause!)
+      .orderBy(desc(advertisements.created_at));
   }
 
   async trackAdImpression(adId: string): Promise<void> {
