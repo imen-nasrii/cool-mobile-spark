@@ -240,6 +240,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
           onProductClick={onProductClick}
           onProductLike={handleProductLike}
           onProductMessage={handleProductMessage}
+          viewMode="grid"
         />
       </div>
 

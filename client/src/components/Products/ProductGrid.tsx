@@ -65,7 +65,7 @@ interface ProductGridProps {
   filters?: any;
 }
 
-export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'list', filters }: ProductGridProps) => {
+export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'grid', filters }: ProductGridProps) => {
   // const { t } = useLanguage();
 
   // Use react-query to fetch products
