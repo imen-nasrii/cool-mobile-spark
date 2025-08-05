@@ -122,7 +122,13 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
       setFilteredProducts([]);
     }
     setLoading(queryLoading);
-  }, [productsData, queryLoading, activeFilters]);
+  }, [productsData, queryLoading]);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      applyFiltersAndSort(products);
+    }
+  }, [activeFilters]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);

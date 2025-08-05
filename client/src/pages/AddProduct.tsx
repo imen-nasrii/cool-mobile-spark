@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings } from "lucide-react";
+import { Camera, MapPin, Tag, DollarSign, FileText, Upload, Car, Building, Briefcase, Grid3X3, Settings, Smartphone, Dumbbell, Shirt } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,10 +13,13 @@ import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
 const categories = [
-  { id: "voiture", name: "Voiture", icon: Car },
-  { id: "immobilier", name: "Immobilier", icon: Building },
-  { id: "emplois", name: "Emplois", icon: Briefcase },
-  { id: "autres", name: "Autres", icon: Grid3X3 }
+  { id: "auto", name: "Voiture", icon: Car, color: "bg-blue-500" },
+  { id: "immobilier", name: "Immobilier", icon: Building, color: "bg-green-500" },
+  { id: "emplois", name: "Emplois", icon: Briefcase, color: "bg-purple-500" },
+  { id: "electronique", name: "Électronique", icon: Smartphone, color: "bg-orange-500" },
+  { id: "sport", name: "Sport", icon: Dumbbell, color: "bg-red-500" },
+  { id: "mode", name: "Mode", icon: Shirt, color: "bg-pink-500" },
+  { id: "autres", name: "Autres", icon: Grid3X3, color: "bg-gray-500" }
 ];
 
 const carBrands = [
@@ -386,17 +389,42 @@ export const AddProduct = ({ activeTab, onTabChange }: {
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
             {/* Category Selection */}
             <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
-              <label className="block text-sm sm:text-base font-medium mb-2 sm:mb-3">Catégorie *</label>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-10 sm:h-12 text-sm sm:text-base">
-                  <SelectValue placeholder="Choisir une catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id}>{category.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <label className="block text-sm sm:text-base font-medium mb-4">Catégorie *</label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {categories.map((category) => {
+                  const Icon = category.icon;
+                  const isSelected = selectedCategory === category.id;
+                  return (
+                    <div
+                      key={category.id}
+                      onClick={() => setSelectedCategory(category.id)}
+                      className={`
+                        p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 text-center
+                        ${isSelected 
+                          ? 'border-red-500 bg-red-50 shadow-lg scale-105' 
+                          : 'border-gray-200 hover:border-gray-300 hover:shadow-md'
+                        }
+                      `}
+                    >
+                      <div className={`
+                        w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center
+                        ${isSelected ? category.color : 'bg-gray-100'}
+                      `}>
+                        <Icon 
+                          size={24} 
+                          className={isSelected ? 'text-white' : 'text-gray-600'} 
+                        />
+                      </div>
+                      <p className={`
+                        text-sm font-medium
+                        ${isSelected ? 'text-red-600' : 'text-gray-700'}
+                      `}>
+                        {category.name}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
             {/* Title */}
             <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6">
