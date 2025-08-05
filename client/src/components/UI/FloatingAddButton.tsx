@@ -128,17 +128,7 @@ export const FloatingAddButton = ({ onCategorySelect }: FloatingAddButtonProps) 
         )}
       </div>
 
-      {/* Helper text */}
-      {!isOpen && (
-        <div className="absolute -top-12 right-0 whitespace-nowrap transition-all duration-200">
-          <div className="bg-gray-800 text-white text-sm px-3 py-2 rounded-lg shadow-lg">
-            Ajouter une annonce
-            <div className="absolute bottom-0 right-4 transform translate-y-1">
-              <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-800"></div>
-            </div>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 };
