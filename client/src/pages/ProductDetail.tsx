@@ -265,16 +265,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     });
     if (category === 'voitures' || category === 'véhicules' || category === 'voiture') {
       const carDetails = [
-        { icon: Car, label: 'Marque', value: product.car_brand, color: 'text-blue-600' },
-        { icon: Settings, label: 'Modèle', value: product.car_model, color: 'text-purple-600' },
         { icon: Calendar, label: 'Année', value: product.car_year, color: 'text-green-600' },
-        { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
-        { icon: Fuel, label: 'Carburant', value: product.car_fuel_type, color: 'text-red-600' },
-        { icon: Settings, label: 'Transmission', value: product.car_transmission, color: 'text-indigo-600' },
-        { icon: Star, label: 'État', value: product.car_condition, color: 'text-yellow-600' },
-        { icon: Shield, label: 'Couleur', value: product.car_color, color: 'text-pink-600' },
-        { icon: Users, label: 'Portes', value: product.car_doors ? `${product.car_doors} portes` : null, color: 'text-teal-600' },
-        { icon: Car, label: 'Puissance', value: product.car_engine_size ? `${product.car_engine_size}` : null, color: 'text-cyan-600' }
+        { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' }
       ].filter(detail => detail.value);
 
       // Complete equipment list with icons (black if available, gray if not)
