@@ -8,7 +8,26 @@ import { useState } from "react";
 
 // Format price in TND (Tunisian Dinar)
 const formatPrice = (price: string | number) => {
-  const numPrice = Number(price);
+  // Handle null, undefined, or empty values
+  if (price === null || price === undefined || price === '') {
+    return "Prix non défini";
+  }
+  
+  // Handle "Free" text
+  if (typeof price === 'string' && (price.toLowerCase() === 'free' || price.toLowerCase() === 'gratuit')) {
+    return "Gratuit";
+  }
+  
+  // Remove currency symbols and clean the price string
+  let cleanPrice = typeof price === 'string' ? price.replace(/[€$,\s]/g, '') : price.toString();
+  
+  const numPrice = Number(cleanPrice);
+  
+  // Check if the conversion resulted in NaN
+  if (isNaN(numPrice)) {
+    return "Prix invalide";
+  }
+  
   if (numPrice === 0) return "Gratuit";
   return `${numPrice.toLocaleString()} TND`;
 };
