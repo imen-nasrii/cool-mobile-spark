@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Car, Building, Briefcase, Grid3X3, SlidersHorizontal, TrendingUp, MapPin, Star, Heart } from "lucide-react";
+import { SlidersHorizontal, TrendingUp, MapPin, Star, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,7 +19,6 @@ interface HomeProps {
 }
 
 export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("date");
   const [showFilters, setShowFilters] = useState(false);
   const { t } = useLanguage();
@@ -27,34 +26,12 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-
-
   // Fetch promoted products
   const { data: promotedProducts } = useQuery({
     queryKey: ['/products/promoted'],
     queryFn: () => apiClient.request('/products/promoted'),
     staleTime: 2 * 60 * 1000,
   });
-
-  const categories = [
-    { id: "Électronique", name: "Électronique", icon: Grid3X3 },
-    { id: "Sport", name: "Sport", icon: Grid3X3 },
-    { id: "Voiture", name: "Voiture", icon: Car },
-    { id: "Bureautique", name: "Bureautique", icon: Briefcase },
-    { id: "Jeux vidéo", name: "Jeux vidéo", icon: Grid3X3 },
-    { id: "Mobilier", name: "Mobilier", icon: Building }
-  ];
-
-  const handleCategorySelect = (categoryId: string) => {
-    console.log('Category selected:', categoryId, 'current:', selectedCategory);
-    if (categoryId === "") {
-      // "Toutes les catégories" clicked - always set to empty
-      setSelectedCategory("");
-    } else {
-      // Other category clicked - toggle if same, otherwise set
-      setSelectedCategory(selectedCategory === categoryId ? "" : categoryId);
-    }
-  };
 
   // Like product mutation
   const likeProductMutation = useMutation({
@@ -161,37 +138,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
         </div>
       )}
 
-      {/* Categories */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Parcourir par Catégorie</h2>
-        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-4 scrollbar-hide">
-          <Button
-            variant={selectedCategory === "" ? "default" : "outline"}
-            onClick={() => {
-              console.log('Toutes les catégories clicked - resetting category');
-              handleCategorySelect("");
-            }}
-            className="whitespace-nowrap rounded-full px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium shadow-lg"
-          >
-            <Grid3X3 size={16} className="mr-2" />
-            Toutes les catégories
-          </Button>
-          {categories.map((category) => {
-            const Icon = category.icon;
-            return (
-              <Button
-                key={category.id}
-                variant={selectedCategory === category.id ? "default" : "outline"}
-                onClick={() => handleCategorySelect(category.id)}
-                className="whitespace-nowrap rounded-full px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-medium shadow-lg"
-              >
-                <Icon size={16} className="mr-2" />
-                {category.name}
-              </Button>
-            );
-          })}
-        </div>
-      </div>
+
 
       {/* Filters */}
       <div className="max-w-7xl mx-auto px-4 mb-4">
@@ -229,12 +176,11 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       </div>
 
       {/* Ad Banner Between Products */}
-      <AdBanner position="between_products" category={selectedCategory} className="mb-6 relative z-10" />
+      <AdBanner position="between_products" className="mb-6 relative z-10" />
 
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 mb-6">
         <ProductGrid 
-          category={selectedCategory === "" ? undefined : selectedCategory}
           sortBy={sortBy}
           searchTerm=""
           onProductClick={onProductClick}
@@ -245,7 +191,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange }: HomeProps) => {
       </div>
 
       {/* Footer Ad Banner */}
-      <AdBanner position="footer" category={selectedCategory} className="mt-8 relative z-10" />
+      <AdBanner position="footer" className="mt-8 relative z-10" />
       
 
     </div>
