@@ -30,7 +30,8 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   };
 
   const handlePublishAd = () => {
-    navigate('/post');
+    // Navigate to home with add tab active
+    navigate('/?tab=add');
   };
 
   const handleConnect = () => {

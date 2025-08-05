@@ -47,11 +47,15 @@ const Index = () => {
     }
   };
 
-  // Check URL for tab parameter
+  // Check URL for tab parameter and route
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab');
-    if (tabParam) {
+    const pathname = window.location.pathname;
+    
+    if (pathname === '/post') {
+      setActiveTab('add');
+    } else if (tabParam) {
       setActiveTab(tabParam);
     }
   }, []);
