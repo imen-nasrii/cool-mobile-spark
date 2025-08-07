@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
-import { CarForm } from "@/components/Forms/CarForm";
+import { CarFormWithAds } from "@/components/Forms/CarFormWithAds";
 import { RealEstateForm } from "@/components/Forms/RealEstateForm";
 import { JobForm } from "@/components/Forms/JobForm";
 
@@ -115,7 +115,7 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
   return (
     <div>
       {selectedCategory === "voiture" && (
-        <CarForm onSubmit={handleSubmit} onCancel={handleCancel} />
+        <CarFormWithAds onSubmit={handleSubmit} onCancel={handleCancel} />
       )}
       {selectedCategory === "immobilier" && (
         <RealEstateForm onSubmit={handleSubmit} onCancel={handleCancel} />
