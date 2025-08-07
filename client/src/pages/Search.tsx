@@ -18,6 +18,8 @@ import sofaImage from "@/assets/modern-sofa.jpg";
 import bikeImage from "@/assets/mountain-bike.jpg";
 import tractorImage from "@/assets/tractor-holland.jpg";
 import iphoneImage from "@/assets/iphone-15-pro.jpg";
+import ad1Image from "@/assets/ad-1.jpeg";
+import ad2Image from "@/assets/ad-2.jpeg";
 
 // Map image URLs to imported images
 const imageMap: { [key: string]: string } = {
@@ -27,6 +29,8 @@ const imageMap: { [key: string]: string } = {
   '/src/assets/mountain-bike.jpg': bikeImage,
   '/src/assets/tractor-holland.jpg': tractorImage,
   '/src/assets/iphone-15-pro.jpg': iphoneImage,
+  '/src/assets/ad-1.jpeg': ad1Image,
+  '/src/assets/ad-2.jpeg': ad2Image,
 };
 
 interface Product {

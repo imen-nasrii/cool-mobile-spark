@@ -3,7 +3,8 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { 
   insertUserSchema, insertProfileSchema, insertProductSchema, 
-  insertCategorySchema, insertMessageSchema, insertNotificationSchema 
+  insertCategorySchema, insertMessageSchema, insertNotificationSchema,
+  insertAdvertisementSchema 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
@@ -509,6 +510,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { id } = req.params;
       await storage.trackAdClick(id);
       res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Create advertisement (admin only)
+  app.post("/api/advertisements", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const adData = insertAdvertisementSchema.parse(req.body);
+      const newAd = await storage.createAdvertisement(adData);
+      res.status(201).json(newAd);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

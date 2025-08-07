@@ -34,6 +34,7 @@ export interface IStorage {
   
   // Advertisements
   getAdvertisements(position?: string, category?: string): Promise<Advertisement[]>;
+  createAdvertisement(advertisement: InsertAdvertisement): Promise<Advertisement>;
   trackAdImpression(adId: string): Promise<void>;
   trackAdClick(adId: string): Promise<void>;
   
@@ -221,7 +222,7 @@ export class DatabaseStorage implements IStorage {
     const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
     return await db.select().from(advertisements)
-      .where(whereClause)
+      .where(whereClause!)
       .orderBy(desc(advertisements.created_at));
   }
 
@@ -229,6 +230,11 @@ export class DatabaseStorage implements IStorage {
     await db.update(advertisements)
       .set({ impression_count: sql`${advertisements.impression_count} + 1` })
       .where(eq(advertisements.id, adId));
+  }
+
+  async createAdvertisement(advertisement: InsertAdvertisement): Promise<Advertisement> {
+    const result = await db.insert(advertisements).values(advertisement).returning();
+    return result[0];
   }
 
   async trackAdClick(adId: string): Promise<void> {
