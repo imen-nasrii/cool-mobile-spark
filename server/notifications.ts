@@ -31,7 +31,7 @@ export class NotificationService {
         eq(notifications.user_id, userId)
       ));
     
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   async markAllAsRead(userId: string): Promise<number> {
@@ -43,7 +43,7 @@ export class NotificationService {
         eq(notifications.is_read, false)
       ));
     
-    return result.rowCount;
+    return result.rowCount || 0;
   }
 
   async getUnreadCount(userId: string): Promise<number> {
@@ -66,7 +66,7 @@ export class NotificationService {
         eq(notifications.user_id, userId)
       ));
     
-    return result.rowCount > 0;
+    return (result.rowCount || 0) > 0;
   }
 
   // Helper methods to create specific types of notifications
