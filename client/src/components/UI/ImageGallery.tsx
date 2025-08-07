@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, Expand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -65,6 +65,17 @@ export const ImageGallery = ({ images, title, className }: ImageGalleryProps) =>
               </Button>
             </>
           )}
+          
+          {/* Fullscreen Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white hover:bg-black/70"
+            onClick={openFullscreen}
+            title="Plein écran"
+          >
+            <Expand size={16} />
+          </Button>
           
           {/* Image Counter */}
           {images.length > 1 && (
