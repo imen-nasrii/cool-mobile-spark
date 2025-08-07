@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
-import { Search as SearchIcon, Filter, MapPin, Heart } from "lucide-react";
+import { Search as SearchIcon, MapPin, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProductCard } from "@/components/Products/ProductCard";
-import { AdvancedFilters } from "@/components/Filters/AdvancedFilters";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useLanguage } from "@/hooks/useLanguage";
@@ -60,22 +59,6 @@ const formatTimeAgo = (dateString: string) => {
   }
 };
 
-const popularSearches = [
-  "iPhone", "Tesla", "Canapé", "PC Gaming", "VTT", "Tracteur"
-];
-
-interface FilterOptions {
-  category: string;
-  minPrice: number;
-  maxPrice: number;
-  location: string;
-  condition: string;
-  sortBy: string;
-  sortOrder: 'asc' | 'desc';
-  freeOnly: boolean;
-  availableOnly: boolean;
-  dateRange: string;
-}
 
 export const Search = ({ activeTab, onTabChange, onProductClick }: { 
   activeTab?: string; 
@@ -87,22 +70,9 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [filtersOpen, setFiltersOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [activeFilters, setActiveFilters] = useState<FilterOptions>({
-    category: "",
-    minPrice: 0,
-    maxPrice: 10000,
-    location: "",
-    condition: "",
-    sortBy: "date",
-    sortOrder: "desc",
-    freeOnly: false,
-    availableOnly: true,
-    dateRange: "all"
-  });
   // const { t } = useLanguage();
 
   // Use react-query to fetch products with search
@@ -230,39 +200,6 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     setFilteredProducts(filtered);
   };
 
-  const handleFiltersChange = (filters: FilterOptions) => {
-    setActiveFilters(filters);
-    applyFiltersAndSort(searchQuery ? 
-      products.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.location.toLowerCase().includes(searchQuery.toLowerCase())
-      ) : products
-    );
-  };
-
-  const handleClearFilters = () => {
-    const defaultFilters = {
-      category: "",
-      minPrice: 0,
-      maxPrice: 10000,
-      location: "",
-      condition: "",
-      sortBy: "date",
-      sortOrder: "desc" as const,
-      freeOnly: false,
-      availableOnly: true,
-      dateRange: "all"
-    };
-    setActiveFilters(defaultFilters);
-    applyFiltersAndSort(searchQuery ? 
-      products.filter(product =>
-        product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.location.toLowerCase().includes(searchQuery.toLowerCase())
-      ) : products
-    );
-  };
 
   // Like product mutation
   const likeProductMutation = useMutation({
@@ -350,43 +287,8 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
             </div>
           )}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary"
-            onClick={() => setFiltersOpen(!filtersOpen)}
-          >
-            <Filter size={18} />
-          </Button>
         </div>
 
-        {/* Popular Searches */}
-        {!searchQuery && (
-          <div>
-            <h3 className="text-sm font-medium text-foreground mb-3">Recherches populaires</h3>
-            <div className="flex flex-wrap gap-2">
-              {popularSearches.map((search) => (
-                <Button
-                  key={search}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleSearch(search)}
-                  className="text-xs rounded-full border-primary/20 hover:bg-primary/10 hover:border-primary"
-                >
-                  {search}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Advanced Filters */}
-        <AdvancedFilters
-          onFiltersChange={handleFiltersChange}
-          onClearFilters={handleClearFilters}
-          isOpen={filtersOpen}
-          onToggle={() => setFiltersOpen(!filtersOpen)}
-        />
       </div>
 
       {/* Results Summary */}
