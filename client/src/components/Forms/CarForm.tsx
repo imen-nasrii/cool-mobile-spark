@@ -8,6 +8,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { StepsIndicator } from "@/components/UI/StepsIndicator";
 import { ImageManager } from "@/components/Products/ImageManager";
 import { useToast } from "@/hooks/use-toast";
+import ad1Image from "@/assets/ad-1.jpeg";
+import ad2Image from "@/assets/ad-2.jpeg";
 
 interface CarFormProps {
   onSubmit: (data: any) => void;
@@ -46,8 +48,8 @@ const carEquipment = [
 export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedImages, setSelectedImages] = useState<string[]>([
-    '/src/assets/ad-1.jpeg',
-    '/src/assets/ad-2.jpeg'
+    ad1Image,
+    ad2Image
   ]);
   const { toast } = useToast();
   
