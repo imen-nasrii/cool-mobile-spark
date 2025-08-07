@@ -45,7 +45,10 @@ const carEquipment = [
 
 export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
   const [currentStep, setCurrentStep] = useState(1);
-  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [selectedImages, setSelectedImages] = useState<string[]>([
+    '/src/assets/ad-1.jpeg',
+    '/src/assets/ad-2.jpeg'
+  ]);
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
@@ -173,14 +176,14 @@ export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
               <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Informations générales</h2>
                 
-                {/* Photo - Une seule pour voiture */}
+                {/* Photos - Deux photos pour voiture */}
                 <div className="space-y-3">
-                  <label className="block text-sm font-medium text-gray-700">Photo principale *</label>
+                  <label className="block text-sm font-medium text-gray-700">Photos du véhicule *</label>
                   <ImageManager
                     images={selectedImages}
                     onImagesChange={setSelectedImages}
-                    maxImages={1}
-                    className="max-w-xs"
+                    maxImages={2}
+                    className="max-w-md"
                   />
                 </div>
 
