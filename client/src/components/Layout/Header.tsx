@@ -80,7 +80,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
             <Button
               onClick={handleConnect}
               variant="outline"
-              className="border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-full font-medium flex items-center gap-2"
+              className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
             >
               <User size={18} />
               <span className="hidden sm:inline">
