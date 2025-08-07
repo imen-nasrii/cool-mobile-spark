@@ -94,11 +94,6 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     setLoading(queryLoading);
   }, [productsData, queryLoading]);
 
-  useEffect(() => {
-    if (products.length > 0) {
-      applyFiltersAndSort(products);
-    }
-  }, [activeFilters]);
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -121,83 +116,12 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   };
 
   const applyFiltersAndSort = (productsList: Product[]) => {
-    let filtered = [...productsList];
-
-    // Apply filters
-    if (activeFilters.category) {
-      filtered = filtered.filter(p => p.category === activeFilters.category);
-    }
-    
-    if (activeFilters.location) {
-      filtered = filtered.filter(p => p.location === activeFilters.location);
-    }
-    
-    if (activeFilters.freeOnly) {
-      filtered = filtered.filter(p => p.is_free);
-    }
-    
-    if (activeFilters.availableOnly) {
-      filtered = filtered.filter(p => !p.is_reserved);
-    }
-
-    // Price filtering
-    filtered = filtered.filter(p => {
-      const price = parseFloat(p.price.replace(/[TND,]/g, ''));
-      return price >= activeFilters.minPrice && price <= activeFilters.maxPrice;
+    // Sort by date (most recent first)
+    const sorted = [...productsList].sort((a, b) => {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
-    // Date filtering
-    if (activeFilters.dateRange !== "all") {
-      const now = new Date();
-      const cutoffDate = new Date();
-      
-      switch (activeFilters.dateRange) {
-        case "today":
-          cutoffDate.setHours(0, 0, 0, 0);
-          break;
-        case "week":
-          cutoffDate.setDate(now.getDate() - 7);
-          break;
-        case "month":
-          cutoffDate.setMonth(now.getMonth() - 1);
-          break;
-        case "3months":
-          cutoffDate.setMonth(now.getMonth() - 3);
-          break;
-      }
-      
-      filtered = filtered.filter(p => new Date(p.created_at) >= cutoffDate);
-    }
-
-    // Apply sorting
-    filtered.sort((a, b) => {
-      let comparison = 0;
-      
-      switch (activeFilters.sortBy) {
-        case "price":
-          const priceA = parseFloat(a.price.replace(/[TND,]/g, ''));
-          const priceB = parseFloat(b.price.replace(/[TND,]/g, ''));
-          comparison = priceA - priceB;
-          break;
-        case "title":
-          comparison = a.title.localeCompare(b.title);
-          break;
-        case "likes":
-          comparison = a.likes - b.likes;
-          break;
-        case "location":
-          comparison = a.location.localeCompare(b.location);
-          break;
-        case "date":
-        default:
-          comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-          break;
-      }
-      
-      return activeFilters.sortOrder === 'asc' ? comparison : -comparison;
-    });
-
-    setFilteredProducts(filtered);
+    setFilteredProducts(sorted);
   };
 
 
@@ -299,10 +223,7 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
             {searchQuery && ` pour "${searchQuery}"`}
           </p>
           <p>
-            Trié par {activeFilters.sortBy === 'date' ? 'date' : 
-                     activeFilters.sortBy === 'price' ? 'prix' :
-                     activeFilters.sortBy === 'likes' ? 'popularité' : activeFilters.sortBy}
-            {activeFilters.sortOrder === 'desc' ? ' ↓' : ' ↑'}
+            Trié par date (plus récents en premier)
           </p>
         </div>
       </div>
