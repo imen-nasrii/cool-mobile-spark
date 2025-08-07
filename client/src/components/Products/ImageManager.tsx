@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Upload, Move, Edit2, RotateCcw } from "lucide-react";
+import { X, Upload, Move, Edit2, RotateCcw, Expand, ChevronLeft, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImageManagerProps {
@@ -17,6 +17,8 @@ export const ImageManager = ({
   className = "" 
 }: ImageManagerProps) => {
   const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const { toast } = useToast();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,6 +97,23 @@ export const ImageManager = ({
     });
   };
 
+  const openFullscreen = (index: number) => {
+    setFullscreenIndex(index);
+    setIsFullscreen(true);
+  };
+
+  const closeFullscreen = () => {
+    setIsFullscreen(false);
+  };
+
+  const nextImage = () => {
+    setFullscreenIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = () => {
+    setFullscreenIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
   return (
     <div className={`space-y-4 ${className}`}>
       {/* Upload Area */}
@@ -153,6 +172,15 @@ export const ImageManager = ({
               {/* Image Controls */}
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                 <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => openFullscreen(index)}
+                    className="w-8 h-8 p-0 bg-white/20 hover:bg-white/30 text-white"
+                    title="Voir en plein écran"
+                  >
+                    <Expand size={14} />
+                  </Button>
                   {index !== 0 && (
                     <Button
                       size="sm"
@@ -187,6 +215,55 @@ export const ImageManager = ({
         </div>
       )}
 
+      {/* Fullscreen Modal */}
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/20 text-white hover:bg-white/30"
+            onClick={closeFullscreen}
+          >
+            <X size={20} />
+          </Button>
+          
+          <div className="relative max-w-5xl max-h-full">
+            <img
+              src={images[fullscreenIndex]}
+              alt={`Image ${fullscreenIndex + 1}`}
+              className="max-w-full max-h-full object-contain"
+            />
+            
+            {images.length > 1 && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 text-white hover:bg-white/30"
+                  onClick={prevImage}
+                >
+                  <ChevronLeft size={24} />
+                </Button>
+                
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/20 text-white hover:bg-white/30"
+                  onClick={nextImage}
+                >
+                  <ChevronRight size={24} />
+                </Button>
+                
+                {/* Image Counter */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white text-sm px-3 py-1 rounded-full">
+                  {fullscreenIndex + 1} / {images.length}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Helper Text */}
       {images.length > 0 && (
         <div className="text-sm text-gray-600 bg-gray-50 p-3 rounded-lg">
@@ -194,6 +271,7 @@ export const ImageManager = ({
           <ul className="space-y-1 text-xs">
             <li>• La première image sera l'image principale</li>
             <li>• Glissez-déposez pour réorganiser</li>
+            <li>• Cliquez sur ⤢ pour voir en plein écran</li>
             <li>• Cliquez sur l'icône ↻ pour définir comme principale</li>
             <li>• Utilisez des images de haute qualité (au moins 800x800px)</li>
           </ul>
