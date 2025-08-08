@@ -1,5 +1,5 @@
 import { db } from "./db";
-import { conversations, messages, users, products, type Conversation, type ChatMessage, type InsertConversation, type InsertChatMessage } from "@shared/schema";
+import { conversations, messages, users, products, profiles, type Conversation, type ChatMessage, type InsertConversation, type InsertChatMessage } from "@shared/schema";
 import { eq, and, desc, or } from "drizzle-orm";
 import { WebSocket } from "ws";
 import { notificationService } from "./notifications";
@@ -181,10 +181,26 @@ export class MessagingService {
       throw new Error('Unauthorized access to conversation');
     }
 
-    // Get messages
+    // Get messages with sender profile information
     const conversationMessages = await db
-      .select()
+      .select({
+        id: messages.id,
+        conversation_id: messages.conversation_id,
+        sender_id: messages.sender_id,
+        content: messages.content,
+        message_type: messages.message_type,
+        file_url: messages.file_url,
+        file_name: messages.file_name,
+        file_size: messages.file_size,
+        is_read: messages.is_read,
+        created_at: messages.created_at,
+        sender_name: users.display_name,
+        sender_email: users.email,
+        sender_avatar_url: profiles.avatar_url,
+      })
       .from(messages)
+      .leftJoin(users, eq(messages.sender_id, users.id))
+      .leftJoin(profiles, eq(users.id, profiles.user_id))
       .where(eq(messages.conversation_id, conversationId))
       .orderBy(messages.created_at);
 

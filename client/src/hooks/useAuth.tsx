@@ -6,6 +6,7 @@ interface User {
   email: string;
   display_name?: string;
   role?: string;
+  avatar_url?: string;
 }
 
 interface AuthContextType {
@@ -42,7 +43,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser({
               id: profile.user_id,
               email: '', // We'll need to update this from user data if needed
-              display_name: profile.display_name
+              display_name: profile.display_name,
+              avatar_url: profile.avatar_url
             });
           }
           setLoading(false);

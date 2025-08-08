@@ -268,7 +268,22 @@ export default function MessagesPage() {
                     messagesQuery.data?.map((message: any) => {
                       const isOwn = message.sender_id === user?.id;
                       return (
-                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}>
+                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-2`}>
+                          {!isOwn && (
+                            <Avatar className="h-8 w-8 mb-1">
+                              {message.sender_avatar_url ? (
+                                <img 
+                                  src={message.sender_avatar_url} 
+                                  alt={message.sender_name || 'Avatar'}
+                                  className="w-full h-full object-cover rounded-full"
+                                />
+                              ) : (
+                                <AvatarFallback className="bg-blue-500 text-white text-xs">
+                                  {(message.sender_name || message.sender_email || 'U').charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              )}
+                            </Avatar>
+                          )}
                           <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                             isOwn 
                               ? 'bg-blue-500 text-white' 
@@ -307,6 +322,21 @@ export default function MessagesPage() {
                               })}
                             </p>
                           </div>
+                          {isOwn && (
+                            <Avatar className="h-8 w-8 mb-1">
+                              {user?.avatar_url ? (
+                                <img 
+                                  src={user.avatar_url} 
+                                  alt={user.display_name || 'Mon avatar'}
+                                  className="w-full h-full object-cover rounded-full"
+                                />
+                              ) : (
+                                <AvatarFallback className="bg-green-500 text-white text-xs">
+                                  {(user?.display_name || user?.email || 'M').charAt(0).toUpperCase()}
+                                </AvatarFallback>
+                              )}
+                            </Avatar>
+                          )}
                         </div>
                       );
                     })
