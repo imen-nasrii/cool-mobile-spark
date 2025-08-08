@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useMutation } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
 import { CarFormWithAds } from "@/components/Forms/CarFormWithAds";
+import { MultiPageCarFormWithAds } from "@/components/Forms/MultiPageCarFormWithAds";
 import { RealEstateForm } from "@/components/Forms/RealEstateForm";
 import { JobForm } from "@/components/Forms/JobForm";
 
@@ -115,7 +116,7 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
   return (
     <div>
       {selectedCategory === "voiture" && (
-        <CarFormWithAds onSubmit={handleSubmit} onCancel={handleCancel} />
+        <MultiPageCarFormWithAds onSubmit={handleSubmit} onCancel={handleCancel} />
       )}
       {selectedCategory === "immobilier" && (
         <RealEstateForm onSubmit={handleSubmit} onCancel={handleCancel} />
