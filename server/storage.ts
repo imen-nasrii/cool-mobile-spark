@@ -37,6 +37,8 @@ export interface IStorage {
   createAdvertisement(advertisement: InsertAdvertisement): Promise<Advertisement>;
   trackAdImpression(adId: string): Promise<void>;
   trackAdClick(adId: string): Promise<void>;
+  deleteAdvertisement(adId: string): Promise<boolean>;
+  deactivateAdvertisement(adId: string): Promise<boolean>;
   
   // Likes
   getUserProductLike(userId: string, productId: string): Promise<any>;
@@ -238,7 +240,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
+    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions) || undefined;
     
     return await db.select().from(advertisements)
       .where(whereClause)
@@ -263,6 +265,28 @@ export class DatabaseStorage implements IStorage {
         impression_count: sql`${advertisements.impression_count} + 1`
       })
       .where(eq(advertisements.id, adId));
+  }
+
+  async deleteAdvertisement(adId: string): Promise<boolean> {
+    try {
+      const result = await db.delete(advertisements).where(eq(advertisements.id, adId));
+      return Array.isArray(result) ? result.length > 0 : true;
+    } catch (error) {
+      console.error('Error deleting advertisement:', error);
+      return false;
+    }
+  }
+
+  async deactivateAdvertisement(adId: string): Promise<boolean> {
+    try {
+      const result = await db.update(advertisements)
+        .set({ is_active: false })
+        .where(eq(advertisements.id, adId));
+      return Array.isArray(result) ? result.length > 0 : true;
+    } catch (error) {
+      console.error('Error deactivating advertisement:', error);
+      return false;
+    }
   }
   
   // Likes

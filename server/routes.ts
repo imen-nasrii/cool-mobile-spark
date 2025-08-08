@@ -515,6 +515,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete("/api/advertisements/:id", authenticateToken, requireAdmin, async (req, res) => {
+    try {
+      const success = await storage.deleteAdvertisement(req.params.id);
+      if (!success) {
+        return res.status(404).json({ error: "Advertisement not found" });
+      }
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Create advertisement (admin only)
   app.post("/api/advertisements", authenticateToken, requireAdmin, async (req: any, res: any) => {
     try {
