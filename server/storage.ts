@@ -66,6 +66,25 @@ export class DatabaseStorage implements IStorage {
   // Profiles
   async getProfile(userId: string): Promise<Profile | undefined> {
     const result = await db.select().from(profiles).where(eq(profiles.user_id, userId)).limit(1);
+    
+    // If no profile exists, create one with default values
+    if (!result[0]) {
+      try {
+        const newProfile = await db.insert(profiles).values({
+          user_id: userId,
+          display_name: null,
+          bio: null,
+          location: null,
+          phone: null,
+          avatar_url: null
+        }).returning();
+        return newProfile[0];
+      } catch (error) {
+        console.error('Error creating default profile:', error);
+        return undefined;
+      }
+    }
+    
     return result[0];
   }
 
@@ -219,15 +238,11 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : conditions.length > 1 ? and(...conditions) : undefined;
+    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
-    const query = db.select().from(advertisements);
-    
-    if (whereClause) {
-      return await query.where(whereClause).orderBy(desc(advertisements.created_at));
-    } else {
-      return await query.orderBy(desc(advertisements.created_at));
-    }
+    return await db.select().from(advertisements)
+      .where(whereClause)
+      .orderBy(desc(advertisements.created_at));
   }
 
   async trackAdImpression(adId: string): Promise<void> {

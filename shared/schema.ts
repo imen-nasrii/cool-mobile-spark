@@ -118,8 +118,25 @@ export const messages = pgTable("messages", {
   conversation_id: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade" }).notNull(),
   sender_id: uuid("sender_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
   content: text("content").notNull(),
-  message_type: text("message_type").default("text").notNull(), // 'text', 'image', 'file'
+  message_type: text("message_type").default("text").notNull(), // 'text', 'image', 'file', 'audio', 'video'
+  file_url: text("file_url"), // URL for attached files/images
+  file_name: text("file_name"), // Original filename
+  file_size: integer("file_size"), // File size in bytes
   is_read: boolean("is_read").default(false).notNull(),
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Calls table for video/audio calls within conversations
+export const calls = pgTable("calls", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  conversation_id: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade" }).notNull(),
+  caller_id: uuid("caller_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  callee_id: uuid("callee_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  call_type: text("call_type").notNull(), // 'audio' | 'video'
+  status: text("status").default("pending").notNull(), // 'pending', 'accepted', 'rejected', 'ended', 'missed'
+  started_at: timestamp("started_at"),
+  ended_at: timestamp("ended_at"),
+  duration: integer("duration"), // in seconds
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -212,6 +229,14 @@ export const insertMessageReadSchema = createInsertSchema(message_reads).omit({
   read_at: true,
 });
 
+export const insertCallSchema = createInsertSchema(calls).omit({
+  id: true,
+  created_at: true,
+  started_at: true,
+  ended_at: true,
+  duration: true,
+});
+
 export const insertNotificationSchema = createInsertSchema(notifications).omit({
   id: true,
   created_at: true,
@@ -242,6 +267,8 @@ export type ChatMessage = typeof messages.$inferSelect;
 export type InsertChatMessage = z.infer<typeof insertMessageSchema>;
 export type MessageRead = typeof message_reads.$inferSelect;
 export type InsertMessageRead = z.infer<typeof insertMessageReadSchema>;
+export type Call = typeof calls.$inferSelect;
+export type InsertCall = z.infer<typeof insertCallSchema>;
 
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;

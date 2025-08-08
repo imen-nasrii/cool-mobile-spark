@@ -26,8 +26,7 @@ function Profile() {
 
   // Fetch user profile
   const { data: profile, isLoading } = useQuery({
-    queryKey: ['/profile'],
-    queryFn: () => apiClient.getProfile(),
+    queryKey: ['/api/profile'],
     enabled: !!user,
   });
 
@@ -45,9 +44,15 @@ function Profile() {
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
-    mutationFn: apiClient.updateProfile.bind(apiClient),
+    mutationFn: async (data: any) => {
+      return apiClient.request('/api/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/profile'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
       setIsEditing(false);
       toast({
         title: "Succès",

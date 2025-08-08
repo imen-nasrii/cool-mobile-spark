@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft } from 'lucide-react';
+import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft, Video, ImageIcon } from 'lucide-react';
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { CallInterface } from '@/components/MessagingComponents/CallInterface';
+import { FileUpload, FilePreview } from '@/components/MessagingComponents/FileUpload';
 
 export default function MessagesPage() {
   const { user } = useAuth();
@@ -22,6 +24,15 @@ export default function MessagesPage() {
   
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [fileType, setFileType] = useState<'image' | 'file' | 'camera' | null>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [activeCall, setActiveCall] = useState<{
+    type: 'audio' | 'video';
+    isIncoming: boolean;
+    callerName: string;
+    isActive: boolean;
+  } | null>(null);
 
   const messagesQuery = useConversationMessages(selectedConversation);
 
@@ -44,6 +55,66 @@ export default function MessagesPage() {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleFileSelect = (file: File, type: 'image' | 'file' | 'camera') => {
+    setSelectedFile(file);
+    setFileType(type);
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setFileType(null);
+  };
+
+  const handleSendFile = async () => {
+    if (!selectedFile || !selectedConversation) return;
+    
+    setUploadingFile(true);
+    try {
+      // Here we would upload the file to cloud storage and get URL
+      // For now, we'll simulate the process
+      const fileMessage = {
+        conversationId: selectedConversation,
+        content: selectedFile.name,
+        message_type: fileType === 'image' || fileType === 'camera' ? 'image' : 'file',
+        file_url: URL.createObjectURL(selectedFile), // Temporary URL for demo
+        file_name: selectedFile.name,
+        file_size: selectedFile.size
+      };
+      
+      await sendMessage(fileMessage);
+      handleRemoveFile();
+    } catch (error) {
+      console.error('Error sending file:', error);
+    } finally {
+      setUploadingFile(false);
+    }
+  };
+
+  const handleStartCall = (type: 'audio' | 'video') => {
+    if (!selectedConversationData) return;
+    
+    setActiveCall({
+      type,
+      isIncoming: false,
+      callerName: selectedConversationData.other_user_name || selectedConversationData.other_user_email,
+      isActive: true
+    });
+  };
+
+  const handleEndCall = () => {
+    setActiveCall(null);
+  };
+
+  const handleAcceptCall = () => {
+    if (activeCall) {
+      setActiveCall({ ...activeCall, isActive: true });
+    }
+  };
+
+  const handleRejectCall = () => {
+    setActiveCall(null);
   };
 
   const selectedConversationData = conversations.find((c: any) => c.id === selectedConversation);
@@ -161,8 +232,21 @@ export default function MessagesPage() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleStartCall('audio')}
+                      title="Appel audio"
+                    >
                       <Phone className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleStartCall('video')}
+                      title="Appel vidéo"
+                    >
+                      <Video className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -190,7 +274,32 @@ export default function MessagesPage() {
                               ? 'bg-blue-500 text-white' 
                               : 'bg-gray-100 text-gray-900'
                           }`}>
-                            <p className="text-sm">{message.content}</p>
+                            {message.message_type === 'image' && message.file_url ? (
+                              <div className="mb-2">
+                                <img 
+                                  src={message.file_url} 
+                                  alt={message.file_name || 'Image'}
+                                  className="max-w-full h-auto rounded border"
+                                />
+                                {message.file_name && (
+                                  <p className="text-xs mt-1 opacity-80">{message.file_name}</p>
+                                )}
+                              </div>
+                            ) : message.message_type === 'file' && message.file_url ? (
+                              <div className="flex items-center gap-2 mb-2">
+                                <ImageIcon className="h-4 w-4" />
+                                <div>
+                                  <p className="text-sm font-medium">{message.file_name}</p>
+                                  {message.file_size && (
+                                    <p className="text-xs opacity-80">
+                                      {(message.file_size / 1024 / 1024).toFixed(2)} MB
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <p className="text-sm">{message.content}</p>
+                            )}
                             <p className={`text-xs mt-1 ${isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
                               {formatDistanceToNow(new Date(message.created_at), { 
                                 addSuffix: true, 
@@ -204,6 +313,18 @@ export default function MessagesPage() {
                   )}
                 </div>
 
+                {/* File Preview */}
+                {selectedFile && (
+                  <div className="border-t p-4">
+                    <FilePreview
+                      file={selectedFile}
+                      onRemove={handleRemoveFile}
+                      onSend={handleSendFile}
+                      uploading={uploadingFile}
+                    />
+                  </div>
+                )}
+
                 {/* Message Input */}
                 <div className="border-t p-4">
                   <div className="flex gap-2">
@@ -213,17 +334,21 @@ export default function MessagesPage() {
                     <Button variant="outline" size="sm">
                       <Smile className="h-4 w-4" />
                     </Button>
+                    <FileUpload
+                      onFileSelect={handleFileSelect}
+                      disabled={isSendingMessage || uploadingFile}
+                    />
                     <div className="flex-1 flex gap-2">
                       <Input
                         placeholder="Tapez votre message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        disabled={isSendingMessage}
+                        disabled={isSendingMessage || uploadingFile}
                       />
                       <Button 
                         onClick={handleSendMessage}
-                        disabled={!newMessage.trim() || isSendingMessage}
+                        disabled={!newMessage.trim() || isSendingMessage || uploadingFile}
                       >
                         <Send className="h-4 w-4" />
                       </Button>
@@ -243,6 +368,19 @@ export default function MessagesPage() {
           </div>
         )}
       </div>
+
+      {/* Call Interface Overlay */}
+      {activeCall && (
+        <CallInterface
+          isIncoming={activeCall.isIncoming}
+          callerName={activeCall.callerName}
+          onAccept={handleAcceptCall}
+          onReject={handleRejectCall}
+          onEnd={handleEndCall}
+          callType={activeCall.type}
+          isActive={activeCall.isActive}
+        />
+      )}
     </div>
   );
 }
