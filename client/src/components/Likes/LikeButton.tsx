@@ -74,6 +74,9 @@ export const LikeButton = ({
       return response.json();
     },
     onSuccess: (data: any) => {
+      console.log('Like mutation success:', data);
+      
+      // Update local state immediately
       setIsLiked(true);
       setLikeCount(data.newLikeCount || likeCount + 1);
       setIsAnimating(true);
@@ -98,10 +101,15 @@ export const LikeButton = ({
       // Reset animation after delay
       setTimeout(() => setIsAnimating(false), 600);
 
-      // Invalidate related queries
+      // Invalidate and refetch queries to sync with server
       queryClient.invalidateQueries({ queryKey: ['/products', productId] });
       queryClient.invalidateQueries({ queryKey: ['/products', productId, 'liked'] });
       queryClient.invalidateQueries({ queryKey: ['/products/promoted'] });
+      
+      // Force refetch to ensure consistency
+      setTimeout(() => {
+        queryClient.refetchQueries({ queryKey: ['/products', productId, 'liked'] });
+      }, 200);
     },
     onError: (error: any) => {
       toast({
@@ -113,7 +121,8 @@ export const LikeButton = ({
   });
 
   useEffect(() => {
-    if (likedData) {
+    if (likedData !== undefined) {
+      console.log('Updating liked state from query:', likedData.liked);
       setIsLiked(likedData.liked);
     }
   }, [likedData]);
