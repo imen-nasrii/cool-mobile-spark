@@ -285,23 +285,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get user profile by ID (for viewing seller profiles)
   app.get("/api/users/:id/profile", async (req, res) => {
     try {
-      const user = await storage.getUser(req.params.id);
-      const profile = await storage.getProfile(req.params.id);
+      const userId = req.params.id;
+      console.log('Fetching profile for user ID:', userId);
+      
+      const user = await storage.getUser(userId);
+      const profile = await storage.getProfile(userId);
+      
+      console.log('User found:', user);
+      console.log('Profile found:', profile);
       
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      // Return public profile information only
-      res.json({
+      // Return comprehensive profile information
+      const sellerProfile = {
         id: user.id,
-        display_name: user.display_name || profile?.display_name,
+        display_name: profile?.display_name || user.display_name || user.email?.split('@')[0] || 'Vendeur',
         email: user.email,
         created_at: user.created_at,
-        bio: profile?.bio,
-        avatar_url: profile?.avatar_url
-      });
+        bio: profile?.bio || null,
+        avatar_url: profile?.avatar_url || null,
+
+      };
+      
+      console.log('Sending seller profile:', sellerProfile);
+      res.json(sellerProfile);
     } catch (error: any) {
+      console.error('Error fetching seller profile:', error);
       res.status(500).json({ error: error.message });
     }
   });

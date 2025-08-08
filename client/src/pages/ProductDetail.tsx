@@ -749,18 +749,26 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Informations vendeur</h3>
                 <div className="flex items-center gap-4">
-                  <Avatar className="w-16 h-16">
-                    <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
-                      {sellerProfile?.display_name?.charAt(0) || 'U'}
-                    </AvatarFallback>
+                  <Avatar className="w-16 h-16 border-2 border-primary/20">
+                    {sellerProfile?.avatar_url ? (
+                      <img 
+                        src={sellerProfile.avatar_url} 
+                        alt={sellerProfile?.display_name || "Vendeur"} 
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
+                        {(sellerProfile?.display_name || sellerProfile?.email || 'U').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    )}
                   </Avatar>
                   
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h4 className="text-lg font-semibold text-foreground">
-                        {sellerProfile?.display_name || 'Utilisateur'}
+                        {sellerProfile?.display_name || sellerProfile?.email?.split('@')[0] || 'Vendeur'}
                       </h4>
-                      <Shield size={18} className="text-success" />
+                      <Shield size={18} className="text-green-600" />
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground mb-1">
                       <Star size={14} className="text-yellow-500 fill-yellow-500" />
@@ -769,8 +777,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       <span>Membre vérifié</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Membre depuis {new Date(sellerProfile?.created_at || '').getFullYear()}
+                      Membre depuis {sellerProfile?.created_at ? new Date(sellerProfile.created_at).getFullYear() : '2025'}
                     </p>
+                    {sellerProfile?.bio && (
+                      <p className="text-sm text-muted-foreground mt-2 italic">
+                        "{sellerProfile.bio}"
+                      </p>
+                    )}
                   </div>
                   
                   <Button 
@@ -874,72 +887,87 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       <Dialog open={showSellerProfile} onOpenChange={setShowSellerProfile}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Profil du vendeur</DialogTitle>
+            <DialogTitle className="text-center">Profil du vendeur</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <Avatar className="w-16 h-16">
-                <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
-                  {sellerProfile?.display_name?.charAt(0) || 'U'}
-                </AvatarFallback>
+          
+          <div className="space-y-6">
+            {/* Avatar and Basic Info */}
+            <div className="text-center">
+              <Avatar className="w-24 h-24 mx-auto border-4 border-primary/20 mb-4">
+                {sellerProfile?.avatar_url ? (
+                  <img 
+                    src={sellerProfile.avatar_url} 
+                    alt={sellerProfile?.display_name || "Vendeur"} 
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                ) : (
+                  <AvatarFallback className="bg-primary/10 text-primary font-medium text-3xl">
+                    {(sellerProfile?.display_name || sellerProfile?.email || 'U').charAt(0).toUpperCase()}
+                  </AvatarFallback>
+                )}
               </Avatar>
               
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold">
-                  {sellerProfile?.display_name || 'Utilisateur'}
-                </h3>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Star size={14} className="text-yellow-500 fill-yellow-500" />
-                  <span>4.8</span>
-                  <span>•</span>
-                  <Shield size={14} className="text-success" />
-                  <span>Membre vérifié</span>
-                </div>
+              <h3 className="text-xl font-semibold text-foreground mb-2">
+                {sellerProfile?.display_name || sellerProfile?.email?.split('@')[0] || 'Vendeur'}
+              </h3>
+              
+              <div className="flex items-center justify-center gap-2 text-muted-foreground mb-2">
+                <Star size={16} className="text-yellow-500 fill-yellow-500" />
+                <span>4.8 • Membre vérifié</span>
+                <Shield size={16} className="text-green-600" />
               </div>
+              
+              <p className="text-sm text-muted-foreground">
+                Membre depuis {sellerProfile?.created_at ? new Date(sellerProfile.created_at).getFullYear() : '2025'}
+              </p>
             </div>
-            
-            <div className="space-y-3 text-sm">
-              <div>
-                <span className="font-medium">Email:</span>
-                <span className="ml-2 text-muted-foreground">
-                  {sellerProfile?.email || 'Non disponible'}
-                </span>
+
+            {/* Bio */}
+            {sellerProfile?.bio && (
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h4 className="font-medium text-foreground mb-2">À propos</h4>
+                <p className="text-sm text-muted-foreground">
+                  {sellerProfile.bio}
+                </p>
               </div>
+            )}
+
+            {/* Contact Info */}
+            <div className="space-y-3">
+              {sellerProfile?.location && (
+                <div className="flex items-center gap-2 text-sm">
+                  <MapPin size={16} className="text-muted-foreground" />
+                  <span>{sellerProfile.location}</span>
+                </div>
+              )}
               
-              <div>
-                <span className="font-medium">Membre depuis:</span>
-                <span className="ml-2 text-muted-foreground">
-                  {sellerProfile?.created_at ? 
-                    new Date(sellerProfile.created_at).toLocaleDateString('fr-FR') : 
-                    'Date inconnue'
-                  }
-                </span>
-              </div>
-              
-              {sellerProfile?.bio && (
-                <div>
-                  <span className="font-medium">Bio:</span>
-                  <p className="mt-1 text-muted-foreground">{sellerProfile.bio}</p>
+              {sellerProfile?.phone && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Phone size={16} className="text-muted-foreground" />
+                  <span>{sellerProfile.phone}</span>
                 </div>
               )}
             </div>
-            
-            <div className="flex gap-3 pt-4">
+
+            {/* Action Buttons */}
+            <div className="flex gap-3">
               <Button 
                 variant="outline" 
                 className="flex-1"
                 onClick={() => setShowSellerProfile(false)}
               >
-                Fermer
+                <Phone size={16} className="mr-2" />
+                Appeler
               </Button>
               <Button 
-                className="flex-1"
+                className="flex-1 bg-primary hover:bg-primary/90"
                 onClick={() => {
                   setShowSellerProfile(false);
                   setShowChat(true);
                 }}
               >
-                Contacter
+                <MessageCircle size={16} className="mr-2" />
+                Message
               </Button>
             </div>
           </div>
