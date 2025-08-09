@@ -73,12 +73,7 @@ export class DatabaseStorage implements IStorage {
     if (!result[0]) {
       try {
         const newProfile = await db.insert(profiles).values({
-          user_id: userId,
-          display_name: null,
-          bio: null,
-          location: null,
-          phone: null,
-          avatar_url: null
+          user_id: userId
         }).returning();
         return newProfile[0];
       } catch (error) {
@@ -240,7 +235,7 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions) || undefined;
+    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
     
     return await db.select().from(advertisements)
       .where(whereClause)

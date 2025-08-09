@@ -157,13 +157,21 @@ export default function AdminDashboard() {
           <CardTitle>Actions Rapides</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Button 
               onClick={() => setActiveTab("products")} 
               className="h-20 flex flex-col gap-2"
             >
               <Package size={24} />
               <span>Gérer les Produits</span>
+            </Button>
+            <Button 
+              onClick={() => navigate('/admin/products')} 
+              variant="destructive" 
+              className="h-20 flex flex-col gap-2"
+            >
+              <Package size={24} />
+              <span>Supprimer Produits</span>
             </Button>
             <Button 
               onClick={() => setActiveTab("categories")} 

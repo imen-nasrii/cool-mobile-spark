@@ -20,6 +20,7 @@ import { Settings } from "./pages/Settings";
 import { TestPromotion } from "./pages/TestPromotion";
 import { ProductManagement } from "./pages/ProductManagement";
 import { OrganizedProducts } from "./pages/OrganizedProducts";
+import AdminProducts from "./pages/AdminProducts";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -83,6 +84,16 @@ const App = () => (
                   <ProtectedRoute>
                     <AdminRoute>
                       <ProductManagement />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/products" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminProducts />
                     </AdminRoute>
                   </ProtectedRoute>
                 } 

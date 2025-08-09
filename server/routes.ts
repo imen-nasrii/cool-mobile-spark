@@ -589,7 +589,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-
+  // Admin routes for product management
+  app.delete("/api/admin/products/:id", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteProduct(id);
+      
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: "Produit supprimé avec succès" 
+        });
+      } else {
+        res.status(404).json({ error: "Produit non trouvé" });
+      }
+    } catch (error: any) {
+      console.error('Error deleting product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
 
   const httpServer = createServer(app);
   
