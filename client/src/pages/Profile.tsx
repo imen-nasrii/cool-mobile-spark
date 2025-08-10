@@ -6,15 +6,27 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/queryClient";
 import { ProfilePhotoUpload } from "@/components/ProfilePhotoUpload";
 
+interface ProfileData {
+  id: string;
+  user_id: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  location?: string;
+  phone?: string;
+  created_at: string;
+  updated_at: string;
+}
+
 function Profile() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +38,7 @@ function Profile() {
   });
 
   // Fetch user profile
-  const { data: profile, isLoading } = useQuery({
+  const { data: profile, isLoading } = useQuery<ProfileData>({
     queryKey: ['/api/profile'],
     enabled: !!user,
   });
@@ -110,7 +122,7 @@ function Profile() {
           <Button
             variant="outline"
             size="sm"
-            onClick={() => navigate('/')}
+            onClick={() => setLocation('/')}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="w-4 h-4" />

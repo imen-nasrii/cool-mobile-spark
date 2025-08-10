@@ -740,6 +740,68 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user profile
+  app.get("/api/profile", authenticateToken, async (req: any, res: any) => {
+    try {
+      const userId = req.user.id;
+      const [profile] = await db.select().from(profiles).where(eq(profiles.user_id, userId));
+      
+      if (!profile) {
+        // Create default profile if none exists
+        const [newProfile] = await db.insert(profiles)
+          .values({
+            user_id: userId,
+            display_name: req.user.display_name || req.user.email?.split('@')[0] || 'Utilisateur',
+            bio: '',
+            location: '',
+            phone: ''
+          })
+          .returning();
+        return res.json(newProfile);
+      }
+      
+      res.json(profile);
+    } catch (error: any) {
+      console.error('Error fetching profile:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Update user profile
+  app.put("/api/profile", authenticateToken, async (req: any, res: any) => {
+    try {
+      const userId = req.user.id;
+      const { display_name, bio, location, phone } = req.body;
+      
+      // Update or create profile
+      const [updatedProfile] = await db.insert(profiles)
+        .values({
+          user_id: userId,
+          display_name,
+          bio,
+          location,
+          phone,
+          updated_at: new Date()
+        })
+        .onConflictDoUpdate({
+          target: profiles.user_id,
+          set: {
+            display_name,
+            bio,
+            location,
+            phone,
+            updated_at: new Date()
+          }
+        })
+        .returning();
+      
+      res.json(updatedProfile);
+    } catch (error: any) {
+      console.error('Error updating profile:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Update profile avatar
   app.put("/api/profile/avatar", authenticateToken, async (req: any, res: any) => {
     try {
