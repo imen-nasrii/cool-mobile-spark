@@ -21,6 +21,7 @@ import { TestPromotion } from "./pages/TestPromotion";
 import { ProductManagement } from "./pages/ProductManagement";
 import { OrganizedProducts } from "./pages/OrganizedProducts";
 import AdminProducts from "./pages/AdminProducts";
+import AdminAdvertisements from "./pages/AdminAdvertisements";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -94,6 +95,16 @@ const App = () => (
                   <ProtectedRoute>
                     <AdminRoute>
                       <AdminProducts />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/advertisements" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminAdvertisements />
                     </AdminRoute>
                   </ProtectedRoute>
                 } 

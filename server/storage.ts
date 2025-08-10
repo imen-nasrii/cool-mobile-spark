@@ -45,6 +45,9 @@ export interface IStorage {
   addProductLike(userId: string, productId: string): Promise<void>;
   updateProductLikes(productId: string): Promise<Product | undefined>;
   
+  // Advertisement methods
+  getAllAdvertisements(): Promise<Advertisement[]>;
+  
   // Legacy message methods removed - use MessagingService instead
 }
 
@@ -239,6 +242,11 @@ export class DatabaseStorage implements IStorage {
     
     return await db.select().from(advertisements)
       .where(whereClause)
+      .orderBy(desc(advertisements.created_at));
+  }
+
+  async getAllAdvertisements(): Promise<Advertisement[]> {
+    return await db.select().from(advertisements)
       .orderBy(desc(advertisements.created_at));
   }
 

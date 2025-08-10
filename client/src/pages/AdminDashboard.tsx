@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, BarChart3, Users, Package, Grid3X3, TrendingUp, ShoppingCart } from "lucide-react";
+import { ArrowLeft, BarChart3, Users, Package, Grid3X3, TrendingUp, ShoppingCart, Zap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
           <CardTitle>Actions Rapides</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             <Button 
               onClick={() => setActiveTab("products")} 
               className="h-20 flex flex-col gap-2"
@@ -172,6 +172,14 @@ export default function AdminDashboard() {
             >
               <Package size={24} />
               <span>Supprimer Produits</span>
+            </Button>
+            <Button 
+              onClick={() => navigate('/admin/advertisements')} 
+              variant="secondary" 
+              className="h-20 flex flex-col gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200"
+            >
+              <Zap size={24} />
+              <span>Supprimer Pubs Bleues</span>
             </Button>
             <Button 
               onClick={() => setActiveTab("categories")} 

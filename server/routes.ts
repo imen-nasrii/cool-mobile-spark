@@ -609,6 +609,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin routes for advertisement management
+  app.get("/api/advertisements/all", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const advertisements = await storage.getAllAdvertisements();
+      res.json(advertisements);
+    } catch (error: any) {
+      console.error('Error fetching advertisements:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/admin/advertisements/:id", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteAdvertisement(id);
+      
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: "Publicité supprimée avec succès" 
+        });
+      } else {
+        res.status(404).json({ error: "Publicité non trouvée" });
+      }
+    } catch (error: any) {
+      console.error('Error deleting advertisement:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  
