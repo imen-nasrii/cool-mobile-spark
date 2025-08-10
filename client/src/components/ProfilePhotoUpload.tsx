@@ -84,10 +84,12 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         description: "Votre nouvelle photo de profil est magnifique ✨",
       });
       
-      // Force a page refresh to ensure avatar updates
+      // Force immediate refresh of the avatar
       setTimeout(() => {
+        // Force refresh the cache and reload page
+        queryClient.clear();
         window.location.reload();
-      }, 1000);
+      }, 500);
     },
     onError: (error: any) => {
       toast({
@@ -111,11 +113,11 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         return;
       }
 
-      // Validate file size (max 2MB)
-      if (file.size > 2 * 1024 * 1024) {
+      // Validate file size (max 200MB)
+      if (file.size > 200 * 1024 * 1024) {
         toast({
           title: "📏 Cette image est un peu trop grande",
-          description: "Essayez avec une image plus petite (moins de 2MB) 🤏",
+          description: "Essayez avec une image plus petite (moins de 200MB) 🤏",
           variant: "destructive",
         });
         return;
@@ -167,7 +169,7 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
             <br />
             <span className="text-sm text-purple-600 font-medium">Montrez votre plus beau sourire 😊</span>
             <br />
-            <span className="text-xs text-gray-500">JPG, PNG, GIF (max 2MB)</span>
+            <span className="text-xs text-gray-500">JPG, PNG, GIF (max 200MB)</span>
           </DialogDescription>
         </DialogHeader>
         

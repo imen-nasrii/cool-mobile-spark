@@ -137,6 +137,9 @@ function Profile() {
                   <ProfilePhotoUpload 
                     currentAvatarUrl={profile?.avatar_url}
                     onSuccess={() => {
+                      // Force immediate refresh of profile data
+                      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+                      queryClient.refetchQueries({ queryKey: ['/api/profile'] });
                       toast({
                         title: "Photo mise à jour",
                         description: "Votre photo de profil a été mise à jour avec succès",
