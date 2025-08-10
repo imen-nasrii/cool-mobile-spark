@@ -22,7 +22,7 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
   const uploadPhotoMutation = useMutation({
     mutationFn: async (file: File) => {
       // Get upload URL using fetch with proper authentication
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken') || localStorage.getItem('token');
       console.log('Upload attempt - Token:', token ? 'present' : 'missing');
       
       const uploadResponse = await fetch('/api/objects/upload', {

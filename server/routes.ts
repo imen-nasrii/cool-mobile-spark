@@ -4,13 +4,15 @@ import { storage } from "./storage";
 import { 
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema, insertNotificationSchema,
-  insertAdvertisementSchema 
+  insertAdvertisementSchema, users, products, profiles 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
 import { promotionService } from "./promotionService";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
