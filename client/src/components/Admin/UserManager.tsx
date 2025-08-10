@@ -1,605 +1,190 @@
-import { useState } from "react";
-import { Plus, Edit, Trash2, Users, Shield, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/lib/queryClient';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Users, Search, Shield, User } from 'lucide-react';
 
-const userSchema = z.object({
-  username: z.string().min(3, "Le nom d'utilisateur doit contenir au moins 3 caractères"),
-  email: z.string().email("Email invalide"),
-  password: z.string().min(6, "Le mot de passe doit contenir au moins 6 caractères"),
-  role: z.enum(["user", "admin"]).default("user"),
-  first_name: z.string().min(2, "Le prénom est requis"),
-  last_name: z.string().min(2, "Le nom est requis"),
-});
-
-type UserFormData = z.infer<typeof userSchema>;
-
-interface UserData {
+interface AdminUser {
   id: string;
-  username: string;
   email: string;
-  role: "user" | "admin";
-  first_name: string;
-  last_name: string;
+  display_name?: string;
+  role: string;
   created_at: string;
-  last_login?: string;
-  is_active: boolean;
+  updated_at: string;
 }
 
-export const UserManager = () => {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<UserData | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("");
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+export function UserManager() {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const createForm = useForm<UserFormData>({
-    resolver: zodResolver(userSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      role: "user",
-      first_name: "",
-      last_name: "",
-    },
-  });
-
-  const editForm = useForm<Omit<UserFormData, 'password'>>({
-    resolver: zodResolver(userSchema.omit({ password: true })),
-    defaultValues: {
-      username: "",
-      email: "",
-      role: "user",
-      first_name: "",
-      last_name: "",
-    },
-  });
-
-  // Fetch users (using placeholder data for demo)
+  // Fetch users
   const { data: users = [], isLoading } = useQuery({
-    queryKey: ['/api/users'],
-    queryFn: async () => {
-      // Mock users data
-      return [
-        { 
-          id: "1", 
-          username: "admin", 
-          email: "admin@tomati.com", 
-          role: "admin" as const, 
-          first_name: "Super", 
-          last_name: "Admin", 
-          created_at: "2025-01-10T10:00:00Z", 
-          last_login: "2025-01-25T14:30:00Z",
-          is_active: true 
-        },
-        { 
-          id: "2", 
-          username: "john_doe", 
-          email: "john@example.com", 
-          role: "user" as const, 
-          first_name: "John", 
-          last_name: "Doe", 
-          created_at: "2025-01-15T11:00:00Z", 
-          last_login: "2025-01-24T16:15:00Z",
-          is_active: true 
-        },
-        { 
-          id: "3", 
-          username: "marie_martin", 
-          email: "marie@example.com", 
-          role: "user" as const, 
-          first_name: "Marie", 
-          last_name: "Martin", 
-          created_at: "2025-01-18T09:30:00Z", 
-          last_login: "2025-01-25T08:45:00Z",
-          is_active: true 
-        },
-        { 
-          id: "4", 
-          username: "alex_smith", 
-          email: "alex@example.com", 
-          role: "user" as const, 
-          first_name: "Alex", 
-          last_name: "Smith", 
-          created_at: "2025-01-20T13:20:00Z", 
-          last_login: "2025-01-23T19:10:00Z",
-          is_active: false 
-        },
-        { 
-          id: "5", 
-          username: "sara_ben", 
-          email: "sara@example.com", 
-          role: "user" as const, 
-          first_name: "Sara", 
-          last_name: "Ben Ali", 
-          created_at: "2025-01-22T15:45:00Z", 
-          last_login: "2025-01-25T12:30:00Z",
-          is_active: true 
-        }
-      ];
-    },
+    queryKey: ['/api/admin/users'],
+    queryFn: () => apiClient.request('/admin/users'),
   });
 
-  // Filter users
-  const filteredUsers = users.filter((user: UserData) => {
-    const matchesSearch = user.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         `${user.first_name} ${user.last_name}`.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = !roleFilter || user.role === roleFilter;
-    return matchesSearch && matchesRole;
-  });
+  // Filter users based on search
+  const filteredUsers = users.filter((user: AdminUser) =>
+    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (user.display_name && user.display_name.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
-  // Create user mutation
-  const createMutation = useMutation({
-    mutationFn: async (data: UserFormData) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Creating user:', data);
-      return { 
-        id: Date.now().toString(), 
-        ...data, 
-        is_active: true,
-        created_at: new Date().toISOString() 
-      };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/users'] });
-      setIsCreateOpen(false);
-      createForm.reset();
-      toast({
-        title: "Utilisateur créé",
-        description: "Le nouvel utilisateur a été ajouté avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer l'utilisateur.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Update user mutation
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: Omit<UserFormData, 'password'> }) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Updating user:', id, data);
-      return { id, ...data };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/users'] });
-      setIsEditOpen(false);
-      setEditingUser(null);
-      editForm.reset();
-      toast({
-        title: "Utilisateur modifié",
-        description: "L'utilisateur a été mis à jour avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de modifier l'utilisateur.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Delete user mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Deleting user:', id);
-      return { success: true };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/users'] });
-      toast({
-        title: "Utilisateur supprimé",
-        description: "L'utilisateur a été supprimé avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer l'utilisateur.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleCreate = (data: UserFormData) => {
-    createMutation.mutate(data);
-  };
-
-  const handleEdit = (user: UserData) => {
-    setEditingUser(user);
-    editForm.reset({
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      first_name: user.first_name,
-      last_name: user.last_name,
-    });
-    setIsEditOpen(true);
-  };
-
-  const handleUpdate = (data: Omit<UserFormData, 'password'>) => {
-    if (editingUser) {
-      updateMutation.mutate({ id: editingUser.id, data });
+  const getRoleBadge = (role: string) => {
+    if (role === 'admin') {
+      return <Badge className="bg-red-100 text-red-700">Administrateur</Badge>;
     }
+    return <Badge variant="secondary">Utilisateur</Badge>;
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
-      deleteMutation.mutate(id);
-    }
+  const getInitials = (name?: string, email?: string) => {
+    if (name) return name.charAt(0).toUpperCase();
+    if (email) return email.charAt(0).toUpperCase();
+    return "U";
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="text-center py-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4 mx-auto"></div>
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-20 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <Users size={24} />
-          Gestion des Utilisateurs
-        </h2>
-        
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus size={16} />
-              Nouvel Utilisateur
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Créer un nouvel utilisateur</DialogTitle>
-            </DialogHeader>
-            <Form {...createForm}>
-              <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={createForm.control}
-                    name="first_name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prénom *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="John" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={createForm.control}
-                    name="last_name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={createForm.control}
-                    name="username"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nom d'utilisateur *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="john_doe" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={createForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="john@example.com" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={createForm.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mot de passe *</FormLabel>
-                        <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={createForm.control}
-                    name="role"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Rôle *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Sélectionnez un rôle" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="user">Utilisateur</SelectItem>
-                            <SelectItem value="admin">Administrateur</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="flex gap-2 pt-4">
-                  <Button type="submit" disabled={createMutation.isPending}>
-                    {createMutation.isPending ? "Création..." : "Créer"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsCreateOpen(false)}
-                  >
-                    Annuler
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+      <div>
+        <h2 className="text-2xl font-bold">Gestion des Utilisateurs</h2>
+        <p className="text-gray-600">Gérez tous les utilisateurs de la plateforme Tomati</p>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
-          placeholder="Rechercher par nom, email ou nom d'utilisateur..."
+          placeholder="Rechercher par email ou nom..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          className="pl-10"
         />
-        <Select value={roleFilter} onValueChange={setRoleFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Tous les rôles" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="">Tous les rôles</SelectItem>
-            <SelectItem value="user">Utilisateur</SelectItem>
-            <SelectItem value="admin">Administrateur</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des Utilisateurs ({filteredUsers.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nom complet</TableHead>
-                <TableHead>Nom d'utilisateur</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Rôle</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Dernière connexion</TableHead>
-                <TableHead>Date d'inscription</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredUsers.map((user: UserData) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">
-                    {user.first_name} {user.last_name}
-                  </TableCell>
-                  <TableCell>{user.username}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Badge variant={user.role === 'admin' ? 'default' : 'secondary'}>
-                      {user.role === 'admin' ? (
-                        <><Shield size={12} className="mr-1" /> Admin</>
-                      ) : (
-                        <><User size={12} className="mr-1" /> User</>
-                      )}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.is_active ? 'default' : 'destructive'}>
-                      {user.is_active ? 'Actif' : 'Inactif'}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {user.last_login ? (
-                      new Date(user.last_login).toLocaleDateString('fr-FR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })
-                    ) : (
-                      'Jamais'
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {new Date(user.created_at).toLocaleDateString('fr-FR')}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(user)}
-                      >
-                        <Edit size={16} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(user.id)}
-                        className="text-destructive hover:text-destructive"
-                        disabled={user.role === 'admin'}
-                      >
-                        <Trash2 size={16} />
-                      </Button>
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Utilisateurs</p>
+                <p className="text-2xl font-bold">{users.length}</p>
+              </div>
+              <Users className="h-8 w-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Administrateurs</p>
+                <p className="text-2xl font-bold">
+                  {users.filter((user: AdminUser) => user.role === 'admin').length}
+                </p>
+              </div>
+              <Shield className="h-8 w-8 text-red-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Utilisateurs Standard</p>
+                <p className="text-2xl font-bold">
+                  {users.filter((user: AdminUser) => user.role === 'user').length}
+                </p>
+              </div>
+              <User className="h-8 w-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Résultats</p>
+                <p className="text-2xl font-bold">{filteredUsers.length}</p>
+              </div>
+              <Search className="h-8 w-8 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Users List */}
+      <div className="grid gap-4">
+        {filteredUsers.length === 0 ? (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Users className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-semibold mb-2">Aucun utilisateur trouvé</h3>
+              <p className="text-gray-600">Aucun utilisateur ne correspond à votre recherche</p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredUsers.map((user: AdminUser) => (
+            <Card key={user.id}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {/* User Avatar */}
+                    <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
+                      <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                        {getInitials(user.display_name, user.email)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    {/* User Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-lg">
+                          {user.display_name || 'Nom non défini'}
+                        </h3>
+                        {getRoleBadge(user.role)}
+                      </div>
+                      <p className="text-sm text-gray-600 mb-1">{user.email}</p>
+                      <div className="flex items-center gap-4 text-xs text-gray-500">
+                        <span>Inscrit le {new Date(user.created_at).toLocaleDateString('fr-FR')}</span>
+                        <span>Mis à jour le {new Date(user.updated_at).toLocaleDateString('fr-FR')}</span>
+                      </div>
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                  </div>
 
-      {/* Edit Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Modifier l'utilisateur</DialogTitle>
-          </DialogHeader>
-          <Form {...editForm}>
-            <form onSubmit={editForm.handleSubmit(handleUpdate)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="first_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prénom *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="John" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="last_name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="username"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Nom d'utilisateur *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john_doe" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="john@example.com" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={editForm.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Rôle *</FormLabel>
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Sélectionnez un rôle" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="user">Utilisateur</SelectItem>
-                        <SelectItem value="admin">Administrateur</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="flex gap-2 pt-4">
-                <Button type="submit" disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? "Modification..." : "Modifier"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditOpen(false)}
-                >
-                  Annuler
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+                  {/* Actions could be added here */}
+                  <div className="flex items-center gap-2">
+                    {user.role === 'admin' && (
+                      <Badge variant="destructive" className="bg-red-100 text-red-700">
+                        Privilégié
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
     </div>
   );
-};
+}

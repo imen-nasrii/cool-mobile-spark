@@ -639,6 +639,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin statistics endpoint
+  app.get("/api/admin/stats", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const stats = await storage.getAdminStats();
+      res.json(stats);
+    } catch (error: any) {
+      console.error('Error fetching admin stats:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Admin categories management
+  app.get("/api/admin/categories", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const categories = await storage.getCategories();
+      res.json(categories);
+    } catch (error: any) {
+      console.error('Error fetching categories:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/admin/categories", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const { name, icon } = req.body;
+      
+      if (!name) {
+        return res.status(400).json({ error: "Le nom de la catégorie est requis" });
+      }
+
+      const category = await storage.createCategory({ name, icon });
+      res.json(category);
+    } catch (error: any) {
+      console.error('Error creating category:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Admin users management
+  app.get("/api/admin/users", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const allUsers = await db.select({
+        id: users.id,
+        email: users.email,
+        display_name: users.display_name,
+        role: users.role,
+        created_at: users.created_at,
+        updated_at: users.updated_at
+      }).from(users).orderBy(desc(users.created_at));
+      
+      res.json(allUsers);
+    } catch (error: any) {
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/admin/products", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const allProducts = await db.select().from(products).orderBy(desc(products.created_at));
+      res.json(allProducts);
+    } catch (error: any) {
+      console.error('Error fetching products for admin:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  

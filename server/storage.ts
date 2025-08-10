@@ -48,6 +48,18 @@ export interface IStorage {
   // Advertisement methods
   getAllAdvertisements(): Promise<Advertisement[]>;
   
+  // Admin statistics methods
+  getAdminStats(): Promise<{
+    totalProducts: number;
+    totalUsers: number;
+    totalCategories: number;
+    totalAdvertisements: number;
+    activeUsers: number;
+    recentProducts: number;
+    totalLikes: number;
+    promotedProducts: number;
+  }>;
+  
   // Legacy message methods removed - use MessagingService instead
 }
 
@@ -248,6 +260,50 @@ export class DatabaseStorage implements IStorage {
   async getAllAdvertisements(): Promise<Advertisement[]> {
     return await db.select().from(advertisements)
       .orderBy(desc(advertisements.created_at));
+  }
+
+  async getAdminStats() {
+    try {
+      const [productsCount] = await db.select({ count: sql`count(*)` }).from(products);
+      const [usersCount] = await db.select({ count: sql`count(*)` }).from(users);
+      const [categoriesCount] = await db.select({ count: sql`count(*)` }).from(categories);
+      const [advertisementsCount] = await db.select({ count: sql`count(*)` }).from(advertisements);
+      const [likesCount] = await db.select({ count: sql`count(*)` }).from(product_likes);
+      const [promotedCount] = await db.select({ count: sql`count(*)` }).from(products).where(eq(products.is_promoted, true));
+      
+      // Recent products (last 30 days)
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+      const [recentCount] = await db.select({ count: sql`count(*)` }).from(products)
+        .where(sql`${products.created_at} >= ${thirtyDaysAgo}`);
+      
+      // Active users (users who created products in last 30 days)
+      const [activeUsersCount] = await db.select({ count: sql`count(distinct ${products.user_id})` }).from(products)
+        .where(sql`${products.created_at} >= ${thirtyDaysAgo}`);
+
+      return {
+        totalProducts: Number(productsCount.count),
+        totalUsers: Number(usersCount.count),
+        totalCategories: Number(categoriesCount.count),
+        totalAdvertisements: Number(advertisementsCount.count),
+        totalLikes: Number(likesCount.count),
+        promotedProducts: Number(promotedCount.count),
+        recentProducts: Number(recentCount.count),
+        activeUsers: Number(activeUsersCount.count),
+      };
+    } catch (error) {
+      console.error('Error getting admin stats:', error);
+      return {
+        totalProducts: 0,
+        totalUsers: 0,
+        totalCategories: 0,
+        totalAdvertisements: 0,
+        totalLikes: 0,
+        promotedProducts: 0,
+        recentProducts: 0,
+        activeUsers: 0,
+      };
+    }
   }
 
   async trackAdImpression(adId: string): Promise<void> {

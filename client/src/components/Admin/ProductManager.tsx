@@ -1,647 +1,247 @@
-import { useState } from "react";
-import { Plus, Edit, Trash2, Package } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
-
-const productSchema = z.object({
-  title: z.string().min(5, "Le titre doit contenir au moins 5 caractères"),
-  description: z.string().min(10, "La description doit contenir au moins 10 caractères"),
-  price: z.string().min(1, "Le prix est requis"),
-  location: z.string().min(2, "La localisation est requise"),
-  category: z.string().min(1, "La catégorie est requise"),
-  is_free: z.boolean().default(false),
-  image_url: z.string().optional(),
-});
-
-type ProductFormData = z.infer<typeof productSchema>;
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { apiClient } from '@/lib/queryClient';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Package, Search, Star, Heart, TrendingUp } from 'lucide-react';
 
 interface Product {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   price: string;
   location: string;
   category: string;
-  is_free: boolean;
+  like_count: number;
+  is_promoted: boolean;
   is_reserved: boolean;
-  image_url?: string;
-  likes: number;
+  is_free: boolean;
   created_at: string;
+  image_url?: string;
 }
 
-const categories = [
-  "Électronique", 
-  "Sport", 
-  "Voiture", 
-  "Bureautique", 
-  "Jeux vidéo", 
-  "Mobilier"
-];
+export function ProductManager() {
+  const [searchTerm, setSearchTerm] = useState('');
 
-const locations = [
-  "Tunis", 
-  "Sfax", 
-  "Sousse", 
-  "Monastir", 
-  "Bizerte", 
-  "Gabès",
-  "Kairouan",
-  "Nabeul"
-];
-
-export const ProductManager = () => {
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
-
-  const createForm = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: "",
-      location: "",
-      category: "",
-      is_free: false,
-      image_url: "",
-    },
-  });
-
-  const editForm = useForm<ProductFormData>({
-    resolver: zodResolver(productSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: "",
-      location: "",
-      category: "",
-      is_free: false,
-      image_url: "",
-    },
-  });
-
-  // Fetch products
+  // Fetch products for admin
   const { data: products = [], isLoading } = useQuery({
-    queryKey: ['/api/products'],
-    queryFn: () => apiClient.getProducts(),
+    queryKey: ['/api/admin/products'],
+    queryFn: () => apiClient.request('/admin/products'),
   });
 
-  // Filter products
-  const filteredProducts = products.filter((product: Product) => {
-    const matchesSearch = product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         product.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === "all" || product.category === categoryFilter;
-    return matchesSearch && matchesCategory;
-  });
+  // Filter products based on search
+  const filteredProducts = products.filter((product: Product) =>
+    product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    product.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  // Create product mutation
-  const createMutation = useMutation({
-    mutationFn: async (data: ProductFormData) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Creating product:', data);
-      return { 
-        id: Date.now().toString(), 
-        ...data, 
-        likes: 0, 
-        is_reserved: false,
-        created_at: new Date().toISOString() 
-      };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      setIsCreateOpen(false);
-      createForm.reset();
-      toast({
-        title: "Produit créé",
-        description: "Le nouveau produit a été ajouté avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de créer le produit.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Update product mutation
-  const updateMutation = useMutation({
-    mutationFn: async ({ id, data }: { id: string; data: ProductFormData }) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Updating product:', id, data);
-      return { id, ...data };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      setIsEditOpen(false);
-      setEditingProduct(null);
-      editForm.reset();
-      toast({
-        title: "Produit modifié",
-        description: "Le produit a été mis à jour avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de modifier le produit.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Delete product mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: string) => {
-      // Mock API call - in real implementation would call backend
-      console.log('Deleting product:', id);
-      return { success: true };
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      toast({
-        title: "Produit supprimé",
-        description: "Le produit a été supprimé avec succès.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer le produit.",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const handleCreate = (data: ProductFormData) => {
-    createMutation.mutate(data);
-  };
-
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product);
-    editForm.reset({
-      title: product.title,
-      description: product.description,
-      price: product.price,
-      location: product.location,
-      category: product.category,
-      is_free: product.is_free,
-      image_url: product.image_url || "",
-    });
-    setIsEditOpen(true);
-  };
-
-  const handleUpdate = (data: ProductFormData) => {
-    if (editingProduct) {
-      updateMutation.mutate({ id: editingProduct.id, data });
+  const getProductBadges = (product: Product) => {
+    const badges = [];
+    
+    if (product.is_promoted) {
+      badges.push(
+        <Badge key="promoted" className="bg-yellow-100 text-yellow-700">
+          <Star className="w-3 h-3 mr-1" />
+          Promu
+        </Badge>
+      );
     }
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
-      deleteMutation.mutate(id);
+    
+    if (product.is_reserved) {
+      badges.push(
+        <Badge key="reserved" variant="secondary">
+          Réservé
+        </Badge>
+      );
     }
+    
+    if (product.is_free) {
+      badges.push(
+        <Badge key="free" className="bg-green-100 text-green-700">
+          Gratuit
+        </Badge>
+      );
+    }
+    
+    return badges;
   };
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="text-center py-8">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4 mx-auto"></div>
+          <div className="space-y-3">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="h-24 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <Package size={24} />
-          Gestion des Produits
-        </h2>
-        
-        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus size={16} />
-              Nouveau Produit
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Créer un nouveau produit</DialogTitle>
-            </DialogHeader>
-            <Form {...createForm}>
-              <form onSubmit={createForm.handleSubmit(handleCreate)} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={createForm.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Titre du produit *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ex: iPhone 15 Pro..." {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={createForm.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Prix *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Ex: 1200TND" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={createForm.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Description *</FormLabel>
-                      <FormControl>
-                        <Textarea placeholder="Description détaillée du produit..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={createForm.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Catégorie *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Sélectionnez une catégorie" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {categories.map((category) => (
-                              <SelectItem key={category} value={category}>
-                                {category}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={createForm.control}
-                    name="location"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Localisation *</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Sélectionnez une ville" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {locations.map((location) => (
-                              <SelectItem key={location} value={location}>
-                                {location}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <FormField
-                  control={createForm.control}
-                  name="image_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>URL de l'image (optionnel)</FormLabel>
-                      <FormControl>
-                        <Input placeholder="https://example.com/image.jpg" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={createForm.control}
-                  name="is_free"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                      <div className="space-y-0.5">
-                        <FormLabel className="text-base">Produit gratuit</FormLabel>
-                        <div className="text-sm text-muted-foreground">
-                          Ce produit est-il offert gratuitement ?
-                        </div>
-                      </div>
-                      <FormControl>
-                        <Switch
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <div className="flex gap-2 pt-4">
-                  <Button type="submit" disabled={createMutation.isPending}>
-                    {createMutation.isPending ? "Création..." : "Créer"}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsCreateOpen(false)}
-                  >
-                    Annuler
-                  </Button>
-                </div>
-              </form>
-            </Form>
-          </DialogContent>
-        </Dialog>
+      <div>
+        <h2 className="text-2xl font-bold">Gestion des Produits</h2>
+        <p className="text-gray-600">Superviser tous les produits de la marketplace Tomati</p>
       </div>
 
-      {/* Filters */}
-      <div className="flex gap-4">
+      {/* Search Bar */}
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
-          placeholder="Rechercher par titre ou description..."
+          placeholder="Rechercher par titre, catégorie ou localisation..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="max-w-sm"
+          className="pl-10"
         />
-        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-          <SelectTrigger className="w-48">
-            <SelectValue placeholder="Toutes les catégories" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Toutes les catégories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Liste des Produits ({filteredProducts.length})</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Titre</TableHead>
-                <TableHead>Prix</TableHead>
-                <TableHead>Catégorie</TableHead>
-                <TableHead>Localisation</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Likes</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredProducts.map((product: Product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium">{product.title}</TableCell>
-                  <TableCell>
-                    {product.is_free ? (
-                      <Badge variant="secondary">Gratuit</Badge>
-                    ) : (
-                      product.price
-                    )}
-                  </TableCell>
-                  <TableCell>{product.category}</TableCell>
-                  <TableCell>{product.location}</TableCell>
-                  <TableCell>
-                    {product.is_reserved ? (
-                      <Badge variant="destructive">Réservé</Badge>
-                    ) : (
-                      <Badge variant="default">Disponible</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{product.likes}</TableCell>
-                  <TableCell>
-                    {new Date(product.created_at).toLocaleDateString('fr-FR')}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleEdit(product)}
-                      >
-                        <Edit size={16} />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDelete(product.id)}
-                        className="text-destructive hover:text-destructive"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Produits</p>
+                <p className="text-2xl font-bold">{products.length}</p>
+              </div>
+              <Package className="h-8 w-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Promus</p>
+                <p className="text-2xl font-bold">
+                  {products.filter((product: Product) => product.is_promoted).length}
+                </p>
+              </div>
+              <Star className="h-8 w-8 text-yellow-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Réservés</p>
+                <p className="text-2xl font-bold">
+                  {products.filter((product: Product) => product.is_reserved).length}
+                </p>
+              </div>
+              <TrendingUp className="h-8 w-8 text-orange-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Gratuits</p>
+                <p className="text-2xl font-bold">
+                  {products.filter((product: Product) => product.is_free).length}
+                </p>
+              </div>
+              <Heart className="h-8 w-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Résultats</p>
+                <p className="text-2xl font-bold">{filteredProducts.length}</p>
+              </div>
+              <Search className="h-8 w-8 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Products List */}
+      <div className="grid gap-4">
+        {filteredProducts.length === 0 ? (
+          <Card>
+            <CardContent className="p-8 text-center">
+              <Package className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+              <h3 className="text-lg font-semibold mb-2">Aucun produit trouvé</h3>
+              <p className="text-gray-600">Aucun produit ne correspond à votre recherche</p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredProducts.map((product: Product) => (
+            <Card key={product.id}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    {/* Product Image */}
+                    <div className="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden">
+                      {product.image_url ? (
+                        <img 
+                          src={product.image_url} 
+                          alt={product.title}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <Package className="h-6 w-6" />
+                        </div>
+                      )}
                     </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
 
-      {/* Edit Dialog */}
-      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Modifier le produit</DialogTitle>
-          </DialogHeader>
-          <Form {...editForm}>
-            <form onSubmit={editForm.handleSubmit(handleUpdate)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Titre du produit *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: iPhone 15 Pro..." {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Prix *</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Ex: 1200TND" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={editForm.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description *</FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Description détaillée du produit..." {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={editForm.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Catégorie *</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez une catégorie" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={editForm.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Localisation *</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Sélectionnez une ville" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {locations.map((location) => (
-                            <SelectItem key={location} value={location}>
-                              {location}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <FormField
-                control={editForm.control}
-                name="image_url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL de l'image (optionnel)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="https://example.com/image.jpg" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={editForm.control}
-                name="is_free"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                    <div className="space-y-0.5">
-                      <FormLabel className="text-base">Produit gratuit</FormLabel>
-                      <div className="text-sm text-muted-foreground">
-                        Ce produit est-il offert gratuitement ?
+                    {/* Product Info */}
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-lg">{product.title}</h3>
+                        {getProductBadges(product)}
+                      </div>
+                      <p className="text-sm text-gray-600 mb-1">{product.description}</p>
+                      <div className="flex items-center gap-4 text-sm text-gray-600">
+                        <span className="font-semibold text-green-600">
+                          {product.is_free ? 'Gratuit' : `${product.price} TND`}
+                        </span>
+                        <span>📍 {product.location}</span>
+                        <Badge variant="outline">{product.category}</Badge>
+                      </div>
+                      <div className="flex items-center gap-4 text-xs text-gray-500 mt-1">
+                        <span className="flex items-center gap-1">
+                          <Heart className="w-3 h-3" />
+                          {product.like_count} likes
+                        </span>
+                        <span>Créé le {new Date(product.created_at).toLocaleDateString('fr-FR')}</span>
                       </div>
                     </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+                  </div>
 
-              <div className="flex gap-2 pt-4">
-                <Button type="submit" disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? "Modification..." : "Modifier"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditOpen(false)}
-                >
-                  Annuler
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
+                  {/* Actions */}
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => window.open(`/products/${product.id}`, '_blank')}
+                    >
+                      Voir
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
     </div>
   );
-};
+}

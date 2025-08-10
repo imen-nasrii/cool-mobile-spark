@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ArrowLeft, BarChart3, Users, Package, Grid3X3, TrendingUp, ShoppingCart, Zap } from "lucide-react";
+import { ArrowLeft, BarChart3, Users, Package, Grid3X3, TrendingUp, ShoppingCart, Zap, Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/apiClient";
+import { apiClient } from "@/lib/queryClient";
 import { CategoryManager } from "@/components/Admin/CategoryManager";
 import { ProductManager } from "@/components/Admin/ProductManager";
 import { UserManager } from "@/components/Admin/UserManager";
@@ -17,59 +17,58 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const { toast } = useToast();
 
-  // Stats data
+  // Real stats data from database
   const { data: stats = {}, isLoading: statsLoading } = useQuery({
     queryKey: ['/api/admin/stats'],
-    queryFn: async () => {
-      return {
-        totalProducts: 47,
-        totalUsers: 156,
-        totalCategories: 6,
-        totalOrders: 89,
-        recentProducts: 12,
-        activeUsers: 45
-      };
-    },
+    queryFn: () => apiClient.request('/admin/stats'),
   });
 
-  // Fetch products for dashboard overview
-  const { data: products = [], isLoading } = useQuery({
-    queryKey: ['/api/products'],
-    queryFn: () => apiClient.getProducts()
+  // Fetch advertisements for dashboard overview
+  const { data: advertisements = [], isLoading: adsLoading } = useQuery({
+    queryKey: ['/api/advertisements/all'],
+    queryFn: () => apiClient.request('/advertisements/all'),
   });
 
   const statsCards = [
     {
       title: "Total Produits",
-      value: stats.totalProducts || products.length,
+      value: stats.totalProducts || 0,
       icon: Package,
-      description: `+${stats.recentProducts || 5} ce mois`,
+      description: `+${stats.recentProducts || 0} ce mois`,
       color: "text-blue-600",
       bgColor: "bg-blue-50"
     },
     {
       title: "Utilisateurs",
-      value: stats.totalUsers || 156,
+      value: stats.totalUsers || 0,
       icon: Users,
-      description: `${stats.activeUsers || 45} actifs`,
+      description: `${stats.activeUsers || 0} actifs`,
       color: "text-green-600",
       bgColor: "bg-green-50"
     },
     {
       title: "Catégories",
-      value: stats.totalCategories || 6,
+      value: stats.totalCategories || 0,
       icon: Grid3X3,
-      description: "Toutes actives",
+      description: "Gestion complète",
       color: "text-purple-600",
       bgColor: "bg-purple-50"
     },
     {
-      title: "Commandes",
-      value: stats.totalOrders || 89,
-      icon: ShoppingCart,
-      description: "+12% ce mois",
+      title: "Publicités",
+      value: stats.totalAdvertisements || 0,
+      icon: Zap,
+      description: `${stats.promotedProducts || 0} promus`,
       color: "text-orange-600",
       bgColor: "bg-orange-50"
+    },
+    {
+      title: "Total Likes",
+      value: stats.totalLikes || 0,
+      icon: TrendingUp,
+      description: "Engagement",
+      color: "text-pink-600",
+      bgColor: "bg-pink-50"
     }
   ];
 
