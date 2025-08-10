@@ -706,6 +706,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Object storage routes for profile photos
+  app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { ObjectStorageService } = await import('./objectStorage');
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      res.json({ uploadURL });
+    } catch (error: any) {
+      console.error('Error getting upload URL:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Update profile avatar
+  app.put("/api/profile/avatar", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { avatarURL } = req.body;
+      const userId = req.user.id;
+      
+      if (!avatarURL) {
+        return res.status(400).json({ error: "L'URL de l'avatar est requise" });
+      }
+
+      // Update user avatar in profiles table
+      await db.update(profiles)
+        .set({ avatar_url: avatarURL, updated_at: new Date() })
+        .where(eq(profiles.user_id, userId));
+
+      res.json({ success: true, message: "Avatar mis à jour avec succès" });
+    } catch (error: any) {
+      console.error('Error updating avatar:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  

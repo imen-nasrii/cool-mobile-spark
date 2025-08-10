@@ -4,12 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiClient } from "@/lib/queryClient";
+import { ProfilePhotoUpload } from "@/components/ProfilePhotoUpload";
 
 function Profile() {
   const { user } = useAuth();
@@ -126,20 +127,22 @@ function Profile() {
                 <div className="relative">
                   <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
                     {profile?.avatar_url ? (
-                      <img 
-                        src={profile.avatar_url} 
-                        alt={profile.display_name || 'Avatar'}
-                        className="w-full h-full object-cover rounded-full"
-                      />
+                      <AvatarImage src={profile.avatar_url} alt="Photo de profil" />
                     ) : (
                       <AvatarFallback className="text-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
-                        {getInitials(user?.display_name, user?.email)}
+                        {getInitials(profile?.display_name, user?.email)}
                       </AvatarFallback>
                     )}
                   </Avatar>
-                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white flex items-center justify-center">
-                    <User className="w-3 h-3 text-white" />
-                  </div>
+                  <ProfilePhotoUpload 
+                    currentAvatarUrl={profile?.avatar_url}
+                    onSuccess={() => {
+                      toast({
+                        title: "Photo mise à jour",
+                        description: "Votre photo de profil a été mise à jour avec succès",
+                      });
+                    }}
+                  />
                 </div>
                 <div>
                   <CardTitle className="text-xl">
