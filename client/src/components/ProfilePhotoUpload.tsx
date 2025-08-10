@@ -21,13 +21,24 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
   // Upload photo mutation
   const uploadPhotoMutation = useMutation({
     mutationFn: async (file: File) => {
-      // Get upload URL using apiClient (which handles authentication automatically)
-      const uploadResponse = await apiClient.request('/api/objects/upload', {
+      // Get upload URL using fetch with proper authentication
+      const token = localStorage.getItem('token');
+      console.log('Upload attempt - Token:', token ? 'present' : 'missing');
+      
+      const uploadResponse = await fetch('/api/objects/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
       });
       
-      const { uploadURL } = uploadResponse;
+      if (!uploadResponse.ok) {
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || 'Erreur lors de la récupération de l\'URL');
+      }
+      
+      const { uploadURL } = await uploadResponse.json();
       
       // Upload file to the presigned URL
       const fileUploadResponse = await fetch(uploadURL, {
@@ -42,14 +53,22 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         throw new Error('Erreur lors du téléchargement du fichier');
       }
       
-      // Update profile with new avatar URL using apiClient
-      const updateResponse = await apiClient.request('/api/profile/avatar', {
+      // Update profile with new avatar URL
+      const updateResponse = await fetch('/api/profile/avatar', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ avatarURL: uploadURL })
       });
       
-      return updateResponse;
+      if (!updateResponse.ok) {
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || 'Erreur lors de la mise à jour');
+      }
+      
+      return await updateResponse.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
@@ -84,11 +103,11 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         return;
       }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
+      // Validate file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
         toast({
           title: "📏 Cette image est un peu trop grande",
-          description: "Essayez avec une image plus petite (moins de 5MB) 🤏",
+          description: "Essayez avec une image plus petite (moins de 2MB) 🤏",
           variant: "destructive",
         });
         return;
@@ -140,7 +159,7 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
             <br />
             <span className="text-sm text-purple-600 font-medium">Montrez votre plus beau sourire 😊</span>
             <br />
-            <span className="text-xs text-gray-500">JPG, PNG, GIF (max 5MB)</span>
+            <span className="text-xs text-gray-500">JPG, PNG, GIF (max 2MB)</span>
           </DialogDescription>
         </DialogHeader>
         
