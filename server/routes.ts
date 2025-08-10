@@ -734,12 +734,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "L'URL de l'avatar est requise" });
       }
 
+      // Convert Google Storage URL to our object storage path
+      const { ObjectStorageService } = await import('./objectStorage');
+      const objectStorageService = new ObjectStorageService();
+      const normalizedPath = objectStorageService.normalizeObjectEntityPath(avatarURL);
+      
+      console.log('Updating avatar - Original URL:', avatarURL);
+      console.log('Updating avatar - Normalized path:', normalizedPath);
+
       // Update user avatar in profiles table
       await db.update(profiles)
-        .set({ avatar_url: avatarURL, updated_at: new Date() })
+        .set({ avatar_url: normalizedPath, updated_at: new Date() })
         .where(eq(profiles.user_id, userId));
 
-      res.json({ success: true, message: "Avatar mis à jour avec succès" });
+      res.json({ success: true, message: "Avatar mis à jour avec succès", avatarPath: normalizedPath });
     } catch (error: any) {
       console.error('Error updating avatar:', error);
       res.status(500).json({ error: error.message });
