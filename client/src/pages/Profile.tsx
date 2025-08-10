@@ -123,11 +123,24 @@ function Profile() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarFallback className="text-xl">
-                    {getInitials(user?.display_name, user?.email)}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="w-20 h-20 border-4 border-white shadow-lg">
+                    {profile?.avatar_url ? (
+                      <img 
+                        src={profile.avatar_url} 
+                        alt={profile.display_name || 'Avatar'}
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <AvatarFallback className="text-2xl bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
+                        {getInitials(user?.display_name, user?.email)}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-3 border-white flex items-center justify-center">
+                    <User className="w-3 h-3 text-white" />
+                  </div>
+                </div>
                 <div>
                   <CardTitle className="text-xl">
                     {profile?.display_name || user?.display_name || "Utilisateur"}

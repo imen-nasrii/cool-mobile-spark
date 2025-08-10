@@ -164,11 +164,30 @@ export default function MessagesPage() {
                       onClick={() => setSelectedConversation(conversation.id)}
                     >
                       <div className="flex items-start gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback>
-                            {conversation.other_user_name?.charAt(0).toUpperCase() || 'U'}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className="relative">
+                          <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
+                            {conversation.other_user_avatar_url ? (
+                              <img 
+                                src={conversation.other_user_avatar_url} 
+                                alt={conversation.other_user_name || 'Avatar'}
+                                className="w-full h-full object-cover rounded-full"
+                              />
+                            ) : (
+                              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                                {conversation.other_user_name?.charAt(0).toUpperCase() || 'U'}
+                              </AvatarFallback>
+                            )}
+                          </Avatar>
+                          {conversation.product_image_url && (
+                            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm">
+                              <img 
+                                src={conversation.product_image_url} 
+                                alt={conversation.product_title}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
+                        </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className="font-medium text-sm truncate">
@@ -217,11 +236,30 @@ export default function MessagesPage() {
                     >
                       <ArrowLeft className="h-4 w-4" />
                     </Button>
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback>
-                        {selectedConversationData?.other_user_name?.charAt(0).toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                      <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                        {selectedConversationData?.other_user_avatar_url ? (
+                          <img 
+                            src={selectedConversationData.other_user_avatar_url} 
+                            alt={selectedConversationData.other_user_name || 'Avatar'}
+                            className="w-full h-full object-cover rounded-full"
+                          />
+                        ) : (
+                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                            {selectedConversationData?.other_user_name?.charAt(0).toUpperCase() || 'U'}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      {selectedConversationData?.product_image_url && (
+                        <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm">
+                          <img 
+                            src={selectedConversationData.product_image_url} 
+                            alt={selectedConversationData.product_title}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div>
                       <h3 className="font-medium">
                         {selectedConversationData?.other_user_name || selectedConversationData?.other_user_email}
@@ -270,7 +308,7 @@ export default function MessagesPage() {
                       return (
                         <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-2`}>
                           {!isOwn && (
-                            <Avatar className="h-8 w-8 mb-1">
+                            <Avatar className="h-8 w-8 mb-1 border-2 border-white shadow-sm">
                               {message.sender_avatar_url ? (
                                 <img 
                                   src={message.sender_avatar_url} 
@@ -278,7 +316,7 @@ export default function MessagesPage() {
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <AvatarFallback className="bg-blue-500 text-white text-xs">
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-semibold">
                                   {(message.sender_name || message.sender_email || 'U').charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               )}
@@ -323,7 +361,7 @@ export default function MessagesPage() {
                             </p>
                           </div>
                           {isOwn && (
-                            <Avatar className="h-8 w-8 mb-1">
+                            <Avatar className="h-8 w-8 mb-1 border-2 border-white shadow-sm">
                               {user?.avatar_url ? (
                                 <img 
                                   src={user.avatar_url} 
@@ -331,7 +369,7 @@ export default function MessagesPage() {
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <AvatarFallback className="bg-green-500 text-white text-xs">
+                                <AvatarFallback className="bg-gradient-to-br from-green-500 to-teal-600 text-white text-xs font-semibold">
                                   {(user?.display_name || user?.email || 'M').charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               )}
