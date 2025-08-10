@@ -724,6 +724,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Serve object storage files
+  app.get("/objects/:objectPath(*)", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { ObjectStorageService, ObjectNotFoundError } = await import('./objectStorage');
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      objectStorageService.downloadObject(objectFile, res);
+    } catch (error: any) {
+      console.error('Error serving object:', error);
+      if (error.name === 'ObjectNotFoundError') {
+        return res.status(404).json({ error: 'Object not found' });
+      }
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  });
+
   // Update profile avatar
   app.put("/api/profile/avatar", authenticateToken, async (req: any, res: any) => {
     try {

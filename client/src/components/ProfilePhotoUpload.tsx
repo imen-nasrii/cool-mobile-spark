@@ -71,7 +71,10 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
       return await updateResponse.json();
     },
     onSuccess: () => {
+      // Force refresh the profile data and clear any caches
       queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
+      queryClient.refetchQueries({ queryKey: ['/api/profile'] });
+      
       setIsOpen(false);
       setSelectedFile(null);
       setImagePreview(null);
@@ -80,6 +83,11 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         title: "🎉 C'est parfait !",
         description: "Votre nouvelle photo de profil est magnifique ✨",
       });
+      
+      // Force a page refresh to ensure avatar updates
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     },
     onError: (error: any) => {
       toast({
