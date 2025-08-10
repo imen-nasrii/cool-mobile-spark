@@ -20,16 +20,20 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
   // Upload photo mutation
   const uploadPhotoMutation = useMutation({
     mutationFn: async (file: File) => {
+      const token = localStorage.getItem('token');
+      
       // Get upload URL
       const uploadResponse = await fetch('/api/objects/upload', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         }
       });
       
       if (!uploadResponse.ok) {
-        throw new Error('Erreur lors de la récupération de l\'URL de téléchargement');
+        const errorData = await uploadResponse.json();
+        throw new Error(errorData.error || 'Erreur lors de la récupération de l\'URL de téléchargement');
       }
       
       const { uploadURL } = await uploadResponse.json();
@@ -52,13 +56,14 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ avatarURL: uploadURL })
       });
       
       if (!updateResponse.ok) {
-        throw new Error('Erreur lors de la mise à jour de l\'avatar');
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || 'Erreur lors de la mise à jour de l\'avatar');
       }
       
       return updateResponse.json();

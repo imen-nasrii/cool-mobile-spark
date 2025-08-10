@@ -19,15 +19,16 @@ const authenticateToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  // Only log for like endpoints to reduce noise
-  if (req.path.includes('/like')) {
-    console.log('Like request - Auth header:', authHeader);
-    console.log('Like request - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
+  // Log for like endpoints and object upload endpoints to debug
+  if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
+    console.log('Auth request - Path:', req.path);
+    console.log('Auth request - Auth header:', authHeader);
+    console.log('Auth request - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
   }
 
   if (!token || token === 'null' || token === 'undefined') {
-    if (req.path.includes('/like')) {
-      console.log('Like request - No valid token provided');
+    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
+      console.log('Auth request - No valid token provided');
     }
     return res.status(401).json({ error: 'Access token required' });
   }
@@ -36,19 +37,19 @@ const authenticateToken = async (req: any, res: any, next: any) => {
     const decoded = jwt.verify(token, JWT_SECRET) as any;
     const user = await storage.getUser(decoded.userId);
     if (!user) {
-      if (req.path.includes('/like')) {
-        console.log('Like request - User not found for userId:', decoded.userId);
+      if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
+        console.log('Auth request - User not found for userId:', decoded.userId);
       }
       return res.status(401).json({ error: 'Invalid token' });
     }
-    if (req.path.includes('/like')) {
-      console.log('Like request - User authenticated successfully:', user.email);
+    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
+      console.log('Auth request - User authenticated successfully:', user.email);
     }
     req.user = user;
     next();
   } catch (error) {
-    if (req.path.includes('/like')) {
-      console.log('Like request - Token verification failed:', error);
+    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
+      console.log('Auth request - Token verification failed:', error);
     }
     return res.status(403).json({ error: 'Invalid token' });
   }
@@ -709,9 +710,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Object storage routes for profile photos
   app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
     try {
+      console.log('Upload request from user:', req.user?.id);
       const { ObjectStorageService } = await import('./objectStorage');
       const objectStorageService = new ObjectStorageService();
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
+      console.log('Generated upload URL successfully');
       res.json({ uploadURL });
     } catch (error: any) {
       console.error('Error getting upload URL:', error);
