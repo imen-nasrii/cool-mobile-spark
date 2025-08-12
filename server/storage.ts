@@ -250,11 +250,15 @@ export class DatabaseStorage implements IStorage {
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : and(...conditions);
+    const whereClause = conditions.length === 1 ? conditions[0] : (conditions.length > 1 ? and(...conditions) : undefined);
     
-    return await db.select().from(advertisements)
-      .where(whereClause)
-      .orderBy(desc(advertisements.created_at));
+    const query = db.select().from(advertisements);
+    
+    if (whereClause) {
+      return query.where(whereClause).orderBy(desc(advertisements.created_at));
+    } else {
+      return query.orderBy(desc(advertisements.created_at));
+    }
   }
 
   async getAllAdvertisements(): Promise<Advertisement[]> {

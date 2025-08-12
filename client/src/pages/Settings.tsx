@@ -20,7 +20,7 @@ interface SettingsProps {
 }
 
 export const Settings = ({ onBack }: SettingsProps) => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -69,8 +69,8 @@ export const Settings = ({ onBack }: SettingsProps) => {
 
   // Update profile mutation
   const updateProfileMutation = useMutation({
-    mutationFn: (data: any) => apiClient.request('/profile', {
-      method: 'PATCH',
+    mutationFn: (data: any) => apiClient.request('/api/profile', {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     }),
@@ -79,7 +79,7 @@ export const Settings = ({ onBack }: SettingsProps) => {
         title: "Succès",
         description: "Profil mis à jour avec succès",
       });
-      queryClient.invalidateQueries({ queryKey: ['/profile'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/profile'] });
     },
     onError: (error: any) => {
       toast({
