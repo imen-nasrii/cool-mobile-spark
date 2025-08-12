@@ -1,0 +1,76 @@
+client:536 WebSocket connection to 'wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=XrxmyRm1XTtL' failed: 
+setupWebSocket	@	client:536
+(anonymous)	@	client:531
+
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=XrxmyRm1XTtL' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket	@	client:536
+fallback	@	client:509
+(anonymous)	@	client:555
+chunk-RPCDYKBN.js?v=09b9fafe:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+apiClient.ts:38 Using token for request: /profile Token length: 192
+﻿
+
+
+
+ChatGPT a dit :
+It looks like your WebSocket connection is failing because your code is sometimes trying to connect to an invalid URL like:
+
+ruby
+Copier
+Modifier
+wss://localhost:undefined/?token=...
+That undefined suggests the port or host value in your WebSocket URL is missing.
+
+Here’s the breakdown of what’s going wrong:
+
+First attempt:
+
+ruby
+Copier
+Modifier
+wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=XrxmyRm1XTtL
+This looks like a Replit-provided WebSocket endpoint. That’s fine, but the connection failed (could be server down, wrong token, or network restrictions).
+
+Fallback attempt:
+
+ruby
+Copier
+Modifier
+wss://localhost:undefined/?token=...
+This is clearly invalid because undefined is not a valid port number. That means somewhere in your setupWebSocket or fallback function, you’re pulling process.env.PORT or a config value, but it’s not defined.
+
+Likely cause:
+Your code probably has something like:
+
+js
+Copier
+Modifier
+const port = process.env.PORT;
+const url = `wss://${host}:${port}/?token=${token}`;
+and when port is not set, it becomes undefined.
+
+How to fix:
+
+Make sure you define the port (e.g., PORT=443 for secure WebSockets) when falling back to localhost.
+
+Or use a conditional so that if there’s no port, you don’t add :undefined:
+
+js
+Copier
+Modifier
+const portPart = port ? `:${port}` : '';
+const wsUrl = `wss://${host}${portPart}/?token=${token}`;
+Ensure host and port come from a proper config for both production (Replit domain) and development (localhost).
+
+If you want, I can walk through how to make a WebSocket URL builder that works both locally and on Replit so you won’t see undefined again. That way your setupWebSocket won’t break when switching environments.
+
+
+
+
+
+
+
+
