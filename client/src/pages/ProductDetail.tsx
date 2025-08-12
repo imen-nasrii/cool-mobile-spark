@@ -640,11 +640,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Desktop Layout - 2 Column Grid */}
+      {/* Desktop Layout - 2 Column Grid with Sticky Images */}
       <div className="hidden md:block max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Images */}
-          <div className="space-y-6">
+          {/* Left Column - Sticky Images */}
+          <div className="sticky top-24 h-fit space-y-6">
             <ImageGallery 
               images={(() => {
                 const images = (product as any).images ? JSON.parse((product as any).images) : [];
@@ -673,31 +673,10 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 </div>
               </CardContent>
             </Card>
-
-            {/* Map */}
-            <Card className="glass-card">
-              <CardContent className="p-6">
-                <h3 className="text-xl font-semibold mb-4">Localisation</h3>
-                <ProductMap location={product.location} readonly className="w-full" />
-              </CardContent>
-            </Card>
-
-            {/* Chat */}
-            {showChat && !isOwner && (
-              <Card className="glass-card">
-                <CardContent className="p-6">
-                  <ProductChat
-                    productId={product.id}
-                    sellerId={product.user_id}
-                    onClose={() => setShowChat(false)}
-                  />
-                </CardContent>
-              </Card>
-            )}
           </div>
 
-          {/* Right Column - Product Details */}
-          <div className="space-y-6">
+          {/* Right Column - Scrollable Product Details */}
+          <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Price & Title */}
             <Card className="glass-card">
               <CardContent className="p-6">
@@ -845,6 +824,28 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   {deleteProductMutation.isPending ? "Suppression..." : "Supprimer"}
                 </Button>
               </div>
+            )}
+
+            {/* Map Section */}
+            <Card className="glass-card">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold mb-4">Localisation</h3>
+                <ProductMap location={product.location} readonly className="w-full" />
+              </CardContent>
+            </Card>
+
+            {/* Chat Section */}
+            {showChat && !isOwner && (
+              <Card className="glass-card">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-4">Discussion avec le vendeur</h3>
+                  <ProductChat
+                    productId={product.id}
+                    sellerId={product.user_id}
+                    onClose={() => setShowChat(false)}
+                  />
+                </CardContent>
+              </Card>
             )}
           </div>
         </div>
