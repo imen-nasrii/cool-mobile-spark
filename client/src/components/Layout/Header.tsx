@@ -77,12 +77,15 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   };
 
   return (
-    <header className="glass-card border-0 border-b border-white/20 sticky top-0 z-40 modern-shadow-lg backdrop-blur-xl">
+    <header className="bg-white border-b sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="text-3xl font-black bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
+            <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
+              <span className="text-white font-bold text-sm">T</span>
+            </div>
+            <div className="text-2xl font-bold text-red-500">
               tomati
             </div>
           </div>
@@ -91,21 +94,28 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           <div className="flex-1 max-w-xl mx-4">
             <form onSubmit={handleSearch} className="relative">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <Input
                   type="text"
                   placeholder="Rechercher sur tomati"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full glass-card border-0 rounded-full modern-shadow focus:outline-none focus:ring-2 focus:ring-blue-400 focus:modern-shadow-lg transition-all duration-300"
+                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
                 />
               </div>
             </form>
           </div>
           
           {/* Right Side Buttons */}
-          <div className="flex items-center gap-3">
-
+          <div className="flex items-center gap-2">
+            {/* Publish Ad Button */}
+            <Button
+              onClick={handlePublishAd}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium text-sm"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              Publier une annonce
+            </Button>
             
             {/* User Menu */}
             {user ? (
@@ -113,13 +123,12 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="glass-card border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 modern-shadow hover:modern-shadow-lg transition-all duration-300 hover:scale-105"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 rounded font-medium flex items-center gap-2 text-sm"
                   >
-                    <User size={18} />
+                    <User size={16} />
                     <span className="hidden sm:inline">
-                      {user.display_name || 'Mon profil'}
+                      {user.display_name || 'Mon compte'}
                     </span>
-                    <span className="sm:hidden">Profil</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
@@ -151,12 +160,10 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
             ) : (
               <Button
                 onClick={handleConnect}
-                variant="outline"
-                className="glass-card border-0 bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 modern-shadow hover:modern-shadow-lg transition-all duration-300 hover:scale-105"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium flex items-center gap-2 text-sm"
               >
-                <LogIn size={18} />
-                <span className="hidden sm:inline">Se connecter</span>
-                <span className="sm:hidden">Login</span>
+                <LogIn size={16} />
+                <span>Se connecter</span>
               </Button>
             )}
           </div>
