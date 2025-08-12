@@ -62,10 +62,7 @@ export default function MessagesPage() {
       if (messageCount <= 2) { // Send product photo in first few messages
         await sendMessage({
           conversationId: selectedConversation,
-          content: `Voici le produit dont nous discutons: ${selectedConversationData.product_title}`,
-          message_type: 'image',
-          file_url: selectedConversationData.product_image_url,
-          file_name: `${selectedConversationData.product_title}.jpg`
+          content: `Voici le produit dont nous discutons: ${selectedConversationData.product_title}`
         });
       }
     } catch (error) {
@@ -377,7 +374,7 @@ export default function MessagesPage() {
                               )}
                             </Avatar>
                           )}
-                          <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl modern-shadow group-hover:modern-shadow-lg transition-all duration-300 ${
+                          <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl modern-shadow group-hover:modern-shadow-lg transition-all duration-300 message-bubble ${
                             isOwn 
                               ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' 
                               : 'glass-card bg-white text-gray-900'
@@ -408,7 +405,7 @@ export default function MessagesPage() {
                             ) : (
                               <p className="text-sm">{message.content}</p>
                             )}
-                            <p className={`text-xs mt-1 ${isOwn ? 'text-blue-100' : 'text-gray-500'}`}>
+                            <p className={`text-xs mt-1 ${isOwn ? 'text-blue-100 hover:text-blue-100' : 'text-gray-500 hover:text-gray-500'}`}>
                               {formatDistanceToNow(new Date(message.created_at), { 
                                 addSuffix: true, 
                                 locale: fr 

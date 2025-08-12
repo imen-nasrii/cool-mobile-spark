@@ -381,6 +381,19 @@ All colors MUST be HSL.
     @apply glass rounded-2xl;
   }
 
+  /* Fix hover text color issue */
+  .glass-card:hover * {
+    color: inherit !important;
+  }
+
+  .message-bubble {
+    color: inherit !important;
+  }
+
+  .message-bubble * {
+    color: inherit !important;
+  }
+
   /* Advanced shadow utilities */
   .shadow-soft {
     box-shadow: var(--shadow-soft);
