@@ -45,8 +45,31 @@ export default function MessagesPage() {
         content: newMessage.trim()
       });
       setNewMessage('');
+      
+      // Auto-send product photo if this is the first message in the conversation
+      await handleAutoSendProductPhoto();
     } catch (error) {
       console.error('Error sending message:', error);
+    }
+  };
+
+  const handleAutoSendProductPhoto = async () => {
+    if (!selectedConversationData?.product_image_url || !selectedConversation) return;
+    
+    try {
+      // Check if this is one of the first few messages (auto-send product photo logic)
+      const messageCount = messagesQuery.data?.length || 0;
+      if (messageCount <= 2) { // Send product photo in first few messages
+        await sendMessage({
+          conversationId: selectedConversation,
+          content: `Voici le produit dont nous discutons: ${selectedConversationData.product_title}`,
+          message_type: 'image',
+          file_url: selectedConversationData.product_image_url,
+          file_name: `${selectedConversationData.product_title}.jpg`
+        });
+      }
+    } catch (error) {
+      console.error('Error auto-sending product photo:', error);
     }
   };
 
@@ -135,15 +158,17 @@ export default function MessagesPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="flex gap-6 h-[600px]">
         {/* Conversations List */}
         <div className={`${selectedConversation ? 'hidden lg:block' : 'block'} w-full lg:w-1/3`}>
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="h-5 w-5" />
-                Messages ({conversations.length})
+          <Card className="h-full glass-card border-0 modern-shadow hover:modern-shadow-lg transition-all duration-300">
+            <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-t-lg">
+              <CardTitle className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-full">
+                  <MessageCircle className="h-5 w-5" />
+                </div>
+                <span className="font-bold">Messages ({conversations.length})</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -158,14 +183,14 @@ export default function MessagesPage() {
                   conversations.map((conversation: any) => (
                     <div
                       key={conversation.id}
-                      className={`p-4 cursor-pointer hover:bg-gray-50 ${
-                        selectedConversation === conversation.id ? 'bg-blue-50 border-r-2 border-blue-500' : ''
+                      className={`p-4 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-300 hover:scale-[1.02] ${
+                        selectedConversation === conversation.id ? 'bg-gradient-to-r from-blue-100 to-purple-100 border-l-4 border-blue-500 modern-shadow' : ''
                       }`}
                       onClick={() => setSelectedConversation(conversation.id)}
                     >
                       <div className="flex items-start gap-3">
                         <div className="relative">
-                          <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
+                          <Avatar className="h-14 w-14 border-3 border-white modern-shadow hover:scale-110 transition-transform duration-300">
                             {conversation.other_user_avatar_url ? (
                               <img 
                                 src={conversation.other_user_avatar_url} 
@@ -173,13 +198,13 @@ export default function MessagesPage() {
                                 className="w-full h-full object-cover rounded-full"
                               />
                             ) : (
-                              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold text-lg">
                                 {conversation.other_user_name?.charAt(0).toUpperCase() || 'U'}
                               </AvatarFallback>
                             )}
                           </Avatar>
                           {conversation.product_image_url && (
-                            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm">
+                            <div className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full border-3 border-white bg-white overflow-hidden modern-shadow">
                               <img 
                                 src={conversation.product_image_url} 
                                 alt={conversation.product_title}
@@ -224,8 +249,8 @@ export default function MessagesPage() {
         {/* Chat Window */}
         {selectedConversation ? (
           <div className={`${selectedConversation ? 'block' : 'hidden lg:block'} w-full lg:w-2/3`}>
-            <Card className="h-full flex flex-col">
-              <CardHeader className="pb-4">
+            <Card className="h-full flex flex-col glass-card border-0 modern-shadow-lg overflow-hidden">
+              <CardHeader className="pb-4 bg-gradient-to-r from-slate-50 to-blue-50 border-b border-white/20">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <Button
@@ -237,7 +262,7 @@ export default function MessagesPage() {
                       <ArrowLeft className="h-4 w-4" />
                     </Button>
                     <div className="relative">
-                      <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+                      <Avatar className="h-12 w-12 border-3 border-white modern-shadow hover:scale-110 transition-transform duration-300">
                         {selectedConversationData?.other_user_avatar_url ? (
                           <img 
                             src={selectedConversationData.other_user_avatar_url} 
@@ -245,7 +270,7 @@ export default function MessagesPage() {
                             className="w-full h-full object-cover rounded-full"
                           />
                         ) : (
-                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                          <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-bold">
                             {selectedConversationData?.other_user_name?.charAt(0).toUpperCase() || 'U'}
                           </AvatarFallback>
                         )}
@@ -269,12 +294,13 @@ export default function MessagesPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <Button 
                       variant="outline" 
                       size="sm"
                       onClick={() => handleStartCall('audio')}
                       title="Appel audio"
+                      className="glass-card border-0 bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
                     >
                       <Phone className="h-4 w-4" />
                     </Button>
@@ -283,6 +309,7 @@ export default function MessagesPage() {
                       size="sm"
                       onClick={() => handleStartCall('video')}
                       title="Appel vidéo"
+                      className="glass-card border-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
                     >
                       <Video className="h-4 w-4" />
                     </Button>
@@ -290,9 +317,9 @@ export default function MessagesPage() {
                 </div>
               </CardHeader>
               
-              <CardContent className="flex-1 flex flex-col p-0">
+              <CardContent className="flex-1 flex flex-col p-0 bg-gradient-to-b from-white to-blue-50/30">
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px]">
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px] relative">
                   {messagesQuery.isLoading ? (
                     <div className="flex items-center justify-center h-full">
                       <div className="animate-pulse text-gray-500">Chargement des messages...</div>
@@ -306,9 +333,9 @@ export default function MessagesPage() {
                     messagesQuery.data?.map((message: any) => {
                       const isOwn = message.sender_id === user?.id;
                       return (
-                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-2`}>
+                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-3 group`}>
                           {!isOwn && (
-                            <Avatar className="h-8 w-8 mb-1 border-2 border-white shadow-sm">
+                            <Avatar className="h-8 w-8 mb-1 border-2 border-white modern-shadow group-hover:scale-110 transition-transform duration-300">
                               {message.sender_avatar_url ? (
                                 <img 
                                   src={message.sender_avatar_url} 
@@ -316,16 +343,16 @@ export default function MessagesPage() {
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-semibold">
+                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold">
                                   {(message.sender_name || message.sender_email || 'U').charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               )}
                             </Avatar>
                           )}
-                          <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                          <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl modern-shadow group-hover:modern-shadow-lg transition-all duration-300 ${
                             isOwn 
-                              ? 'bg-blue-500 text-white' 
-                              : 'bg-gray-100 text-gray-900'
+                              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' 
+                              : 'glass-card bg-white text-gray-900'
                           }`}>
                             {message.message_type === 'image' && message.file_url ? (
                               <div className="mb-2">
@@ -394,34 +421,55 @@ export default function MessagesPage() {
                 )}
 
                 {/* Message Input */}
-                <div className="border-t p-4">
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm">
+                <div className="border-t p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+                  <div className="flex gap-3">
+                    <Button variant="outline" size="sm" className="glass-card border-0 bg-gradient-to-r from-pink-500 to-red-500 text-white hover:from-pink-600 hover:to-red-600 modern-shadow hover:scale-110 transition-all duration-300">
                       <Heart className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm">
+                    <Button variant="outline" size="sm" className="glass-card border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 modern-shadow hover:scale-110 transition-all duration-300">
                       <Smile className="h-4 w-4" />
                     </Button>
                     <FileUpload
                       onFileSelect={handleFileSelect}
                       disabled={isSendingMessage || uploadingFile}
                     />
-                    <div className="flex-1 flex gap-2">
+                    <div className="flex-1 flex gap-3">
                       <Input
                         placeholder="Tapez votre message..."
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
                         disabled={isSendingMessage || uploadingFile}
+                        className="glass-card border-0 rounded-full modern-shadow focus:modern-shadow-lg transition-all duration-300"
                       />
                       <Button 
                         onClick={handleSendMessage}
                         disabled={!newMessage.trim() || isSendingMessage || uploadingFile}
+                        className="glass-card border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300 rounded-full w-12 h-12 p-0"
                       >
-                        <Send className="h-4 w-4" />
+                        <Send className="h-5 w-5" />
                       </Button>
                     </div>
                   </div>
+                  
+                  {/* Product context indicator */}
+                  {selectedConversationData?.product_title && (
+                    <div className="mt-3 p-3 glass-card border-0 rounded-xl modern-shadow bg-gradient-to-r from-blue-50 to-purple-50">
+                      <div className="flex items-center gap-3">
+                        {selectedConversationData.product_image_url && (
+                          <img 
+                            src={selectedConversationData.product_image_url} 
+                            alt={selectedConversationData.product_title}
+                            className="w-12 h-12 rounded-lg object-cover modern-shadow"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-gray-700">Discussion à propos de:</p>
+                          <p className="text-sm text-blue-600 font-semibold">{selectedConversationData.product_title}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

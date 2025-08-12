@@ -56,36 +56,36 @@ export function CallInterface({
 
   if (isIncoming && !isActive) {
     return (
-      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-8 max-w-sm w-full mx-4 text-center">
-          <div className="mb-6">
-            <div className="w-20 h-20 bg-gray-300 dark:bg-gray-600 rounded-full mx-auto mb-4 flex items-center justify-center">
-              <span className="text-2xl font-bold text-gray-600 dark:text-gray-300">
+      <div className="fixed inset-0 bg-gradient-to-br from-black/90 to-blue-900/80 backdrop-blur-lg flex items-center justify-center z-50">
+        <div className="glass-card border-0 rounded-3xl p-8 max-w-sm w-full mx-4 text-center modern-shadow-lg animate-float">
+          <div className="mb-8">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-6 flex items-center justify-center modern-shadow-lg animate-pulse">
+              <span className="text-3xl font-bold text-white">
                 {callerName.charAt(0).toUpperCase()}
               </span>
             </div>
-            <h3 className="text-xl font-semibold mb-2">{callerName}</h3>
-            <p className="text-gray-600 dark:text-gray-400">
+            <h3 className="text-2xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{callerName}</h3>
+            <p className="text-gray-600 text-lg">
               Appel {callType === 'video' ? 'vidéo' : 'audio'} entrant...
             </p>
           </div>
           
-          <div className="flex justify-center space-x-6">
+          <div className="flex justify-center space-x-8">
             <Button
               onClick={onReject}
               variant="destructive"
               size="lg"
-              className="rounded-full w-16 h-16 p-0"
+              className="rounded-full w-20 h-20 p-0 glass-card border-0 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
             >
-              <PhoneOff className="w-8 h-8" />
+              <PhoneOff className="w-10 h-10" />
             </Button>
             <Button
               onClick={onAccept}
               variant="default"
               size="lg"
-              className="rounded-full w-16 h-16 p-0 bg-green-600 hover:bg-green-700"
+              className="rounded-full w-20 h-20 p-0 glass-card border-0 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
             >
-              <Phone className="w-8 h-8" />
+              <Phone className="w-10 h-10" />
             </Button>
           </div>
         </div>
@@ -142,16 +142,16 @@ export function CallInterface({
         )}
 
         {/* Call controls */}
-        <div className="bg-black/80 p-6">
-          <div className="flex justify-center items-center space-x-6">
+        <div className="glass-card bg-black/90 p-8 border-0 backdrop-blur-xl">
+          <div className="flex justify-center items-center space-x-8">
             {/* Mute button */}
             <Button
               onClick={handleToggleMute}
               variant="outline"
               size="lg"
               className={cn(
-                "rounded-full w-14 h-14 p-0",
-                isMuted ? "bg-red-600 hover:bg-red-700 border-red-600" : "bg-gray-600 hover:bg-gray-700"
+                "rounded-full w-16 h-16 p-0 glass-card border-0 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300",
+                isMuted ? "bg-gradient-to-r from-red-500 to-red-600 text-white" : "bg-gradient-to-r from-gray-500 to-gray-600 text-white"
               )}
             >
               {isMuted ? <MicOff className="w-6 h-6" /> : <Mic className="w-6 h-6" />}
@@ -177,9 +177,9 @@ export function CallInterface({
               onClick={onEnd}
               variant="destructive"
               size="lg"
-              className="rounded-full w-16 h-16 p-0"
+              className="rounded-full w-20 h-20 p-0 glass-card border-0 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
             >
-              <PhoneOff className="w-8 h-8" />
+              <PhoneOff className="w-10 h-10" />
             </Button>
           </div>
         </div>
