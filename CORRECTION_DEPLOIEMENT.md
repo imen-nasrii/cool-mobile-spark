@@ -1,67 +1,90 @@
-# Correction Déploiement - Commandes Exactes
+# Correction du Déploiement - Erreur Vite
 
-## Situation Actuelle
-- Vous êtes connecté en tant que `tomati@vps-8dfc48b5:~$`
-- L'application existe déjà dans `tomati-market/`
-- PM2 a été arrêté correctement
+## Problème identifié
+- Le clone GitHub a réussi
+- L'installation npm a réussi mais `vite` n'est pas trouvé
+- Erreur: `sh: 1: vite: not found`
 
-## Commandes Correctes à Exécuter
+## Solution
 
-### Étape 1: Aller dans le répertoire existant
+### Étapes de correction à exécuter sur le VPS
+
+#### 1. Installation complète des dépendances
 ```bash
-cd tomati-market
+cd /home/tomati/tomatimarket
+npm install
 ```
 
-### Étape 2: Sauvegarder la version actuelle
+#### 2. Alternative si problème persiste - Build manuel
 ```bash
-cp -r dist dist-backup-$(date +%Y%m%d_%H%M%S)
+npx vite build
+npx esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
 ```
 
-### Étape 3: Récupérer la nouvelle version depuis GitHub
-```bash
-git pull origin main
-```
-
-### Étape 4: Installer les nouvelles dépendances
-```bash
-npm install --production
-```
-
-### Étape 5: Construire la nouvelle version
+#### 3. Ou utilisation du script build existant
 ```bash
 npm run build
 ```
 
-### Étape 6: Appliquer les migrations de base de données
+#### 4. Mise à jour de la base de données
 ```bash
 npm run db:push
 ```
 
-### Étape 7: Redémarrer l'application
+#### 5. Démarrage de l'application
 ```bash
-pm2 start ecosystem.config.js --env production --name tomati-production
+pm2 start ecosystem.config.js
+pm2 save
 ```
 
-### Étape 8: Vérifier le statut
+#### 6. Vérification
 ```bash
 pm2 status
-pm2 logs tomati-production --lines 10
+pm2 logs tomati-production --lines 15
+curl http://localhost:5000/api/categories
 ```
 
-### Étape 9: Tester l'application
+---
+
+## Commandes de correction complètes à copier-coller
+
+### Sur le VPS (vous êtes déjà connecté)
 ```bash
-curl http://localhost:5000
+cd /home/tomati/tomatimarket
+npm install
+npm run build
+npm run db:push
+pm2 start ecosystem.config.js
+pm2 save
+pm2 status
+pm2 logs tomati-production --lines 15
+curl http://localhost:5000/api/categories
 ```
 
-## Commandes Une par Une
-Tapez ces commandes exactement dans cet ordre :
+---
 
-1. `cd tomati-market`
-2. `cp -r dist dist-backup-$(date +%Y%m%d_%H%M%S)`
-3. `git pull origin main`
-4. `npm install --production`
-5. `npm run build`
-6. `npm run db:push`
-7. `pm2 start ecosystem.config.js --env production --name tomati-production`
-8. `pm2 status`
-9. `curl http://localhost:5000`
+## Si le problème persiste
+
+### Solution alternative - Installation globale de vite
+```bash
+npm install -g vite esbuild tsx
+npm run build
+```
+
+### Ou modification temporaire du package.json
+```bash
+# Vérifier si les scripts existent
+cat package.json | grep -A 10 '"scripts"'
+
+# Si nécessaire, corriger le script build
+npm run build:client
+npm run build:server
+```
+
+---
+
+## Statut attendu après correction
+- PM2 status: `online`
+- API répond: Status 200
+- Logs: Aucune erreur critique
+- Application accessible sur https://tomati.org

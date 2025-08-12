@@ -1,0 +1,142 @@
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-135-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Aug 12 21:59:35 UTC 2025
+
+  System load:           0.08
+  Usage of /:            9.3% of 77.35GB
+  Memory usage:          18%
+  Swap usage:            0%
+  Processes:             117
+  Users logged in:       2
+  IPv4 address for ens3: 51.222.111.183
+  IPv6 address for ens3: 2607:5300:205:200::3f85
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Tue Aug 12 21:16:34 2025 from 41.62.169.222
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+tomati@vps-8dfc48b5:~$ cd tomatimarket
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://tomati_user:Tomati123_db@localhost:5432/tomati_db
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > ecosystem.config.js << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './server/index.ts',
+    interpreter: 'tsx',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
+tomati@vps-8dfc48b5:~/tomatimarket$ mkdir -p logs uploads
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 delete tomati-production 2>/dev/null ||                                                                                                              echo "Aucune app à arrêter"
+if [ -d /home/tomati/tomatimarket ]; then mv /home/tomati/tomatimarket /home/tom                                                                                                             ati/tomatimarket_backup_$(date +%Y%m%d_%H%M%S); fi
+Aucune app à arrêter
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 delete tomati-production 2>/dev/null; if                                                                                                              [ -d /home/tomati/tomatimarket ]; then mv /home/tomati/tomatimarket /home/tomat                                                                                                             i/tomatimarket_backup_$(date +%Y%m%d_%H%M%S); fi; git clone https://github.com/i                                                                                                             men-nasrii/cool-mobile-spark.git /home/tomati/tomatimarket; cd /home/tomati/toma                                                                                                             timarket
+Cloning into '/home/tomati/tomatimarket'...
+remote: Enumerating objects: 3451, done.
+remote: Counting objects: 100% (3451/3451), done.
+remote: Compressing objects: 100% (930/930), done.
+remote: Total 3451 (delta 2668), reused 3251 (delta 2468), pack-reused 0 (from 0                                                                                                             )
+Receiving objects: 100% (3451/3451), 15.25 MiB | 18.84 MiB/s, done.
+Resolving deltas: 100% (2668/2668), done.
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://tomati_user:Tomati123_db@localhost:5432/tomati_db
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+EOF
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './server/index.ts',
+    interpreter: 'tsx',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: { NODE_ENV: 'production', PORT: 5000 },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+EOF
+tomati@vps-8dfc48b5:~/tomatimarket$ mkdir -p logs uploads && npm install --produ                                                                                                             ction && npm run build && npm run db:push && pm2 start ecosystem.config.js && pm                                                                                                             2 save
+npm warn config production Use `--omit=dev` instead.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMExcep                                                                                                             tion instead
+
+added 572 packages, and audited 573 packages in 25s
+
+75 packages are looking for funding
+  run `npm fund` for details
+
+3 low severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+npm notice To update run: npm install -g npm@11.5.2
+npm notice
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bu                                                                                                             ndle --format=esm --outdir=dist
+
+sh: 1: vite: not found
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 status && pm2 logs tomati-production --l                                                                                                             ines 10 && curl http://localhost:5000/api/categories
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the valu                                                                                                             e with --lines option)
+
