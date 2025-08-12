@@ -252,19 +252,19 @@ export default function AdminDashboard() {
 
           <TabsContent value="products" className="mt-8 px-8">
             <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
-              <ProductManager onStatsUpdate={() => {}} />
+              <ProductManager />
             </div>
           </TabsContent>
 
           <TabsContent value="users" className="mt-8 px-8">
             <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
-              <UserManager onStatsUpdate={() => {}} />
+              <UserManager />
             </div>
           </TabsContent>
 
           <TabsContent value="categories" className="mt-8 px-8">
             <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
-              <CategoryManager onStatsUpdate={() => {}} />
+              <CategoryManager />
             </div>
           </TabsContent>
         </Tabs>
