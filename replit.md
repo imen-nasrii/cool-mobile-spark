@@ -35,3 +35,10 @@ The platform is built with a clear separation between client and server. The fro
   - Added product rating API routes (/api/products/:id/rate, /api/products/:id/rating)
   - Updated UI to display real view counts and ratings instead of placeholders
   - Fixed missing cn import in ProductDetail.tsx
+- **Fixed Admin Dashboard and Category Management:**
+  - Resolved all TypeScript errors in admin components
+  - Cleaned up duplicate categories in database (removed Electronics/Électronique, Sports/Sport, Voiture/Auto duplicates)
+  - Standardized category names to French (Furniture → Meubles)
+  - Final categories: Auto, Autres, Emplois, Meubles, Immobilier, Mode, Sport, Électronique
+  - Admin dashboard fully functional with real database statistics
+- **Prepared for deployment to VPS OVH with user credentials**
