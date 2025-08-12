@@ -1,4 +1,4 @@
-import { Search, Plus, User, LogOut, LogIn, Settings } from "lucide-react";
+import { Search, Plus, User, LogOut, LogIn, Settings, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -133,6 +133,12 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                     <Search className="mr-2 h-4 w-4" />
                     <span>Mes favoris</span>
                   </DropdownMenuItem>
+                  {user?.role === 'admin' && (
+                    <DropdownMenuItem onClick={() => navigate('/admin')}>
+                      <Shield className="mr-2 h-4 w-4" />
+                      <span>Dashboard Admin</span>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
                     <LogOut className="mr-2 h-4 w-4" />
