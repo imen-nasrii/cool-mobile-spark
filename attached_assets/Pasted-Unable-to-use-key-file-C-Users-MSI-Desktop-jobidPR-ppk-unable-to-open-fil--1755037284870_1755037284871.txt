@@ -1,0 +1,246 @@
+Unable to use key file "C:\Users\MSI\Desktop\jobidPR.ppk" (unable to open fil                                                                                                             e)
+login as: ubuntu
+ubuntu@51.222.111.183's password:
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 5.15.0-135-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Aug 12 21:59:35 UTC 2025
+
+  System load:           0.08
+  Usage of /:            9.3% of 77.35GB
+  Memory usage:          18%
+  Swap usage:            0%
+  Processes:             117
+  Users logged in:       2
+  IPv4 address for ens3: 51.222.111.183
+  IPv6 address for ens3: 2607:5300:205:200::3f85
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+New release '24.04.3 LTS' available.
+Run 'do-release-upgrade' to upgrade to it.
+
+
+*** System restart required ***
+Last login: Tue Aug 12 21:16:34 2025 from 41.62.169.222
+ubuntu@vps-8dfc48b5:~$ su - tomati
+Password:
+tomati@vps-8dfc48b5:~$ cd tomatimarket
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://tomati_user:Tomati123_db@localhost:5432/tomati_db
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > ecosystem.config.js << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './server/index.ts',
+    interpreter: 'tsx',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
+tomati@vps-8dfc48b5:~/tomatimarket$ mkdir -p logs uploads
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 delete tomati-production 2>/dev/null ||                                                                                                              echo "Aucune app à arrêter"
+if [ -d /home/tomati/tomatimarket ]; then mv /home/tomati/tomatimarket /home/tom                                                                                                             ati/tomatimarket_backup_$(date +%Y%m%d_%H%M%S); fi
+Aucune app à arrêter
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 delete tomati-production 2>/dev/null; if                                                                                                              [ -d /home/tomati/tomatimarket ]; then mv /home/tomati/tomatimarket /home/tomat                                                                                                             i/tomatimarket_backup_$(date +%Y%m%d_%H%M%S); fi; git clone https://github.com/i                                                                                                             men-nasrii/cool-mobile-spark.git /home/tomati/tomatimarket; cd /home/tomati/toma                                                                                                             timarket
+Cloning into '/home/tomati/tomatimarket'...
+remote: Enumerating objects: 3451, done.
+remote: Counting objects: 100% (3451/3451), done.
+remote: Compressing objects: 100% (930/930), done.
+remote: Total 3451 (delta 2668), reused 3251 (delta 2468), pack-reused 0 (from 0                                                                                                             )
+Receiving objects: 100% (3451/3451), 15.25 MiB | 18.84 MiB/s, done.
+Resolving deltas: 100% (2668/2668), done.
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > .env << 'EOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://tomati_user:Tomati123_db@localhost:5432/tomati_db
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+EOF
+tomati@vps-8dfc48b5:~/tomatimarket$ cat > ecosystem.config.js << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './server/index.ts',
+    interpreter: 'tsx',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: { NODE_ENV: 'production', PORT: 5000 },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+EOF
+tomati@vps-8dfc48b5:~/tomatimarket$ mkdir -p logs uploads && npm install --produ                                                                                                             ction && npm run build && npm run db:push && pm2 start ecosystem.config.js && pm                                                                                                             2 save
+npm warn config production Use `--omit=dev` instead.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMExcep                                                                                                             tion instead
+
+added 572 packages, and audited 573 packages in 25s
+
+75 packages are looking for funding
+  run `npm fund` for details
+
+3 low severity vulnerabilities
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+npm notice To update run: npm install -g npm@11.5.2
+npm notice
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bu                                                                                                             ndle --format=esm --outdir=dist
+
+sh: 1: vite: not found
+tomati@vps-8dfc48b5:~/tomatimarket$ pm2 status && pm2 logs tomati-production --l                                                                                                             ines 10 && curl http://localhost:5000/api/categories
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-production] process (change the valu                                                                                                             e with --lines option)
+^C
+tomati@vps-8dfc48b5:~/tomatimarket$ npm install
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 107 packages, and audited 680 packages in 10s
+
+87 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+tomati@vps-8dfc48b5:~/tomatimarket$ npm run build
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (8) src/pages/Auth.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2681 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-CnH-OLuK.css            120.64 kB │ gzip:  24.00 kB
+../dist/public/assets/index-DMlBXpoI.js             906.26 kB │ gzip: 260.42 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 23.84s
+
+  dist/index.js  81.2kb
+
+⚡ Done in 25ms
+tomati@vps-8dfc48b5:~/tomatimarket$ npm run db:push
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/tomati/tomatimarket/drizzle.config.ts'
+Using 'pg' driver for database querying
+[⣷] Pulling schema from database...
+error: password authentication failed for user "tomati_user"
+    at /home/tomati/tomatimarket/node_modules/pg-pool/index.js:45:11
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async Object.query (/home/tomati/tomatimarket/node_modules/drizzle-kit/bin.cjs:66575:26)
+    at async fromDatabase2 (/home/tomati/tomatimarket/node_modules/drizzle-kit/bin.cjs:18700:25) {
+  length: 107,
+  severity: 'FATAL',
+  code: '28P01',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'auth.c',
+  line: '335',
+  routine: 'auth_failed'
+}
+tomati@vps-8dfc48b5:~/tomatimarket$ ^C
+tomati@vps-8dfc48b5:~/tomatimarket$ sudo systemctl status postgresql
+[sudo] password for tomati:
+● postgresql.service - PostgreSQL RDBMS
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (exited) since Sat 2025-07-26 21:02:34 UTC; 2 weeks 3 days ago
+   Main PID: 222636 (code=exited, status=0/SUCCESS)
+        CPU: 1ms
+
+Jul 26 21:02:34 vps-8dfc48b5 systemd[1]: Starting PostgreSQL RDBMS...
+Jul 26 21:02:34 vps-8dfc48b5 systemd[1]: Finished PostgreSQL RDBMS.
+tomati@vps-8dfc48b5:~/tomatimarket$ sudo -u postgres psql -c "CREATE USER tomati_user WITH PASSWORD 'Tomati123_db';"
+sudo -u postgres psql -c "CREATE DATABASE tomati_db OWNER tomati_user;"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tomati_db TO tomati_user;"
+could not change directory to "/home/tomati/tomatimarket": Permission denied
+ERROR:  role "tomati_user" already exists
+could not change directory to "/home/tomati/tomatimarket": Permission denied
+ERROR:  database "tomati_db" already exists
+could not change directory to "/home/tomati/tomatimarket": Permission denied
+GRANT
