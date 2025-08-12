@@ -57,31 +57,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setLoading(false);
         });
     } else {
-      // Auto-login for testing - connect as admin user
-      const autoLogin = async () => {
-        try {
-          console.log('Attempting auto-login...');
-          const response = await apiClient.signIn('admin@tomati.com', 'admin123');
-          console.log('Auto-login response:', response);
-          if (response.user && response.token) {
-            // Make sure we get the complete user data including role
-            const userWithRole = {
-              ...response.user,
-              role: response.user.role || 'admin' // Ensure admin role is set
-            };
-            setUser(userWithRole);
-            // Ensure token is saved
-            apiClient.setToken(response.token);
-            localStorage.setItem('authToken', response.token);
-            console.log('Auto-login successful, token saved, user role:', userWithRole.role);
-          }
-        } catch (error) {
-          console.log('Auto-login failed:', error);
-        } finally {
-          setLoading(false);
-        }
-      };
-      autoLogin();
+      setLoading(false);
     }
   }, []);
 

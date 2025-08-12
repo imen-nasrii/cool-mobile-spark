@@ -288,7 +288,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "Rating must be between 1 and 5" });
       }
       
-      await storage.rateProduct(req.params.id, req.user.id, rating);
+      await storage.rateProduct(req.params.id, (req as any).user.id, rating);
       
       res.json({ success: true });
     } catch (error: any) {
@@ -299,7 +299,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get user's rating for a product
   app.get("/api/products/:id/rating", authenticateToken, async (req, res) => {
     try {
-      const rating = await storage.getUserRatingForProduct(req.params.id, req.user.id);
+      const rating = await storage.getUserRatingForProduct(req.params.id, (req as any).user.id);
       res.json({ rating });
     } catch (error: any) {
       res.status(500).json({ error: error.message });

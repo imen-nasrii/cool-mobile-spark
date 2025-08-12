@@ -333,16 +333,19 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(advertisements.position, position));
     }
     if (category && category !== 'all') {
-      conditions.push(or(eq(advertisements.category, category), isNull(advertisements.category)));
+      const categoryCondition = or(eq(advertisements.category, category), isNull(advertisements.category));
+      if (categoryCondition) {
+        conditions.push(categoryCondition);
+      }
     }
     
     // Build the where clause properly
-    const whereClause = conditions.length === 1 ? conditions[0] : (conditions.length > 1 ? and(...conditions) : undefined);
-    
     const query = db.select().from(advertisements);
     
-    if (whereClause) {
-      return query.where(whereClause).orderBy(desc(advertisements.created_at));
+    if (conditions.length === 1) {
+      return query.where(conditions[0]).orderBy(desc(advertisements.created_at));
+    } else if (conditions.length > 1) {
+      return query.where(and(...conditions)).orderBy(desc(advertisements.created_at));
     } else {
       return query.orderBy(desc(advertisements.created_at));
     }
