@@ -24,4 +24,7 @@ The platform is built with a clear separation between client and server. The fro
 - Fixed database schema issues in profile management routes
 - Removed unused fields (location, phone) from profiles table operations
 - Resolved TypeScript compilation errors in server/routes.ts
+- Fixed profile update functionality - removed obsolete location/phone fields from UI
+- Product photo display working correctly in product details pages
+- WebSocket authentication improved
 - Application successfully running on port 5000
