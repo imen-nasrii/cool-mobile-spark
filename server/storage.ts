@@ -1,12 +1,13 @@
 import { db } from "./db";
 import { eq, desc, or, sql, and, isNull } from "drizzle-orm";
 import { 
-  users, profiles, categories, products, advertisements, product_likes,
+  users, profiles, categories, products, advertisements, product_likes, product_ratings,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
-  type Advertisement, type InsertAdvertisement
+  type Advertisement, type InsertAdvertisement,
+  type ProductRating, type InsertProductRating
 } from "@shared/schema";
 
 export interface IStorage {
@@ -31,6 +32,12 @@ export interface IStorage {
   createProduct(product: InsertProduct): Promise<Product>;
   updateProduct(id: string, product: Partial<InsertProduct>): Promise<Product | undefined>;
   deleteProduct(id: string): Promise<boolean>;
+  incrementProductViews(id: string): Promise<void>;
+  
+  // Product ratings
+  rateProduct(productId: string, userId: string, rating: number): Promise<void>;
+  getUserRatingForProduct(productId: string, userId: string): Promise<number | null>;
+  updateProductRatingStats(productId: string): Promise<void>;
   
   // Advertisements
   getAdvertisements(position?: string, category?: string): Promise<Advertisement[]>;
@@ -235,6 +242,86 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error('Error deleting product:', error);
       return false;
+    }
+  }
+
+  async incrementProductViews(id: string): Promise<void> {
+    try {
+      await db.update(products)
+        .set({ 
+          view_count: sql`${products.view_count} + 1`,
+          updated_at: new Date()
+        })
+        .where(eq(products.id, id));
+    } catch (error) {
+      console.error('Error incrementing product views:', error);
+    }
+  }
+
+  async rateProduct(productId: string, userId: string, rating: number): Promise<void> {
+    try {
+      // Check if user already rated this product
+      const existingRating = await db.select().from(product_ratings)
+        .where(and(eq(product_ratings.product_id, productId), eq(product_ratings.user_id, userId)))
+        .limit(1);
+
+      if (existingRating.length > 0) {
+        // Update existing rating
+        await db.update(product_ratings)
+          .set({ rating })
+          .where(and(eq(product_ratings.product_id, productId), eq(product_ratings.user_id, userId)));
+      } else {
+        // Create new rating
+        await db.insert(product_ratings).values({
+          product_id: productId,
+          user_id: userId,
+          rating
+        });
+      }
+
+      // Update product rating stats
+      await this.updateProductRatingStats(productId);
+    } catch (error) {
+      console.error('Error rating product:', error);
+      throw error;
+    }
+  }
+
+  async getUserRatingForProduct(productId: string, userId: string): Promise<number | null> {
+    try {
+      const result = await db.select().from(product_ratings)
+        .where(and(eq(product_ratings.product_id, productId), eq(product_ratings.user_id, userId)))
+        .limit(1);
+      
+      return result.length > 0 ? result[0].rating : null;
+    } catch (error) {
+      console.error('Error getting user rating:', error);
+      return null;
+    }
+  }
+
+  async updateProductRatingStats(productId: string): Promise<void> {
+    try {
+      // Calculate average rating and count
+      const result = await db.select({
+        avg_rating: sql<number>`AVG(${product_ratings.rating})`,
+        count: sql<number>`COUNT(*)::integer`
+      }).from(product_ratings).where(eq(product_ratings.product_id, productId));
+
+      const stats = result[0];
+      const avgRating = stats?.avg_rating ? Number(stats.avg_rating) : 0;
+      const ratingCount = stats?.count || 0;
+
+      // Update product table
+      await db.update(products)
+        .set({ 
+          rating: avgRating,
+          rating_count: ratingCount,
+          updated_at: new Date()
+        })
+        .where(eq(products.id, productId));
+    } catch (error) {
+      console.error('Error updating product rating stats:', error);
     }
   }
   

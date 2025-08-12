@@ -37,6 +37,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const [showChat, setShowChat] = useState(false);
   const [showSellerProfile, setShowSellerProfile] = useState(false);
   const [sellerProfile, setSellerProfile] = useState<any>(null);
+  const [userRating, setUserRating] = useState<number>(0);
+  const [hoveredRating, setHoveredRating] = useState<number>(0);
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
@@ -127,6 +129,42 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   });
 
+  const rateProductMutation = useMutation({
+    mutationFn: async ({ productId, rating }: { productId: string; rating: number }) => {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch(`/api/products/${productId}/rate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ rating })
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to rate product');
+      }
+      
+      return response.json();
+    },
+    onSuccess: (data, variables) => {
+      setUserRating(variables.rating);
+      toast({
+        title: "Note enregistrée",
+        description: `Vous avez donné ${variables.rating} étoile${variables.rating > 1 ? 's' : ''} à ce produit.`,
+      });
+      queryClient.invalidateQueries({ queryKey: ['/products', productId] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Erreur",
+        description: error.message || "Impossible d'enregistrer votre note",
+        variant: "destructive",
+      });
+    }
+  });
+
   const deleteProductMutation = useMutation({
     mutationFn: async (id: string) => {
       const token = localStorage.getItem('authToken');
@@ -185,6 +223,21 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       setSellerProfile(sellerData);
     }
   }, [sellerData]);
+
+  const handleRating = (rating: number) => {
+    if (!user) {
+      toast({
+        title: "Connexion requise",
+        description: "Veuillez vous connecter pour noter ce produit.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (productId) {
+      rateProductMutation.mutate({ productId, rating });
+    }
+  };
 
   const handleShare = async () => {
     if (!product) return;
@@ -610,16 +663,35 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <CardContent className="p-4">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-xl font-bold text-primary">{product.likes}</div>
+                  <div className="text-xl font-bold text-primary">{product.like_count || 0}</div>
                   <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-primary">-</div>
+                  <div className="text-xl font-bold text-primary">{product.view_count || 0}</div>
                   <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
                 </div>
                 <div>
-                  <div className="text-xl font-bold text-primary">-</div>
+                  <div className="text-xl font-bold text-primary">
+                    {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
+                  </div>
                   <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
+                  {/* Interactive Rating Stars */}
+                  <div className="flex gap-1 mt-2 justify-center">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={cn(
+                          "w-4 h-4 cursor-pointer transition-colors",
+                          (hoveredRating || userRating) >= star
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-gray-300 hover:text-yellow-300"
+                        )}
+                        onClick={() => handleRating(star)}
+                        onMouseEnter={() => setHoveredRating(star)}
+                        onMouseLeave={() => setHoveredRating(0)}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -663,11 +735,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     <div className="text-sm text-muted-foreground">J'aime</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-primary">-</div>
+                    <div className="text-2xl font-bold text-primary">{product.view_count || 0}</div>
                     <div className="text-sm text-muted-foreground">Vues</div>
                   </div>
                   <div>
-                    <div className="text-2xl font-bold text-primary">-</div>
+                    <div className="text-2xl font-bold text-primary">
+                      {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "5.0"}
+                    </div>
                     <div className="text-sm text-muted-foreground">Note</div>
                   </div>
                 </div>

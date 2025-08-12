@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { 
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema, insertNotificationSchema,
-  insertAdvertisementSchema, users, products, profiles 
+  insertAdvertisementSchema, insertProductRatingSchema, users, products, profiles 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
@@ -209,6 +209,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!product) {
         return res.status(404).json({ error: "Product not found" });
       }
+      
+      // Increment view count (non-blocking)
+      storage.incrementProductViews(req.params.id).catch(err => 
+        console.error('Failed to increment views:', err)
+      );
+      
       res.json(product);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
@@ -268,6 +274,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "Product not found" });
       }
       res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Rate a product
+  app.post("/api/products/:id/rate", authenticateToken, async (req, res) => {
+    try {
+      const { rating } = req.body;
+      
+      if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({ error: "Rating must be between 1 and 5" });
+      }
+      
+      await storage.rateProduct(req.params.id, req.user.id, rating);
+      
+      res.json({ success: true });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get user's rating for a product
+  app.get("/api/products/:id/rating", authenticateToken, async (req, res) => {
+    try {
+      const rating = await storage.getUserRatingForProduct(req.params.id, req.user.id);
+      res.json({ rating });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

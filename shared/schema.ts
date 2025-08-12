@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, uuid } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, uuid, real } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -40,6 +40,9 @@ export const products = pgTable("products", {
   category: text("category").notNull(),
   likes: integer("likes").default(0).notNull(),
   like_count: integer("like_count").default(0).notNull(),
+  view_count: integer("view_count").default(0).notNull(),
+  rating: real("rating").default(0),
+  rating_count: integer("rating_count").default(0).notNull(),
   is_reserved: boolean("is_reserved").default(false).notNull(),
   is_free: boolean("is_free").default(false).notNull(),
   is_promoted: boolean("is_promoted").default(false).notNull(),
@@ -189,6 +192,15 @@ export const advertisements = pgTable("advertisements", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
+// Product ratings table for user ratings
+export const product_ratings = pgTable("product_ratings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
+  rating: integer("rating").notNull(), // 1-5 stars
+  created_at: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -250,6 +262,11 @@ export const insertAdvertisementSchema = createInsertSchema(advertisements).omit
   impression_count: true,
 });
 
+export const insertProductRatingSchema = createInsertSchema(product_ratings).omit({
+  id: true,
+  created_at: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -272,3 +289,5 @@ export type InsertCall = z.infer<typeof insertCallSchema>;
 
 export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
+export type ProductRating = typeof product_ratings.$inferSelect;
+export type InsertProductRating = z.infer<typeof insertProductRatingSchema>;
