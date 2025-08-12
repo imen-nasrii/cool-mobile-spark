@@ -57,7 +57,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           setLoading(false);
         });
     } else {
-      setLoading(false);
+      // Auto-login for testing
+      const autoLogin = async () => {
+        try {
+          const response = await apiClient.signIn('admin@tomati.com', 'admin123');
+          if (response.user && response.token) {
+            setUser(response.user);
+            apiClient.setToken(response.token);
+            localStorage.setItem('authToken', response.token);
+          }
+        } catch (error) {
+          console.log('Auto-login failed:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      autoLogin();
     }
   }, []);
 
