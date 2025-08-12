@@ -18,3 +18,10 @@ The platform is built with a clear separation between client and server. The fro
 - **Deployment**: PM2, Nginx
 - **Geolocation**: Leaflet (for interactive map)
 - **Version Control**: GitHub
+
+## Recent Changes
+**Date: August 12, 2025**
+- Fixed database schema issues in profile management routes
+- Removed unused fields (location, phone) from profiles table operations
+- Resolved TypeScript compilation errors in server/routes.ts
+- Application successfully running on port 5000

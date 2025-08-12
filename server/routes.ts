@@ -764,9 +764,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .values({
             user_id: userId,
             display_name: req.user.display_name || req.user.email?.split('@')[0] || 'Utilisateur',
-            bio: '',
-            location: '',
-            phone: ''
+            bio: ''
           })
           .returning();
         return res.json(newProfile);
@@ -783,7 +781,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/profile", authenticateToken, async (req: any, res: any) => {
     try {
       const userId = req.user.id;
-      const { display_name, bio, location, phone } = req.body;
+      const { display_name, bio } = req.body;
       
       // Update or create profile
       const [updatedProfile] = await db.insert(profiles)
@@ -791,8 +789,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           user_id: userId,
           display_name,
           bio,
-          location,
-          phone,
           updated_at: new Date()
         })
         .onConflictDoUpdate({
@@ -800,8 +796,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
           set: {
             display_name,
             bio,
-            location,
-            phone,
             updated_at: new Date()
           }
         })
