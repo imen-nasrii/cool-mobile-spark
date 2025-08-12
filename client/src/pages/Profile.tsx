@@ -32,9 +32,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     display_name: "",
-    bio: "",
-    location: "",
-    phone: ""
+    bio: ""
   });
 
   // Fetch user profile
@@ -48,9 +46,7 @@ function Profile() {
     if (profile) {
       setFormData({
         display_name: profile.display_name || "",
-        bio: profile.bio || "",
-        location: profile.location || "",
-        phone: profile.phone || ""
+        bio: profile.bio || ""
       });
     }
   }, [profile]);
@@ -89,9 +85,7 @@ function Profile() {
     if (profile) {
       setFormData({
         display_name: profile.display_name || "",
-        bio: profile.bio || "",
-        location: profile.location || "",
-        phone: profile.phone || ""
+        bio: profile.bio || ""
       });
     }
     setIsEditing(false);
@@ -235,38 +229,7 @@ function Profile() {
               )}
             </div>
 
-            <div>
-              <Label htmlFor="location">Localisation</Label>
-              {isEditing ? (
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                  placeholder="Votre ville"
-                />
-              ) : (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {profile?.location || "Non renseigné"}
-                </p>
-              )}
-            </div>
 
-            <div>
-              <Label htmlFor="phone">Téléphone</Label>
-              {isEditing ? (
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                  placeholder="Votre numéro de téléphone"
-                  type="tel"
-                />
-              ) : (
-                <p className="text-sm text-muted-foreground mt-1">
-                  {profile?.phone || "Non renseigné"}
-                </p>
-              )}
-            </div>
           </CardContent>
         </Card>
 
