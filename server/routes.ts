@@ -724,12 +724,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve object storage files
-  app.get("/objects/:objectPath(*)", authenticateToken, async (req: any, res: any) => {
+  // Serve object storage files (public access for avatars)
+  app.get("/objects/:objectPath(*)", async (req: any, res: any) => {
     try {
+      console.log('Auth request - Path:', req.path);
+      console.log('Auth request - Auth header:', req.headers['authorization']);
+      
       const { ObjectStorageService, ObjectNotFoundError } = await import('./objectStorage');
       const objectStorageService = new ObjectStorageService();
       const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+      
+      // Set cache headers for better performance
+      res.set({
+        'Cache-Control': 'public, max-age=3600', // 1 hour cache
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET',
+        'Access-Control-Allow-Headers': 'Content-Type'
+      });
+      
       objectStorageService.downloadObject(objectFile, res);
     } catch (error: any) {
       console.error('Error serving object:', error);
