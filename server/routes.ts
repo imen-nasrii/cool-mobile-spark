@@ -311,8 +311,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Profile routes
   app.get("/api/profile", authenticateToken, async (req, res) => {
     try {
-      const profile = await storage.getProfile((req as any).user.id);
-      res.json(profile);
+      const user = (req as any).user;
+      const profile = await storage.getProfile(user.id);
+      
+      // Include user role from the authenticated user data
+      const profileWithRole = {
+        ...profile,
+        role: user.role,
+        email: user.email
+      };
+      
+      res.json(profileWithRole);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }

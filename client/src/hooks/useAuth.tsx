@@ -42,9 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           if (profile) {
             setUser({
               id: profile.user_id,
-              email: '', // We'll need to update this from user data if needed
+              email: profile.email || '',
               display_name: profile.display_name,
-              avatar_url: profile.avatar_url
+              avatar_url: profile.avatar_url,
+              role: profile.role || 'user' // Include role from profile
             });
           }
           setLoading(false);
@@ -63,11 +64,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           const response = await apiClient.signIn('admin@tomati.com', 'admin123');
           console.log('Auto-login response:', response);
           if (response.user && response.token) {
-            setUser(response.user);
+            // Make sure we get the complete user data including role
+            const userWithRole = {
+              ...response.user,
+              role: response.user.role || 'admin' // Ensure admin role is set
+            };
+            setUser(userWithRole);
             // Ensure token is saved
             apiClient.setToken(response.token);
             localStorage.setItem('authToken', response.token);
-            console.log('Auto-login successful, token saved');
+            console.log('Auto-login successful, token saved, user role:', userWithRole.role);
           }
         } catch (error) {
           console.log('Auto-login failed:', error);
