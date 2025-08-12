@@ -28,3 +28,10 @@ The platform is built with a clear separation between client and server. The fro
 - Product photo display working correctly in product details pages
 - WebSocket authentication improved
 - Application successfully running on port 5000
+- **Implemented functional views and rating system:**
+  - Added view_count and rating fields to products database schema
+  - Created automatic view counting when users access product details
+  - Built interactive 5-star rating system with click functionality
+  - Added product rating API routes (/api/products/:id/rate, /api/products/:id/rating)
+  - Updated UI to display real view counts and ratings instead of placeholders
+  - Fixed missing cn import in ProductDetail.tsx
