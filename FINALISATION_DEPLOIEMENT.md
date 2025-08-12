@@ -1,65 +1,49 @@
-# 🎉 Finalisation Déploiement - VPS OVH
+# Finalisation du Déploiement - SUCCESS!
 
-## ✅ EXCELLENTE NOUVELLE !
+## Statut actuel
+✅ Application compilée avec succès
+✅ PM2 démarré et en ligne (status: online)
+✅ Port 5000 configuré
+❌ DATABASE_URL manquante
 
-Votre application fonctionne parfaitement dans Replit ! Les logs montrent :
-- ✅ **17 produits chargés** ("Fetched products: 17 items")
-- ✅ **API promoted products OK** (304 response)
-- ✅ **Publicités fonctionnelles**
-- ✅ **Statistiques OK** ({"totalProducts":17,"totalUsers":100})
-- ✅ **Plus d'erreurs 500 !**
+## Solution finale
 
-## 🔧 Correction Finale VPS
-
-Il reste juste à créer la base `tomati_db` sur votre VPS.
-
-### Étapes Finales:
-
-**1. Entrer dans PostgreSQL:**
+### Ajouter la DATABASE_URL et redémarrer
 ```bash
-sudo -u postgres psql
-```
+cd /home/tomati/tomatimarket
 
-**2. Dans PostgreSQL (postgres=#), exécuter:**
-```sql
-CREATE DATABASE tomati_db OWNER tomati;
-\q
-```
-
-**3. Corriger le .env:**
-```bash
-nano .env
-```
-
-**Contenu .env:**
-```env
-DATABASE_URL=postgresql://tomati:tomati123@localhost:5432/tomati_db
-PGUSER=tomati
-PGPASSWORD=tomati123
-PGDATABASE=tomati_db
-PGHOST=localhost
-PGPORT=5432
+# Configuration complète avec DATABASE_URL
+cat > .env << 'ENVEOF'
 NODE_ENV=production
 PORT=5000
-JWT_SECRET=tomati-ovh-jwt-secret-2025
-SESSION_SECRET=tomati-ovh-session-secret-2025
-```
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://postgres@localhost:5432/postgres
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
 
-**4. Migration et redémarrage:**
-```bash
-npm run db:push
+# Redémarrer PM2 avec la nouvelle configuration
 pm2 restart tomati-production
+pm2 logs tomati-production --lines 10
+curl http://localhost:5000/api/categories
 ```
 
-**5. Test final:**
+## Commande finale
 ```bash
-curl http://51.222.111.183
+cd /home/tomati/tomatimarket && cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://postgres@localhost:5432/postgres
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
+pm2 restart tomati-production && sleep 5 && pm2 logs tomati-production --lines 10 && curl http://localhost:5000/api/categories
 ```
 
-## 🎯 Résultat
-
-Votre Tomati Market sera identique à Replit et accessible sur:
-- **http://51.222.111.183**
-- **http://51.222.111.183/admin**
-
-L'application est déjà parfaitement fonctionnelle en développement !
+## Après succès
+- Application disponible sur https://tomati.org
+- Admin dashboard sur https://tomati.org/admin
+- API fonctionnelle

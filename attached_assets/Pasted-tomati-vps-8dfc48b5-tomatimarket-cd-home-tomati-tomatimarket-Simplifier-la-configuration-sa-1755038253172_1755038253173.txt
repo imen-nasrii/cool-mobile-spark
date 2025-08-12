@@ -1,0 +1,71 @@
+tomati@vps-8dfc48b5:~/tomatimarket$ cd /home/tomati/tomatimarket
+
+# Simplifier la configuration sans DB pour l'instant
+cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
+
+# Utiliser node directement avec le fichier compilé
+cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './dist/index.js',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
+
+# Démarrer avec PM2
+pm2 start ecosystem.config.cjs && pm2 save && pm2 status
+[PM2][WARN] Applications tomati-production not running, starting...
+[PM2] App [tomati-production] launched (1 instances)
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ fork    │ 594138   │ 0s     │ 0    │ online    │ 0%       │ 11.1mb   │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/tomati/.pm2/dump.pm2
+┌────┬──────────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name                 │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼──────────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-production    │ default     │ 1.0.0   │ fork    │ 594138   │ 1s     │ 0    │ online    │ 0%       │ 82.3mb   │ tomati   │ disabled │
+└────┴──────────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+tomati@vps-8dfc48b5:~/tomatimarket$ # Alternative : démarrage direct
+node ./dist/index.js &
+sleep 3
+curl http://localhost:5000/api/categories
+[1] 594166
+file:///home/tomati/tomatimarket/dist/index.js:523
+  throw new Error(
+        ^
+
+Error: DATABASE_URL must be set. Did you forget to provision a database?
+    at file:///home/tomati/tomatimarket/dist/index.js:523:9
+    at ModuleJob.run (node:internal/modules/esm/module_job:263:25)
+    at async ModuleLoader.import (node:internal/modules/esm/loader:540:24)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:117:5)
+
+Node.js v20.19.4
+[1]+  Exit 1                  node ./dist/index.js
+curl: (7) Failed to connect to localhost port 5000 after 0 ms: Connection refused
+tomati@vps-8dfc48b5:~/tomatimarket$
