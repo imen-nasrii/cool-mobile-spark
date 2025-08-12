@@ -8,7 +8,7 @@ echo "🚀 Déploiement Tomati Market via GitHub vers VPS OVH..."
 # Configuration
 VPS_USER="tomati"
 VPS_HOST="51.222.111.183"
-GITHUB_REPO="https://github.com/votre-username/tomati-market.git"
+GITHUB_REPO="https://github.com/imen-nasrii/cool-mobile-spark.git"
 APP_NAME="tomati-production"
 APP_DIR="/home/tomati/tomatimarket"
 
@@ -26,7 +26,7 @@ if [ -d /home/tomati/tomatimarket ]; then
 fi
 
 echo "📥 Clone depuis GitHub..."
-git clone https://github.com/votre-username/tomati-market.git /home/tomati/tomatimarket
+git clone https://github.com/imen-nasrii/cool-mobile-spark.git /home/tomati/tomatimarket
 cd /home/tomati/tomatimarket
 
 echo "⚙️ Configuration de l'environnement..."
