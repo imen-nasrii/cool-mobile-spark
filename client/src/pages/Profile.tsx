@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, User, Mail, Edit, Save, X } from "lucide-react";
+import { ArrowLeft, User, Mail, Edit, Save, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,7 +25,7 @@ interface ProfileData {
 }
 
 function Profile() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -89,6 +89,23 @@ function Profile() {
       });
     }
     setIsEditing(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+      });
+      setLocation('/');
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de se déconnecter",
+        variant: "destructive",
+      });
+    }
   };
 
   const getInitials = (name?: string, email?: string) => {
@@ -258,6 +275,17 @@ function Profile() {
                   {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('fr-FR') : "Date inconnue"}
                 </p>
               </div>
+            </div>
+            
+            <div className="pt-4 border-t">
+              <Button 
+                onClick={handleSignOut}
+                variant="outline"
+                className="w-full flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 border-red-200 hover:border-red-300"
+              >
+                <LogOut className="w-4 h-4" />
+                Se déconnecter
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -1,9 +1,17 @@
-import { Search, Plus, User } from "lucide-react";
+import { Search, Plus, User, LogOut, LogIn, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/hooks/use-toast";
 
 interface HeaderProps {
   activeTab?: string;
@@ -15,6 +23,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,6 +59,23 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
     }
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Déconnexion réussie",
+        description: "Vous avez été déconnecté avec succès",
+      });
+      navigate('/');
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de se déconnecter",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-3">
@@ -79,20 +105,52 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           <div className="flex items-center gap-3">
 
             
-            {/* Se connecter Button */}
-            <Button
-              onClick={handleConnect}
-              variant="outline"
-              className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
-            >
-              <User size={18} />
-              <span className="hidden sm:inline">
-                {user ? 'Mon profil' : 'Se connecter'}
-              </span>
-              <span className="sm:hidden">
-                {user ? 'Profil' : 'Login'}
-              </span>
-            </Button>
+            {/* User Menu */}
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
+                  >
+                    <User size={18} />
+                    <span className="hidden sm:inline">
+                      {user.display_name || 'Mon profil'}
+                    </span>
+                    <span className="sm:hidden">Profil</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem onClick={handleConnect}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Mon profil</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onTabChange?.('add')}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Publier une annonce</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => onTabChange?.('favorites')}>
+                    <Search className="mr-2 h-4 w-4" />
+                    <span>Mes favoris</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-red-600 focus:text-red-600">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Se déconnecter</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                onClick={handleConnect}
+                variant="outline"
+                className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
+              >
+                <LogIn size={18} />
+                <span className="hidden sm:inline">Se connecter</span>
+                <span className="sm:hidden">Login</span>
+              </Button>
+            )}
           </div>
         </div>
       </div>
