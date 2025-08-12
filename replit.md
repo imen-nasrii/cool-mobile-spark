@@ -42,3 +42,9 @@ The platform is built with a clear separation between client and server. The fro
   - Final categories: Auto, Autres, Emplois, Meubles, Immobilier, Mode, Sport, Électronique
   - Admin dashboard fully functional with real database statistics
 - **Prepared for deployment to VPS OVH with user credentials**
+- **Created comprehensive GitHub deployment strategy:**
+  - GitHub repository deployment scripts for VPS OVH
+  - Automated deployment workflow via git clone and pull
+  - Complete deployment documentation for GitHub method
+  - Production-ready PM2 ecosystem configuration
+  - Database migration integration in deployment process
