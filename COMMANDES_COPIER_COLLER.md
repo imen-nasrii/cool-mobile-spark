@@ -1,67 +1,136 @@
-# Commandes à Copier-Coller pour HTTPS tomati.org
+# Commandes à Copier-Coller pour Déploiement VPS OVH
 
-## 1. Vérifier si Nginx est installé
+## 🔗 CONNEXION
 ```bash
-sudo systemctl status nginx
+ssh tomati@51.222.111.183
+```
+**Mot de passe**: Tomati123
+
+---
+
+## 🛑 ARRÊT APPLICATION
+```bash
+pm2 delete tomati-production
 ```
 
-Si pas installé :
+---
+
+## 💾 SAUVEGARDE
 ```bash
-sudo apt update && sudo apt install nginx -y
+if [ -d /home/tomati/tomatimarket ]; then mv /home/tomati/tomatimarket /home/tomati/tomatimarket_backup_$(date +%Y%m%d_%H%M%S); fi
 ```
 
-## 2. Créer configuration tomati.org
-```bash
-sudo tee /etc/nginx/sites-available/tomati.org > /dev/null << 'EOF'
-server {
-    listen 80;
-    server_name tomati.org www.tomati.org;
+---
 
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-EOF
+## 📁 CRÉATION RÉPERTOIRE
+```bash
+mkdir -p /home/tomati/tomatimarket && cd /home/tomati/tomatimarket
 ```
 
-## 3. Activer la configuration
+---
+
+## ⚙️ FICHIER .ENV
 ```bash
-sudo ln -sf /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
-sudo rm -f /etc/nginx/sites-enabled/default
-sudo nginx -t && sudo systemctl reload nginx
+cat > .env << 'ENVEOF'
+NODE_ENV=production
+PORT=5000
+JWT_SECRET=tomati-super-secret-jwt-key-production-2025
+DATABASE_URL=postgresql://tomati_user:Tomati123_db@localhost:5432/tomati_db
+PUBLIC_URL=https://tomati.org
+VITE_API_URL=https://tomati.org/api
+CORS_ORIGIN=https://tomati.org
+ENVEOF
 ```
 
-## 4. Installer Certbot
+---
+
+## 📋 FICHIER PM2 CONFIG
 ```bash
-sudo apt install certbot python3-certbot-nginx -y
+cat > ecosystem.config.js << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './server/index.ts',
+    interpreter: 'tsx',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
 ```
 
-## 5. Test DNS (attendre que ça retourne 51.222.111.183)
+---
+
+## 📂 RÉPERTOIRES
 ```bash
-nslookup tomati.org
+mkdir -p logs uploads
 ```
 
-## 6. Certificat SSL (quand DNS OK)
+---
+
+## 📤 TRANSFERT ARCHIVE (Machine Locale)
 ```bash
-sudo certbot --nginx -d tomati.org -d www.tomati.org
+scp tomati-deployment.tar.gz tomati@51.222.111.183:/home/tomati/
 ```
 
-## 7. Tests finaux
+---
+
+## 📦 EXTRACTION
 ```bash
-curl http://tomati.org
-curl https://tomati.org
+cd /home/tomati/tomatimarket && tar -xzf /home/tomati/tomati-deployment.tar.gz && rm /home/tomati/tomati-deployment.tar.gz
+```
+
+---
+
+## 🔧 INSTALLATION + BUILD + DÉMARRAGE
+```bash
+npm install --production && npm run build && npm run db:push && pm2 start ecosystem.config.js && pm2 save
+```
+
+---
+
+## ✅ VÉRIFICATION
+```bash
+pm2 status && pm2 logs tomati-production --lines 10 && curl http://localhost:5000/api/categories
+```
+
+---
+
+## 🔄 COMMANDES DE GESTION
+
+### Statut
+```bash
 pm2 status
 ```
 
-## Résultat
-- ✅ https://tomati.org → Tomati Market
-- ✅ Certificat SSL valide
-- ✅ Redirection automatique HTTP → HTTPS
+### Logs
+```bash
+pm2 logs tomati-production
+```
+
+### Redémarrer
+```bash
+pm2 restart tomati-production
+```
+
+### Arrêter
+```bash
+pm2 stop tomati-production
+```
+
+---
+
+## 🌐 TEST FINAL
+Ouvrir dans le navigateur: **https://tomati.org**
