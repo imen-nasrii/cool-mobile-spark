@@ -1,62 +1,79 @@
-# ✅ Validation Finale - Correction Base de Données
+# Solution Finale - Configuration PM2 avec Variables
 
-## 🚨 Problème Actuel
-- Erreur authentification PostgreSQL: `password authentication failed for user "tomati"`
-- Application redémarrée mais base de données inaccessible
-- PM2 montre status "online" ✅
+## Problème identifié
+PM2 ne charge pas automatiquement le fichier .env
 
-## 🔧 Solution Étapes Finales
-
-### 1. Recréer l'utilisateur PostgreSQL
+## Solution 1: Configuration directe dans ecosystem.config.cjs
 ```bash
-sudo -u postgres psql
+cd /home/tomati/tomatimarket
+cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './dist/index.js',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      JWT_SECRET: 'tomati-super-secret-jwt-key-production-2025',
+      DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres',
+      PUBLIC_URL: 'https://tomati.org',
+      VITE_API_URL: 'https://tomati.org/api',
+      CORS_ORIGIN: 'https://tomati.org'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
+
+pm2 delete tomati-production
+pm2 start ecosystem.config.cjs
+pm2 save
+pm2 status
+curl http://localhost:5000/api/categories
 ```
 
-### Dans PostgreSQL, exécuter UNE PAR UNE:
-```sql
-DROP USER IF EXISTS tomati;
-CREATE USER tomati WITH PASSWORD 'tomati123';
-ALTER USER tomati CREATEDB;
-ALTER USER tomati WITH SUPERUSER;
-GRANT ALL PRIVILEGES ON DATABASE tomati_db TO tomati;
-\q
-```
-
-### 2. Tester connexion
+## Solution 2: Restart avec --update-env
 ```bash
-psql -h localhost -U tomati -d tomati_db -c "SELECT version();"
+pm2 restart tomati-production --update-env
 ```
-**Mot de passe:** `tomati123`
 
-### 3. Migration base de données
+## Commande finale recommandée
 ```bash
-npm run db:push
+cd /home/tomati/tomatimarket && cat > ecosystem.config.cjs << 'ECOEOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-production',
+    script: './dist/index.js',
+    cwd: '/home/tomati/tomatimarket',
+    instances: 1,
+    exec_mode: 'fork',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      JWT_SECRET: 'tomati-super-secret-jwt-key-production-2025',
+      DATABASE_URL: 'postgresql://postgres@localhost:5432/postgres',
+      PUBLIC_URL: 'https://tomati.org',
+      VITE_API_URL: 'https://tomati.org/api',
+      CORS_ORIGIN: 'https://tomati.org'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true,
+    autorestart: true,
+    max_restarts: 5,
+    min_uptime: '10s'
+  }]
+};
+ECOEOF
+pm2 delete tomati-production && pm2 start ecosystem.config.cjs && pm2 save && pm2 status && sleep 5 && curl http://localhost:5000/api/categories
 ```
-
-### 4. Redémarrer application
-```bash
-pm2 restart tomati-production
-```
-
-### 5. Vérification finale
-```bash
-pm2 logs tomati-production --lines 10
-curl http://localhost:5000/api/products/promoted
-curl http://51.222.111.183
-```
-
-## 🎯 Résultat Final
-
-Après ces étapes:
-- ✅ Base de données accessible
-- ✅ Migration réussie
-- ✅ Plus d'erreurs 500
-- ✅ Application accessible sur http://51.222.111.183
-
-## 📋 URLs Finales
-
-- **Application**: http://51.222.111.183
-- **Administration**: http://51.222.111.183/admin
-- **Login admin**: admin@tomati.com / admin123
-
-L'application Tomati Market sera complètement fonctionnelle!
