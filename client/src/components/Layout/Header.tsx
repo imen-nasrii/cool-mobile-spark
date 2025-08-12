@@ -77,12 +77,14 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
+    <header className="glass-card border-0 border-b border-white/20 sticky top-0 z-40 modern-shadow-lg backdrop-blur-xl">
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="text-2xl font-bold text-red-500">tomati</div>
+            <div className="text-3xl font-black bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent drop-shadow-lg">
+              tomati
+            </div>
           </div>
           
           {/* Search Bar */}
@@ -95,7 +97,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                   placeholder="Rechercher sur tomati"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="pl-10 pr-4 py-2 w-full glass-card border-0 rounded-full modern-shadow focus:outline-none focus:ring-2 focus:ring-blue-400 focus:modern-shadow-lg transition-all duration-300"
                 />
               </div>
             </form>
@@ -111,7 +113,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="outline"
-                    className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
+                    className="glass-card border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 modern-shadow hover:modern-shadow-lg transition-all duration-300 hover:scale-105"
                   >
                     <User size={18} />
                     <span className="hidden sm:inline">
@@ -150,7 +152,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
               <Button
                 onClick={handleConnect}
                 variant="outline"
-                className="border border-gray-300 text-gray-700 hover:bg-red-50 hover:text-red-700 hover:border-red-300 px-4 py-2 rounded-full font-medium flex items-center gap-2 transition-colors"
+                className="glass-card border-0 bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 px-4 py-2 rounded-full font-medium flex items-center gap-2 modern-shadow hover:modern-shadow-lg transition-all duration-300 hover:scale-105"
               >
                 <LogIn size={18} />
                 <span className="hidden sm:inline">Se connecter</span>

@@ -4,6 +4,129 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Effets 3D et animations modernes */
+@layer components {
+  .glass-card {
+    @apply bg-white/90 backdrop-blur-xl border border-white/30;
+    box-shadow: 
+      0 8px 32px rgba(31, 38, 135, 0.37),
+      0 4px 16px rgba(31, 38, 135, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateZ(0);
+  }
+
+  .glass-card:hover {
+    transform: translateY(-8px) rotateX(5deg) translateZ(0);
+    box-shadow: 
+      0 20px 60px rgba(31, 38, 135, 0.5),
+      0 8px 32px rgba(31, 38, 135, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .floating-element {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .modern-shadow {
+    box-shadow: 
+      0 6px 20px -2px rgba(0, 0, 0, 0.1),
+      0 30px 60px -12px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .modern-shadow-lg {
+    box-shadow: 
+      0 12px 30px -3px rgba(0, 0, 0, 0.15),
+      0 6px 12px -2px rgba(0, 0, 0, 0.08),
+      0 40px 80px -12px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .neon-glow {
+    box-shadow: 
+      0 0 5px theme('colors.blue.400'),
+      0 0 20px theme('colors.blue.400'),
+      0 0 35px theme('colors.blue.400'),
+      0 0 50px theme('colors.blue.400');
+  }
+
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    perspective: 1000px;
+  }
+
+  .card-3d:hover {
+    transform: perspective(1000px) rotateY(8deg) rotateX(4deg) scale(1.03) translateZ(20px);
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg, 
+      rgba(255, 255, 255, 0) 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .aurora {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.1) 0%,
+      rgba(118, 75, 162, 0.1) 25%,
+      rgba(255, 154, 158, 0.1) 50%,
+      rgba(250, 208, 196, 0.1) 75%,
+      rgba(212, 252, 121, 0.1) 100%
+    );
+    background-size: 400% 400%;
+    animation: aurora 8s ease-in-out infinite;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(-12px) rotate(-1deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes aurora {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
 /* Animation for floating menu */
 @keyframes fadeInScale {
   0% {

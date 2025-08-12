@@ -23,12 +23,6 @@ export default function AdminDashboard() {
     queryFn: () => apiClient.request('/admin/stats'),
   });
 
-  // Fetch advertisements for dashboard overview
-  const { data: advertisements = [], isLoading: adsLoading } = useQuery({
-    queryKey: ['/api/advertisements/all'],
-    queryFn: () => apiClient.request('/advertisements/all'),
-  });
-
   const statsCards = [
     {
       title: "Total Produits",
@@ -36,7 +30,8 @@ export default function AdminDashboard() {
       icon: Package,
       description: `+${stats.recentProducts || 0} ce mois`,
       color: "text-blue-600",
-      bgColor: "bg-blue-50"
+      bgColor: "bg-blue-50",
+      gradient: "from-blue-500 to-blue-600"
     },
     {
       title: "Utilisateurs",
@@ -44,7 +39,8 @@ export default function AdminDashboard() {
       icon: Users,
       description: `${stats.activeUsers || 0} actifs`,
       color: "text-green-600",
-      bgColor: "bg-green-50"
+      bgColor: "bg-green-50",
+      gradient: "from-green-500 to-green-600"
     },
     {
       title: "Catégories",
@@ -52,7 +48,8 @@ export default function AdminDashboard() {
       icon: Grid3X3,
       description: "Gestion complète",
       color: "text-purple-600",
-      bgColor: "bg-purple-50"
+      bgColor: "bg-purple-50",
+      gradient: "from-purple-500 to-purple-600"
     },
     {
       title: "Publicités",
@@ -60,209 +57,215 @@ export default function AdminDashboard() {
       icon: Zap,
       description: `${stats.promotedProducts || 0} promus`,
       color: "text-orange-600",
-      bgColor: "bg-orange-50"
+      bgColor: "bg-orange-50",
+      gradient: "from-orange-500 to-orange-600"
     },
     {
       title: "Total Likes",
       value: stats.totalLikes || 0,
-      icon: TrendingUp,
+      icon: Heart,
       description: "Engagement",
       color: "text-pink-600",
-      bgColor: "bg-pink-50"
+      bgColor: "bg-pink-50",
+      gradient: "from-pink-500 to-pink-600"
     }
   ];
 
   const DashboardOverview = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Tableau de Bord Administrateur</h1>
-          <p className="text-muted-foreground mt-2">
-            Gérez votre plateforme e-commerce Tomati
-          </p>
-        </div>
-        <Badge variant="default" className="bg-green-100 text-green-800">
-          <TrendingUp size={14} className="mr-1" />
-          Système en ligne
-        </Badge>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium text-muted-foreground">
-                      {stat.title}
-                    </p>
-                    <p className="text-2xl font-bold">
-                      {isLoading || statsLoading ? "..." : stat.value}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {stat.description}
-                    </p>
-                  </div>
-                  <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                    <Icon size={24} className={stat.color} />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
-
-      {/* Recent Products */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Package size={20} />
-            Produits Récents
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {products.slice(0, 5).map((product: any) => (
-                <div key={product.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1">
-                    <h4 className="font-medium">{product.title}</h4>
-                    <p className="text-sm text-muted-foreground">{product.category} • {product.location}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">{product.price}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {new Date(product.created_at).toLocaleDateString('fr-FR')}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Actions Rapides</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <Button 
-              onClick={() => setActiveTab("products")} 
-              className="h-20 flex flex-col gap-2"
-            >
-              <Package size={24} />
-              <span>Gérer les Produits</span>
-            </Button>
-            <Button 
-              onClick={() => navigate('/admin/products')} 
-              variant="destructive" 
-              className="h-20 flex flex-col gap-2"
-            >
-              <Package size={24} />
-              <span>Supprimer Produits</span>
-            </Button>
-            <Button 
-              onClick={() => navigate('/admin/advertisements')} 
-              variant="secondary" 
-              className="h-20 flex flex-col gap-2 bg-blue-100 text-blue-700 hover:bg-blue-200"
-            >
-              <Zap size={24} />
-              <span>Supprimer Pubs Bleues</span>
-            </Button>
-            <Button 
-              onClick={() => setActiveTab("categories")} 
-              variant="outline" 
-              className="h-20 flex flex-col gap-2"
-            >
-              <Grid3X3 size={24} />
-              <span>Gérer les Catégories</span>
-            </Button>
-            <Button 
-              onClick={() => setActiveTab("users")} 
-              variant="outline" 
-              className="h-20 flex flex-col gap-2"
-            >
-              <Users size={24} />
-              <span>Gérer les Utilisateurs</span>
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      <div className="space-y-8 p-8">
+        {/* Hero Section */}
+        <div className="text-center space-y-6">
+          <div className="floating-element">
+            <h1 className="text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
+              Dashboard Administrateur
+            </h1>
           </div>
-        </CardContent>
-      </Card>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
+            Contrôlez et gérez votre plateforme e-commerce Tomati avec style et élégance
+          </p>
+          <div className="flex justify-center">
+            <Badge variant="default" className="bg-green-100 text-green-800 px-6 py-3 rounded-full modern-shadow-lg text-lg">
+              <TrendingUp size={20} className="mr-3" />
+              Système opérationnel
+            </Badge>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+          {statsCards.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={index} className="glass-card card-3d group hover:modern-shadow-lg border-0">
+                <CardContent className="p-6 relative overflow-hidden">
+                  {/* Background gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/20 to-gray-50/30 group-hover:to-gray-100/40 transition-all duration-500"></div>
+                  
+                  {/* Content */}
+                  <div className="relative z-10 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className={`p-3 rounded-xl ${stat.bgColor} group-hover:scale-110 transition-transform duration-300 modern-shadow`}>
+                        <Icon size={24} className={`${stat.color} drop-shadow-sm`} />
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
+                          {stat.title}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <p className="text-3xl font-black bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                        {statsLoading ? (
+                          <div className="animate-pulse bg-gray-200 h-8 w-16 rounded-lg"></div>
+                        ) : (
+                          stat.value
+                        )}
+                      </p>
+                      <p className="text-xs text-muted-foreground font-semibold">
+                        {stat.description}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom accent line */}
+                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${stat.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+
+        {/* Management Cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+          <Card className="glass-card card-3d group border-0 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100 opacity-50"></div>
+            <CardHeader className="pb-4 relative z-10">
+              <CardTitle className="flex items-center gap-4 text-2xl">
+                <div className="p-3 rounded-xl bg-blue-100 group-hover:bg-blue-200 transition-colors modern-shadow">
+                  <Package size={28} className="text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Gestion des Produits</h3>
+                  <p className="text-sm text-muted-foreground font-normal">Centre de contrôle produits</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <div className="space-y-4">
+                <p className="text-muted-foreground">Gérez les produits, catégories et inventaire de votre plateforme avec des outils avancés.</p>
+                <Button 
+                  onClick={() => setActiveTab("products")} 
+                  className={`w-full h-12 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 modern-shadow-lg font-semibold text-lg transition-all duration-300 hover:scale-105`}
+                >
+                  Accéder au centre de gestion
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="glass-card card-3d group border-0 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100 opacity-50"></div>
+            <CardHeader className="pb-4 relative z-10">
+              <CardTitle className="flex items-center gap-4 text-2xl">
+                <div className="p-3 rounded-xl bg-green-100 group-hover:bg-green-200 transition-colors modern-shadow">
+                  <Users size={28} className="text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Gestion des Utilisateurs</h3>
+                  <p className="text-sm text-muted-foreground font-normal">Administration utilisateurs</p>
+                </div>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="relative z-10">
+              <div className="space-y-4">
+                <p className="text-muted-foreground">Administrez les comptes utilisateurs, leurs permissions et surveillez l'activité.</p>
+                <Button 
+                  onClick={() => setActiveTab("users")} 
+                  className={`w-full h-12 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 modern-shadow-lg font-semibold text-lg transition-all duration-300 hover:scale-105`}
+                >
+                  Accéder au centre de gestion
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-white border-b">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+      {/* Modern Header */}
+      <div className="glass-card border-0 rounded-none border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <Button
               variant="ghost"
               onClick={() => navigate('/')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-3 hover:bg-white/10 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
             >
-              <ArrowLeft size={18} />
-              Retour au site
+              <ArrowLeft size={20} />
+              <span className="font-semibold">Retour au site</span>
             </Button>
-            <div className="flex items-center gap-4">
-              <Badge variant="outline">Admin</Badge>
-              <div className="text-sm">
-                <div className="font-medium">Super Admin</div>
-                <div className="text-muted-foreground">admin@tomati.com</div>
+            <div className="flex items-center gap-6">
+              <Badge variant="outline" className="bg-blue-100 text-blue-800 px-4 py-2 modern-shadow">
+                Super Admin
+              </Badge>
+              <div className="text-right">
+                <div className="font-bold text-gray-900">Administrateur</div>
+                <div className="text-sm text-muted-foreground">admin@tomati.com</div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard" className="flex items-center gap-2">
-              <BarChart3 size={16} />
-              Tableau de Bord
-            </TabsTrigger>
-            <TabsTrigger value="products" className="flex items-center gap-2">
-              <Package size={16} />
-              Produits
-            </TabsTrigger>
-            <TabsTrigger value="categories" className="flex items-center gap-2">
-              <Grid3X3 size={16} />
-              Catégories
-            </TabsTrigger>
-            <TabsTrigger value="users" className="flex items-center gap-2">
-              <Users size={16} />
-              Utilisateurs
-            </TabsTrigger>
-          </TabsList>
+      {/* Content */}
+      <div className="max-w-7xl mx-auto">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="px-8 pt-8">
+            <TabsList className="grid w-full max-w-md mx-auto grid-cols-4 glass-card border-0 modern-shadow">
+              <TabsTrigger value="dashboard" className="font-semibold">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Dashboard
+              </TabsTrigger>
+              <TabsTrigger value="products" className="font-semibold">
+                <Package className="w-4 h-4 mr-2" />
+                Produits
+              </TabsTrigger>
+              <TabsTrigger value="users" className="font-semibold">
+                <Users className="w-4 h-4 mr-2" />
+                Utilisateurs
+              </TabsTrigger>
+              <TabsTrigger value="categories" className="font-semibold">
+                <Grid3X3 className="w-4 h-4 mr-2" />
+                Catégories
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          <TabsContent value="dashboard" className="space-y-6">
+          <TabsContent value="dashboard" className="mt-0">
             <DashboardOverview />
           </TabsContent>
 
-          <TabsContent value="products" className="space-y-6">
-            <ProductManager />
+          <TabsContent value="products" className="mt-8 px-8">
+            <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
+              <ProductManager onStatsUpdate={() => {}} />
+            </div>
           </TabsContent>
 
-          <TabsContent value="categories" className="space-y-6">
-            <CategoryManager />
+          <TabsContent value="users" className="mt-8 px-8">
+            <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
+              <UserManager onStatsUpdate={() => {}} />
+            </div>
           </TabsContent>
 
-          <TabsContent value="users" className="space-y-6">
-            <UserManager />
+          <TabsContent value="categories" className="mt-8 px-8">
+            <div className="glass-card p-8 rounded-2xl border-0 modern-shadow-lg">
+              <CategoryManager onStatsUpdate={() => {}} />
+            </div>
           </TabsContent>
         </Tabs>
       </div>

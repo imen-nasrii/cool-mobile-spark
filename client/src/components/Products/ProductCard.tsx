@@ -74,12 +74,12 @@ export const ProductCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer w-full", 
+        "overflow-hidden glass-card card-3d border-0 modern-shadow hover:modern-shadow-lg transition-all duration-300 cursor-pointer w-full group", 
         className
       )}
       onClick={onClick}
     >
-      <div className="relative aspect-square bg-white overflow-hidden">
+      <div className="relative aspect-square bg-gradient-to-br from-white to-gray-50 overflow-hidden">
         {/* Product image */}
         {(() => {
           const images = (product as any).images ? JSON.parse((product as any).images) : [];
@@ -90,7 +90,7 @@ export const ProductCard = ({
               <img 
                 src={mainImage} 
                 alt={product.title}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
             );
           } else {
@@ -103,23 +103,30 @@ export const ProductCard = ({
         })()}
         
         {/* Status badges */}
-        <div className="absolute top-1 sm:top-2 left-1 sm:left-2 flex gap-1">
+        <div className="absolute top-2 left-2 flex gap-2">
           {product.isFree && (
-            <Badge className="bg-success text-success-foreground text-xs">Free</Badge>
+            <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white text-xs modern-shadow">
+              Gratuit
+            </Badge>
           )}
           {product.isReserved && (
-            <Badge className="bg-info text-info-foreground text-xs">Reserved</Badge>
+            <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs modern-shadow">
+              Réservé
+            </Badge>
           )}
         </div>
+        
+        {/* Overlay gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
       
-      <CardContent className="p-2 sm:p-3 flex-1 flex flex-col justify-between min-h-[120px] sm:min-h-[140px]">
+      <CardContent className="p-3 sm:p-4 flex-1 flex flex-col justify-between min-h-[120px] sm:min-h-[140px] relative bg-gradient-to-b from-white to-gray-50/50">
         <div>
           <h3 className="font-medium text-foreground text-xs sm:text-sm leading-tight mb-1 sm:mb-2 line-clamp-2">
             {product.title}
           </h3>
           
-          <div className="text-sm sm:text-lg font-bold text-primary mb-1 sm:mb-2">
+          <div className="text-sm sm:text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1 sm:mb-2">
             {product.isFree ? "Gratuit" : formatPrice(product.price)}
           </div>
           
@@ -139,17 +146,17 @@ export const ProductCard = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 w-6 sm:h-7 sm:w-7 p-0 hover:bg-destructive/10 transition-all duration-200"
+              className="h-7 w-7 p-0 glass-card border-0 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
               onClick={(e) => {
                 e.stopPropagation();
                 handleLike();
               }}
             >
               <Heart 
-                size={12} 
-                className={`transition-all duration-200 ${
+                size={14} 
+                className={`transition-all duration-300 ${
                   isLiked 
-                    ? 'text-red-500 fill-red-500 scale-110' 
+                    ? 'text-red-500 fill-red-500 scale-125 drop-shadow-sm' 
                     : 'text-muted-foreground hover:text-red-500'
                 }`} 
               />
@@ -159,13 +166,13 @@ export const ProductCard = ({
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 w-6 sm:h-7 sm:w-7 p-0 hover:bg-primary/10 ml-1 sm:ml-2"
+              className="h-7 w-7 p-0 glass-card border-0 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300 ml-2"
               onClick={(e) => {
                 e.stopPropagation();
                 onMessage?.();
               }}
             >
-              <MessageCircle size={12} className="text-muted-foreground hover:text-primary" />
+              <MessageCircle size={14} className="text-muted-foreground hover:text-blue-500 transition-colors duration-300" />
             </Button>
           </div>
         </div>
