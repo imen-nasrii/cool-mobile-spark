@@ -844,10 +844,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const ws = await import('ws');
   const wss = new ws.WebSocketServer({ server: httpServer, path: '/ws' });
   
-  wss.on('connection', (ws: any, req: any) => {
-    const userId = req.url?.split('userId=')[1];
-    if (userId) {
+  wss.on('connection', async (ws: any, req: any) => {
+    try {
+      // Extract userId from URL query parameter
+      const urlParams = new URLSearchParams(req.url?.split('?')[1] || '');
+      const userId = urlParams.get('userId');
+      
+      if (!userId) {
+        console.log('WebSocket connection denied: No userId provided');
+        ws.close(1008, 'User ID required');
+        return;
+      }
+
+      // Verify user exists in database
+      const user = await storage.getUser(userId);
+      if (!user) {
+        console.log('WebSocket connection denied: Invalid userId:', userId);
+        ws.close(1008, 'Invalid user ID');
+        return;
+      }
+
+      console.log('WebSocket client connected for user:', user.email);
       messagingService.addClient(userId, ws);
+
+      // Send connection confirmation
+      ws.send(JSON.stringify({
+        type: 'connected',
+        message: 'WebSocket connection established'
+      }));
+
+    } catch (error) {
+      console.error('WebSocket connection error:', error);
+      ws.close(1011, 'Server error');
     }
   });
 
