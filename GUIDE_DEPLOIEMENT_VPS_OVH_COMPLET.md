@@ -52,10 +52,10 @@ sudo systemctl enable postgresql
 sudo -u postgres psql
 
 # Dans le terminal PostgreSQL, exécutez :
-CREATE DATABASE tomati_db;
-CREATE USER tomati_user WITH ENCRYPTED PASSWORD 'tomati_password_2024!';
-GRANT ALL PRIVILEGES ON DATABASE tomati_db TO tomati_user;
-ALTER USER tomati_user CREATEDB;
+CREATE DATABASE tomatii_db;
+CREATE USER tomatii_user WITH ENCRYPTED PASSWORD 'tomatii_password_2024!';
+GRANT ALL PRIVILEGES ON DATABASE tomatii_db TO tomatii_user;
+ALTER USER tomatii_user CREATEDB;
 \q
 ```
 
@@ -85,12 +85,12 @@ npm install
 # Création du fichier .env
 cat > .env << 'EOF'
 # Database Configuration
-DATABASE_URL=postgresql://tomati_user:tomati_password_2024!@localhost:5432/tomati_db
-PGDATABASE=tomati_db
+DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
+PGDATABASE=tomatii_db
 PGHOST=localhost
 PGPORT=5432
-PGUSER=tomati_user
-PGPASSWORD=tomati_password_2024!
+PGUSER=tomatii_user
+PGPASSWORD=tomatii_password_2024!
 
 # JWT Configuration
 JWT_SECRET=tomati_super_secret_jwt_key_2024_production
@@ -122,7 +122,7 @@ chmod 600 .env
 npm run db:push
 
 # Vérification que les tables sont créées
-sudo -u postgres psql -d tomati_db -c "\dt"
+sudo -u postgres psql -d tomatii_db -c "\dt"
 ```
 
 ### Étape 7: Build et Test de l'Application
@@ -292,7 +292,7 @@ echo "🚀 Déploiement Tomati..."
 cd /home/tomati/cool-mobile-spark
 
 # Backup de la base de données
-sudo -u postgres pg_dump tomati_db > backup_$(date +%Y%m%d_%H%M%S).sql
+sudo -u postgres pg_dump tomatii_db > backup_$(date +%Y%m%d_%H%M%S).sql
 
 # Pull des dernières modifications
 git pull origin main
@@ -390,7 +390,7 @@ sudo systemctl restart postgresql
 
 ### Sauvegarde de la base de données
 ```bash
-sudo -u postgres pg_dump tomati_db > backup_tomati_$(date +%Y%m%d).sql
+sudo -u postgres pg_dump tomatii_db > backup_tomatii_$(date +%Y%m%d).sql
 ```
 
 ## 🚨 Dépannage
@@ -416,7 +416,7 @@ sudo tail -f /var/log/nginx/error.log
 ### Si la base de données ne se connecte pas :
 ```bash
 # Test de connexion
-sudo -u postgres psql -d tomati_db -c "SELECT version();"
+sudo -u postgres psql -d tomatii_db -c "SELECT version();"
 
 # Vérifier les permissions
 sudo -u postgres psql -c "\du"

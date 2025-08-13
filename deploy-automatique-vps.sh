@@ -10,9 +10,9 @@ echo "================================================"
 
 # Variables de configuration
 DOMAIN="votre-domaine.com"  # Changez par votre domaine
-DB_NAME="tomati_db"
-DB_USER="tomati_user"
-DB_PASSWORD="tomati_password_2024!"
+DB_NAME="tomatii_db"
+DB_USER="tomatii_user"
+DB_PASSWORD="tomatii_password_2024!"
 APP_USER="tomati"
 APP_DIR="/home/tomati/cool-mobile-spark"
 JWT_SECRET="tomati_super_secret_jwt_key_2024_production"
