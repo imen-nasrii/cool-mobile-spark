@@ -114,6 +114,7 @@ export class MessagingService {
         product_image: products.image_url,
         other_user_name: users.display_name,
         other_user_email: users.email,
+        other_user_avatar_url: users.avatar_url,
       })
       .from(conversations)
       .leftJoin(products, eq(conversations.product_id, products.id))
@@ -149,7 +150,14 @@ export class MessagingService {
           );
 
         return {
-          ...conv,
+          id: conv.id,
+          product_id: conv.product_id,
+          product_title: conv.product_title,
+          product_image_url: conv.product_image,
+          other_user_id: conv.buyer_id === userId ? conv.seller_id : conv.buyer_id,
+          other_user_name: conv.other_user_name,
+          other_user_email: conv.other_user_email,
+          other_user_avatar_url: conv.other_user_avatar_url,
           last_message: lastMessage[0]?.content || '',
           last_message_time: lastMessage[0]?.created_at || conv.created_at,
           unread_count: unreadCount.length,
