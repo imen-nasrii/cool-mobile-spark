@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
 
 interface HeaderProps {
   activeTab?: string;
@@ -131,6 +132,16 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                   <DropdownMenuItem onClick={() => onTabChange?.('favorites')}>
                     <Search className="mr-2 h-4 w-4" />
                     <span>Mes favoris</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <PreferencesDialog 
+                      trigger={
+                        <div className="flex items-center cursor-pointer w-full px-2 py-1.5 hover:bg-gray-100 rounded">
+                          <Settings className="mr-2 h-4 w-4" />
+                          <span>Préférences</span>
+                        </div>
+                      }
+                    />
                   </DropdownMenuItem>
                   {user?.role === 'admin' && (
                     <DropdownMenuItem onClick={() => navigate('/admin')}>

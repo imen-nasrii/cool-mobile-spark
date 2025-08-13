@@ -1,13 +1,14 @@
 import { db } from "./db";
 import { eq, desc, or, sql, and, isNull } from "drizzle-orm";
 import { 
-  users, profiles, categories, products, advertisements, product_likes, product_ratings,
+  users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
   type Advertisement, type InsertAdvertisement,
-  type ProductRating, type InsertProductRating
+  type ProductRating, type InsertProductRating,
+  type UserPreferences, type InsertUserPreferences
 } from "@shared/schema";
 
 export interface IStorage {
@@ -20,6 +21,11 @@ export interface IStorage {
   getProfile(userId: string): Promise<Profile | undefined>;
   createProfile(profile: InsertProfile): Promise<Profile>;
   updateProfile(userId: string, profile: Partial<InsertProfile>): Promise<Profile | undefined>;
+  
+  // User Preferences
+  getUserPreferences(userId: string): Promise<UserPreferences | undefined>;
+  createUserPreferences(preferences: InsertUserPreferences): Promise<UserPreferences>;
+  updateUserPreferences(userId: string, preferences: Partial<InsertUserPreferences>): Promise<UserPreferences | undefined>;
   
   // Categories
   getCategories(): Promise<Category[]>;
@@ -116,6 +122,39 @@ export class DatabaseStorage implements IStorage {
     const result = await db.update(profiles)
       .set({ ...profile, updated_at: new Date() })
       .where(eq(profiles.user_id, userId))
+      .returning();
+    return result[0];
+  }
+
+  // User Preferences
+  async getUserPreferences(userId: string): Promise<UserPreferences | undefined> {
+    const result = await db.select().from(user_preferences).where(eq(user_preferences.user_id, userId)).limit(1);
+    
+    // If no preferences exist, create default ones
+    if (!result[0]) {
+      try {
+        const defaultPreferences = await db.insert(user_preferences).values({
+          user_id: userId
+        }).returning();
+        return defaultPreferences[0];
+      } catch (error) {
+        console.error('Error creating default preferences:', error);
+        return undefined;
+      }
+    }
+    
+    return result[0];
+  }
+
+  async createUserPreferences(preferences: InsertUserPreferences): Promise<UserPreferences> {
+    const result = await db.insert(user_preferences).values(preferences).returning();
+    return result[0];
+  }
+
+  async updateUserPreferences(userId: string, preferences: Partial<InsertUserPreferences>): Promise<UserPreferences | undefined> {
+    const result = await db.update(user_preferences)
+      .set({ ...preferences, updated_at: new Date() })
+      .where(eq(user_preferences.user_id, userId))
       .returning();
     return result[0];
   }

@@ -4,7 +4,8 @@ import { storage } from "./storage";
 import { 
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema, insertNotificationSchema,
-  insertAdvertisementSchema, insertProductRatingSchema, users, products, profiles 
+  insertAdvertisementSchema, insertProductRatingSchema, insertUserPreferencesSchema,
+  users, products, profiles 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
@@ -366,6 +367,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const profile = await storage.updateProfile((req as any).user.id, req.body);
       res.json(profile);
+    } catch (error: any) {
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // User Preferences routes
+  app.get("/api/user/preferences", authenticateToken, async (req, res) => {
+    try {
+      const preferences = await storage.getUserPreferences((req as any).user.id);
+      res.json(preferences);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/user/preferences", authenticateToken, async (req, res) => {
+    try {
+      const userId = (req as any).user.id;
+      const preferencesData = insertUserPreferencesSchema.partial().parse(req.body);
+      const preferences = await storage.updateUserPreferences(userId, preferencesData);
+      res.json(preferences);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
     }

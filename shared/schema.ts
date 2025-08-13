@@ -203,6 +203,31 @@ export const product_ratings = pgTable("product_ratings", {
   created_at: timestamp("created_at").defaultNow().notNull(),
 });
 
+// User preferences table for personalized UI settings
+export const user_preferences = pgTable("user_preferences", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }).notNull().unique(),
+  theme: text("theme").default("light").notNull(), // 'light', 'dark', 'auto'
+  language: text("language").default("fr").notNull(), // 'fr', 'en', 'ar'
+  currency: text("currency").default("TND").notNull(), // 'TND', 'EUR', 'USD'
+  view_mode: text("view_mode").default("grid").notNull(), // 'grid', 'list'
+  items_per_page: integer("items_per_page").default(12).notNull(), // Number of products per page
+  show_price_in_list: boolean("show_price_in_list").default(true).notNull(),
+  auto_refresh: boolean("auto_refresh").default(true).notNull(), // Auto refresh product listings
+  email_notifications: boolean("email_notifications").default(true).notNull(),
+  push_notifications: boolean("push_notifications").default(true).notNull(),
+  message_sound: boolean("message_sound").default(true).notNull(),
+  default_location: text("default_location"), // User's preferred location for searches
+  favorite_categories: text("favorite_categories"), // JSON array of preferred categories
+  search_radius: integer("search_radius").default(50).notNull(), // Default search radius in km
+  map_style: text("map_style").default("standard").notNull(), // 'standard', 'satellite', 'hybrid'
+  compact_mode: boolean("compact_mode").default(false).notNull(), // Compact UI mode
+  high_contrast: boolean("high_contrast").default(false).notNull(), // Accessibility option
+  font_size: text("font_size").default("medium").notNull(), // 'small', 'medium', 'large'
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -269,10 +294,18 @@ export const insertProductRatingSchema = createInsertSchema(product_ratings).omi
   created_at: true,
 });
 
+export const insertUserPreferencesSchema = createInsertSchema(user_preferences).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Profile = typeof profiles.$inferSelect;
+export type UserPreferences = typeof user_preferences.$inferSelect;
+export type InsertUserPreferences = z.infer<typeof insertUserPreferencesSchema>;
 export type InsertProfile = z.infer<typeof insertProfileSchema>;
 export type Category = typeof categories.$inferSelect;
 export type Advertisement = typeof advertisements.$inferSelect;

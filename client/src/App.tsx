@@ -5,6 +5,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { LanguageProvider } from "@/hooks/useLanguage";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
 import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -30,6 +31,7 @@ const App = () => (
       <TooltipProvider>
         <LanguageProvider>
           <AuthProvider>
+            <PreferencesProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -115,11 +117,12 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </LanguageProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+            </BrowserRouter>
+            </PreferencesProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
   </ErrorBoundary>
 );
 
