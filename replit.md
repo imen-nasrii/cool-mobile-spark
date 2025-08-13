@@ -48,18 +48,14 @@ The platform is built with a clear separation between client and server. The fro
   - Complete deployment documentation for GitHub method
   - Production-ready PM2 ecosystem configuration
   - Database migration integration in deployment process
-- **Successfully deployed application to production on tomati.org:**
-  - Created dedicated system user 'hamdi' for application management
-  - Installed Node.js v22.18.0 via NVM for hamdi user
-  - Cloned application from GitHub and built successfully
-  - Configured PostgreSQL database connection with tomatii_user/tomatii_db
-  - PM2 process tomati-hamdi running in fork mode (133.3mb memory usage)
-  - Nginx reverse proxy configured and active for tomati.org domain
-  - Firewall (UFW) configured to allow HTTP/HTTPS traffic
-  - External access confirmed - curl http://tomati.org returns HTTP 200 with full HTML
-  - PM2 configuration saved for automatic restart on server reboot
-  - **Application successfully deployed and accessible at http://tomati.org**
-  - User reported deployed version is outdated - update procedure created for latest version deployment
+- **Deploying latest version from new GitHub repository:**
+  - New repository: https://github.com/imen-nasrii/cool-mobile-spark.git
+  - User requested fresh deployment from updated repository
+  - Created comprehensive deployment script for complete reinstallation
+  - Includes port conflict resolution and clean PM2 restart
+  - Full environment configuration with all required variables
+  - Database schema push and application build process
+  - **Deployment in progress to update tomati.org with latest features**
 - **Removed automatic advertising label feature:**
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components
