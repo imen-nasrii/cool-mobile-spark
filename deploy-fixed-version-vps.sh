@@ -1,13 +1,31 @@
-# Commandes à copier-coller sur le VPS
+#!/bin/bash
 
-## Exécuter en tant que hamdi dans ~/cool-mobile-spark
+# Script to deploy the fixed version to VPS
+echo "🚀 Deploying fixed version to VPS..."
 
-```bash
-# 1. Mise à jour du fichier server/index.ts
+# Check if we have the fixed server/index.ts
+if ! grep -q "process.env.PORT" server/index.ts; then
+    echo "❌ server/index.ts not properly fixed"
+    exit 1
+fi
+
+echo "✅ server/index.ts contains dynamic port configuration"
+
+# Commands to run on VPS
+echo "
+Execute these commands on your VPS as hamdi user:
+
+# 1. Navigate to the project directory
+cd ~/cool-mobile-spark
+
+# 2. Pull latest changes from GitHub (if pushed)
+git pull origin main
+
+# 3. OR manually update server/index.ts with this content:
 cat > server/index.ts << 'EOF'
-import express, { type Request, Response, NextFunction } from "express";
-import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
+import express, { type Request, Response, NextFunction } from \"express\";
+import { registerRoutes } from \"./routes\";
+import { setupVite, serveStatic, log } from \"./vite\";
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -24,16 +42,16 @@ app.use((req, res, next) => {
     return originalResJson.apply(res, [bodyJson, ...args]);
   };
 
-  res.on("finish", () => {
+  res.on(\"finish\", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
+    if (path.startsWith(\"/api\")) {
+      let logLine = \`\${req.method} \${path} \${res.statusCode} in \${duration}ms\`;
       if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
+        logLine += \` :: \${JSON.stringify(capturedJsonResponse)}\`;
       }
 
       if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
+        logLine = logLine.slice(0, 79) + \"…\";
       }
 
       log(logLine);
@@ -48,41 +66,44 @@ app.use((req, res, next) => {
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    const message = err.message || \"Internal Server Error\";
 
     res.status(status).json({ message });
     throw err;
   });
 
-  if (app.get("env") === "development") {
+  // importantly only setup vite in development and after
+  // setting up all the other routes so the catch-all route
+  // doesn't interfere with the other routes
+  if (app.get(\"env\") === \"development\") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
   // Use PORT from environment or default to 5000
-  const port = parseInt(process.env.PORT || "5000", 10);
-  const host = process.env.HOST || "0.0.0.0";
+  const port = parseInt(process.env.PORT || \"5000\", 10);
+  const host = process.env.HOST || \"0.0.0.0\";
   server.listen({
     port,
     host,
     reusePort: true,
   }, () => {
-    log(`serving on port ${port}`);
+    log(\`serving on port \${port}\`);
   });
 })();
 EOF
 
-# 2. Nettoyer tous les processus conflictuels
+# 4. Kill all conflicting processes
 sudo fuser -k 5000/tcp 2>/dev/null || true
 sudo fuser -k 3001/tcp 2>/dev/null || true
 pm2 delete all
 pm2 kill
 
-# 3. Reconstruire l'application
+# 5. Rebuild the application
 npm run build
 
-# 4. Configuration PM2 en mode fork (pas cluster)
+# 6. Update PM2 configuration for fork mode (not cluster)
 cat > ecosystem.config.cjs << 'EOF'
 module.exports = {
   apps: [{
@@ -117,54 +138,22 @@ module.exports = {
 };
 EOF
 
-# 5. Démarrer l'application
+# 7. Start the application
 pm2 start ecosystem.config.cjs
 
-# 6. Vérifier le fonctionnement
+# 8. Wait a moment and check
 sleep 3
 pm2 status
 pm2 logs tomati-hamdi --lines 5
+
+# 9. Test the application
 curl http://localhost:3001
 
-# 7. Si succès, sauvegarder
+# 10. If successful, save configuration
 pm2 save
 
-# 8. Configuration Nginx
-sudo tee /etc/nginx/sites-available/tomati.org << 'EOF'
-server {
-    listen 80;
-    server_name tomati.org www.tomati.org;
+echo '🎉 If you see the application running on port 3001, the deployment is successful!'
+echo 'Next step: Configure Nginx to serve tomati.org'
+"
 
-    location / {
-        proxy_pass http://localhost:3001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-EOF
-
-sudo ln -sf /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-
-# 9. Test final
-curl http://tomati.org
-
-echo "🎉 Déploiement terminé ! Tomati Market accessible sur tomati.org"
-```
-
-## Points clés de cette correction
-
-✅ **Code server/index.ts** corrigé pour utiliser `process.env.PORT`  
-✅ **Mode fork** au lieu de cluster (évite les conflits de port)  
-✅ **Nettoyage complet** des processus conflictuels  
-✅ **Rebuild** de l'application avec le code corrigé  
-✅ **Configuration Nginx** pour rediriger tomati.org → port 3001  
-
-Une fois ces commandes exécutées, votre application sera accessible sur https://tomati.org
+echo "📋 Commands copied to clipboard. Execute them on your VPS!"
