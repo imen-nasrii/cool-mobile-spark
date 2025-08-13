@@ -134,6 +134,9 @@ export const ProductListCard = ({
             {product.isReserved && (
               <Badge className="bg-info text-info-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Reserved</Badge>
             )}
+            {likesCount >= 3 && (
+              <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Publicité</Badge>
+            )}
           </div>
         </div>
         

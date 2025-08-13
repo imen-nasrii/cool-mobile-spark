@@ -114,6 +114,11 @@ export const ProductCard = ({
               Réservé
             </Badge>
           )}
+          {likesCount >= 3 && (
+            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs modern-shadow">
+              Publicité
+            </Badge>
+          )}
         </div>
         
         {/* Overlay gradient */}
