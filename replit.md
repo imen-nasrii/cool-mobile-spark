@@ -91,3 +91,9 @@ The platform is built with a clear separation between client and server. The fro
   - Replaced "Ajouter" tab with "Carte" (GPS icon)
   - Map tab now redirects to existing /map page with product locations
   - Streamlined navigation focused on core features
+- **Implemented photo display in messaging conversations:**
+  - Added avatar_url column to users table
+  - Updated messaging API to return user profile photos and product images
+  - Conversations now display user profile photo alongside product photo
+  - Fixed conversation data structure to show real images instead of letter circles
+  - Both conversation list and chat headers show profile + product photos side by side
