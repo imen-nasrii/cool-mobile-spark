@@ -82,7 +82,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <div className="text-2xl font-bold text-red-500">
+            <div className="text-2xl font-bold text-black">
               tomati
             </div>
           </div>
