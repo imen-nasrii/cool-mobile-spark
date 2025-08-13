@@ -56,6 +56,11 @@ The platform is built with a clear separation between client and server. The fro
   - Removed promoted products section from home page
   - Cleaned up unnecessary featured content display
   - Simplified home page layout without trending products showcase
+- **Added selective advertisement labeling system:**
+  - Added is_advertisement field to products database schema
+  - Implemented "Publicité" badge for manually marked products (1 in 4 products)
+  - Updated ProductCard and ProductListCard components to display advertisement badges
+  - Provides controlled advertising display without automatic triggers
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red

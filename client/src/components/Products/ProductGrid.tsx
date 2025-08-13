@@ -34,6 +34,7 @@ interface Product {
   likes: number;
   is_reserved: boolean;
   is_free: boolean;
+  is_advertisement: boolean;
   created_at: string;
 }
 
@@ -135,6 +136,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
     likes: product.likes || 0,
     isReserved: product.is_reserved,
     isFree: product.is_free,
+    isAdvertisement: product.is_advertisement,
     // Car details
     brand: product.brand,
     model: product.model,

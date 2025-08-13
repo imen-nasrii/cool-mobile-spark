@@ -46,6 +46,7 @@ export const products = pgTable("products", {
   is_reserved: boolean("is_reserved").default(false).notNull(),
   is_free: boolean("is_free").default(false).notNull(),
   is_promoted: boolean("is_promoted").default(false).notNull(),
+  is_advertisement: boolean("is_advertisement").default(false).notNull(),
   promoted_at: timestamp("promoted_at"),
   user_id: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   

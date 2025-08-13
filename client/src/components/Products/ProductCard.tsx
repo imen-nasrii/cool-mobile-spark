@@ -41,6 +41,7 @@ interface Product {
   image?: string;
   isFree?: boolean;
   isReserved?: boolean;
+  isAdvertisement?: boolean;
   likes: number;
   category: string;
   isLiked?: boolean;
@@ -112,6 +113,11 @@ export const ProductCard = ({
           {product.isReserved && (
             <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs modern-shadow">
               Réservé
+            </Badge>
+          )}
+          {product.isAdvertisement && (
+            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs modern-shadow">
+              Publicité
             </Badge>
           )}
 

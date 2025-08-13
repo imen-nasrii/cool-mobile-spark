@@ -41,6 +41,7 @@ interface Product {
   image?: string;
   isFree?: boolean;
   isReserved?: boolean;
+  isAdvertisement?: boolean;
   likes: number;
   category: string;
   isLiked?: boolean;
@@ -133,6 +134,9 @@ export const ProductListCard = ({
             )}
             {product.isReserved && (
               <Badge className="bg-info text-info-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Reserved</Badge>
+            )}
+            {product.isAdvertisement && (
+              <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Publicité</Badge>
             )}
 
           </div>
