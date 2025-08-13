@@ -291,28 +291,25 @@ export default function MessagesPage() {
                       {/* Product Image */}
                       {selectedConversationData?.product_image_url && (
                         <div className="relative">
-                          <div className="w-12 h-12 rounded-xl border-3 border-white bg-white overflow-hidden modern-shadow hover:scale-110 transition-transform duration-300">
+                          <div className="w-12 h-12 rounded border border-gray-200 bg-white overflow-hidden">
                             <img 
                               src={selectedConversationData.product_image_url} 
                               alt={selectedConversationData.product_title}
                               className="w-full h-full object-cover"
                             />
                           </div>
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-blue-500 border-2 border-white flex items-center justify-center">
-                            <span className="text-xs text-white font-bold">P</span>
-                          </div>
                         </div>
                       )}
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        <h3 className="font-bold text-lg text-black">
                           {selectedConversationData?.other_user_name || selectedConversationData?.other_user_email}
                         </h3>
-                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+
                       </div>
                       <p className="text-sm text-gray-600 font-medium">
-                        💬 À propos de: <span className="text-blue-600 font-semibold">{selectedConversationData?.product_title}</span>
+                        À propos de: <span className="text-red-600 font-semibold">{selectedConversationData?.product_title}</span>
                       </p>
                     </div>
                   </div>
@@ -322,7 +319,7 @@ export default function MessagesPage() {
                       size="sm"
                       onClick={() => handleStartCall('audio')}
                       title="Appel audio"
-                      className="glass-card border-0 bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
+                      className="border-gray-300 hover:bg-gray-50"
                     >
                       <Phone className="h-4 w-4" />
                     </Button>
@@ -331,7 +328,7 @@ export default function MessagesPage() {
                       size="sm"
                       onClick={() => handleStartCall('video')}
                       title="Appel vidéo"
-                      className="glass-card border-0 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300"
+                      className="border-gray-300 hover:bg-gray-50"
                     >
                       <Video className="h-4 w-4" />
                     </Button>
@@ -339,7 +336,7 @@ export default function MessagesPage() {
                 </div>
               </CardHeader>
               
-              <CardContent className="flex-1 flex flex-col p-0 bg-gradient-to-b from-white to-blue-50/30">
+              <CardContent className="flex-1 flex flex-col p-0 bg-white">
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px] relative">
                   {messagesQuery.isLoading ? (
