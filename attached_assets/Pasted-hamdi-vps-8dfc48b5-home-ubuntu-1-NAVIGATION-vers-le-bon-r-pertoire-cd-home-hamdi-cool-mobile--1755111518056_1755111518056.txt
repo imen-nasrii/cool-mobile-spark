@@ -1,0 +1,100 @@
+hamdi@vps-8dfc48b5:/home/ubuntu$ # 1. NAVIGATION vers le bon répertoire
+cd /home/hamdi/cool-mobile-spark
+
+# 2. MISE À JOUR du code
+pm2 stop tomati-hamdi
+git pull origin main
+
+# 3. INSTALLATION dans le bon dossier
+npm install multer @types/multer
+
+# 4. CRÉATION uploads avec permissions
+mkdir -p uploads && chmod 755 uploads
+
+# 5. BUILD et REDÉMARRAGE
+npm run build
+pm2 restart tomati-hamdi
+[PM2] Applying action stopProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 4    │ stopped   │ 0%       │ 0b       │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+From https://github.com/imen-nasrii/cool-mobile-spark
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+added 9 packages, and audited 690 packages in 5s
+
+88 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (1) index.htmlBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2680 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-BCXJso9b.css            116.17 kB │ gzip:  23.56 kB
+../dist/public/assets/index-D7cltdS5.js             890.07 kB │ gzip: 256.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 27.96s
+
+  dist/index.js  77.1kb
+
+⚡ Done in 30ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 630872   │ 0s     │ 4    │ online    │ 0%       │ 20.7mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # Les erreurs "Object storage not available" doivent disparaître
+pm2 logs tomati-hamdi --lines 5
+
+# Test rapide
+curl -I https://tomati.org/api/objects/upload
+[TAILING] Tailing last 5 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 5 lines:
+0|tomati-h | 2025-08-13T18:47:48:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:47:50: Error getting upload URL: Error: Object storage not available on VPS
+0|tomati-h | 2025-08-13T18:47:50:     at ObjectStorageService.getObjectEntityUploadURL (file:///home/hamdi/cool-mobile-spark/dist/index.js:40:15)
+0|tomati-h | 2025-08-13T18:47:50:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:47:50:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 5 lines:
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] POST /api/auth/signin 401 in 4ms :: {"error":"Invalid credentials"}
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/advertisements 200 in 3ms :: []
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/products/promoted 200 in 6ms :: []
+0|tomati-h | 2025-08-13T18:56:36: 6:56:36 PM [express] serving on port 5000
+0|tomati-h | 2025-08-13T18:58:22: 6:58:22 PM [express] serving on port 5000
+
+
