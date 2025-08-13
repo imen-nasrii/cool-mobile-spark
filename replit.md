@@ -74,6 +74,11 @@ The platform is built with a clear separation between client and server. The fro
   - Cleaned up header by removing publish ad button
   - Users can still access product posting through floating action button
   - Simplified navigation bar design
+- **Simplified messaging design with flat style:**
+  - Removed all gradients, animations, and visual effects from messaging
+  - Used simple red, black, white color scheme without effects
+  - Flat design with basic borders and solid colors
+  - Removed hover animations and transition effects
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red

@@ -355,9 +355,9 @@ export default function MessagesPage() {
                     messagesQuery.data?.map((message: any) => {
                       const isOwn = message.sender_id === user?.id;
                       return (
-                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-3 group`}>
+                        <div key={message.id} className={`flex ${isOwn ? 'justify-end' : 'justify-start'} items-end gap-3`}>
                           {!isOwn && (
-                            <Avatar className="h-8 w-8 mb-1 border-2 border-white modern-shadow group-hover:scale-110 transition-transform duration-300">
+                            <Avatar className="h-8 w-8 mb-1">
                               {message.sender_avatar_url ? (
                                 <img 
                                   src={message.sender_avatar_url} 
@@ -365,16 +365,16 @@ export default function MessagesPage() {
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-600 text-white text-xs font-bold">
+                                <AvatarFallback className="bg-red-500 text-white text-xs font-bold">
                                   {(message.sender_name || message.sender_email || 'U').charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               )}
                             </Avatar>
                           )}
-                          <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl modern-shadow group-hover:modern-shadow-lg transition-all duration-300 message-bubble ${
+                          <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded border ${
                             isOwn 
-                              ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white' 
-                              : 'glass-card bg-white text-gray-900'
+                              ? 'bg-red-500 text-white border-red-500' 
+                              : 'bg-white text-black border-gray-300'
                           }`}>
                             {message.message_type === 'image' && message.file_url ? (
                               <div className="mb-2">
@@ -402,7 +402,7 @@ export default function MessagesPage() {
                             ) : (
                               <p className="text-sm">{message.content}</p>
                             )}
-                            <p className={`text-xs mt-1 ${isOwn ? 'text-blue-100 hover:text-blue-100' : 'text-gray-500 hover:text-gray-500'}`}>
+                            <p className={`text-xs mt-1 ${isOwn ? 'text-red-100' : 'text-gray-500'}`}>
                               {formatDistanceToNow(new Date(message.created_at), { 
                                 addSuffix: true, 
                                 locale: fr 
@@ -410,7 +410,7 @@ export default function MessagesPage() {
                             </p>
                           </div>
                           {isOwn && (
-                            <Avatar className="h-8 w-8 mb-1 border-2 border-white shadow-sm">
+                            <Avatar className="h-8 w-8 mb-1">
                               {user?.avatar_url ? (
                                 <img 
                                   src={user.avatar_url} 
@@ -418,7 +418,7 @@ export default function MessagesPage() {
                                   className="w-full h-full object-cover rounded-full"
                                 />
                               ) : (
-                                <AvatarFallback className="bg-gradient-to-br from-green-500 to-teal-600 text-white text-xs font-semibold">
+                                <AvatarFallback className="bg-red-500 text-white text-xs font-semibold">
                                   {(user?.display_name || user?.email || 'M').charAt(0).toUpperCase()}
                                 </AvatarFallback>
                               )}
@@ -443,13 +443,13 @@ export default function MessagesPage() {
                 )}
 
                 {/* Quick Response Suggestions */}
-                <div className="border-t p-3 bg-gradient-to-r from-gray-50 to-blue-50">
+                <div className="border-t p-3 bg-gray-50">
                   <div className="flex flex-wrap gap-2 mb-3">
                     <Button 
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Pouvez-vous me donner votre localisation exacte ?")}
-                      className="text-xs bg-white/80 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       📍 Localisation
                     </Button>
@@ -457,7 +457,7 @@ export default function MessagesPage() {
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
-                      className="text-xs bg-white/80 hover:bg-green-100 border border-green-200 text-green-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       📅 Rendez-vous
                     </Button>
@@ -465,7 +465,7 @@ export default function MessagesPage() {
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Quel est votre meilleur prix ?")}
-                      className="text-xs bg-white/80 hover:bg-yellow-100 border border-yellow-200 text-yellow-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       💰 Prix
                     </Button>
@@ -473,7 +473,7 @@ export default function MessagesPage() {
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Le produit est-il encore disponible ?")}
-                      className="text-xs bg-white/80 hover:bg-purple-100 border border-purple-200 text-purple-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       ✅ Disponibilité
                     </Button>
@@ -481,7 +481,7 @@ export default function MessagesPage() {
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Pouvez-vous m'envoyer plus de photos ?")}
-                      className="text-xs bg-white/80 hover:bg-pink-100 border border-pink-200 text-pink-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       📸 Photos
                     </Button>
@@ -489,7 +489,7 @@ export default function MessagesPage() {
                       variant="outline" 
                       size="sm" 
                       onClick={() => setNewMessage("Merci beaucoup !")}
-                      className="text-xs bg-white/80 hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-full"
+                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       🙏 Merci
                     </Button>
@@ -497,12 +497,12 @@ export default function MessagesPage() {
                 </div>
 
                 {/* Message Input */}
-                <div className="p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+                <div className="p-4 bg-gray-50">
                   <div className="flex gap-3">
-                    <Button variant="outline" size="sm" className="glass-card border-0 bg-gradient-to-r from-pink-500 to-red-500 text-white hover:from-pink-600 hover:to-red-600 modern-shadow hover:scale-110 transition-all duration-300">
+                    <Button variant="outline" size="sm" className="border-gray-300 text-red-500 hover:bg-red-50">
                       <Heart className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="glass-card border-0 bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:from-yellow-600 hover:to-orange-600 modern-shadow hover:scale-110 transition-all duration-300">
+                    <Button variant="outline" size="sm" className="border-gray-300 text-red-500 hover:bg-red-50">
                       <Smile className="h-4 w-4" />
                     </Button>
                     <FileUpload
@@ -516,12 +516,12 @@ export default function MessagesPage() {
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
                         disabled={isSendingMessage || uploadingFile}
-                        className="glass-card border-0 rounded-full modern-shadow focus:modern-shadow-lg transition-all duration-300"
+                        className="border-gray-300"
                       />
                       <Button 
                         onClick={handleSendMessage}
                         disabled={!newMessage.trim() || isSendingMessage || uploadingFile}
-                        className="glass-card border-0 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 modern-shadow hover:modern-shadow-lg hover:scale-110 transition-all duration-300 rounded-full w-12 h-12 p-0"
+                        className="bg-red-500 hover:bg-red-600 text-white"
                       >
                         <Send className="h-5 w-5" />
                       </Button>
