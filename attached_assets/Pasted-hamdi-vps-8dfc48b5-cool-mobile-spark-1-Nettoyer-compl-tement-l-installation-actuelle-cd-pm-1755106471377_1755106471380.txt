@@ -1,0 +1,206 @@
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # 1. Nettoyer complètement l'installation actuelle
+cd ~
+pm2 delete all 2>/dev/null || true
+pm2 kill 2>/dev/null || true
+sudo killall node 2>/dev/null || true
+sudo lsof -ti :5000 | xargs sudo kill -9 2>/dev/null || true
+sudo fuser -k 5000/tcp 2>/dev/null || true
+
+# 2. Sauvegarder l'ancien répertoire et cloner le nouveau
+if [ -d "cool-mobile-spark" ]; then
+    mv cool-mobile-spark cool-mobile-spark-backup-$(date +%Y%m%d_%H%M%S)
+fi
+
+git clone https://github.com/imen-nasrii/cool-mobile-spark.git
+cd cool-mobile-spark
+
+# 3. Installer les dépendances
+npm install
+
+# 4. Créer le fichier .env
+cat > .env << 'EOF'
+DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
+PGDATABASE=tomatii_db
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomatii_user
+PGPASSWORD=tomatii_password_2024!
+JWT_SECRET=tomati_super_secret_jwt_key_2024_production
+NODE_ENV=production
+PORT=5000
+HOST=0.0.0.0
+SESSION_SECRET=tomati_session_secret_key_2024_production
+REPL_ID=tomati-production
+REPLIT_DOMAINS=tomati.org
+ISSUER_URL=https://replit.com/oidc
+EOF
+
+chmod 600 .env
+
+# 5. Mettre à jour la base de données et construire
+npm run db:push
+npm run build
+
+# 6. Créer la configuration PM2
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-hamdi',
+    script: 'dist/index.js',
+echo "🎉 Nouveau repository déployé sur tomati.org"24_production',24!@localhost:5432/tomatii_db',
+[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2] [v] All Applications Stopped
+[PM2] [v] PM2 Daemon Stopped
+[sudo] password for hamdi:
+Cloning into 'cool-mobile-spark'...
+remote: Enumerating objects: 3756, done.
+remote: Counting objects: 100% (3756/3756), done.
+remote: Compressing objects: 100% (995/995), done.
+remote: Total 3756 (delta 2928), reused 3534 (delta 2706), pack-reused 0 (from 0)
+Receiving objects: 100% (3756/3756), 16.93 MiB | 12.63 MiB/s, done.
+Resolving deltas: 100% (2928/2928), done.
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 680 packages, and audited 681 packages in 27s
+
+87 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/hamdi/cool-mobile-spark/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[i] No changes detected
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+Browserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2680 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-BCXJso9b.css            116.17 kB │ gzip:  23.56 kB
+../dist/public/assets/index-D7cltdS5.js             890.07 kB │ gzip: 256.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 20.36s
+
+  dist/index.js  81.7kb
+
+⚡ Done in 25ms
+[PM2] Spawning PM2 daemon with pm2_home=/home/hamdi/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2][WARN] Applications tomati-hamdi not running, starting...
+[PM2] App [tomati-hamdi] launched (1 instances)
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 621250   │ 0s     │ 0    │ online    │ 0%       │ 31.1mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 621278   │ 1s     │ 2    │ online    │ 0%       │ 136.5mb  │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 5 lines:
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 5 lines:
+0|tomati-h | 2025-08-13T17:33:36:   errno: -98,
+0|tomati-h | 2025-08-13T17:33:36:   syscall: 'listen',
+0|tomati-h | 2025-08-13T17:33:36:   address: '0.0.0.0',
+0|tomati-h | 2025-08-13T17:33:36:   port: 5000
+0|tomati-h | 2025-08-13T17:33:36: }
+
+0|tomati-hamdi  | 2025-08-13T17:33:38: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|tomati-hamdi  | 2025-08-13T17:33:38:     at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+0|tomati-hamdi  | 2025-08-13T17:33:38:     at listenInCluster (node:net:1997:12)
+0|tomati-hamdi  | 2025-08-13T17:33:38:     at node:net:2206:7
+0|tomati-hamdi  | 2025-08-13T17:33:38:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+0|tomati-hamdi  | 2025-08-13T17:33:38:   code: 'EADDRINUSE',
+0|tomati-hamdi  | 2025-08-13T17:33:38:   errno: -98,
+0|tomati-hamdi  | 2025-08-13T17:33:38:   syscall: 'listen',
+0|tomati-hamdi  | 2025-08-13T17:33:38:   address: '0.0.0.0',
+0|tomati-hamdi  | 2025-08-13T17:33:38:   port: 5000
+0|tomati-hamdi  | 2025-08-13T17:33:38: }
+0|tomati-hamdi  | 2025-08-13T17:33:41: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|tomati-hamdi  | 2025-08-13T17:33:41:     at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+0|tomati-hamdi  | 2025-08-13T17:33:41:     at listenInCluster (node:net:1997:12)
+0|tomati-hamdi  | 2025-08-13T17:33:41:     at node:net:2206:7
+0|tomati-hamdi  | 2025-08-13T17:33:41:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+0|tomati-hamdi  | 2025-08-13T17:33:41:   code: 'EADDRINUSE',
+0|tomati-hamdi  | 2025-08-13T17:33:41:   errno: -98,
+0|tomati-hamdi  | 2025-08-13T17:33:41:   syscall: 'listen',
+0|tomati-hamdi  | 2025-08-13T17:33:41:   address: '0.0.0.0',
+0|tomati-hamdi  | 2025-08-13T17:33:41:   port: 5000
+0|tomati-hamdi  | 2025-08-13T17:33:41: }
+0|tomati-hamdi  | 2025-08-13T17:33:43: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|tomati-hamdi  | 2025-08-13T17:33:43:     at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+0|tomati-hamdi  | 2025-08-13T17:33:43:     at listenInCluster (node:net:1997:12)
+0|tomati-hamdi  | 2025-08-13T17:33:43:     at node:net:2206:7
+0|tomati-hamdi  | 2025-08-13T17:33:43:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+0|tomati-hamdi  | 2025-08-13T17:33:43:   code: 'EADDRINUSE',
+0|tomati-hamdi  | 2025-08-13T17:33:43:   errno: -98,
+0|tomati-hamdi  | 2025-08-13T17:33:43:   syscall: 'listen',
+0|tomati-hamdi  | 2025-08-13T17:33:43:   address: '0.0.0.0',
+0|tomati-hamdi  | 2025-08-13T17:33:43:   port: 5000
+0|tomati-hamdi  | 2025-08-13T17:33:43: }
+0|tomati-hamdi  | 2025-08-13T17:33:45: Error: listen EADDRINUSE: address already in use 0.0.0.0:5000
+0|tomati-hamdi  | 2025-08-13T17:33:45:     at Server.setupListenHandle [as _listen2] (node:net:1940:16)
+0|tomati-hamdi  | 2025-08-13T17:33:45:     at listenInCluster (node:net:1997:12)
+0|tomati-hamdi  | 2025-08-13T17:33:45:     at node:net:2206:7
+0|tomati-hamdi  | 2025-08-13T17:33:45:     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+0|tomati-hamdi  | 2025-08-13T17:33:45:   code: 'EADDRINUSE',
+0|tomati-hamdi  | 2025-08-13T17:33:45:   errno: -98,
+0|tomati-hamdi  | 2025-08-13T17:33:45:   syscall: 'listen',
+0|tomati-hamdi  | 2025-08-13T17:33:45:   address: '0.0.0.0',
+0|tomati-hamdi  | 2025-08-13T17:33:45:   port: 5000
+0|tomati-hamdi  | 2025-08-13T17:33:45: }
+^C
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 17:33:45 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1389
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 12 Aug 2025 22:18:55 GMT
+ETag: W/"56d-198a05d72ea"
+
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/hamdi/.pm2/dump.pm2
+🎉 Nouveau repository déployé sur tomati.org
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$
