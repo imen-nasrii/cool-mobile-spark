@@ -1,0 +1,76 @@
+ubuntu@vps-8dfc48b5:~$ sudo
+usage: sudo -h | -K | -k | -V
+usage: sudo -v [-ABknS] [-g group] [-h host] [-p prompt] [-u user]
+usage: sudo -l [-ABknS] [-g group] [-h host] [-p prompt] [-U user] [-u user] [command]
+usage: sudo [-ABbEHknPS] [-r role] [-t type] [-C num] [-D directory] [-g group] [-h host] [-p prompt] [-R directory] [-T timeout] [-u user] [VAR=value] [-i|-s] [<command>]
+usage: sudo -e [-ABknS] [-r role] [-t type] [-C num] [-D directory] [-g group] [-h host] [-p prompt] [-R directory] [-T timeout] [-u user] file ...
+ubuntu@vps-8dfc48b5:~$ sudo apt update && apt upgrade -y
+Hit:1 https://deb.nodesource.com/node_20.x nodistro InRelease
+Get:2 http://nova.clouds.archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Hit:3 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Hit:4 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates InRelease
+Hit:5 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-backports InRelease
+Fetched 270 kB in 2s (156 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+E: Could not open lock file /var/lib/dpkg/lock-frontend - open (13: Permission denied)
+E: Unable to acquire the dpkg frontend lock (/var/lib/dpkg/lock-frontend), are you root?
+ubuntu@vps-8dfc48b5:~$ sudo
+
+
+
+
+usage: sudo -h | -K | -k | -V
+usage: sudo -v [-ABknS] [-g group] [-h host] [-p prompt] [-u user]
+usage: sudo -l [-ABknS] [-g group] [-h host] [-p prompt] [-U user] [-u user] [command]
+usage: sudo [-ABbEHknPS] [-r role] [-t type] [-C num] [-D directory] [-g group] [-h host] [-p prompt] [-R directory] [-T timeout] [-u user] [VAR=value] [-i|-s] [<command>]
+usage: sudo -e [-ABknS] [-r role] [-t type] [-C num] [-D directory] [-g group] [-h host] [-p prompt] [-R directory] [-T timeout] [-u user] file ...
+ubuntu@vps-8dfc48b5:~$ sudo
+
+
+
+
+^C
+ubuntu@vps-8dfc48b5:~$ sudo apt install curl git ufw build-essential nginx postgresql postgresql-contrib certbot python3-certbot-nginx -y
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+build-essential is already the newest version (12.9ubuntu3).
+postgresql is already the newest version (14+238).
+postgresql-contrib is already the newest version (14+238).
+certbot is already the newest version (1.21.0-1build1).
+python3-certbot-nginx is already the newest version (1.21.0-1).
+curl is already the newest version (7.81.0-1ubuntu1.20).
+git is already the newest version (1:2.34.1-1ubuntu1.15).
+nginx is already the newest version (1.18.0-6ubuntu14.6).
+ufw is already the newest version (0.36.1-4ubuntu0.1).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+ubuntu@vps-8dfc48b5:~$ sudo systemctl start postgresql
+systemctl enable postgresql
+sudo -u postgres psql << 'EOF'
+CREATE DATABASE tomatii_db;
+CREATE USER tomatii_user WITH ENCRYPTED PASSWORD 'tomatii_password_2024!';
+GRANT ALL PRIVILEGES ON DATABASE tomatii_db TO tomatii_user;
+ALTER USER tomatii_user CREATEDB;
+\q
+EOF
+Synchronizing state of postgresql.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable postgresql
+==== AUTHENTICATING FOR org.freedesktop.systemd1.reload-daemon ===
+Authentication is required to reload the systemd state.
+Multiple identities can be used for authentication:
+ 1.  Ubuntu (ubuntu)
+ 2.  ,,, (tomati)
+ 3.  tomati,,, (tomatii)
+Choose identity to authenticate as (1-3): 1
+Password:
+==== AUTHENTICATION COMPLETE ===
+==== AUTHENTICATING FOR org.freedesktop.systemd1.reload-daemon ===
+Authentication is required to reload the systemd state.
+Multiple identities can be used for authentication:
+ 1.  Ubuntu (ubuntu)
+ 2.  ,,, (tomati)
+ 3.  tomati,,, (tomatii)
+Choose identity to authenticate as (1-3):
