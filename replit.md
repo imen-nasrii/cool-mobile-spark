@@ -55,3 +55,12 @@ The platform is built with a clear separation between client and server. The fro
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red
+- **Implemented floating action button with category shortcuts:**
+  - Created vertical stack FAB with 4 category icons (Immobilier-blue, Voiture-green, Emplois-purple, Autres-orange)
+  - Each button directly opens the specific category add form
+  - Smooth animations and hover effects
+  - Positioned at bottom-right with proper z-index
+- **Updated bottom navigation:**
+  - Replaced "Ajouter" tab with "Carte" (GPS icon)
+  - Map tab now redirects to existing /map page with product locations
+  - Streamlined navigation focused on core features

@@ -73,6 +73,13 @@ const Index = () => {
       navigate("/auth");
       return;
     }
+    
+    // Handle map navigation
+    if (tab === "map") {
+      navigate("/map");
+      return;
+    }
+    
     setActiveTab(tab);
     
     // Update URL to reflect current tab
