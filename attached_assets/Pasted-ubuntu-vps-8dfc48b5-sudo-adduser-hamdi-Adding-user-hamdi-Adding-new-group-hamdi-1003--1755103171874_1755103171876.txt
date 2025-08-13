@@ -1,0 +1,309 @@
+ubuntu@vps-8dfc48b5:~$ sudo adduser hamdi
+Adding user `hamdi' ...
+Adding new group `hamdi' (1003) ...
+Adding new user `hamdi' (1003) with group `hamdi' ...
+Creating home directory `/home/hamdi' ...
+Copying files from `/etc/skel' ...
+New password:
+Retype new password:
+passwd: password updated successfully
+Changing the user information for hamdi
+Enter the new value, or press ENTER for the default
+        Full Name []:
+        Room Number []:
+        Work Phone []:
+        Home Phone []:
+        Other []:
+Is the information correct? [Y/n]
+ubuntu@vps-8dfc48b5:~$ sudo usermod -aG sudo hamdi
+ubuntu@vps-8dfc48b5:~$ sudo su - hamdi
+To run a command as administrator (user "root"), use "sudo <command>".
+See "man sudo_root" for details.
+
+hamdi@vps-8dfc48b5:~$ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+nvm use --lts
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 16555  100 16555    0     0  87139      0 --:--:-- --:--:-- --:--:-- 87592
+=> Downloading nvm from git to '/home/hamdi/.nvm'
+=> Cloning into '/home/hamdi/.nvm'...
+remote: Enumerating objects: 383, done.
+remote: Counting objects: 100% (383/383), done.
+remote: Compressing objects: 100% (326/326), done.
+remote: Total 383 (delta 43), reused 178 (delta 29), pack-reused 0 (from 0)
+Receiving objects: 100% (383/383), 392.12 KiB | 6.54 MiB/s, done.
+Resolving deltas: 100% (43/43), done.
+* (HEAD detached at FETCH_HEAD)
+  master
+=> Compressing and cleaning up git repository
+
+=> Appending nvm source string to /home/hamdi/.bashrc
+=> Appending bash_completion source string to /home/hamdi/.bashrc
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.5.2
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.5.2
+npm notice To update run: npm install -g npm@11.5.2
+npm notice
+=> You currently have modules installed globally with `npm`. These will no
+=> longer be linked to the active version of Node when you install a new node
+=> with `nvm`; and they may (depending on how you construct your `$PATH`)
+=> override the binaries of modules installed with `nvm`:
+
+/usr/lib
+├── corepack@0.32.0
+├── pm2@6.0.8
+└── typescript@5.9.2
+=> If you wish to uninstall them at a later point (or re-install them under your
+=> `nvm` Nodes), you can remove them from the system Node as follows:
+
+     $ nvm use system
+     $ npm uninstall -g a_module
+
+=> Close and reopen your terminal to start using nvm or run the following to use it now:
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+Installing latest LTS version.
+Downloading and installing node v22.18.0...
+Downloading https://nodejs.org/dist/v22.18.0/node-v22.18.0-linux-x64.tar.xz...
+###################################################################################################################################################################################### 100.0%
+Computing checksum with sha256sum
+Checksums matched!
+Now using node v22.18.0 (npm v10.9.3)
+Creating default alias: default -> lts/* (-> v22.18.0)
+Now using node v22.18.0 (npm v10.9.3)
+hamdi@vps-8dfc48b5:~$ git clone https://github.com/imen-nasrii/cool-mobile-spark.git
+cd cool-mobile-spark
+npm install
+Cloning into 'cool-mobile-spark'...
+remote: Enumerating objects: 3756, done.
+remote: Counting objects: 100% (3756/3756), done.
+remote: Compressing objects: 100% (995/995), done.
+remote: Total 3756 (delta 2928), reused 3534 (delta 2706), pack-reused 0 (from 0)
+Receiving objects: 100% (3756/3756), 16.93 MiB | 18.29 MiB/s, done.
+Resolving deltas: 100% (2928/2928), done.
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+npm warn deprecated @esbuild-kit/esm-loader@2.6.5: Merged into tsx: https://tsx.is
+npm warn deprecated @esbuild-kit/core-utils@3.3.2: Merged into tsx: https://tsx.is
+
+added 680 packages, and audited 681 packages in 43s
+
+87 packages are looking for funding
+  run `npm fund` for details
+
+10 vulnerabilities (3 low, 7 moderate)
+
+To address issues that do not require attention, run:
+  npm audit fix
+
+To address all issues (including breaking changes), run:
+  npm audit fix --force
+
+Run `npm audit` for details.
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ cat > .env << 'EOF'
+DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
+PGDATABASE=tomatii_db
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomatii_user
+PGPASSWORD=tomatii_password_2024!
+JWT_SECRET=tomati_super_secret_jwt_key_2024_production
+NODE_ENV=production
+PORT=5000
+HOST=0.0.0.0
+SESSION_SECRET=tomati_session_secret_key_2024_production
+REPL_ID=tomati-production
+REPLIT_DOMAINS=tomati.org
+ISSUER_URL=https://replit.com/oidc
+EOF
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ chmod 600 .env
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ npm run db:push
+npm run build
+npm install -g pm2
+
+> rest-express@1.0.0 db:push
+> drizzle-kit push
+
+No config path provided, using default 'drizzle.config.ts'
+Reading config file '/home/hamdi/cool-mobile-spark/drizzle.config.ts'
+Using 'pg' driver for database querying
+[✓] Pulling schema from database...
+[i] No changes detected
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2680 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-BCXJso9b.css            116.17 kB │ gzip:  23.56 kB
+../dist/public/assets/index-D7cltdS5.js             890.07 kB │ gzip: 256.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 25.82s
+
+  dist/index.js  81.7kb
+
+⚡ Done in 37ms
+
+added 133 packages in 17s
+
+13 packages are looking for funding
+  run `npm fund` for details
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ pm2 start server/index.ts --name tomati-hamdi --interpreter-args="--loader tsx/esm"
+pm2 save
+pm2 startup
+
+                        -------------
+
+__/\\\\\\\\\\\\\____/\\\\____________/\\\\____/\\\\\\\\\_____
+ _\/\\\/////////\\\_\/\\\\\\________/\\\\\\__/\\\///////\\\___
+  _\/\\\_______\/\\\_\/\\\//\\\____/\\\//\\\_\///______\//\\\__
+   _\/\\\\\\\\\\\\\/__\/\\\\///\\\/\\\/_\/\\\___________/\\\/___
+    _\/\\\/////////____\/\\\__\///\\\/___\/\\\________/\\\//_____
+     _\/\\\_____________\/\\\____\///_____\/\\\_____/\\\//________
+      _\/\\\_____________\/\\\_____________\/\\\___/\\\/___________
+       _\/\\\_____________\/\\\_____________\/\\\__/\\\\\\\\\\\\\\\_
+        _\///______________\///______________\///__\///////////////__
+
+
+                          Runtime Edition
+
+        PM2 is a Production Process Manager for Node.js applications
+                     with a built-in Load Balancer.
+
+                Start and Daemonize any application:
+                $ pm2 start app.js
+
+                Load Balance 4 instances of api.js:
+                $ pm2 start api.js -i 4
+
+                Monitor in production:
+                $ pm2 monitor
+
+                Make pm2 auto-boot at server restart:
+                $ pm2 startup
+
+                To go further checkout:
+                http://pm2.io/
+
+
+                        -------------
+
+[PM2] Spawning PM2 daemon with pm2_home=/home/hamdi/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2][ERROR] Interpreter bun is NOT AVAILABLE in PATH. (type 'which bun' to double check.)
+[PM2] Saving current process list...
+[PM2][WARN] PM2 is not managing any process, skipping save...
+[PM2][WARN] To force saving use: pm2 save --force
+[PM2] Init System found: systemd
+[PM2] To setup the Startup Script, copy/paste the following command:
+sudo env PATH=$PATH:/home/hamdi/.nvm/versions/node/v22.18.0/bin /home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/pm2/bin/pm2 startup systemd -u hamdi --hp /home/hamdi
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ sudo su - hamdi           # Passer à hamdi
+pm2 status               # Voir le statut
+pm2 logs tomati-hamdi    # Voir les logs
+pm2 restart tomati-hamdi # Redémarrer
+[sudo] password for hamdi:
+hamdi@vps-8dfc48b5:~$ pm2 logs tomati-hamdi    # Voir les logs
+pm2 restart tomati-hamdi # Redémarrer
+[TAILING] Tailing last 15 lines for [tomati-hamdi] process (change the value with --lines option)
+^C
+Use --update-env to update environment variables
+[PM2][ERROR] Process or Namespace tomati-hamdi not found
+hamdi@vps-8dfc48b5:~$ pm2 logs tomati-hamdi
+[TAILING] Tailing last 15 lines for [tomati-hamdi] process (change the value with --lines option)
+
+^C
+hamdi@vps-8dfc48b5:~$ curl http://localhost:5000    # Vérifier que l'app répond
+pm2 logs tomati-hamdi --lines 20  # Voir les derniers logs
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-DMlBXpoI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CnH-OLuK.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>[TAILING] Tailing last 20 lines for [tomati-hamdi] process (change the value with --lines option)
+^C
+hamdi@vps-8dfc48b5:~$ cd cool-mobile-spark
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ pm2 delete all
+[PM2][WARN] No process found
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-hamdi',
+    script: 'server/index.ts',
+    interpreter: 'node',
+    interpreter_args: '--loader tsx/esm',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+EOF
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ mkdir -p logs
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ pm2 start ecosystem.config.cjs
+[PM2][WARN] Applications tomati-hamdi not running, starting...
+[PM2] App [tomati-hamdi] launched (1 instances)
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ cluster │ 613742   │ 0s     │ 0    │ online    │ 0%       │ 48.4mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ pm2 status
+pm2 logs tomati-hamdi
+┌────┬────────────────────┬──────────┬──────┬───────────┬──────────┬──────────┐
+│ id │ name               │ mode     │ ↺    │ status    │ cpu      │ memory   │
+├────┼────────────────────┼──────────┼──────┼───────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi       │ cluster  │ 15   │ errored   │ 0%       │ 0b       │
+└────┴────────────────────┴──────────┴──────┴───────────┴──────────┴──────────┘
+[TAILING] Tailing last 15 lines for [tomati-hamdi] process (change the value wit                                                                                                             h --lines option)
+
+
+
+^C
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ pm2 logs tomati-hamdi --err --lines 20
+[TAILING] Tailing last 20 lines for [tomati-hamdi] process (change the value with --lines option)
+^C
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$

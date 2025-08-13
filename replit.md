@@ -48,6 +48,13 @@ The platform is built with a clear separation between client and server. The fro
   - Complete deployment documentation for GitHub method
   - Production-ready PM2 ecosystem configuration
   - Database migration integration in deployment process
+- **Successfully deployed application with user 'hamdi':**
+  - Created dedicated system user 'hamdi' for application management
+  - Installed Node.js v22.18.0 via NVM for hamdi user
+  - Cloned application from GitHub and built successfully
+  - Configured PostgreSQL database connection with tomatii_user/tomatii_db
+  - Application responds correctly on http://localhost:5000
+  - Working on PM2 process management stabilization
 - **Removed automatic advertising label feature:**
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components

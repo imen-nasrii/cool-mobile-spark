@@ -1,72 +1,85 @@
-# Solution Immédiate - Correction Database
+# Solution Immédiate - PM2 Hamdi
 
-## Situation actuelle
-- PostgreSQL installé et actif ✅
-- Build réussi ✅
-- Utilisateur `tomati_user` existe ✅
-- Base `tomati_db` existe ✅
-- Problème : Authentification échoue
+## Commandes de diagnostic urgent
 
-## Solution rapide
-
-### 1. Réinitialiser le mot de passe
 ```bash
-sudo -u postgres psql -c "ALTER USER tomati_user PASSWORD 'Tomati123_db';"
-```
-
-### 2. Tester la connexion
-```bash
-cd /home/tomati/tomatimarket
-psql -h localhost -U tomati_user -d tomati_db -c "SELECT version();"
-```
-
-### 3. Si échec, utiliser postgres par défaut
-```bash
-cat > .env << 'ENVEOF'
-NODE_ENV=production
-PORT=5000
-JWT_SECRET=tomati-super-secret-jwt-key-production-2025
-DATABASE_URL=postgresql://postgres@localhost:5432/tomati_db
-PUBLIC_URL=https://tomati.org
-VITE_API_URL=https://tomati.org/api
-CORS_ORIGIN=https://tomati.org
-ENVEOF
-```
-
-### 4. Finaliser le déploiement
-```bash
-npm run db:push
-pm2 start ecosystem.config.js
-pm2 save
+# 1. Voir le statut actuel
 pm2 status
+
+# 2. Voir les logs d'erreur complets
+pm2 logs tomati-hamdi --err --lines 30
+
+# 3. Voir les fichiers de logs
+ls -la logs/
+cat logs/err.log 2>/dev/null || echo "Fichier err.log introuvable"
+cat logs/out.log 2>/dev/null || echo "Fichier out.log introuvable"
+
+# 4. Test direct de l'application pour identifier l'erreur
+node --loader tsx/esm server/index.ts
 ```
 
-### 5. Vérification
+## Solution de contournement immédiate
+
 ```bash
-curl http://localhost:5000/api/categories
+# Utiliser le fichier JavaScript compilé au lieu de TypeScript
+pm2 delete tomati-hamdi
+
+# Nouvelle configuration utilisant dist/index.js
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-hamdi',
+    script: 'dist/index.js',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+EOF
+
+# Démarrer avec le fichier compilé
+pm2 start ecosystem.config.cjs
+pm2 status
+pm2 logs tomati-hamdi --lines 10
 ```
 
-## Commandes à exécuter maintenant
+## Si le problème persiste - Configuration minimale
+
 ```bash
-# Réinitialiser le mot de passe
-sudo -u postgres psql -c "ALTER USER tomati_user PASSWORD 'Tomati123_db';"
+# Configuration ultra-simple
+pm2 delete tomati-hamdi
 
-# Tester
-cd /home/tomati/tomatimarket
-npm run db:push
+# Démarrage direct sans fichier de config
+pm2 start dist/index.js --name tomati-hamdi --env production
 
-# Si échec, utiliser postgres
-cat > .env << 'ENVEOF'
-NODE_ENV=production
-PORT=5000
-JWT_SECRET=tomati-super-secret-jwt-key-production-2025
-DATABASE_URL=postgresql://postgres@localhost:5432/tomati_db
-PUBLIC_URL=https://tomati.org
-VITE_API_URL=https://tomati.org/api
-CORS_ORIGIN=https://tomati.org
-ENVEOF
+# Vérifier
+pm2 status
+pm2 logs tomati-hamdi
+```
 
-npm run db:push
-pm2 start ecosystem.config.js
-pm2 save
+## Dernière solution - Démarrage manuel avec screen
+
+```bash
+# Si PM2 continue de crasher, utiliser screen
+sudo apt update && sudo apt install -y screen
+
+# Démarrer l'application en arrière-plan avec screen
+screen -dmS tomati bash -c 'cd /home/hamdi/cool-mobile-spark && node dist/index.js'
+
+# Vérifier que ça fonctionne
+curl http://localhost:5000
+screen -list
+
+# Pour voir les logs de screen
+screen -r tomati
+# (Ctrl+A puis D pour sortir)
 ```
