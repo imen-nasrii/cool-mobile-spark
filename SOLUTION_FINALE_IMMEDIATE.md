@@ -1,72 +1,100 @@
-# Solution Finale Immédiate
+# Solution Finale - Variables d'environnement PM2
 
-## 🚀 Une seule commande pour tout créer avec hamdi
+## Problème identifié
+✅ PM2 fonctionne maintenant (statut "online")
+❌ Les variables d'environnement du fichier .env ne sont pas chargées
 
-```bash
-curl -sSL https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/deploy-avec-hamdi.sh | bash
-```
-
-## 📋 Ou copier-coller ces 3 commandes simples
+## Solution immédiate - Charger les variables d'environnement
 
 ```bash
-# 1. Créer hamdi
-sudo adduser hamdi
-sudo usermod -aG sudo hamdi
+# 1. Arrêter le processus actuel
+pm2 delete tomati-hamdi
 
-# 2. Installer pour hamdi
-sudo su - hamdi -c "
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-source ~/.bashrc
-export NVM_DIR=~/.nvm
-[ -s \"\$NVM_DIR/nvm.sh\" ] && \. \"\$NVM_DIR/nvm.sh\"
-nvm install --lts
-nvm use --lts
-git clone https://github.com/imen-nasrii/cool-mobile-spark.git
-cd cool-mobile-spark
-npm install
-cat > .env << 'EOF'
-DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
-PGDATABASE=tomatii_db
-PGHOST=localhost
-PGPORT=5432
-PGUSER=tomatii_user
-PGPASSWORD=tomatii_password_2024!
-JWT_SECRET=tomati_super_secret_jwt_key_2024_production
-NODE_ENV=production
-PORT=5000
-HOST=0.0.0.0
-SESSION_SECRET=tomati_session_secret_key_2024_production
-REPL_ID=tomati-production
-REPLIT_DOMAINS=tomati.org
-ISSUER_URL=https://replit.com/oidc
+# 2. Configuration PM2 avec chargement du fichier .env
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-hamdi',
+    script: 'dist/index.js',
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env_file: '.env',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      DATABASE_URL: 'postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db',
+      PGDATABASE: 'tomatii_db',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomatii_user',
+      PGPASSWORD: 'tomatii_password_2024!',
+      JWT_SECRET: 'tomati_super_secret_jwt_key_2024_production',
+      SESSION_SECRET: 'tomati_session_secret_key_2024_production',
+      REPL_ID: 'tomati-production',
+      REPLIT_DOMAINS: 'tomati.org',
+      ISSUER_URL: 'https://replit.com/oidc'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
 EOF
-chmod 600 .env
-npm run db:push
-npm run build
-npm install -g pm2
-pm2 start server/index.ts --name tomati-hamdi --interpreter-args='--loader tsx/esm'
-pm2 save
-pm2 startup
-"
 
-# 3. Gestion quotidienne
-sudo su - hamdi -c "pm2 status"
+# 3. Redémarrer avec toutes les variables d'environnement
+pm2 start ecosystem.config.cjs
+pm2 status
+pm2 logs tomati-hamdi --lines 10
 ```
 
-## ✅ Résultat
-
-- **Utilisateur hamdi créé** avec privilèges sudo
-- **Application déployée** sur http://tomati.org
-- **PM2 configuré** pour redémarrage automatique
-- **Base de données migrée** automatiquement
-
-## 🔧 Commandes de gestion
+## Test de fonctionnement
 
 ```bash
-sudo su - hamdi              # Passer à hamdi
-pm2 status                  # Voir le statut
-pm2 logs tomati-hamdi       # Voir les logs  
-pm2 restart tomati-hamdi    # Redémarrer
+# Vérifier le statut
+pm2 status
+
+# Tester l'application
+curl http://localhost:5000
+
+# Voir les logs
+pm2 logs tomati-hamdi --lines 5
+
+# Si tout fonctionne, sauvegarder la configuration
+pm2 save
+
+# Configurer le démarrage automatique
+sudo env PATH=$PATH:/home/hamdi/.nvm/versions/node/v22.18.0/bin /home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/pm2/bin/pm2 startup systemd -u hamdi --hp /home/hamdi
 ```
 
-**Tout sera opérationnel en 5 minutes avec l'utilisateur hamdi !**
+## Configuration Nginx (après validation PM2)
+
+```bash
+# Une fois PM2 stable, configurer Nginx
+sudo nano /etc/nginx/sites-available/tomati.org
+
+# Contenu du fichier Nginx:
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+
+# Activer la configuration
+sudo ln -s /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
