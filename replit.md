@@ -53,10 +53,10 @@ The platform is built with a clear separation between client and server. The fro
   - Installed Node.js v22.18.0 via NVM for hamdi user
   - Cloned application from GitHub and built successfully
   - Configured PostgreSQL database connection with tomatii_user/tomatii_db
-  - Fixed port configuration to use environment variables (PORT=3001)
-  - Modified server/index.ts to support dynamic port configuration instead of hardcoded 5000
-  - PM2 ecosystem configured with all required environment variables
-  - Application ready for deployment on tomati.org via Nginx proxy
+  - Application running successfully on port 5000 with PM2 process management
+  - Local testing confirmed - curl http://localhost:5000 returns full HTML page
+  - PM2 ecosystem configured and process tomati-hamdi active
+  - Nginx configuration required for external access via tomati.org domain
 - **Removed automatic advertising label feature:**
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components
