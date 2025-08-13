@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { AIButton } from "@/components/UI/FloatingButtons";
+import { AddButton } from "@/components/UI/FloatingButtons";
 import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell, Car, Building, Briefcase, Grid3X3, X, Heart } from "lucide-react";
 import { Home as HomePage } from "./Home";
 import MessagesPage from "./Messages";
@@ -12,8 +12,7 @@ import { Notifications } from "./Notifications";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 
-import { ChatBot } from "@/components/Chat/ChatBot";
-import { AIChat, AIChatToggle } from "@/components/Chat/AIChat";
+
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +31,6 @@ const Index = () => {
   const [currentView, setCurrentView] = useState<"main" | "product">("main");
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [showAIChat, setShowAIChat] = useState(false);
   const [homeSearchTerm, setHomeSearchTerm] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const { toast } = useToast();
@@ -209,21 +207,9 @@ const Index = () => {
             </DialogContent>
           </Dialog>
           
-          {/* ChatBot Component */}
-          <ChatBot />
-
-          {/* AI Chat */}
-          {showAIChat && (
-            <AIChat 
-              isOpen={showAIChat} 
-              onToggle={() => setShowAIChat(!showAIChat)}
-              onClose={() => setShowAIChat(false)}
-            />
-          )}
-
-          {/* AI Button */}
-          <AIButton 
-            onAIToggle={() => setShowAIChat(!showAIChat)}
+          {/* Add Button */}
+          <AddButton 
+            onCategorySelect={handleFloatingCategorySelect}
           />
 
 
