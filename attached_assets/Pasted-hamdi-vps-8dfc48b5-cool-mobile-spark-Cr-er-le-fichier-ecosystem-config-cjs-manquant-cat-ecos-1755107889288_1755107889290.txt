@@ -1,0 +1,75 @@
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # Créer le fichier ecosystem.config.cjs manquant
+cat > ecosystem.config.cjs << 'EOF'     # Créer le fichier ecosystem.config.cjs manquant
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{'tomati-hamdi',
+    name: 'tomati-hamdi',s',
+    script: 'dist/index.js',
+    instances: 1,ork',
+    exec_mode: 'fork',
+    autorestart: true,
+    watch: false,start: '1G',
+    max_memory_restart: '1G',
+    env: {_ENV: 'production',
+      NODE_ENV: 'production',
+      PORT: 5001,0.0',
+      HOST: '0.0.0.0',ostgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db',
+      DATABASE_URL: 'postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db',
+      PGDATABASE: 'tomatii_db',
+      PGHOST: 'localhost',
+      PGPORT: '5432',i_user',
+      PGUSER: 'tomatii_user',ssword_2024!',
+      PGPASSWORD: 'tomatii_password_2024!',key_2024_production',
+      JWT_SECRET: 'tomati_super_secret_jwt_key_2024_production',',
+      SESSION_SECRET: 'tomati_session_secret_key_2024_production',
+      REPL_ID: 'tomati-production',
+      REPLIT_DOMAINS: 'tomati.org',om/oidc'
+      ISSUER_URL: 'https://replit.com/oidc'
+    },ror_file: './logs/err.log',
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};F
+EOF
+# Vérifier que tous les fichiers sont présents
+# Vérifier que tous les fichiers sont présents
+ls -la ecosystem.config.cjs .env dist/index.js
+# Démarrer l'application
+# Démarrer l'applicationig.cjs
+pm2 start ecosystem.config.cjs
+# Vérifications
+# Vérifications
+sleep 5tus
+pm2 statusomati-hamdi --lines 5
+pm2 logs tomati-hamdi --lines 5
+curl http://localhost:5001
+curl -I http://tomati.org
+pm2 save
+echo "✅ Application démarrée sur tomati.org"
+echo "✅ Application démarrée sur tomati.org"
+ls: cannot access '.env': No such file or directory
+ls: cannot access 'dist/index.js': No such file or directory
+-rw-rw-r-- 1 hamdi hamdi 913 Aug 13 17:57 ecosystem.config.cjs
+[PM2][WARN] Applications tomati-hamdi not running, starting...
+[PM2][ERROR] Error: Script not found: /home/hamdi/cool-mobile-spark/dist/index.js
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [tomati-hamdi] process (change the value with --lines option)
+^Z
+[1]+  Stopped                 pm2 logs tomati-hamdi --lines 5
+curl: (7) Failed to connect to localhost port 5001 after 0 ms: Connection refused
+HTTP/1.1 502 Bad Gateway
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 17:58:00 GMT
+Content-Type: text/html
+Content-Length: 166
+Connection: keep-alive
+
+^A[PM2] Saving current process list...
+[PM2][WARN] PM2 is not managing any process, skipping save...
+[PM2][WARN] To force saving use: pm2 save --force
+✅ Application démarrée sur tomati.org
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$
