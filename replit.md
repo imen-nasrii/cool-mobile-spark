@@ -61,6 +61,11 @@ The platform is built with a clear separation between client and server. The fro
   - Implemented "Publicité" badge for manually marked products (1 in 4 products)
   - Updated ProductCard and ProductListCard components to display advertisement badges
   - Provides controlled advertising display without automatic triggers
+- **Enhanced messaging system with quick response suggestions:**
+  - Added quick response buttons above message input field
+  - Includes common responses: Location, Meeting, Price, Availability, Photos, Thanks
+  - Color-coded suggestion buttons with emojis for better UX
+  - Auto-fills message input when suggestion is selected
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red

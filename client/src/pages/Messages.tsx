@@ -445,8 +445,62 @@ export default function MessagesPage() {
                   </div>
                 )}
 
+                {/* Quick Response Suggestions */}
+                <div className="border-t p-3 bg-gradient-to-r from-gray-50 to-blue-50">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Pouvez-vous me donner votre localisation exacte ?")}
+                      className="text-xs bg-white/80 hover:bg-blue-100 border border-blue-200 text-blue-700 rounded-full"
+                    >
+                      📍 Localisation
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
+                      className="text-xs bg-white/80 hover:bg-green-100 border border-green-200 text-green-700 rounded-full"
+                    >
+                      📅 Rendez-vous
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Quel est votre meilleur prix ?")}
+                      className="text-xs bg-white/80 hover:bg-yellow-100 border border-yellow-200 text-yellow-700 rounded-full"
+                    >
+                      💰 Prix
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Le produit est-il encore disponible ?")}
+                      className="text-xs bg-white/80 hover:bg-purple-100 border border-purple-200 text-purple-700 rounded-full"
+                    >
+                      ✅ Disponibilité
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Pouvez-vous m'envoyer plus de photos ?")}
+                      className="text-xs bg-white/80 hover:bg-pink-100 border border-pink-200 text-pink-700 rounded-full"
+                    >
+                      📸 Photos
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setNewMessage("Merci beaucoup !")}
+                      className="text-xs bg-white/80 hover:bg-gray-100 border border-gray-200 text-gray-700 rounded-full"
+                    >
+                      🙏 Merci
+                    </Button>
+                  </div>
+                </div>
+
                 {/* Message Input */}
-                <div className="border-t p-4 bg-gradient-to-r from-gray-50 to-blue-50">
+                <div className="p-4 bg-gradient-to-r from-gray-50 to-blue-50">
                   <div className="flex gap-3">
                     <Button variant="outline" size="sm" className="glass-card border-0 bg-gradient-to-r from-pink-500 to-red-500 text-white hover:from-pink-600 hover:to-red-600 modern-shadow hover:scale-110 transition-all duration-300">
                       <Heart className="h-4 w-4" />
