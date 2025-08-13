@@ -48,10 +48,10 @@ The platform is built with a clear separation between client and server. The fro
   - Complete deployment documentation for GitHub method
   - Production-ready PM2 ecosystem configuration
   - Database migration integration in deployment process
-- **Added automatic advertising label feature:**
-  - Products with 3+ likes automatically display "Publicité" badge
-  - Implemented in both ProductCard and ProductListCard components
-  - Yellow-orange gradient design with modern styling
+- **Removed automatic advertising label feature:**
+  - Removed "Publicité" badge that appeared on products with 3+ likes
+  - Cleaned up badge logic from ProductCard and ProductListCard components
+  - Simplified product display without advertising labels
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red
