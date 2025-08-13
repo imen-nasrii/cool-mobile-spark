@@ -1,0 +1,134 @@
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # Créer un script de correction pour supprimer les dépendances Replit
+cat > fix-object-storage.sh << 'EOF'
+#!/bin/bash
+
+echo "🔧 Correction du service Object Storage pour VPS..."
+
+# 1. Désactiver temporairement les fonctionnalités Object Storage
+cat > server/objectStorage.ts << 'OBJEOF'
+import { Response } from "express";
+import { randomUUID } from "crypto";
+
+export class ObjectNotFoundError extends Error {
+  constructor() {
+    super("Object not found");
+    this.name = "ObjectNotFoundError";
+    Object.setPrototypeOf(this, ObjectNotFoundError.prototype);
+  }
+}
+
+// Service Object Storage désactivé pour VPS
+export class ObjectStorageService {
+  constructor() {}
+
+  getPrivateObjectDir(): string {
+    return "";
+  }
+
+  async getObjectEntityUploadURL(): Promise<string> {
+    throw new Error("Object storage not available on VPS");
+  }
+
+  async getObject(objectId: string): Promise<any> {
+    throw new Error("Object storage not available on VPS");
+  }
+
+  async downloadObject(file: any, res: Response, cacheTtlSec: number = 3600) {
+    res.status(404).json({ error: "Object storage not available" });
+  }
+}
+
+export const objectStorageService = new ObjectStorageService();
+
+function parseObjectPath(fullPath: string) {
+  return { bucketName: "", objectName: "" };
+}
+
+export { parseObjectPath };
+OBJEOF
+
+echo "🎉 Correction Object Storage terminée - HTTPS devrait maintenant fonctionner !"
+🔧 Correction du service Object Storage pour VPS...
+✅ Object Storage désactivé pour VPS
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (3) src/main.tsxBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2680 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-BCXJso9b.css            116.17 kB │ gzip:  23.56 kB
+../dist/public/assets/index-D7cltdS5.js             890.07 kB │ gzip: 256.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 26.04s
+
+  dist/index.js  77.1kb
+
+⚡ Done in 36ms
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 629283   │ 0s     │ 3    │ online    │ 0%       │ 9.6mb    │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 629283   │ 10s    │ 3    │ online    │ 0%       │ 130.3mb  │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 5 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 5 lines:
+0|tomati-h | 2025-08-13T18:29:29:       issuerCertificate: [Object]
+0|tomati-h | 2025-08-13T18:29:29:     }
+0|tomati-h | 2025-08-13T18:29:29:   },
+0|tomati-h | 2025-08-13T18:29:29:   [Symbol(kMessage)]: "Hostname/IP does not match certificate's altnames: Host: localhost. is not in the cert's altnames: DNS:tomati.org, DNS:www.tomati.org"
+0|tomati-h | 2025-08-13T18:29:29: }
+
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 5 lines:
+0|tomati-h | 2025-08-13T18:29:07: 6:29:07 PM [express] serving on port 5000
+0|tomati-h | 2025-08-13T18:29:28: GET /api/products - category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:29:28: Storage.getProducts called with category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:29:29: 6:29:29 PM [express] HEAD /api/products 500 in 143ms :: {"error":"Hostname/IP does not match certifi…
+0|tomati-h | 2025-08-13T18:33:51: 6:33:51 PM [express] serving on port 5000
+
+^C
+HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 18:34:11 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1389
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Wed, 13 Aug 2025 18:33:49 GMT
+ETag: W/"56d-198a4b5b72b"
+
+HTTP/1.1 500 Internal Server Error
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 18:34:12 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 145
+Connection: keep-alive
+X-Powered-By: Express
+ETag: W/"91-dJTHz2FQZ2XpPFuZzQ+MOs+tso4"
+
+🎉 Correction Object Storage terminée - HTTPS devrait maintenant fonctionner !
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$
