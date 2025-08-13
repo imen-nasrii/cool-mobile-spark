@@ -3,7 +3,7 @@ import { Plus, Car, Building, Briefcase, Grid3X3, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-interface FloatingAddButtonProps {
+interface FloatingActionButtonProps {
   onCategorySelect: (category: string) => void;
 }
 
@@ -38,7 +38,7 @@ const categories = [
   }
 ];
 
-export const FloatingAddButton: React.FC<FloatingAddButtonProps> = ({ onCategorySelect }) => {
+export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({ onCategorySelect }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = () => {
@@ -71,7 +71,6 @@ export const FloatingAddButton: React.FC<FloatingAddButtonProps> = ({ onCategory
               style={{
                 transitionDelay: isOpen ? `${index * 50}ms` : '0ms'
               }}
-              title={`Ajouter ${category.name}`}
             >
               <Icon size={24} className={category.iconColor} />
             </Button>
@@ -86,11 +85,8 @@ export const FloatingAddButton: React.FC<FloatingAddButtonProps> = ({ onCategory
           "w-16 h-16 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110",
           isOpen 
             ? "bg-red-500 hover:bg-red-600 rotate-45" 
-            : "bg-red-500 hover:bg-red-600"
+            : "bg-tomati-red hover:bg-red-600"
         )}
-        style={{
-          boxShadow: '0 8px 25px rgba(239, 68, 68, 0.3)'
-        }}
       >
         {isOpen ? (
           <X size={28} className="text-white" />
@@ -98,11 +94,6 @@ export const FloatingAddButton: React.FC<FloatingAddButtonProps> = ({ onCategory
           <Plus size={28} className="text-white" />
         )}
       </Button>
-      
-      {/* Pulse animation when closed */}
-      {!isOpen && (
-        <div className="absolute inset-0 rounded-full bg-red-500 animate-ping opacity-20" />
-      )}
     </div>
   );
 };

@@ -216,6 +216,9 @@ const Index = () => {
             <AIChatToggle onClick={() => setShowAIChat(true)} />
           )}
 
+          {/* Floating Add Button */}
+          <FloatingAddButton onCategorySelect={handleFloatingCategorySelect} />
+
 
 
 
