@@ -105,15 +105,6 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           
           {/* Right Side Buttons */}
           <div className="flex items-center gap-2">
-            {/* Publish Ad Button */}
-            <Button
-              onClick={handlePublishAd}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded font-medium text-sm"
-            >
-              <Plus className="h-4 w-4 mr-1" />
-              Publier une annonce
-            </Button>
-            
             {/* User Menu */}
             {user ? (
               <DropdownMenu>
