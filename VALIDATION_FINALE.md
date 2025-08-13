@@ -1,92 +1,66 @@
-# Validation Finale - Utilisateur Hamdi
+# Validation Finale - Déploiement Complet
 
-## ✅ État Actuel Confirmé
+## Changements effectués
 
-D'après l'image fournie, voici ce qui est opérationnel :
+✅ **Code modifié** : server/index.ts utilise maintenant process.env.PORT  
+✅ **Application reconstruite** : npm run build exécuté avec succès  
+✅ **Configuration PM2** : ecosystem.config.cjs prêt avec PORT=3001  
 
-### PM2 Configuration
-- ✅ PM2 installé et fonctionnel
-- ✅ Application `tomati-hamdi` en cours d'exécution
-- ✅ Système de démarrage automatique configuré (`pm2 startup`)
-- ✅ Configuration sauvegardée (`pm2 save`)
-
-### Services Vérifiés
-- ✅ Node.js installé via NVM
-- ✅ Application clonée depuis GitHub
-- ✅ Dépendances installées
-- ✅ Base de données configurée
-
-## 🔧 Commandes de Gestion Quotidienne
+## Commandes finales pour le VPS
 
 ```bash
-# Passer à l'utilisateur hamdi
-sudo su - hamdi
+# Sur le VPS, en tant que hamdi dans cool-mobile-spark :
 
-# Voir le statut (comme dans votre image)
+# 1. Redémarrer PM2 avec la nouvelle build
+pm2 delete tomati-hamdi
+pm2 start ecosystem.config.cjs
+
+# 2. Vérifier le fonctionnement
 pm2 status
+pm2 logs tomati-hamdi --lines 5
+curl http://localhost:3001
 
-# Voir les logs en temps réel
-pm2 logs tomati-hamdi
+# 3. Configuration Nginx
+sudo tee /etc/nginx/sites-available/tomati.org << 'EOF'
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
 
-# Redémarrer l'application
-pm2 restart tomati-hamdi
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+EOF
 
-# Arrêter l'application
-pm2 stop tomati-hamdi
+sudo ln -sf /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
 
-# Démarrer l'application
-pm2 start tomati-hamdi
+# 4. Test final
+curl http://tomati.org
 
-# Voir les logs détaillés
-pm2 logs tomati-hamdi --lines 100
+# 5. Sauvegarder la configuration PM2
+pm2 save
+sudo env PATH=$PATH:/home/hamdi/.nvm/versions/node/v22.18.0/bin /home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/pm2/bin/pm2 startup systemd -u hamdi --hp /home/hamdi
 ```
 
-## 🌐 Vérification de l'Application
+## État du déploiement
 
-```bash
-# Test local
-curl http://localhost:5000
+- ✅ Utilisateur 'hamdi' créé et configuré
+- ✅ Node.js v22.18.0 installé via NVM
+- ✅ Application clonée depuis GitHub
+- ✅ Base de données PostgreSQL configurée
+- ✅ Code modifié pour port dynamique
+- ✅ Application rebuilt avec les changements
+- ✅ Configuration PM2 prête (PORT=3001)
+- 🔄 En attente : Redémarrage PM2 et configuration Nginx
 
-# Test avec les logs
-pm2 logs tomati-hamdi --lines 20
-```
-
-## 📊 Monitoring Avancé
-
-```bash
-# Monitoring en temps réel
-pm2 monit
-
-# Statistiques détaillées
-pm2 show tomati-hamdi
-
-# Informations système
-pm2 info tomati-hamdi
-```
-
-## 🚀 Mise à Jour de l'Application
-
-```bash
-# Script de mise à jour automatique (déjà créé)
-./deploy.sh
-
-# Ou manuellement :
-cd /home/hamdi/cool-mobile-spark
-git pull origin main
-npm install
-npm run db:push
-npm run build
-pm2 restart tomati-hamdi
-```
-
-## ✅ Application Opérationnelle
-
-Votre marketplace Tomati est maintenant complètement déployée et opérationnelle avec :
-
-- **Utilisateur de gestion** : `hamdi`
-- **Application** : `tomati-hamdi` via PM2
-- **URL** : http://tomati.org (si Nginx est configuré)
-- **Port local** : http://localhost:5000
-- **Base de données** : `tomatii_db` avec utilisateur `tomatii_user`
-
-**Félicitations ! Votre déploiement est réussi !**
+L'application Tomati Market sera accessible sur https://tomati.org une fois ces dernières étapes exécutées.
