@@ -1,0 +1,102 @@
+
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # 1. Vérifier quel code est actuellement déployé
+head -10 server/objectStorage.ts
+
+# 2. Forcer la mise à jour complète
+git reset --hard HEAD
+git pull origin main --force
+
+# 3. Nettoyer le cache de build
+rm -rf dist/ node_modules/.cache/
+
+# 4. Rebuild complet avec les nouveaux fichiers
+npm run build
+
+# 5. Redémarrer proprement
+pm2 delete tomati-hamdi
+pm2 start ecosystem.config.cjs
+
+# 6. Vérifier les nouveaux logs
+pm2 logs tomati-hamdi --lines 10
+import { Response } from "express";
+import { randomUUID } from "crypto";
+
+export class ObjectNotFoundError extends Error {
+  constructor() {
+    super("Object not found");
+    this.name = "ObjectNotFoundError";
+    Object.setPrototypeOf(this, ObjectNotFoundError.prototype);
+  }
+}
+HEAD is now at 48c2a5a Add default profile pictures for users and administrators
+From https://github.com/imen-nasrii/cool-mobile-spark
+ * branch            main       -> FETCH_HEAD
+Already up to date.
+
+> rest-express@1.0.0 build
+> vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist
+
+vite v5.4.14 building for production...
+transforming (1) index.htmlBrowserslist: browsers data (caniuse-lite) is 10 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+✓ 2680 modules transformed.
+../dist/public/index.html                             1.38 kB │ gzip:   0.62 kB
+../dist/public/assets/iphone-15-pro-DLnIGZxM.jpg     12.63 kB
+../dist/public/assets/modern-sofa-Bot6_suo.jpg       42.19 kB
+../dist/public/assets/tractor-holland-BVmO3lNy.jpg   45.21 kB
+../dist/public/assets/motherboard-i5-DUzFb2hE.jpg    45.73 kB
+../dist/public/assets/mountain-bike-D3qaVfHl.jpg     45.99 kB
+../dist/public/assets/ad-2-DsZ3vHtJ.jpeg             49.32 kB
+../dist/public/assets/tesla-model3-BDFc0W8h.jpg      54.60 kB
+../dist/public/assets/ad-1-DAMbr7uR.jpeg             67.28 kB
+../dist/public/assets/index-BCXJso9b.css            116.17 kB │ gzip:  23.56 kB
+../dist/public/assets/index-D7cltdS5.js             890.07 kB │ gzip: 256.24 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 25.70s
+
+  dist/index.js  81.7kb
+
+⚡ Done in 26ms
+[PM2] Applying action deleteProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] Applications tomati-hamdi not running, starting...
+[PM2] App [tomati-hamdi] launched (1 instances)
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 631031   │ 0s     │ 0    │ online    │ 0%       │ 12.6mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 10 lines:
+0|tomati-h | 2025-08-13T18:58:50: 6:58:50 PM [express] GET /api/products 304 in 13ms :: []
+0|tomati-h | 2025-08-13T18:58:50: 6:58:50 PM [express] GET /api/advertisements 304 in 13ms :: []
+0|tomati-h | 2025-08-13T18:58:50: 6:58:50 PM [express] GET /api/profile 200 in 15ms :: {"id":"20cdea46-b9a4-40e8-964e-f7cc1ec77bcf","u…
+0|tomati-h | 2025-08-13T18:58:50: 6:58:50 PM [express] GET /api/products/promoted 304 in 5ms :: []
+0|tomati-h | 2025-08-13T18:59:04: Auth request - Path: /api/objects/upload
+0|tomati-h | 2025-08-13T18:59:04: Auth request - Auth header: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzMDg5YzVmZi0yODQ4LTQ5MGQtODhiZS1lNTRiMzk3MmFjMjgiLCJpYXQiOjE3NTUxMTA4MTYsImV4cCI6MTc1NTcxNTYxNn0.5eqlO4yJo6oVwrRYvZ11LgoxTqSo75NQWvGUtFfMeC4
+0|tomati-h | 2025-08-13T18:59:04: Auth request - Token extracted: Token present (eyJhbGciOiJIUzI1NiIs...)
+0|tomati-h | 2025-08-13T18:59:04: Auth request - User authenticated successfully: tomati3@gmail.com
+0|tomati-h | 2025-08-13T18:59:04: Upload request from user: 3089c5ff-2848-490d-88be-e54b3972ac28
+0|tomati-h | 2025-08-13T18:59:04: 6:59:04 PM [express] POST /api/objects/upload 500 in 12ms :: {"error":"Object storage not available …
+
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 10 lines:
+0|tomati-h | 2025-08-13T18:47:48:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:47:50: Error getting upload URL: Error: Object storage not available on VPS
+0|tomati-h | 2025-08-13T18:47:50:     at ObjectStorageService.getObjectEntityUploadURL (file:///home/hamdi/cool-mobile-spark/dist/index.js:40:15)
+0|tomati-h | 2025-08-13T18:47:50:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:47:50:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:59:04: Error getting upload URL: Error: Object storage not available on VPS
+0|tomati-h | 2025-08-13T18:59:04:     at ObjectStorageService.getObjectEntityUploadURL (file:///home/hamdi/cool-mobile-spark/dist/index.js:40:15)
+0|tomati-h | 2025-08-13T18:59:04:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:59:04:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:59:48: Error: ENOENT: no such file or directory, stat '/home/hamdi/cool-mobile-spark/dist/public/index.html'
+
+0|tomati-hamdi  | 2025-08-13T18:59:55: 6:59:55 PM [express] serving on port 5000
