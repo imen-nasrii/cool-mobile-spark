@@ -119,3 +119,18 @@ The platform is built with a clear separation between client and server. The fro
   - Complete production environment with PostgreSQL, PM2, Nginx, and SSL
   - Includes monitoring scripts, backup procedures, and troubleshooting guides
   - Ready for deployment to production VPS with full security configuration
+- **Successfully deployed to production on tomati.org:**
+  - **Date: August 13, 2025**
+  - Cleaned up conflicting deployment under "tomati" user
+  - Fresh deployment under "hamdi" user from new GitHub repository
+  - Application running on port 5000 with PM2 process management
+  - Nginx configured as reverse proxy for tomati.org domain
+  - Complete Tomati Market now live with all latest features:
+    * Flat design with red, black, white color scheme
+    * Enhanced messaging system with quick response suggestions
+    * User preferences system with persistent settings
+    * Product listings with view counts and rating system
+    * Interactive map with product locations
+    * Admin dashboard with role-based access control
+    * Advertisement system with selective labeling
+  - Production environment stable and accessible at tomati.org
