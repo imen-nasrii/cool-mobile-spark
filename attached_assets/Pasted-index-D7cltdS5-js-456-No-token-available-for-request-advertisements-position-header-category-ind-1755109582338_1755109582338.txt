@@ -1,0 +1,94 @@
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+index-D7cltdS5.js:456 No token available for request: /auth/signin
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/auth/signin:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
+index-D7cltdS5.js:456 Auto-login failed: Error: Hostname/IP does not match certificate's altnames: Host: localhost. is not in the cert's altnames: DNS:tomati.org, DNS:www.tomati.org
+    at nO.request (index-D7cltdS5.js:456:21461)
+    at async nO.signIn (index-D7cltdS5.js:456:21717)
+    at async index-D7cltdS5.js:456:23389
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 No token available for request: /products
+index-D7cltdS5.js:529 Error getting location: Object
+navigator.geolocation.navigator.geolocation.getCurrentPosition.enableHighAccuracy @ index-D7cltdS5.js:529
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 No token available for request: /products
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+index-D7cltdS5.js:456 Fetching products with URL: /api/products
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:456 Error fetching products: Error: HTTP error! status: 500
+    at queryFn (index-D7cltdS5.js:456:42139)
+queryFn @ index-D7cltdS5.js:456
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=header&category=
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=between_products&category=
+index-D7cltdS5.js:456 No token available for request: /products/promoted
+index-D7cltdS5.js:456 No token available for request: /advertisements?position=footer&category=
+api/advertisements?position=header&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=between_products&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/products/promoted:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+api/advertisements?position=footer&category=:1  Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+index-D7cltdS5.js:529 Header - handleConnect called, user: null
+index-D7cltdS5.js:529 Navigating to /auth
+index-D7cltdS5.js:456 No token available for request: /auth/signin
+api/auth/signin:1  Failed to load resource: the server responded with a status of 400 (Bad Request)
