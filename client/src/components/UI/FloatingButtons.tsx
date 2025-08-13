@@ -41,32 +41,28 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
 
       {/* Bouton Ajouter - En bas à droite */}
       <div className="fixed bottom-20 right-4 z-[9999]">
-        {/* Menu des catégories */}
+        {/* Menu des catégories - Plus compact */}
         {isAddMenuOpen && (
-          <div className="absolute bottom-20 right-0 flex flex-col gap-3 mb-2">
-            {categories.map((category, index) => {
-              const Icon = category.icon;
-              return (
-                <div
-                  key={category.id}
-                  className="flex items-center gap-3 animate-in slide-in-from-bottom-2 duration-300"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <div className="bg-white px-3 py-2 rounded-lg shadow-lg border text-sm font-medium text-gray-700">
-                    {category.label}
-                  </div>
-                  <Button
+          <div className="absolute bottom-20 right-0 bg-white rounded-2xl shadow-2xl border p-3 min-w-[180px]">
+            <div className="grid grid-cols-1 gap-2">
+              {categories.map((category, index) => {
+                const Icon = category.icon;
+                return (
+                  <button
+                    key={category.id}
                     onClick={() => handleCategorySelect(category.id)}
                     className={cn(
-                      "h-14 w-14 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 border-4 border-white",
-                      category.color
+                      "flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:scale-105 text-left",
+                      category.color.replace('bg-', 'hover:bg-').replace('hover:bg-', 'hover:bg-') + " hover:text-white text-gray-700 hover:shadow-lg"
                     )}
+                    style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <Icon size={24} className="text-white" />
-                  </Button>
-                </div>
-              );
-            })}
+                    <Icon size={20} />
+                    <span className="font-medium text-sm">{category.label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         )}
 
