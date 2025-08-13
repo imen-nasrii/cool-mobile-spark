@@ -255,10 +255,10 @@ export const AIChatToggle = ({ onClick }: { onClick: () => void }) => {
   return (
     <Button
       onClick={onClick}
-      className="fixed bottom-16 right-4 z-40 h-14 w-14 rounded-full shadow-2xl"
+      className="fixed bottom-20 left-4 z-[9999] h-16 w-16 rounded-full shadow-2xl bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-110"
       size="lg"
     >
-      <MessageCircle size={24} />
+      <MessageCircle size={28} className="text-white" />
     </Button>
   );
 };
