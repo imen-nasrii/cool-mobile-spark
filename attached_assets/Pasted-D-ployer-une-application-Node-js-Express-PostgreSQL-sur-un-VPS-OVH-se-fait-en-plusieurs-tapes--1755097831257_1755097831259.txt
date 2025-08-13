@@ -1,0 +1,183 @@
+Déployer une application Node.js + Express + PostgreSQL sur un VPS OVH se fait en plusieurs étapes, qui vont de la configuration du serveur à la mise en ligne de l’application.
+Je te détaille tout dans l’ordre logique :
+
+1. Préparer le VPS OVH
+Accéder au VPS
+
+Depuis ton PC, connecte-toi en SSH :
+
+bash
+Copier
+Modifier
+ssh root@IP_DU_VPS
+Remplace IP_DU_VPS par celle fournie par OVH.
+
+Mettre à jour le système
+
+bash
+Copier
+Modifier
+sudo apt update && sudo apt upgrade -y
+Installer les outils de base
+
+bash
+Copier
+Modifier
+sudo apt install curl git ufw -y
+2. Installer Node.js et npm
+Il est préférable d’installer Node via nvm (Node Version Manager) pour plus de flexibilité.
+
+bash
+Copier
+Modifier
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+node -v
+npm -v
+3. Installer et configurer PostgreSQL
+Installation
+
+bash
+Copier
+Modifier
+sudo apt install postgresql postgresql-contrib -y
+Configurer PostgreSQL
+
+Passer en mode postgres :
+
+bash
+Copier
+Modifier
+sudo -u postgres psql
+Créer une base de données et un utilisateur :
+
+sql
+Copier
+Modifier
+CREATE DATABASE ma_base;
+CREATE USER mon_user WITH ENCRYPTED PASSWORD 'mon_mot_de_passe';
+GRANT ALL PRIVILEGES ON DATABASE ma_base TO mon_user;
+\q
+Autoriser les connexions distantes (facultatif)
+
+Modifier /etc/postgresql/*/main/postgresql.conf :
+
+conf
+Copier
+Modifier
+listen_addresses = '*'
+Modifier /etc/postgresql/*/main/pg_hba.conf :
+
+conf
+Copier
+Modifier
+host    all             all             0.0.0.0/0            md5
+Redémarrer PostgreSQL :
+
+bash
+Copier
+Modifier
+sudo systemctl restart postgresql
+4. Déployer l’application Node.js
+Cloner le projet
+
+bash
+Copier
+Modifier
+git clone https://github.com/ton-compte/ton-projet.git
+cd ton-projet
+Installer les dépendances
+
+bash
+Copier
+Modifier
+npm install
+Configurer les variables d’environnement
+
+Crée un fichier .env :
+
+env
+Copier
+Modifier
+DB_HOST=localhost
+DB_USER=mon_user
+DB_PASSWORD=mon_mot_de_passe
+DB_NAME=ma_base
+PORT=3000
+Utilise dotenv dans ton code si nécessaire.
+
+5. Utiliser un process manager (PM2)
+PM2 permet de garder ton app en ligne même après un crash ou un reboot.
+
+bash
+Copier
+Modifier
+npm install -g pm2
+pm2 start app.js --name "mon-app"
+pm2 save
+pm2 startup
+6. Configurer un reverse proxy avec Nginx
+Installer Nginx
+
+bash
+Copier
+Modifier
+sudo apt install nginx -y
+Créer un fichier de configuration
+
+bash
+Copier
+Modifier
+sudo nano /etc/nginx/sites-available/mon-app
+Exemple :
+
+nginx
+Copier
+Modifier
+server {
+    listen 80;
+    server_name mon-domaine.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+Activer la configuration
+
+bash
+Copier
+Modifier
+sudo ln -s /etc/nginx/sites-available/mon-app /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+7. (Optionnel) Ajouter HTTPS avec Certbot
+Si tu as un domaine pointé sur ton VPS :
+
+bash
+Copier
+Modifier
+sudo apt install certbot python3-certbot-nginx -y
+sudo certbot --nginx -d mon-domaine.com
+8. Sécuriser le VPS
+Activer le pare-feu UFW :
+
+bash
+Copier
+Modifier
+sudo ufw allow OpenSSH
+sudo ufw allow 'Nginx Full'
+sudo ufw enable
+✅ Résumé du flux
+
+VPS OVH → Nginx (reverse proxy) → Node.js (PM2) → PostgreSQL
+
+HTTPS via Certbot si domaine.
+
+Si tu veux, je peux te préparer un script automatisé qui installe tout (Node, PostgreSQL, PM2, Nginx, Certbot) et déploie ton app en une seule commande.
+Ça te ferait gagner pas mal de temps.
