@@ -21,11 +21,11 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
   // Upload photo mutation
   const uploadPhotoMutation = useMutation({
     mutationFn: async (file: File) => {
-      // Get upload URL using fetch with proper authentication
       const token = localStorage.getItem('authToken') || localStorage.getItem('token');
       console.log('Upload attempt - Token:', token ? 'present' : 'missing');
       
-      const uploadResponse = await fetch('/api/objects/upload', {
+      // Get a unique object ID first
+      const uploadUrlResponse = await fetch('/api/objects/upload', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -33,25 +33,34 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
         }
       });
       
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
+      if (!uploadUrlResponse.ok) {
+        const errorData = await uploadUrlResponse.json();
         throw new Error(errorData.error || 'Erreur lors de la récupération de l\'URL');
       }
       
-      const { uploadURL } = await uploadResponse.json();
+      const { uploadURL } = await uploadUrlResponse.json();
       
-      // Upload file to the presigned URL
-      const fileUploadResponse = await fetch(uploadURL, {
-        method: 'PUT',
-        body: file,
+      // Extract object ID from the upload URL (format: /api/objects/upload/:objectId)
+      const objectId = uploadURL.split('/').pop();
+      
+      // Upload file directly to our server using FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const fileUploadResponse = await fetch(`/api/objects/upload/${objectId}`, {
+        method: 'POST',
+        body: formData,
         headers: {
-          'Content-Type': file.type
+          'Authorization': `Bearer ${token}`
         }
       });
       
       if (!fileUploadResponse.ok) {
-        throw new Error('Erreur lors du téléchargement du fichier');
+        const errorData = await fileUploadResponse.json();
+        throw new Error(errorData.error || 'Erreur lors du téléchargement du fichier');
       }
+      
+      const uploadResult = await fileUploadResponse.json();
       
       // Update profile with new avatar URL
       const updateResponse = await fetch('/api/profile/avatar', {
@@ -60,7 +69,7 @@ export function ProfilePhotoUpload({ currentAvatarUrl, onSuccess }: ProfilePhoto
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ avatarURL: uploadURL })
+        body: JSON.stringify({ avatarURL: uploadResult.url })
       });
       
       if (!updateResponse.ok) {

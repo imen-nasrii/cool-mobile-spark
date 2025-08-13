@@ -777,8 +777,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
     try {
       console.log('Upload request from user:', req.user?.id);
-      const { ObjectStorageService } = await import('./objectStorage');
-      const objectStorageService = new ObjectStorageService();
+      const { objectStorageService } = await import('./objectStorage');
       const uploadURL = await objectStorageService.getObjectEntityUploadURL();
       console.log('Generated upload URL successfully');
       res.json({ uploadURL });
@@ -788,14 +787,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Direct file upload route with multer for VPS
+  const multer = (await import('multer')).default;
+  const upload = multer({ storage: multer.memoryStorage() });
+  
+  app.post("/api/objects/upload/:objectId", authenticateToken, upload.single('file'), async (req: any, res: any) => {
+    try {
+      console.log('Direct upload request from user:', req.user?.id);
+      
+      if (!req.file) {
+        return res.status(400).json({ error: 'No file provided' });
+      }
+      
+      const objectId = req.params.objectId;
+      const { objectStorageService } = await import('./objectStorage');
+      
+      const filePath = await objectStorageService.saveUploadedFile(
+        objectId,
+        req.file.buffer,
+        req.file.mimetype
+      );
+      
+      console.log('File uploaded successfully:', filePath);
+      res.json({ 
+        success: true,
+        path: filePath,
+        url: filePath // Return the same path as URL
+      });
+    } catch (error: any) {
+      console.error('Error in direct upload:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Serve object storage files (public access for avatars)
   app.get("/objects/:objectPath(*)", async (req: any, res: any) => {
     try {
-      console.log('Auth request - Path:', req.path);
-      console.log('Auth request - Auth header:', req.headers['authorization']);
+      console.log('Serving file - Path:', req.path);
       
-      const { ObjectStorageService, ObjectNotFoundError } = await import('./objectStorage');
-      const objectStorageService = new ObjectStorageService();
+      const { objectStorageService, ObjectNotFoundError } = await import('./objectStorage');
       const objectFile = await objectStorageService.getObjectEntityFile(req.path);
       
       // Set cache headers for better performance
@@ -806,7 +836,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'Access-Control-Allow-Headers': 'Content-Type'
       });
       
-      objectStorageService.downloadObject(objectFile, res);
+      await objectStorageService.downloadObject(objectFile, res);
     } catch (error: any) {
       console.error('Error serving object:', error);
       if (error.name === 'ObjectNotFoundError') {
