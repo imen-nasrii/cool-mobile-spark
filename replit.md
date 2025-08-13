@@ -66,6 +66,10 @@ The platform is built with a clear separation between client and server. The fro
   - Includes common responses: Location, Meeting, Price, Availability, Photos, Thanks
   - Color-coded suggestion buttons with emojis for better UX
   - Auto-fills message input when suggestion is selected
+- **Added main navbar to map page:**
+  - Integrated Header component with logo, search bar, and user menu
+  - Maintained map-specific filters and controls below main navigation
+  - Consistent navigation experience across all pages
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red
