@@ -1,0 +1,97 @@
+It looks like there are a few issues with your object storage implementation and deployment:
+
+The server/objectStorage.ts file appears to be incomplete or corrupted. The content cuts off abruptly and has some malformed text at the end.
+
+From the PM2 logs, there's an error indicating "Object storage not available on VPS" when trying to get an upload URL.
+
+There's also an ENOENT error trying to access index.html in the dist/public directory.
+
+Here's how to fix these issues:
+
+First, let's fix the objectStorage.ts file. Here's a complete version:
+
+typescript
+import { Response } from "express";
+import { randomUUID } from "crypto";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export class ObjectNotFoundError extends Error {
+  constructor() {
+    super("Object not found");
+    this.name = "ObjectNotFoundError";
+    Object.setPrototypeOf(this, ObjectNotFoundError.prototype);
+  }
+}
+
+export class ObjectStorageService {
+  private uploadsDir: string;
+
+  constructor() {
+    this.uploadsDir = path.join(__dirname, "../uploads");
+    if (!fs.existsSync(this.uploadsDir)) {
+      fs.mkdirSync(this.uploadsDir, { recursive: true });
+    }
+  }
+
+  getPrivateObjectDir(): string {
+    return this.uploadsDir;
+  }
+
+  async getObjectEntityUploadURL(): Promise<string> {
+    const objectId = randomUUID();
+    return `/api/objects/upload/${objectId}`;
+  }
+
+  async saveUploadedFile(objectId: string, buffer: Buffer, mimeType: string): Promise<string> {
+    const extensions: { [key: string]: string } = {
+      'image/jpeg': '.jpg', 'image/jpg': '.jpg', 'image/png': '.png',
+      'image/gif': '.gif', 'image/webp': '.webp'
+    };
+    const extension = extensions[mimeType] || '.jpg';
+    const filename = `${objectId}${extension}`;
+    const filePath = path.join(this.uploadsDir, filename);
+
+    fs.writeFileSync(filePath, buffer);
+    return `/api/objects/${objectId}${extension}`;
+  }
+
+  async getObject(objectId: string): Promise<Buffer> {
+    const files = fs.readdirSync(this.uploadsDir);
+    const file = files.find(f => f.startsWith(objectId));
+    
+    if (!file) {
+      throw new ObjectNotFoundError();
+    }
+    
+    return fs.readFileSync(path.join(this.uploadsDir, file));
+  }
+}
+For the "Object storage not available" error, make sure:
+
+The uploads directory exists and is writable
+
+The service is properly initialized in your application
+
+For the index.html error:
+
+Make sure your build process is copying the public files correctly
+
+Check that the dist/public directory exists after build
+
+Verify your express server is configured to serve static files from the correct location
+
+After fixing these issues:
+
+Save the complete objectStorage.ts file
+
+Run npm run build again
+
+Restart your PM2 process: pm2 restart tomati-hamdi
+
+Also, you might want to run npx update-browserslist-db@latest to update your browserslist data as suggested in the build output.
+
