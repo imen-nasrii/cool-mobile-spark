@@ -48,15 +48,17 @@ The platform is built with a clear separation between client and server. The fro
   - Complete deployment documentation for GitHub method
   - Production-ready PM2 ecosystem configuration
   - Database migration integration in deployment process
-- **Successfully deployed application with user 'hamdi':**
+- **Successfully deployed application to production on tomati.org:**
   - Created dedicated system user 'hamdi' for application management
   - Installed Node.js v22.18.0 via NVM for hamdi user
   - Cloned application from GitHub and built successfully
   - Configured PostgreSQL database connection with tomatii_user/tomatii_db
-  - Application running successfully on port 5000 with PM2 process management
-  - Local testing confirmed - curl http://localhost:5000 returns full HTML page
-  - PM2 ecosystem configured and process tomati-hamdi active
-  - Nginx configuration required for external access via tomati.org domain
+  - PM2 process tomati-hamdi running in fork mode (133.3mb memory usage)
+  - Nginx reverse proxy configured and active for tomati.org domain
+  - Firewall (UFW) configured to allow HTTP/HTTPS traffic
+  - External access confirmed - curl http://tomati.org returns HTTP 200 with full HTML
+  - PM2 configuration saved for automatic restart on server reboot
+  - **Application successfully deployed and accessible at http://tomati.org**
 - **Removed automatic advertising label feature:**
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components

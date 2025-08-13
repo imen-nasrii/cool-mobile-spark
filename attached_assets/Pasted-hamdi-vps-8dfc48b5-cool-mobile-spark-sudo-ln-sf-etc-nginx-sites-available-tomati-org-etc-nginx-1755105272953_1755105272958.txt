@@ -1,0 +1,197 @@
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ sudo ln -sf /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ curl http://tomati.org
+pm2 save
+echo "🎉 Tomati Market deployed successfully!"
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-D7cltdS5.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BCXJso9b.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>[PM2] Saving current process list...
+[PM2] Successfully saved in /home/hamdi/.pm2/dump.pm2
+🎉 Tomati Market deployed successfully!
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ ^C
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # Execute these commands as user with sudo privileges (ubuntu or hamdi)
+
+# 1. Kill any conflicting processes and clean PM2
+sudo fuser -k 5000/tcp 2>/dev/null || true
+sudo killall node 2>/dev/null || true
+pm2 delete all
+pm2 kill
+
+# 2. Install and configure Nginx
+sudo apt update
+sudo apt install nginx -y
+
+# 3. Create Nginx configuration for tomati.org
+sudo tee /etc/nginx/sites-available/tomati.org << 'EOF'
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+EOF
+
+# 4. Enable the configuration
+sudo ln -sf /etc/nginx/sites-available/tomati.org /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+
+# 5. Test and restart Nginx
+sudo nginx -t
+sudo systemctl restart nginx
+sudo systemctl enable nginx
+
+# 6. Restart the application with PM2
+cd ~/cool-mobile-spark
+pm2 start ecosystem.config.cjs
+sleep 3
+echo "✅ Tomati Market should now be accessible at http://tomati.org"
+ 617079[PM2] Applying action deleteProcessId on app [all](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬───────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name      │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+└────┴───────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[PM2][WARN] No process found
+[PM2] [v] All Applications Stopped
+[PM2] [v] PM2 Daemon Stopped
+Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
+Get:2 http://nova.clouds.archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+Hit:3 https://deb.nodesource.com/node_20.x nodistro InRelease
+Get:4 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
+Get:5 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
+Get:6 http://nova.clouds.archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [2803 kB]
+Fetched 3458 kB in 3s (1317 kB/s)
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+All packages are up to date.
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+nginx is already the newest version (1.18.0-6ubuntu14.6).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+server {
+    listen 80;
+    server_name tomati.org www.tomati.org;
+
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_cache_bypass $http_upgrade;
+        proxy_connect_timeout 60s;
+        proxy_send_timeout 60s;
+        proxy_read_timeout 60s;
+    }
+}
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+[PM2] Spawning PM2 daemon with pm2_home=/home/hamdi/.pm2
+[PM2] PM2 Successfully daemonized
+[PM2][WARN] Applications tomati-hamdi not running, starting...
+[PM2] App [tomati-hamdi] launched (1 instances)
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 617926   │ 0s     │ 0    │ online    │ 0%       │ 31.9mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 617926   │ 3s     │ 0    │ online    │ 0%       │ 133.3mb  │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Tomati Market - Marketplace Française</title>
+    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
+    <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
+    <meta property="og:title" content="Tomati Market - Marketplace Française" />
+    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <meta property="og:image" content="/tomati-logo.jpg" />
+    <meta property="og:url" content="https://tomati.org" />
+    <script type="module" crossorigin src="/assets/index-DMlBXpoI.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CnH-OLuK.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
+    <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
+  </body>
+</html>HTTP/1.1 200 OK
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 13 Aug 2025 17:12:44 GMT
+Content-Type: text/html; charset=UTF-8
+Content-Length: 1389
+Connection: keep-alive
+X-Powered-By: Express
+Accept-Ranges: bytes
+Cache-Control: public, max-age=0
+Last-Modified: Tue, 12 Aug 2025 22:18:55 GMT
+ETag: W/"56d-198a05d72ea"
+
+[PM2] Saving current process list...
+[PM2] Successfully saved in /home/hamdi/.pm2/dump.pm2
+Status: active
+
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+80                         ALLOW       Anywhere
+443                        ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+80 (v6)                    ALLOW       Anywhere (v6)
+443 (v6)                   ALLOW       Anywhere (v6)
+
+Rule added
+Rule added (v6)
+Skipping adding existing rule
+Skipping adding existing rule (v6)
+✅ Tomati Market should now be accessible at http://tomati.org
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$
