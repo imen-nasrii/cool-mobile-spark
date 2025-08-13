@@ -1,63 +1,70 @@
-# Correction PM2 - Solution Alternative
+# Correction PM2 Final - Application Crashe
 
-## Problème
-- Le fichier ecosystem.config.js n'a pas été créé correctement
-- Erreur de syntaxe lors de la création du fichier
+## Problème identifié
+L'application démarre mais crashe immédiatement (15 redémarrages, statut "errored").
 
-## Solution: Méthode Alternative
+## Commandes de diagnostic et correction
 
-### Méthode 1: Créer le fichier correctement
 ```bash
-# Supprimer le fichier corrompu
-rm ecosystem.config.js
+# 1. Voir les logs d'erreur détaillés
+pm2 logs tomati-hamdi --err --lines 50
 
-# Créer le fichier avec nano (plus sûr)
-nano ecosystem.config.js
+# 2. Voir les logs complets
+cat logs/err.log
+cat logs/out.log
+
+# 3. Tester l'application manuellement pour voir l'erreur
+node --loader tsx/esm server/index.ts
+
+# 4. Vérifier la configuration .env
+cat .env
+
+# 5. Tester la connexion à la base de données
+npm run db:push
+
+# 6. Si erreur de base de données, recréer l'utilisateur DB
+sudo -u postgres psql -c "DROP USER IF EXISTS tomatii_user;"
+sudo -u postgres psql -c "CREATE USER tomatii_user WITH ENCRYPTED PASSWORD 'tomatii_password_2024!';"
+sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE tomatii_db TO tomatii_user;"
+sudo -u postgres psql -c "ALTER USER tomatii_user CREATEDB;"
+
+# 7. Redémarrer PM2 avec logs verbeux
+pm2 delete tomati-hamdi
+pm2 start ecosystem.config.cjs --log-date-format="YYYY-MM-DD HH:mm:ss Z"
+pm2 logs tomati-hamdi --lines 20
 ```
 
-Contenu à coller dans nano :
-```javascript
+## Configuration PM2 alternative (si problème persist)
+
+```bash
+# Configuration simplifiée sans TSX
+cat > ecosystem.config.cjs << 'EOF'
 module.exports = {
   apps: [{
-    name: 'tomati-production',
+    name: 'tomati-hamdi',
     script: 'dist/index.js',
     instances: 1,
-    exec_mode: 'fork',
-    env_production: {
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
       NODE_ENV: 'production',
-      PORT: 5000,
-      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market'
+      PORT: 5000
     },
-    error_file: '/tmp/tomati-error.log',
-    out_file: '/tmp/tomati-out.log',
-    log_file: '/tmp/tomati-combined.log',
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
     time: true
   }]
-}
+};
+EOF
+
+# Utiliser le fichier compilé
+pm2 start ecosystem.config.cjs
 ```
 
-Puis : Ctrl+X, Y, Enter pour sauvegarder
-
-### Méthode 2: Démarrage Direct (Plus Simple)
+## Test direct de l'application
 ```bash
-# Démarrer directement avec PM2 sans fichier config
-pm2 start dist/index.js --name tomati-production --env production
-
-# Définir les variables d'environnement
-pm2 set pm2:tomati-production NODE_ENV production
-pm2 set pm2:tomati-production PORT 5000
-pm2 set pm2:tomati-production DATABASE_URL "postgresql://tomati:Tomati123@localhost:5432/tomati_market"
-
-# Redémarrer pour prendre en compte les variables
-pm2 restart tomati-production
+# Test sans PM2 pour voir l'erreur exacte
+NODE_ENV=production PORT=5000 node --loader tsx/esm server/index.ts
 ```
-
-### Vérification
-```bash
-pm2 status
-pm2 logs tomati-production --lines 10
-curl http://localhost:5000
-```
-
-## Commandes Exactes à Exécuter
-Choisir une des deux méthodes ci-dessus.
