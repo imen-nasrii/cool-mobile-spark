@@ -1,0 +1,81 @@
+hamdi@vps-8dfc48b5:~/cool-mobile-spark$ # 1. Vérifier les logs pour identifier les erreurs exactes
+cd ~/cool-mobile-spark
+pm2 logs tomati-hamdi --lines 20
+
+# 2. Corriger la configuration .env pour HTTPS
+cat > .env << 'EOF'
+DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
+PGDATABASE=tomatii_db
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomatii_user
+PGPASSWORD=tomatii_password_2024!
+JWT_SECRET=tomati_super_secret_jwt_key_2024_production
+NODE_ENV=production
+PORT=5000
+HOST=0.0.0.0
+SESSION_SECRET=tomati_session_secret_key_2024_production
+REPL_ID=tomati-production
+REPLIT_DOMAINS=tomati.org,www.tomati.org
+ISSUER_URL=https://replit.com/oidc
+BASE_URL=https://tomati.org
+EOF
+
+# 3. Reconstruire avec les nouvelles variables
+npm run build
+
+# 4. Redémarrer l'application
+pm2 restart tomati-hamdi
+
+# 5. Vérifications
+sleep 5
+pm2 status
+pm2 logs tomati-hamdi --lines 10
+curl -I https://tomati.org
+curl -I https://tomati.org/api/products
+
+echo "✅ Configuration HTTPS corrigée"
+[TAILING] Tailing last 20 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 20 lines:
+0|tomati-h | 2025-08-13T18:15:44:       subjectaltname: 'DNS:tomati.org, DNS:www.tomati.org',
+0|tomati-h | 2025-08-13T18:15:44:       infoAccess: [Object: null prototype],
+0|tomati-h | 2025-08-13T18:15:44:       ca: false,
+0|tomati-h | 2025-08-13T18:15:44:       modulus: 'C798B9E66C5FC0256ED83883527033E60A26CFD63D4B87D9C867C1EB737BF4D051A0643AEE3E17805E6B9B1333184863A21509B6C1A8064F76DAA98969500C90FAE13AF5CA3D5AF97EA9C107D0C7AD50798A46B813EA5260CF2446B1F04DC3F09BD2494D57246AF32BB99C4963AAE173D9AD7471E7757931F3BF74CA0EF743B2267EE3B1FD98E1A4D79425C13098612C42A4A3A4A0AC1C0198C42A7D02AAB125AC519D2C5683FEEF89D493A12FC9B9371007A8014C43148AFF4C49378CD79F7D3474301C5FA55D549D718FD8E083BD681A98A8C8A3CA8CF615E48951E719CD23BD3B8362774CD72065B7083311EC45FFA3089A2F284201747D0144447367A9F3',
+0|tomati-h | 2025-08-13T18:15:44:       bits: 2048,
+0|tomati-h | 2025-08-13T18:15:44:       exponent: '0x10001',
+0|tomati-h | 2025-08-13T18:15:44:       pubkey: <Buffer 30 82 01 22 30 0d 06 09 2a 86 48 86 f7 0d 01 01 01 05 00 03 82 01 0f 00 30 82 01 0a 02 82 01 01 00 c7 98 b9 e6 6c 5f c0 25 6e d8 38 83 52 70 33 e6 0a ... 244 more bytes>,
+0|tomati-h | 2025-08-13T18:15:44:       valid_from: 'Aug  2 10:13:31 2025 GMT',
+0|tomati-h | 2025-08-13T18:15:44:       valid_to: 'Oct 31 10:13:30 2025 GMT',
+0|tomati-h | 2025-08-13T18:15:44:       fingerprint: '21:29:B0:93:44:DB:7E:0B:63:17:E4:BF:EF:43:D9:21:A6:F8:A9:BE',
+0|tomati-h | 2025-08-13T18:15:44:       fingerprint256: 'B4:70:87:9A:D4:DC:76:5D:13:94:DB:53:43:7A:C7:15:A0:A1:A5:CD:02:99:1F:F4:F7:AA:F7:F3:03:7C:CD:46',
+0|tomati-h | 2025-08-13T18:15:44:       fingerprint512: 'AE:88:95:88:D9:7A:BB:9B:1D:E3:A1:96:44:66:C3:96:C3:33:7C:24:EB:06:38:40:4A:BE:11:9E:B8:A0:1B:61:FC:23:7E:D5:AE:A6:DB:E7:6F:48:2C:C7:45:B4:C2:DD:7B:9F:4C:1C:92:1A:2F:AF:D3:82:5A:BB:6E:10:46:D9',
+0|tomati-h | 2025-08-13T18:15:44:       ext_key_usage: [Array],
+0|tomati-h | 2025-08-13T18:15:44:       serialNumber: '0684D1FEFC9D9334954434101FCF0E247226',
+0|tomati-h | 2025-08-13T18:15:44:       raw: <Buffer 30 82 05 02 30 82 03 ea a0 03 02 01 02 02 12 06 84 d1 fe fc 9d 93 34 95 44 34 10 1f cf 0e 24 72 26 30 0d 06 09 2a 86 48 86 f7 0d 01 01 0b 05 00 30 33 ... 1236 more bytes>,
+0|tomati-h | 2025-08-13T18:15:44:       issuerCertificate: [Object]
+0|tomati-h | 2025-08-13T18:15:44:     }
+0|tomati-h | 2025-08-13T18:15:44:   },
+0|tomati-h | 2025-08-13T18:15:44:   [Symbol(kMessage)]: "Hostname/IP does not match certificate's altnames: Host: localhost. is not in the cert's altnames: DNS:tomati.org, DNS:www.tomati.org"
+0|tomati-h | 2025-08-13T18:15:44: }
+
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 20 lines:
+0|tomati-h | 2025-08-13T18:15:38: 6:15:38 PM [express] GET /api/products 500 in 23ms :: {"error":"Hostname/IP does not match certifica…
+0|tomati-h | 2025-08-13T18:15:38: 6:15:38 PM [express] GET /api/advertisements 500 in 16ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:38: 6:15:38 PM [express] GET /api/advertisements 500 in 24ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:38: 6:15:38 PM [express] GET /api/products/promoted 500 in 29ms :: {"error":"Hostname/IP does not match …
+0|tomati-h | 2025-08-13T18:15:38: 6:15:38 PM [express] GET /api/advertisements 500 in 30ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:39: GET /api/products - category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:15:39: Storage.getProducts called with category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:15:39: 6:15:39 PM [express] GET /api/products 500 in 15ms :: {"error":"Hostname/IP does not match certifica…
+0|tomati-h | 2025-08-13T18:15:40: 6:15:40 PM [express] GET /api/advertisements 500 in 12ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:40: 6:15:40 PM [express] GET /api/advertisements 500 in 11ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:40: 6:15:40 PM [express] GET /api/products/promoted 500 in 29ms :: {"error":"Hostname/IP does not match …
+0|tomati-h | 2025-08-13T18:15:40: 6:15:40 PM [express] GET /api/advertisements 500 in 11ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:40: GET /api/products - category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:15:40: Storage.getProducts called with category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:15:40: 6:15:40 PM [express] GET /api/products 500 in 15ms :: {"error":"Hostname/IP does not match certifica…
+0|tomati-h | 2025-08-13T18:15:44: 6:15:44 PM [express] GET /api/advertisements 500 in 13ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:44: 6:15:44 PM [express] GET /api/advertisements 500 in 15ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:44: 6:15:44 PM [express] GET /api/products/promoted 500 in 18ms :: {"error":"Hostname/IP does not match …
+0|tomati-h | 2025-08-13T18:15:44: 6:15:44 PM [express] GET /api/advertisements 500 in 13ms :: {"error":"Hostname/IP does not match cer…
+0|tomati-h | 2025-08-13T18:15:59: 6:15:59 PM [express] POST /api/auth/signin 400 in 9ms :: {"error":"Hostname/IP does not match certif…
