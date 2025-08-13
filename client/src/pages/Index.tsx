@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FloatingButtons } from "@/components/UI/FloatingButtons";
+import { AIButton } from "@/components/UI/FloatingButtons";
 import { Home as HomeIcon, Search as SearchIcon, PlusCircle, MessageCircle, User, Bell, Car, Building, Briefcase, Grid3X3, X, Heart } from "lucide-react";
 import { Home as HomePage } from "./Home";
 import MessagesPage from "./Messages";
@@ -221,9 +221,8 @@ const Index = () => {
             />
           )}
 
-          {/* Floating Buttons */}
-          <FloatingButtons 
-            onCategorySelect={handleFloatingCategorySelect}
+          {/* AI Button */}
+          <AIButton 
             onAIToggle={() => setShowAIChat(!showAIChat)}
           />
 
