@@ -26,7 +26,7 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
   return (
     <>
       {/* Bouton IA - En bas à gauche */}
-      <div className="fixed bottom-6 left-6 z-[9999]">
+      <div className="fixed bottom-24 left-6 z-[9999]">
         <Button
           onClick={onAIToggle}
           className="h-16 w-16 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 border-4 border-white"
@@ -34,13 +34,13 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
         >
           <MessageCircle size={28} className="text-white" />
         </Button>
-        <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
+        <div className="absolute -top-3 -right-3 bg-blue-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
           IA
         </div>
       </div>
 
       {/* Bouton Ajouter - En bas à droite */}
-      <div className="fixed bottom-6 right-6 z-[9999]">
+      <div className="fixed bottom-24 right-6 z-[9999]">
         {/* Menu des catégories */}
         {isAddMenuOpen && (
           <div className="absolute bottom-20 right-0 flex flex-col gap-3 mb-2">
@@ -86,7 +86,7 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
             <Plus size={28} className="text-white" />
           )}
         </Button>
-        <div className="absolute -top-2 -left-4 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
+        <div className="absolute -top-3 -left-4 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
           Ajouter
         </div>
       </div>
