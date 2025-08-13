@@ -221,19 +221,19 @@ export default function MessagesPage() {
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <p className="font-bold text-sm truncate bg-gradient-to-r from-gray-800 to-blue-600 bg-clip-text text-transparent">
+                              <p className="font-bold text-sm truncate text-black">
                                 {conversation.other_user_name || conversation.other_user_email}
                               </p>
                               <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
                             </div>
                             {conversation.unread_count > 0 && (
-                              <Badge variant="destructive" className="text-xs bg-gradient-to-r from-red-500 to-pink-500 border-0 modern-shadow">
+                              <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
                                 {conversation.unread_count}
-                              </Badge>
+                              </span>
                             )}
                           </div>
-                          <p className="text-xs text-blue-600 mb-1 font-semibold">
-                            📦 {conversation.product_title}
+                          <p className="text-xs text-red-600 mb-1 font-semibold">
+                            {conversation.product_title}
                           </p>
                           <p className="text-sm text-gray-500 truncate">
                             {conversation.last_message || 'Nouvelle conversation'}
@@ -443,66 +443,54 @@ export default function MessagesPage() {
                 )}
 
                 {/* Quick Response Suggestions */}
-                <div className="border-t p-3 bg-gray-50">
+                <div className="border-t p-3 bg-white">
                   <div className="flex flex-wrap gap-2 mb-3">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <button 
                       onClick={() => setNewMessage("Pouvez-vous me donner votre localisation exacte ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      📍 Localisation
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                      Localisation
+                    </button>
+                    <button 
                       onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      📅 Rendez-vous
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                      Rendez-vous
+                    </button>
+                    <button 
                       onClick={() => setNewMessage("Quel est votre meilleur prix ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      💰 Prix
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                      Prix
+                    </button>
+                    <button 
                       onClick={() => setNewMessage("Le produit est-il encore disponible ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      ✅ Disponibilité
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                      Disponibilité
+                    </button>
+                    <button 
                       onClick={() => setNewMessage("Pouvez-vous m'envoyer plus de photos ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      📸 Photos
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                      Photos
+                    </button>
+                    <button 
                       onClick={() => setNewMessage("Merci beaucoup !")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
+                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
-                      🙏 Merci
-                    </Button>
+                      Merci
+                    </button>
                   </div>
                 </div>
 
                 {/* Message Input */}
-                <div className="p-4 bg-gray-50">
+                <div className="p-4 bg-white border-t border-gray-300">
                   <div className="flex gap-3">
-                    <Button variant="outline" size="sm" className="border-gray-300 text-red-500 hover:bg-red-50">
+                    <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50">
                       <Heart className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" className="border-gray-300 text-red-500 hover:bg-red-50">
+                    <Button variant="outline" size="sm" className="border-gray-300 text-gray-600 hover:bg-gray-50">
                       <Smile className="h-4 w-4" />
                     </Button>
                     <FileUpload
@@ -528,29 +516,7 @@ export default function MessagesPage() {
                     </div>
                   </div>
                   
-                  {/* Product context indicator */}
-                  {selectedConversationData?.product_title && (
-                    <div className="mt-3 p-4 glass-card border-0 rounded-2xl modern-shadow bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50">
-                      <div className="flex items-center gap-4">
-                        {selectedConversationData.product_image_url && (
-                          <div className="relative">
-                            <img 
-                              src={selectedConversationData.product_image_url} 
-                              alt={selectedConversationData.product_title}
-                              className="w-16 h-16 rounded-xl object-cover modern-shadow hover:scale-110 transition-transform duration-300"
-                            />
-                            <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 border-2 border-white flex items-center justify-center">
-                              <span className="text-xs text-white font-bold">📦</span>
-                            </div>
-                          </div>
-                        )}
-                        <div className="flex-1">
-                          <p className="text-sm font-bold text-gray-700 mb-1">💬 Discussion à propos de:</p>
-                          <p className="text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">{selectedConversationData.product_title}</p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+
                 </div>
               </CardContent>
             </Card>
