@@ -59,6 +59,7 @@ The platform is built with a clear separation between client and server. The fro
   - External access confirmed - curl http://tomati.org returns HTTP 200 with full HTML
   - PM2 configuration saved for automatic restart on server reboot
   - **Application successfully deployed and accessible at http://tomati.org**
+  - User reported deployed version is outdated - update procedure created for latest version deployment
 - **Removed automatic advertising label feature:**
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components

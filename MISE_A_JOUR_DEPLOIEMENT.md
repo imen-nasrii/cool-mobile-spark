@@ -1,72 +1,121 @@
-# Mise à Jour - Déploiement Version Finale
+# Mise à jour vers la dernière version
 
-## 🔧 Corrections Appliquées
-
-### Problème résolu : "Unknown Error"
-- **ErrorBoundary global** : Capture toutes les erreurs React non gérées
-- **Messages en français** : Interface d'erreur conviviale avec option de récupération
-- **Gestion d'erreur robuste** : Retry automatique et états d'erreur détaillés
-
-### Améliorations techniques
-- **ProductGrid** : Meilleure gestion des erreurs API avec retry (3 tentatives)
-- **Logging** : Erreurs loggées dans la console pour diagnostic
-- **UX** : Messages d'erreur clairs et actions de récupération
-
-## 📋 Processus de Déploiement
-
-### Étape 1 : Push GitHub
-```bash
-git add .
-git commit -m "Fix Unknown Error with ErrorBoundary and improved error handling
-
-- Added global ErrorBoundary component for error recovery
-- Enhanced ProductGrid error handling with retry mechanism  
-- Improved error messages in French with user-friendly interface
-- Added detailed error logging for debugging"
-
-git push origin main
-```
-
-### Étape 2 : Déploiement VPS Automatique
-```bash
-# Copier le script
-scp vps-deploy-latest.sh ubuntu@51.222.111.183:/tmp/
-
-# Exécuter le déploiement
-ssh ubuntu@51.222.111.183
-sudo su - tomati
-chmod +x /tmp/vps-deploy-latest.sh
-/tmp/vps-deploy-latest.sh
-```
-
-## ✅ Fonctionnalités Déployées
-
-1. **Layout horizontal** : Produits affichés en ligne avec image gauche + détails droite
-2. **Police Arial** : Appliquée globalement dans toute l'interface
-3. **ErrorBoundary** : Capture et gestion des erreurs avec récupération
-4. **API robuste** : Gestion d'erreur avec retry automatique
-5. **Messages français** : Interface d'erreur conviviale
-6. **Migration DB** : Automatique lors du déploiement
-
-## 🎯 Validation Post-Déploiement
+## Commandes à exécuter sur le VPS
 
 ```bash
-# Tests automatiques dans le script
-curl http://51.222.111.183/api/products
-curl http://51.222.111.183/api/stats
+# En tant qu'utilisateur hamdi sur le VPS
+cd ~/cool-mobile-spark
 
-# Vérification manuelle
-# Ouvrir : http://51.222.111.183
-# Tester navigation et fonctionnalités
+# 1. Sauvegarder les fichiers de configuration actuels
+cp .env .env.backup
+cp ecosystem.config.cjs ecosystem.config.cjs.backup
+
+# 2. Récupérer la dernière version depuis GitHub
+git fetch origin
+git reset --hard origin/main
+git pull origin main
+
+# 3. Installer les nouvelles dépendances si nécessaires
+npm install
+
+# 4. Recréer le fichier .env avec les bonnes variables
+cat > .env << 'EOF'
+DATABASE_URL=postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db
+PGDATABASE=tomatii_db
+PGHOST=localhost
+PGPORT=5432
+PGUSER=tomatii_user
+PGPASSWORD=tomatii_password_2024!
+JWT_SECRET=tomati_super_secret_jwt_key_2024_production
+NODE_ENV=production
+PORT=5000
+HOST=0.0.0.0
+SESSION_SECRET=tomati_session_secret_key_2024_production
+REPL_ID=tomati-production
+REPLIT_DOMAINS=tomati.org
+ISSUER_URL=https://replit.com/oidc
+EOF
+
+chmod 600 .env
+
+# 5. Mettre à jour la base de données si nécessaire
+npm run db:push
+
+# 6. Reconstruire l'application avec les derniers changements
+npm run build
+
+# 7. Recréer la configuration PM2 avec les dernières variables
+cat > ecosystem.config.cjs << 'EOF'
+module.exports = {
+  apps: [{
+    name: 'tomati-hamdi',
+    script: 'dist/index.js',
+    instances: 1,
+    exec_mode: 'fork',
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 5000,
+      HOST: '0.0.0.0',
+      DATABASE_URL: 'postgresql://tomatii_user:tomatii_password_2024!@localhost:5432/tomatii_db',
+      PGDATABASE: 'tomatii_db',
+      PGHOST: 'localhost',
+      PGPORT: '5432',
+      PGUSER: 'tomatii_user',
+      PGPASSWORD: 'tomatii_password_2024!',
+      JWT_SECRET: 'tomati_super_secret_jwt_key_2024_production',
+      SESSION_SECRET: 'tomati_session_secret_key_2024_production',
+      REPL_ID: 'tomati-production',
+      REPLIT_DOMAINS: 'tomati.org',
+      ISSUER_URL: 'https://replit.com/oidc'
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
+  }]
+};
+EOF
+
+# 8. Redémarrer l'application avec la nouvelle version
+pm2 delete tomati-hamdi
+pm2 start ecosystem.config.cjs
+
+# 9. Vérifier le déploiement
+sleep 3
+pm2 status
+pm2 logs tomati-hamdi --lines 10
+curl http://localhost:5000
+curl -I http://tomati.org
+
+# 10. Sauvegarder la configuration
+pm2 save
+
+echo "✅ Mise à jour terminée - Tomati Market à jour sur tomati.org"
 ```
 
-## 📊 Résultat Attendu
+## Vérification des fonctionnalités mises à jour
 
-- ✅ Plus d'erreur "Unknown Error"
-- ✅ Interface stable et réactive
-- ✅ Layout horizontal fonctionnel
-- ✅ Police Arial partout
-- ✅ Messages d'erreur clairs en français
-- ✅ Récupération automatique en cas de problème
+Après la mise à jour, vérifiez que les dernières fonctionnalités sont présentes :
+- Système de préférences utilisateur complet
+- Design plat (rouge, noir, blanc) sans effets visuels
+- Bouton d'action flottant avec raccourcis de catégories
+- Photos dans les conversations de messagerie
+- Système de notation et vues des produits
+- Toutes les améliorations récentes
 
-L'application est maintenant prête pour une utilisation en production stable.
+## En cas de problème
+
+Si des erreurs surviennent :
+```bash
+# Voir les logs détaillés
+pm2 logs tomati-hamdi --lines 50
+
+# Restaurer la version précédente si nécessaire
+git log --oneline -10
+git reset --hard <commit_hash_précédent>
+npm run build
+pm2 restart tomati-hamdi
+```
