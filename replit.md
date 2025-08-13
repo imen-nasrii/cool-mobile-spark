@@ -97,3 +97,17 @@ The platform is built with a clear separation between client and server. The fro
   - Conversations now display user profile photo alongside product photo
   - Fixed conversation data structure to show real images instead of letter circles
   - Both conversation list and chat headers show profile + product photos side by side
+- **Implemented comprehensive user preferences system:**
+  - Added user_preferences database table with full UI customization options
+  - Created PreferencesContext for React state management with persistent settings
+  - Built PreferencesDialog with flat design (red, black, white color scheme)
+  - Added API routes for user preferences (GET, PATCH) with authentication
+  - Integrated preferences access in Header dropdown menu
+  - Includes theme, language, currency, view mode, accessibility, and notification preferences
+  - Settings automatically apply and persist across user sessions
+- **Created complete VPS OVH deployment documentation:**
+  - Comprehensive step-by-step deployment guide (GUIDE_DEPLOIEMENT_VPS_OVH_COMPLET.md)
+  - Automated deployment script (deploy-automatique-vps.sh) for one-command setup
+  - Complete production environment with PostgreSQL, PM2, Nginx, and SSL
+  - Includes monitoring scripts, backup procedures, and troubleshooting guides
+  - Ready for deployment to production VPS with full security configuration
