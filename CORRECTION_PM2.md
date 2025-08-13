@@ -1,76 +1,80 @@
-# Correction PM2 - Création du Fichier de Configuration
+# Correction PM2 pour Hamdi
 
-## Situation
-- ✅ Build réussi (application construite)
-- ✅ Base de données à jour (no changes detected)
-- ❌ ecosystem.config.js manquant
+## Problème identifié
+L'application fonctionne (curl répond correctement) mais PM2 n'a pas démarré le processus `tomati-hamdi` correctement.
 
-## Commandes à Exécuter
+## Commandes de correction à exécuter
 
-### Étape 1: Créer le fichier ecosystem.config.js
 ```bash
-cat > ecosystem.config.js << 'EOF'
+# 1. Se connecter en tant que hamdi
+sudo su - hamdi
+cd cool-mobile-spark
+
+# 2. Arrêter tous les processus PM2
+pm2 delete all
+
+# 3. Redémarrer avec la bonne configuration
+pm2 start server/index.ts --name tomati-hamdi --interpreter node --interpreter-args "--loader tsx/esm"
+
+# 4. Vérifier le statut
+pm2 status
+
+# 5. Voir les logs
+pm2 logs tomati-hamdi
+
+# 6. Sauvegarder la configuration
+pm2 save
+
+# 7. Configurer le démarrage automatique
+sudo env PATH=$PATH:/home/hamdi/.nvm/versions/node/v22.18.0/bin /home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/pm2/bin/pm2 startup systemd -u hamdi --hp /home/hamdi
+```
+
+## Alternative avec ecosystem.config.cjs
+
+```bash
+# Créer un fichier de configuration PM2
+cat > ecosystem.config.cjs << 'EOF'
 module.exports = {
   apps: [{
-    name: 'tomati-production',
-    script: 'dist/index.js',
+    name: 'tomati-hamdi',
+    script: 'server/index.ts',
+    interpreter: 'node',
+    interpreter_args: '--loader tsx/esm',
     instances: 1,
-    exec_mode: 'fork',
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '1G',
     env: {
-      NODE_ENV: 'development',
+      NODE_ENV: 'production',
       PORT: 5000
     },
-    env_production: {
-      NODE_ENV: 'production',
-      PORT: 5000,
-      DATABASE_URL: 'postgresql://tomati:Tomati123@localhost:5432/tomati_market'
-    },
-    error_file: '/tmp/tomati-error.log',
-    out_file: '/tmp/tomati-out.log',
-    log_file: '/tmp/tomati-combined.log',
-    time: true,
-    watch: false,
-    max_memory_restart: '500M',
-    min_uptime: '10s',
-    max_restarts: 5
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_file: './logs/combined.log',
+    time: true
   }]
-}
+};
 EOF
-```
 
-### Étape 2: Vérifier que le fichier existe
-```bash
-ls -la ecosystem.config.js
-```
+# Créer le dossier logs
+mkdir -p logs
 
-### Étape 3: Démarrer l'application
-```bash
-pm2 start ecosystem.config.js --env production
-```
+# Démarrer avec le fichier de configuration
+pm2 start ecosystem.config.cjs
 
-### Étape 4: Vérifier le statut
-```bash
+# Vérifier
 pm2 status
+pm2 logs tomati-hamdi
 ```
 
-### Étape 5: Consulter les logs
+## Test final
 ```bash
-pm2 logs tomati-production --lines 10
-```
-
-### Étape 6: Tester l'application
-```bash
+# Test de l'application
 curl http://localhost:5000
-```
 
-### Étape 7: Test externe
-```bash
-exit
-curl http://51.222.111.183
-```
+# Status PM2
+pm2 status
 
-## Alternative si problème
-Si PM2 ne démarre pas, utilisez directement Node.js :
-```bash
-NODE_ENV=production PORT=5000 node dist/index.js &
+# Logs en temps réel
+pm2 logs tomati-hamdi --lines 10
 ```
