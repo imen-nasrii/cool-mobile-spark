@@ -183,10 +183,10 @@ export default function MessagesPage() {
                       onClick={() => setSelectedConversation(conversation.id)}
                     >
                       <div className="flex items-start gap-3">
-                        <div className="relative flex items-center gap-2">
+                        <div className="flex items-center gap-2">
                           {/* User Avatar */}
                           <div className="relative">
-                            <Avatar className="h-12 w-12 border-2 border-white shadow-sm">
+                            <Avatar className="h-12 w-12">
                               {conversation.other_user_avatar_url ? (
                                 <img 
                                   src={conversation.other_user_avatar_url} 
@@ -199,22 +199,17 @@ export default function MessagesPage() {
                                 </AvatarFallback>
                               )}
                             </Avatar>
-                            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
+                            <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-green-500 border-2 border-white"></div>
                           </div>
                           
                           {/* Product Image */}
                           {conversation.product_image_url && (
-                            <div className="relative">
-                              <div className="w-10 h-10 rounded-lg border border-gray-200 bg-white overflow-hidden">
-                                <img 
-                                  src={conversation.product_image_url} 
-                                  alt={conversation.product_title}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-red-500 border border-white flex items-center justify-center">
-                                <span className="text-xs text-white font-bold" style={{fontSize: '8px'}}>P</span>
-                              </div>
+                            <div className="w-12 h-12 rounded border border-gray-200 bg-white overflow-hidden">
+                              <img 
+                                src={conversation.product_image_url} 
+                                alt={conversation.product_title}
+                                className="w-full h-full object-cover"
+                              />
                             </div>
                           )}
                         </div>
@@ -224,7 +219,7 @@ export default function MessagesPage() {
                               <p className="font-bold text-sm truncate text-black">
                                 {conversation.other_user_name || conversation.other_user_email}
                               </p>
-                              <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+
                             </div>
                             {conversation.unread_count > 0 && (
                               <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
