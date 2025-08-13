@@ -1,0 +1,131 @@
+*** System restart required ***
+Last login: Wed Aug 13 18:54:32 2025 from 51.222.111.183
+ubuntu@vps-8dfc48b5:~$
+su hamdi
+cd cool-mobile-spark
+
+# Déploiement automatique
+curl -sSL https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/deploy-upload-fix-vps.sh | bash
+Password:
+hamdi@vps-8dfc48b5:/home/ubuntu$
+cd cool-mobile-spark
+
+# Déploiement automatique
+curl -sSL https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/deploy-upload-fix-vps.sh | bash
+bash: cd: cool-mobile-spark: Permission denied
+bash: line 1: 404:: command not found
+hamdi@vps-8dfc48b5:/home/ubuntu$ sudo curl -sSL https://raw.githubusercontent.com/imen-nasrii/cool-mobile-spark/main/deploy-upload-fix-vps.sh | bash
+[sudo] password for hamdi:
+bash: line 1: 404:: command not found
+hamdi@vps-8dfc48b5:/home/ubuntu$ # 1. Arrêt et mise à jour
+pm2 stop tomati-hamdi
+git pull origin main
+
+# 2. Installation multer
+npm install multer @types/multer
+
+# 3. Création répertoire uploads
+mkdir -p uploads && chmod 755 uploads
+
+# 4. Build et redémarrage
+npm run build
+pm2 restart tomati-hamdi
+
+# 5. Vérification
+pm2 logs tomati-hamdi --lines 10
+[PM2] Applying action stopProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 0        │ 0      │ 4    │ stopped   │ 0%       │ 0b       │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+fatal: not a git repository (or any of the parent directories): .git
+npm error code EACCES
+npm error syscall mkdir
+npm error path /home/ubuntu/node_modules/@types/multer
+npm error errno -13
+npm error Error: EACCES: permission denied, mkdir '/home/ubuntu/node_modules/@types/multer'
+npm error     at async mkdir (node:internal/fs/promises:858:10)
+npm error     at async /home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:624:20
+npm error     at async Promise.allSettled (index 0)
+npm error     at async [reifyPackages] (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:325:11)
+npm error     at async Arborist.reify (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:142:5)
+npm error     at async Install.exec (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/commands/install.js:150:5)
+npm error     at async Npm.exec (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'mkdir',
+npm error   path: '/home/ubuntu/node_modules/@types/multer'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/hamdi/.npm/_logs/2025-08-13T18_56_28_488Z-debug-0.log
+mkdir: cannot create directory ‘uploads’: Permission denied
+npm error code EACCES
+npm error syscall open
+npm error path /home/ubuntu/package.json
+npm error errno -13
+npm error Error: Could not read package.json: Error: EACCES: permission denied, open '/home/ubuntu/package.json'
+npm error     at async open (node:internal/fs/promises:639:25)
+npm error     at async readFile (node:internal/fs/promises:1243:14)
+npm error     at async read (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/package-json/lib/read-package.js:9:18)
+npm error     at async PackageJson.load (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/package-json/lib/index.js:132:31)
+npm error     at async PackageJson.normalize (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/node_modules/@npmcli/package-json/lib/index.js:118:5)
+npm error     at async #run (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/commands/run-script.js:86:13)
+npm error     at async RunScript.exec (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/commands/run-script.js:40:7)
+npm error     at async Npm.exec (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/npm.js:207:9)
+npm error     at async module.exports (/home/hamdi/.nvm/versions/node/v22.18.0/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'open',
+npm error   path: '/home/ubuntu/package.json'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /home/hamdi/.npm/_logs/2025-08-13T18_56_32_919Z-debug-0.log
+Use --update-env to update environment variables
+[PM2] Applying action restartProcessId on app [tomati-hamdi](ids: [ 0 ])
+[PM2] [tomati-hamdi](0) ✓
+┌────┬─────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
+│ id │ name            │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
+├────┼─────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
+│ 0  │ tomati-hamdi    │ default     │ 1.0.0   │ fork    │ 630753   │ 0s     │ 4    │ online    │ 0%       │ 20.8mb   │ hamdi    │ disabled │
+└────┴─────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
+[TAILING] Tailing last 10 lines for [tomati-hamdi] process (change the value with --lines option)
+/home/hamdi/cool-mobile-spark/logs/err-0.log last 10 lines:
+0|tomati-h | 2025-08-13T18:47:42:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:47:42:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:47:48: Error getting upload URL: Error: Object storage not available on VPS
+0|tomati-h | 2025-08-13T18:47:48:     at ObjectStorageService.getObjectEntityUploadURL (file:///home/hamdi/cool-mobile-spark/dist/index.js:40:15)
+0|tomati-h | 2025-08-13T18:47:48:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:47:48:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+0|tomati-h | 2025-08-13T18:47:50: Error getting upload URL: Error: Object storage not available on VPS
+0|tomati-h | 2025-08-13T18:47:50:     at ObjectStorageService.getObjectEntityUploadURL (file:///home/hamdi/cool-mobile-spark/dist/index.js:40:15)
+0|tomati-h | 2025-08-13T18:47:50:     at file:///home/hamdi/cool-mobile-spark/dist/index.js:1585:53
+0|tomati-h | 2025-08-13T18:47:50:     at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+/home/hamdi/cool-mobile-spark/logs/out-0.log last 10 lines:
+0|tomati-h | 2025-08-13T18:47:50: 6:47:50 PM [express] POST /api/objects/upload 500 in 10ms :: {"error":"Object storage not available …
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/advertisements 200 in 7ms :: []
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/advertisements 200 in 3ms :: []
+0|tomati-h | 2025-08-13T18:51:49: GET /api/products - category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:51:49: Storage.getProducts called with category: undefined search: undefined
+0|tomati-h | 2025-08-13T18:51:49: Returning 0 products for category: undefined
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/products 200 in 13ms :: []
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] POST /api/auth/signin 401 in 4ms :: {"error":"Invalid credentials"}
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/advertisements 200 in 3ms :: []
+0|tomati-h | 2025-08-13T18:51:49: 6:51:49 PM [express] GET /api/products/promoted 200 in 6ms :: []
+
+0|tomati-hamdi  | 2025-08-13T18:56:36: 6:56:36 PM [express] serving on port 5000
