@@ -52,6 +52,10 @@ The platform is built with a clear separation between client and server. The fro
   - Removed "Publicité" badge that appeared on products with 3+ likes
   - Cleaned up badge logic from ProductCard and ProductListCard components
   - Simplified product display without advertising labels
+- **Removed "Produits Populaires" section:**
+  - Removed promoted products section from home page
+  - Cleaned up unnecessary featured content display
+  - Simplified home page layout without trending products showcase
 - **Updated logo design:**
   - Removed red square "T" icon from header
   - Simplified logo to display only "tomati" text in red

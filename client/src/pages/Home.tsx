@@ -95,58 +95,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange, searchTerm: exter
 
 
 
-      {/* Promoted Products Section */}
-      {promotedProducts && promotedProducts.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-6">
-            <div className="flex items-center gap-3">
-              <TrendingUp className="text-primary" size={24} />
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Produits Populaires</h2>
-            </div>
-            <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 text-xs">
-              <Star size={12} className="mr-1" />
-              Tendances
-            </Badge>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8">
-            {promotedProducts.slice(0, 6).map((product: any) => (
-              <Card 
-                key={product.id} 
-                className="bg-white shadow-lg border-0 hover:shadow-xl transition-all cursor-pointer group"
-                onClick={() => onProductClick?.(product.id)}
-              >
-                <CardContent className="p-2 sm:p-3">
-                  <div className="aspect-square bg-gray-100 rounded-lg mb-2 sm:mb-3 overflow-hidden">
-                    {product.image_url && (
-                      <img 
-                        src={product.image_url} 
-                        alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    )}
-                  </div>
-                  <h3 className="font-semibold text-xs sm:text-sm mb-1 line-clamp-2">{product.title}</h3>
-                  <div className="text-primary font-bold text-sm sm:text-lg">{product.price}</div>
-                  <div className="flex items-center justify-between mt-1 sm:mt-2">
-                    <Badge variant="outline" className="text-xs hidden sm:block">
-                      {product.category}
-                    </Badge>
-                    <LikeButton 
-                      productId={product.id}
-                      initialLikeCount={product.like_count || 0}
-                      isPromoted={product.is_promoted}
-                      size="sm"
-                      showCount={true}
-                      showPromotedBadge={false}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
+
 
 
 
