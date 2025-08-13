@@ -26,7 +26,7 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
   return (
     <>
       {/* Bouton IA - En bas à gauche */}
-      <div className="fixed bottom-24 left-6 z-[9999]">
+      <div className="fixed bottom-20 left-4 z-[9999]">
         <Button
           onClick={onAIToggle}
           className="h-16 w-16 rounded-full shadow-xl bg-blue-600 hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 border-4 border-white"
@@ -40,7 +40,7 @@ export const FloatingButtons = ({ onCategorySelect, onAIToggle }: FloatingButton
       </div>
 
       {/* Bouton Ajouter - En bas à droite */}
-      <div className="fixed bottom-24 right-6 z-[9999]">
+      <div className="fixed bottom-20 right-4 z-[9999]">
         {/* Menu des catégories */}
         {isAddMenuOpen && (
           <div className="absolute bottom-20 right-0 flex flex-col gap-3 mb-2">
