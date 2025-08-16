@@ -165,9 +165,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Products routes
   app.get("/api/products", async (req, res) => {
     try {
-      const { category, search } = req.query;
-      console.log('GET /api/products - category:', category, 'search:', search);
-      const products = await storage.getProducts(category as string, search as string);
+      const { category, search, page = '1', limit = '20' } = req.query;
+      const pageNum = parseInt(page as string) || 1;
+      const limitNum = parseInt(limit as string) || 20;
+      const offset = (pageNum - 1) * limitNum;
+      
+      console.log('GET /api/products - category:', category, 'search:', search, 'page:', pageNum, 'limit:', limitNum);
+      const products = await storage.getProducts(category as string, search as string, limitNum, offset);
       console.log('Returning', products.length, 'products for category:', category);
       res.json(products);
     } catch (error: any) {
@@ -780,7 +784,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const newProduct = await storage.createProduct({
         ...productData,
-        seller_id: req.user.id, // Admin creates products
+        user_id: req.user.id, // Admin creates products
         view_count: 0,
         rating: 0
       });

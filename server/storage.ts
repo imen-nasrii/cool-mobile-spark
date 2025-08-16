@@ -32,7 +32,7 @@ export interface IStorage {
   createCategory(category: InsertCategory): Promise<Category>;
   
   // Products
-  getProducts(category?: string, search?: string): Promise<Product[]>;
+  getProducts(category?: string, search?: string, limit?: number, offset?: number): Promise<Product[]>;
   getProduct(id: string): Promise<Product | undefined>;
   getUserProducts(userId: string): Promise<Product[]>;
   createProduct(product: InsertProduct): Promise<Product>;
@@ -170,13 +170,33 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Products
-  async getProducts(category?: string, search?: string): Promise<Product[]> {
-    console.log('Storage.getProducts called with category:', category, 'search:', search);
-    let rawProducts: Product[] = [];
+  async getProducts(category?: string, search?: string, limit: number = 20, offset: number = 0): Promise<Product[]> {
+    console.log('Storage.getProducts called with category:', category, 'search:', search, 'limit:', limit, 'offset:', offset);
+    let rawProducts: any[] = [];
     
+    const baseSelect = {
+      id: products.id,
+      title: products.title,
+      description: products.description,
+      price: products.price,
+      location: products.location,
+      category: products.category,
+      image_url: products.image_url,
+      is_promoted: products.is_promoted,
+      is_reserved: products.is_reserved,
+      is_free: products.is_free,
+      is_advertisement: products.is_advertisement,
+      like_count: products.like_count,
+      view_count: products.view_count,
+      rating: products.rating,
+      created_at: products.created_at,
+      updated_at: products.updated_at,
+      user_id: products.user_id
+    };
+
     if (category && search) {
       const searchTerm = `%${search.toLowerCase()}%`;
-      rawProducts = await db.select().from(products)
+      rawProducts = await db.select(baseSelect).from(products)
         .where(
           sql`${products.category} = ${category} AND (
             LOWER(${products.title}) LIKE ${searchTerm} OR
@@ -185,14 +205,18 @@ export class DatabaseStorage implements IStorage {
             LOWER(${products.location}) LIKE ${searchTerm}
           )`
         )
-        .orderBy(desc(products.created_at));
+        .orderBy(desc(products.created_at))
+        .limit(limit)
+        .offset(offset);
     } else if (category) {
-      rawProducts = await db.select().from(products)
+      rawProducts = await db.select(baseSelect).from(products)
         .where(eq(products.category, category))
-        .orderBy(desc(products.created_at));
+        .orderBy(desc(products.created_at))
+        .limit(limit)
+        .offset(offset);
     } else if (search) {
       const searchTerm = `%${search.toLowerCase()}%`;
-      rawProducts = await db.select().from(products)
+      rawProducts = await db.select(baseSelect).from(products)
         .where(
           or(
             sql`LOWER(${products.title}) LIKE ${searchTerm}`,
@@ -201,31 +225,36 @@ export class DatabaseStorage implements IStorage {
             sql`LOWER(${products.location}) LIKE ${searchTerm}`
           )
         )
-        .orderBy(desc(products.created_at));
+        .orderBy(desc(products.created_at))
+        .limit(limit)
+        .offset(offset);
     } else {
-      rawProducts = await db.select().from(products).orderBy(desc(products.created_at));
+      rawProducts = await db.select({
+        id: products.id,
+        title: products.title,
+        description: products.description,
+        price: products.price,
+        location: products.location,
+        category: products.category,
+        image_url: products.image_url,
+        is_promoted: products.is_promoted,
+        is_reserved: products.is_reserved,
+        is_free: products.is_free,
+        is_advertisement: products.is_advertisement,
+        like_count: products.like_count,
+        view_count: products.view_count,
+        rating: products.rating,
+        created_at: products.created_at,
+        updated_at: products.updated_at,
+        user_id: products.user_id
+      }).from(products)
+        .orderBy(desc(products.created_at))
+        .limit(limit)
+        .offset(offset);
     }
     
-    // Map database fields to frontend properties for all products
-    return rawProducts.map(product => ({
-      ...product,
-      year: product.car_year,
-      mileage: product.car_mileage,
-      fuel_type: product.car_fuel_type,
-      transmission: product.car_transmission,
-      condition: product.car_condition,
-      color: product.car_color,
-      doors: product.car_doors,
-      power: product.car_engine_size,
-      // Real estate mappings
-      rooms: product.real_estate_rooms,
-      surface: product.real_estate_surface,
-      property_type: product.real_estate_type,
-      // Job mappings
-      contract_type: product.job_type,
-      salary_range: product.job_salary_min && product.job_salary_max ? 
-        `${product.job_salary_min}-${product.job_salary_max}€` : null
-    }));
+    // Return optimized products data without mapping heavy fields for better performance
+    return rawProducts as Product[];
   }
 
   async getProduct(id: string): Promise<Product | undefined> {
