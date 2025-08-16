@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { StepsIndicator } from "@/components/UI/StepsIndicator";
+import { ImageManager } from "@/components/Products/ImageManager";
 import { useToast } from "@/hooks/use-toast";
 
 interface JobFormProps {
@@ -84,10 +85,13 @@ export const JobForm = ({ onSubmit, onCancel }: JobFormProps) => {
     
     // Étape 3: Description et avantages
     description: "",
-    benefits: [] as string[]
+    benefits: [] as string[],
+    
+    // Images du poste (optionnelles)
+    images: [] as string[]
   });
 
-  const stepTitles = ["Informations", "Exigences", "Description"];
+  const stepTitles = ["Informations", "Exigences", "Description & Photos"];
 
   const handleNext = () => {
     if (currentStep === 1) {
@@ -131,8 +135,8 @@ export const JobForm = ({ onSubmit, onCancel }: JobFormProps) => {
       location: formData.location,
       category: "emplois",
       is_free: true, // Les offres d'emploi sont gratuites
-      image_url: '', // Pas d'image pour les emplois
-      images: JSON.stringify([]),
+      image_url: formData.images.length > 0 ? formData.images[0] : '',
+      images: JSON.stringify(formData.images),
       // Champs spécifiques emploi
       job_type: formData.jobType,
       job_sector: formData.jobSector,
@@ -350,6 +354,22 @@ export const JobForm = ({ onSubmit, onCancel }: JobFormProps) => {
                     onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                     rows={8}
                     className="resize-none"
+                  />
+                </div>
+
+                {/* Photos du poste (optionnelles) */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Photos du poste (optionnelles)
+                  </label>
+                  <p className="text-sm text-gray-500 mb-4">
+                    Ajoutez des photos de l'entreprise, de l'équipe ou du lieu de travail
+                  </p>
+                  <ImageManager
+                    images={formData.images}
+                    onImagesChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                    maxImages={5}
+                    className="mb-6"
                   />
                 </div>
 
