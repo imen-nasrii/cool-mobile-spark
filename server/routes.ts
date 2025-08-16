@@ -773,6 +773,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create product (admin only)
+  app.post("/api/admin/products", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const productData = insertProductSchema.parse(req.body);
+      
+      const newProduct = await storage.createProduct({
+        ...productData,
+        seller_id: req.user.id, // Admin creates products
+        view_count: 0,
+        rating: 0
+      });
+      
+      res.json(newProduct);
+    } catch (error: any) {
+      console.error('Error creating product:', error);
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  // Update product (admin only)
+  app.put("/api/admin/products/:id", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const productId = req.params.id;
+      const updateData = req.body;
+      
+      // Check if product exists
+      const existingProduct = await storage.getProduct(productId);
+      if (!existingProduct) {
+        return res.status(404).json({ error: "Produit non trouvé" });
+      }
+
+      const updatedProduct = await storage.updateProduct(productId, updateData);
+      res.json(updatedProduct);
+    } catch (error: any) {
+      console.error('Error updating product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Delete product (admin only)
+  app.delete("/api/admin/products/:id", authenticateToken, requireAdmin, async (req: any, res: any) => {
+    try {
+      const productId = req.params.id;
+      
+      // Check if product exists
+      const existingProduct = await storage.getProduct(productId);
+      if (!existingProduct) {
+        return res.status(404).json({ error: "Produit non trouvé" });
+      }
+
+      await storage.deleteProduct(productId);
+      res.json({ success: true, message: "Produit supprimé avec succès" });
+    } catch (error: any) {
+      console.error('Error deleting product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   // Object storage routes for profile photos
   app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
     try {
