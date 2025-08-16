@@ -91,8 +91,14 @@ class ApiClient {
   }
 
   // Products
-  async getProducts(category?: string) {
-    const query = category ? `?category=${encodeURIComponent(category)}` : '';
+  async getProducts(category?: string, search?: string, page: number = 1, limit: number = 20) {
+    const params = new URLSearchParams();
+    if (category) params.append('category', category);
+    if (search) params.append('search', search);
+    params.append('page', page.toString());
+    params.append('limit', limit.toString());
+    
+    const query = params.toString() ? `?${params.toString()}` : '';
     return this.request(`/products${query}`);
   }
 

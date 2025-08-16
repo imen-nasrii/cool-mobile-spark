@@ -4,8 +4,16 @@ import { apiClient } from './apiClient';
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 3 * 60 * 1000, // 3 minutes - reduced for fresher data
+      cacheTime: 10 * 60 * 1000, // 10 minutes in cache
       refetchOnWindowFocus: false,
+      refetchOnReconnect: 'always',
+      retry: 1, // Reduced retry attempts for faster failure handling
+      networkMode: 'online',
+    },
+    mutations: {
+      retry: 1,
+      networkMode: 'online',
     },
   },
 });

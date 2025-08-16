@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
-import { useState } from "react";
+import React, { useState } from "react";
 
 // Format price in TND (Tunisian Dinar)
 const formatPrice = (price: string | number) => {
@@ -55,7 +55,7 @@ interface ProductCardProps {
   className?: string;
 }
 
-export const ProductCard = ({ 
+const ProductCardComponent = ({ 
   product, 
   onLike, 
   onMessage, 
@@ -187,3 +187,5 @@ export const ProductCard = ({
     </Card>
   );
 };
+
+export const ProductCard = React.memo(ProductCardComponent);

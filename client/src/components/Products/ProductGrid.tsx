@@ -69,12 +69,17 @@ interface ProductGridProps {
 export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductClick, onProductLike, onProductMessage, viewMode = 'grid', filters }: ProductGridProps) => {
   // const { t } = useLanguage();
 
-  // Use react-query to fetch products
+  // Use react-query to fetch products with pagination
   const { data: fetchedProducts = [], isLoading: loading, error } = useQuery({
-    queryKey: ['/api/products', category],
+    queryKey: ['/api/products', category, searchTerm],
     queryFn: async () => {
       try {
-        const url = category ? `/api/products?category=${encodeURIComponent(category)}` : '/api/products';
+        const params = new URLSearchParams();
+        if (category) params.append('category', category);
+        if (searchTerm) params.append('search', searchTerm);
+        params.append('limit', '20'); // Paginate with 20 items
+        
+        const url = `/api/products?${params.toString()}`;
         console.log('Fetching products with URL:', url);
         const response = await fetch(url);
         if (!response.ok) {
@@ -88,9 +93,9 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         throw error;
       }
     },
-    staleTime: 30 * 1000, // Reduce cache time for testing
-    retry: 3,
-    retryDelay: 1000,
+    staleTime: 2 * 60 * 1000, // 2 minutes cache for better performance
+    retry: 1, // Reduced retries for faster error handling
+    refetchOnWindowFocus: false,
   });
 
   // Apply search filter and sorting to products

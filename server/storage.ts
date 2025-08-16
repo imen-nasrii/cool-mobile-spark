@@ -1,5 +1,12 @@
 import { db } from "./db";
 import { eq, desc, or, sql, and, isNull } from "drizzle-orm";
+import NodeCache from "node-cache";
+
+// Initialize local cache for storage operations
+const storageCache = new NodeCache({
+  stdTTL: 180, // 3 minutes for frequent data
+  checkperiod: 30,
+});
 import { 
   users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences,
   type User, type InsertUser,
@@ -159,9 +166,17 @@ export class DatabaseStorage implements IStorage {
     return result[0];
   }
 
-  // Categories
+  // Categories with caching
   async getCategories(): Promise<Category[]> {
-    return await db.select().from(categories).orderBy(categories.name);
+    const cacheKey = 'categories_all';
+    const cached = storageCache.get(cacheKey);
+    if (cached) {
+      return cached as Category[];
+    }
+    
+    const categories_data = await db.select().from(categories).orderBy(categories.name);
+    storageCache.set(cacheKey, categories_data, 600); // Cache for 10 minutes
+    return categories_data;
   }
 
   async createCategory(category: InsertCategory): Promise<Category> {
@@ -253,8 +268,12 @@ export class DatabaseStorage implements IStorage {
         .offset(offset);
     }
     
-    // Return optimized products data without mapping heavy fields for better performance
-    return rawProducts as Product[];
+    // Cache the results for better performance
+    const results = rawProducts as Product[];
+    const cacheKey = `products_${category || 'all'}_${search || 'none'}_${limit}_${offset}`;
+    storageCache.set(cacheKey, results, 120); // Cache for 2 minutes
+    
+    return results;
   }
 
   async getProduct(id: string): Promise<Product | undefined> {

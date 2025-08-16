@@ -131,9 +131,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Categories routes
+  // Categories routes with caching
   app.get("/api/categories", async (req, res) => {
     try {
+      // Set long cache for categories (rarely change)
+      res.set({
+        'Cache-Control': 'public, max-age=600', // 10 minutes
+        'ETag': '"categories-v1"',
+        'Vary': 'Accept-Encoding'
+      });
+      
       const categories = await storage.getCategories();
       res.json(categories);
     } catch (error: any) {
@@ -162,13 +169,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Products routes
+  // Products routes with caching headers
   app.get("/api/products", async (req, res) => {
     try {
       const { category, search, page = '1', limit = '20' } = req.query;
       const pageNum = parseInt(page as string) || 1;
       const limitNum = parseInt(limit as string) || 20;
       const offset = (pageNum - 1) * limitNum;
+      
+      // Set cache headers for better performance
+      res.set({
+        'Cache-Control': 'public, max-age=120', // 2 minutes
+        'ETag': `"products-${category}-${search}-${pageNum}"`,
+        'Vary': 'Accept-Encoding'
+      });
       
       console.log('GET /api/products - category:', category, 'search:', search, 'page:', pageNum, 'limit:', limitNum);
       const products = await storage.getProducts(category as string, search as string, limitNum, offset);
