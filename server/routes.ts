@@ -14,6 +14,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
 
@@ -898,42 +904,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Serve static assets from client/src/assets
   app.get("/src/assets/:assetPath", (req: any, res: any) => {
-    try {
-      const assetPath = req.params.assetPath;
-      const fs = require('fs');
-      const path = require('path');
-      
-      // Build the full path to the asset
-      const fullPath = path.join(__dirname, '../client/src/assets', assetPath);
-      
+    const assetPath = req.params.assetPath;
+    
+    // Try different possible paths
+    const possiblePaths = [
+      path.join(__dirname, '../client/src/assets', assetPath),
+      path.join(process.cwd(), 'client/src/assets', assetPath),
+      path.join(__dirname, '../../client/src/assets', assetPath)
+    ];
+    
+    for (const fullPath of possiblePaths) {
       if (fs.existsSync(fullPath)) {
-        // Set proper content type based on file extension
-        const ext = path.extname(assetPath).toLowerCase();
-        const contentTypes: { [key: string]: string } = {
-          '.jpg': 'image/jpeg',
-          '.jpeg': 'image/jpeg', 
-          '.png': 'image/png',
-          '.gif': 'image/gif',
-          '.webp': 'image/webp'
-        };
-        
-        const contentType = contentTypes[ext] || 'image/jpeg';
-        
         res.set({
-          'Content-Type': contentType,
+          'Content-Type': 'image/jpeg',
           'Cache-Control': 'public, max-age=3600',
           'Access-Control-Allow-Origin': '*'
         });
-        
         return res.sendFile(fullPath);
-      } else {
-        console.log('Asset not found:', fullPath);
-        return res.status(404).json({ error: 'Asset not found' });
       }
-    } catch (error: any) {
-      console.error('Error serving asset:', error);
-      return res.status(500).json({ error: 'Internal server error' });
     }
+    
+    console.log('Asset not found in any path:', assetPath);
+    res.status(404).json({ error: 'Asset not found' });
   });
 
   // Serve object storage files (public access for avatars) and fallback to assets
