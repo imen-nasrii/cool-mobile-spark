@@ -160,17 +160,46 @@ export const ProductListCard = ({
       <CardContent className="p-3 flex gap-3 sm:gap-4">
         {/* Product image - Responsive size */}
         <div className="relative w-16 h-16 sm:w-24 sm:h-24 bg-white overflow-hidden rounded-lg flex-shrink-0">
-          {product.image ? (
-            <img 
-              src={product.image} 
-              alt={product.title}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-            />
-          ) : (
-            <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
-              <span className="text-muted-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
-            </div>
-          )}
+          {(() => {
+            let mainImage = null;
+            
+            // Try multiple sources for the image
+            if ((product as any).images && (product as any).images !== '[]' && (product as any).images !== '') {
+              try {
+                const images = JSON.parse((product as any).images);
+                if (Array.isArray(images) && images.length > 0) {
+                  mainImage = images[0];
+                }
+              } catch (e) {
+                console.error('Error parsing images JSON:', e);
+              }
+            }
+            
+            // Fallback to other image fields
+            if (!mainImage) {
+              mainImage = (product as any).image_url || (product as any).image;
+            }
+            
+            if (mainImage && mainImage.trim() !== '') {
+              return (
+                <img 
+                  src={mainImage} 
+                  alt={product.title}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  onError={(e) => {
+                    console.error('Image load error for:', mainImage);
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              );
+            } else {
+              return (
+                <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
+                  <span className="text-muted-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
+                </div>
+              );
+            }
+          })()}
           
           {/* Status badges */}
           <div className="absolute top-1 left-1 flex gap-1">

@@ -148,21 +148,53 @@ const ProductCardComponent = ({
       <div className="relative aspect-square bg-gradient-to-br from-white to-gray-50 overflow-hidden">
         {/* Product image */}
         {(() => {
-          const images = (product as any).images ? JSON.parse((product as any).images) : [];
-          const mainImage = images.length > 0 ? images[0] : product.image;
+          // Debug image data
+          console.log('ProductCard image debug for:', product.title, {
+            images: (product as any).images,
+            image: (product as any).image,
+            image_url: (product as any).image_url
+          });
           
-          if (mainImage) {
+          let mainImage = null;
+          
+          // Try multiple sources for the image
+          if ((product as any).images && (product as any).images !== '[]' && (product as any).images !== '') {
+            try {
+              const images = JSON.parse((product as any).images);
+              if (Array.isArray(images) && images.length > 0) {
+                mainImage = images[0];
+              }
+            } catch (e) {
+              console.error('Error parsing images JSON:', e);
+            }
+          }
+          
+          // Fallback to other image fields
+          if (!mainImage) {
+            mainImage = (product as any).image_url || (product as any).image;
+          }
+          
+          console.log('ProductCard final image:', mainImage);
+          
+          if (mainImage && mainImage.trim() !== '') {
             return (
               <img 
                 src={mainImage} 
                 alt={product.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  console.error('Image load error for:', mainImage);
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
             );
           } else {
             return (
-              <div className="w-full h-full bg-white border border-gray-200 flex items-center justify-center">
-                <span className="text-muted-foreground text-xs sm:text-sm">{product.category}</span>
+              <div className="w-full h-full bg-gray-100 border border-gray-200 flex items-center justify-center">
+                <div className="text-center p-4">
+                  <span className="text-gray-400 text-xs sm:text-sm block">{product.category}</span>
+                  <span className="text-gray-300 text-xs block mt-1">Pas d'image</span>
+                </div>
               </div>
             );
           }
