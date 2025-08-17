@@ -36,18 +36,27 @@ const formatPrice = (price: string | number) => {
 const getCategoryDetails = (product: any) => {
   const details: Array<{ icon: any; text: string }> = [];
   
+  console.log('ProductListCard getCategoryDetails - Product data:', {
+    category: product.category,
+    car_year: product.car_year,
+    car_mileage: product.car_mileage,
+    car_fuel_type: product.car_fuel_type,
+    real_estate_surface: product.real_estate_surface,
+    real_estate_rooms: product.real_estate_rooms
+  });
+  
   switch (product.category?.toLowerCase()) {
     case 'auto':
     case 'voiture':
-      if (product.year) details.push({ icon: Calendar, text: product.year });
-      if (product.mileage) details.push({ icon: Gauge, text: `${product.mileage} km` });
-      if (product.fuel_type) details.push({ icon: Fuel, text: product.fuel_type });
+      if (product.car_year) details.push({ icon: Calendar, text: product.car_year.toString() });
+      if (product.car_mileage) details.push({ icon: Gauge, text: `${Number(product.car_mileage).toLocaleString()} km` });
+      if (product.car_fuel_type) details.push({ icon: Fuel, text: product.car_fuel_type });
       break;
       
     case 'immobilier':
-      if (product.surface) details.push({ icon: Home, text: `${product.surface} m²` });
-      if (product.rooms) details.push({ icon: Users, text: `${product.rooms} pièces` });
-      if (product.property_type) details.push({ icon: Building, text: product.property_type });
+      if (product.real_estate_surface) details.push({ icon: Home, text: `${product.real_estate_surface} m²` });
+      if (product.real_estate_rooms) details.push({ icon: Users, text: `${product.real_estate_rooms} pièces` });
+      if (product.real_estate_type) details.push({ icon: Building, text: product.real_estate_type });
       break;
       
     case 'emplois':
@@ -63,6 +72,7 @@ const getCategoryDetails = (product: any) => {
       break;
   }
   
+  console.log('ProductListCard getCategoryDetails - Found details:', details);
   return details.slice(0, 3); // Limit to 3 details max
 };
 
