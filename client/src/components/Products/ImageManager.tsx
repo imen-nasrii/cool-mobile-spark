@@ -45,10 +45,11 @@ export const ImageManager = ({
           const formData = new FormData();
           formData.append('file', file);
           
+          const token = localStorage.getItem('token');
           const response = await fetch(`/api/objects/upload/${objectId}`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
+              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
             },
             body: formData
           });

@@ -167,7 +167,7 @@ const ProductCardComponent = ({
             mainImage = (product as any).image_url || (product as any).image;
           }
           
-          // If mainImage exists and doesn't look like base64, display it
+          // Display image if it exists and is valid (not base64)
           if (mainImage && mainImage.trim() !== '' && !mainImage.startsWith('data:image')) {
             return (
               <img 
