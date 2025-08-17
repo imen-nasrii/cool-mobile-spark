@@ -21,12 +21,9 @@ export const ImageManager = ({
   const [fullscreenIndex, setFullscreenIndex] = useState(0);
   const { toast } = useToast();
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files) return;
-
-    const newImages: string[] = [];
-    let filesProcessed = 0;
 
     if (images.length + files.length > maxImages) {
       toast({
@@ -37,27 +34,54 @@ export const ImageManager = ({
       return;
     }
 
-    Array.from(files).forEach((file) => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          if (e.target?.result) {
-            newImages.push(e.target.result as string);
-            filesProcessed++;
-            
-            if (filesProcessed === files.length) {
-              onImagesChange([...images, ...newImages]);
-            }
+    const newImages: string[] = [];
+    
+    try {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (file.type.startsWith('image/')) {
+          // Upload to object storage instead of converting to base64
+          const objectId = `product-${Date.now()}-${i}`;
+          const formData = new FormData();
+          formData.append('file', file);
+          
+          const response = await fetch(`/api/objects/upload/${objectId}`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+          });
+          
+          if (response.ok) {
+            const result = await response.json();
+            newImages.push(result.url || result.path);
+          } else {
+            console.error('Failed to upload image:', response.statusText);
+            toast({
+              title: "Erreur d'upload",
+              description: `Impossible d'uploader ${file.name}`,
+              variant: "destructive"
+            });
           }
-        };
-        reader.readAsDataURL(file);
-      } else {
-        filesProcessed++;
-        if (filesProcessed === files.length && newImages.length > 0) {
-          onImagesChange([...images, ...newImages]);
         }
       }
-    });
+      
+      if (newImages.length > 0) {
+        onImagesChange([...images, ...newImages]);
+        toast({
+          title: "Images ajoutées",
+          description: `${newImages.length} image(s) ajoutée(s) avec succès`,
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading images:', error);
+      toast({
+        title: "Erreur",
+        description: "Erreur lors de l'upload des images",
+        variant: "destructive"
+      });
+    }
   };
 
   const removeImage = (index: number) => {

@@ -180,7 +180,7 @@ export const ProductListCard = ({
               mainImage = (product as any).image_url || (product as any).image;
             }
             
-            if (mainImage && mainImage.trim() !== '') {
+            if (mainImage && mainImage.trim() !== '' && !mainImage.startsWith('data:image')) {
               return (
                 <img 
                   src={mainImage} 

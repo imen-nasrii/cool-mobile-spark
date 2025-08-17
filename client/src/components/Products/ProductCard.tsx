@@ -148,16 +148,9 @@ const ProductCardComponent = ({
       <div className="relative aspect-square bg-gradient-to-br from-white to-gray-50 overflow-hidden">
         {/* Product image */}
         {(() => {
-          // Debug image data
-          console.log('ProductCard image debug for:', product.title, {
-            images: (product as any).images,
-            image: (product as any).image,
-            image_url: (product as any).image_url
-          });
-          
           let mainImage = null;
           
-          // Try multiple sources for the image
+          // Try to get image from images array first
           if ((product as any).images && (product as any).images !== '[]' && (product as any).images !== '') {
             try {
               const images = JSON.parse((product as any).images);
@@ -174,9 +167,8 @@ const ProductCardComponent = ({
             mainImage = (product as any).image_url || (product as any).image;
           }
           
-          console.log('ProductCard final image:', mainImage);
-          
-          if (mainImage && mainImage.trim() !== '') {
+          // If mainImage exists and doesn't look like base64, display it
+          if (mainImage && mainImage.trim() !== '' && !mainImage.startsWith('data:image')) {
             return (
               <img 
                 src={mainImage} 
