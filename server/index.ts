@@ -35,8 +35,25 @@ app.use(express.urlencoded({ extended: true }));
 <html lang="fr">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tomati Market</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Tomati Market - Marketplace Tunisienne</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Plateforme de petites annonces tunisienne - Voitures, Immobilier, Emplois, Électronique" />
+    <meta name="theme-color" content="#ef4444" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Tomati" />
+    
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/icon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-192x192.png" />
+    <link rel="mask-icon" href="/icon-192x192.png" color="#ef4444" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
     <style>
         body { 
             font-family: Arial, sans-serif; 
@@ -74,6 +91,74 @@ app.use(express.urlencoded({ extended: true }));
         .empty-icon { font-size: 4rem; margin-bottom: 16px; }
         .empty-title { font-size: 1.25rem; font-weight: bold; color: black; margin: 0 0 8px 0; }
         .empty-subtitle { color: black; margin: 0; }
+        
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border: 3px solid #ef4444;
+            border-radius: 10px;
+            padding: 16px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .pwa-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .pwa-icon {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+        
+        .pwa-text {
+            flex: 1;
+        }
+        
+        .pwa-text strong {
+            color: black;
+            font-size: 1.1rem;
+        }
+        
+        .pwa-text p {
+            color: #666;
+            margin: 4px 0 0 0;
+            font-size: 0.9rem;
+        }
+        
+        .pwa-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .pwa-button:hover {
+            background: #dc2626;
+        }
+        
+        .pwa-dismiss {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -113,8 +198,21 @@ app.use(express.urlencoded({ extended: true }));
             
             if (loading) {
                 root.innerHTML = \`
+                    <!-- PWA Install Banner -->
+                    <div id="pwa-install" class="pwa-install-banner" style="display: none;">
+                        <div class="pwa-content">
+                            <div class="pwa-icon">📱</div>
+                            <div class="pwa-text">
+                                <strong>Installer Tomati</strong>
+                                <p>Accédez rapidement à vos annonces</p>
+                            </div>
+                            <button id="install-button" class="pwa-button">Installer</button>
+                            <button id="dismiss-button" class="pwa-dismiss">×</button>
+                        </div>
+                    </div>
+                    
                     <div class="loading">
-                        <div class="loading-text">Chargement Tomati...</div>
+                        <div class="loading-text">🍅 Chargement Tomati...</div>
                     </div>
                 \`;
                 return;
@@ -182,6 +280,63 @@ app.use(express.urlencoded({ extended: true }));
             loading = false;
             renderApp();
         }
+
+        // PWA Functionality
+        let deferredPrompt;
+        
+        // Enregistrer le Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+        
+        // Gérer l'événement beforeinstallprompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('beforeinstallprompt fired');
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Créer et afficher la bannière d'installation
+            const installBanner = document.createElement('div');
+            installBanner.id = 'pwa-install';
+            installBanner.className = 'pwa-install-banner';
+            installBanner.innerHTML = \`
+                <div class="pwa-content">
+                    <div class="pwa-icon">📱</div>
+                    <div class="pwa-text">
+                        <strong>Installer Tomati</strong>
+                        <p>Accédez rapidement à vos annonces</p>
+                    </div>
+                    <button id="install-button" class="pwa-button">Installer</button>
+                    <button id="dismiss-button" class="pwa-dismiss">×</button>
+                </div>
+            \`;
+            document.body.appendChild(installBanner);
+            
+            // Gérer le clic sur le bouton d'installation
+            document.getElementById('install-button').addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(\`User response: \${outcome}\`);
+                    deferredPrompt = null;
+                    installBanner.remove();
+                }
+            });
+            
+            // Gérer le clic sur le bouton de fermeture
+            document.getElementById('dismiss-button').addEventListener('click', () => {
+                installBanner.remove();
+                localStorage.setItem('pwa-dismissed', 'true');
+            });
+        });
 
         // Démarrer immédiatement
         loadProductsDirectly();
