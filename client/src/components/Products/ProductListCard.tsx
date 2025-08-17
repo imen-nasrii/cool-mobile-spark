@@ -5,6 +5,39 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useState } from "react";
+import teslaImage from "@/assets/tesla-model3.jpg";
+import sofaImage from "@/assets/modern-sofa.jpg";
+import iphoneImage from "@/assets/iphone-15-pro.jpg";
+import motherboardImage from "@/assets/motherboard-i5.jpg";
+import bikeImage from "@/assets/mountain-bike.jpg";
+
+// Get correct image based on category and path
+const getCorrectImage = (imagePath: string, category: string) => {
+  if (!imagePath || imagePath.startsWith('data:image')) {
+    return null;
+  }
+  
+  if (imagePath.includes('/src/assets/')) {
+    switch (category?.toLowerCase()) {
+      case 'voiture':
+      case 'auto':
+        return teslaImage;
+      case 'immobilier':
+      case 'meubles':
+        return sofaImage;
+      case 'emplois':
+        return iphoneImage;
+      case 'électronique':
+        return motherboardImage;
+      case 'sport':
+        return bikeImage;
+      default:
+        return teslaImage;
+    }
+  }
+  
+  return imagePath;
+};
 
 // Format price in TND (Tunisian Dinar)
 const formatPrice = (price: string | number) => {
@@ -180,14 +213,17 @@ export const ProductListCard = ({
               mainImage = (product as any).image_url || (product as any).image;
             }
             
-            if (mainImage && mainImage.trim() !== '' && !mainImage.startsWith('data:image')) {
+            // Get the correct image source
+            const correctImage = getCorrectImage(mainImage, product.category);
+            
+            if (correctImage) {
               return (
                 <img 
-                  src={mainImage} 
+                  src={correctImage} 
                   alt={product.title}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                   onError={(e) => {
-                    console.error('Image load error for:', mainImage);
+                    console.error('Image load error for:', correctImage);
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />

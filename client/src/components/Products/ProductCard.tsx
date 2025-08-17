@@ -5,6 +5,42 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import React, { useState } from "react";
+import teslaImage from "@/assets/tesla-model3.jpg";
+import sofaImage from "@/assets/modern-sofa.jpg";
+import iphoneImage from "@/assets/iphone-15-pro.jpg";
+import motherboardImage from "@/assets/motherboard-i5.jpg";
+import bikeImage from "@/assets/mountain-bike.jpg";
+
+// Get correct image based on category and path
+const getCorrectImage = (imagePath: string, category: string) => {
+  // If it's already a base64 or starts with data:, skip
+  if (!imagePath || imagePath.startsWith('data:image')) {
+    return null;
+  }
+  
+  // If it's an asset path, map to correct imported image
+  if (imagePath.includes('/src/assets/')) {
+    switch (category?.toLowerCase()) {
+      case 'voiture':
+      case 'auto':
+        return teslaImage;
+      case 'immobilier':
+      case 'meubles':
+        return sofaImage;
+      case 'emplois':
+        return iphoneImage;
+      case 'électronique':
+        return motherboardImage;
+      case 'sport':
+        return bikeImage;
+      default:
+        return teslaImage;
+    }
+  }
+  
+  // Otherwise return the original path
+  return imagePath;
+};
 
 // Format price in TND (Tunisian Dinar)
 const formatPrice = (price: string | number) => {
@@ -167,15 +203,17 @@ const ProductCardComponent = ({
             mainImage = (product as any).image_url || (product as any).image;
           }
           
-          // Display image if it exists and is valid (not base64)
-          if (mainImage && mainImage.trim() !== '' && !mainImage.startsWith('data:image')) {
+          // Get the correct image source
+          const correctImage = getCorrectImage(mainImage, product.category);
+          
+          if (correctImage) {
             return (
               <img 
-                src={mainImage} 
+                src={correctImage} 
                 alt={product.title}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 onError={(e) => {
-                  console.error('Image load error for:', mainImage);
+                  console.error('Image load error for:', correctImage);
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
               />
