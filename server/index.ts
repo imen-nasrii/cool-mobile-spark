@@ -19,12 +19,25 @@ app.use(express.urlencoded({ extended: true }));
     }
   });
 
-  // Serve static files from dist/public
+  // Serve static files from dist/public with proper MIME types
   const staticDir = path.join(process.cwd(), 'dist/public');
-  app.use(express.static(staticDir, { extensions: ["html"] }));
+  app.use(express.static(staticDir, { 
+    extensions: ["html"],
+    setHeaders: (res, path) => {
+      if (path.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+      }
+      if (path.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      }
+    }
+  }));
   
-  // Catch-all route for SPA
+  // Catch-all route for SPA (excluding API routes)
   app.get("*", (req, res) => {
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API route not found' });
+    }
     res.sendFile(path.join(staticDir, "index.html"));
   });
 
