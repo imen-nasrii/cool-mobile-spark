@@ -896,29 +896,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve object storage files (public access for avatars)
+  // Serve object storage files (public access for avatars) and fallback to assets
   app.get("/objects/:objectPath(*)", async (req: any, res: any) => {
     try {
       console.log('Serving file - Path:', req.path);
       
       const { objectStorageService, ObjectNotFoundError } = await import('./objectStorage');
-      const objectFile = await objectStorageService.getObjectEntityFile(req.path);
-      
-      // Set cache headers for better performance
-      res.set({
-        'Cache-Control': 'public, max-age=3600', // 1 hour cache
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'Content-Type'
-      });
-      
-      await objectStorageService.downloadObject(objectFile, res);
+      try {
+        const objectFile = await objectStorageService.getObjectEntityFile(req.path);
+        
+        // Set cache headers for better performance
+        res.set({
+          'Cache-Control': 'public, max-age=3600', // 1 hour cache
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET',
+          'Access-Control-Allow-Headers': 'Content-Type'
+        });
+        
+        await objectStorageService.downloadObject(objectFile, res);
+      } catch (objectError) {
+        // If object not found, serve a default image from assets
+        console.log('Object not found, serving default image');
+        res.redirect('/src/assets/tesla-model3.jpg');
+      }
     } catch (error: any) {
       console.error('Error serving object:', error);
-      if (error.name === 'ObjectNotFoundError') {
-        return res.status(404).json({ error: 'Object not found' });
-      }
-      return res.status(500).json({ error: 'Internal server error' });
+      res.redirect('/src/assets/tesla-model3.jpg');
     }
   });
 
