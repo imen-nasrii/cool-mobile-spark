@@ -20,11 +20,15 @@ app.use(express.urlencoded({ extended: true }));
     res.sendFile(path.join(process.cwd(), 'client/public/index.html'));
   });
 
-  // Serve HTML directly without external dependencies
+  // Serve simple diagnostic page first
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'API route not found' });
     }
+    
+    // Force text/html content type
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
     
     res.send(`
 <!DOCTYPE html>
