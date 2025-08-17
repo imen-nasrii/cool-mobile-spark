@@ -1,6 +1,6 @@
 import express from "express";
+import path from "path";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic } from "./vite";
 
 const app = express();
 
@@ -19,12 +19,14 @@ app.use(express.urlencoded({ extended: true }));
     }
   });
 
-  // Setup vite or static files
-  if (process.env.NODE_ENV === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+  // Serve static files from dist/public
+  const staticDir = path.join(process.cwd(), 'dist/public');
+  app.use(express.static(staticDir, { extensions: ["html"] }));
+  
+  // Catch-all route for SPA
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(staticDir, "index.html"));
+  });
 
   const port = parseInt(process.env.PORT || "5000", 10);
   const host = process.env.HOST || "0.0.0.0";
