@@ -1,0 +1,39 @@
+{
+  "name": "Tomati Market",
+  "short_name": "Tomati",
+  "description": "Plateforme de petites annonces en Tunisie",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ef4444",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/tomati-logo.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "/tomati-logo.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ],
+  "categories": ["shopping", "business"],
+  "shortcuts": [
+    {
+      "name": "Publier une annonce",
+      "short_name": "Publier",
+      "description": "Créer une nouvelle annonce",
+      "url": "/add?category=auto",
+      "icons": [{ "src": "/icons/add-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mes messages",
+      "short_name": "Messages",
+      "description": "Voir mes conversations",
+      "url": "/messages",
+      "icons": [{ "src": "/icons/messages-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+}

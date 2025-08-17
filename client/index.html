@@ -2,20 +2,50 @@
 <html lang="fr">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-    <title>Tomati Market - Marketplace Française</title>
-    <meta name="description" content="Tomati Market - La marketplace française pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
-    <meta name="keywords" content="marketplace, france, achat, vente, local, produits, tomati" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <title>Tomati Market - Marketplace Tunisienne</title>
+    <meta name="description" content="Tomati Market - La marketplace tunisienne pour acheter et vendre localement. Découvrez des produits uniques près de chez vous." />
+    <meta name="keywords" content="marketplace, tunisie, achat, vente, local, produits, tomati, voiture, immobilier, emploi" />
+    
+    <!-- PWA Configuration -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#ef4444" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tomati" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    
+    <!-- Icons -->
     <link rel="icon" type="image/jpeg" href="/tomati-logo.jpg" />
     <link rel="apple-touch-icon" href="/tomati-logo.jpg" />
-    <meta property="og:title" content="Tomati Market - Marketplace Française" />
-    <meta property="og:description" content="La marketplace française pour acheter et vendre localement" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/tomati-logo.jpg" />
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="Tomati Market - Marketplace Tunisienne" />
+    <meta property="og:description" content="La marketplace tunisienne pour acheter et vendre localement" />
     <meta property="og:image" content="/tomati-logo.jpg" />
     <meta property="og:url" content="https://tomati.org" />
+    <meta property="og:type" content="website" />
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+    
     <!-- This is a replit script which adds a banner on the top of the page when opened in development mode outside the replit environment -->
     <script type="text/javascript" src="https://replit.com/public/js/replit-dev-banner.js"></script>
   </body>

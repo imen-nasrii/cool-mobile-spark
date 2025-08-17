@@ -24,6 +24,7 @@ import { OrganizedProducts } from "./pages/OrganizedProducts";
 import AdminProducts from "./pages/AdminProducts";
 import AdminAdvertisements from "./pages/AdminAdvertisements";
 import NotFound from "./pages/NotFound";
+import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 
 const App = () => (
   <ErrorBoundary>
@@ -36,7 +37,12 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={
+                <>
+                  <Index />
+                  <PWAInstallPrompt />
+                </>
+              } />
               <Route path="/auth" element={<Auth />} />
               <Route 
                 path="/admin" 
