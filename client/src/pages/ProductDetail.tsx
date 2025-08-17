@@ -320,14 +320,22 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
     const category = product.category?.toLowerCase();
     
-    // Car details with complete equipment system
+    // Car details with complete information
     console.log('Category check:', category, 'Product category:', product.category, 'Product ID:', product.id, 'Car details:', {
       brand: product.car_brand, model: product.car_model, year: product.car_year, fuel_type: product.car_fuel_type
     });
-    if (category === 'voitures' || category === 'véhicules' || category === 'voiture') {
+    if (category === 'auto' || category === 'voiture' || category === 'voitures' || category === 'véhicules') {
       const carDetails = [
+        { icon: Car, label: 'Marque', value: product.car_brand, color: 'text-blue-600' },
+        { icon: Car, label: 'Modèle', value: product.car_model, color: 'text-blue-600' },
         { icon: Calendar, label: 'Année', value: product.car_year, color: 'text-green-600' },
-        { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' }
+        { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
+        { icon: Fuel, label: 'Carburant', value: product.car_fuel_type, color: 'text-purple-600' },
+        { icon: Settings, label: 'Transmission', value: product.car_transmission, color: 'text-indigo-600' },
+        { icon: Settings, label: 'État', value: product.car_condition, color: 'text-gray-600' },
+        { icon: Settings, label: 'Couleur', value: product.car_color, color: 'text-pink-600' },
+        { icon: Settings, label: 'Portes', value: product.car_doors ? `${product.car_doors} portes` : null, color: 'text-yellow-600' },
+        { icon: Settings, label: 'Puissance moteur', value: product.car_engine_size, color: 'text-red-600' }
       ].filter(detail => detail.value);
 
       // Complete equipment list with icons (black if available, gray if not)
@@ -360,7 +368,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
       return (
         <div className="space-y-4">
-
+          {/* Basic car details */}
+          <Card className="glass-card">
+            <CardContent className="p-4 md:p-6">
+              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Caractéristiques du véhicule
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {carDetails.map((detail, index) => (
+                  <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                    <detail.icon size={18} className={`${detail.color} flex-shrink-0`} />
+                    <div className="flex-1">
+                      <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                        {detail.label}
+                      </span>
+                      <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                        {detail.value}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Equipment section with all features */}
           <Card className="glass-card">
@@ -402,14 +432,16 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     // Real Estate details
     if (category === 'immobilier' || category === 'logement') {
       const realEstateDetails = [
-        { icon: Home, label: 'Type', value: product.property_type },
-        { icon: Users, label: 'Chambres', value: product.rooms ? `${product.rooms} pièces` : null },
-        { icon: Users, label: 'Salles de bain', value: product.bathrooms },
-        { icon: Layers, label: 'Surface', value: product.surface ? `${product.surface} m²` : null },
-        { icon: Layers, label: 'Étage', value: product.floor },
-        { icon: Car, label: 'Parking', value: product.parking ? 'Oui' : 'Non' },
-        { icon: Layers, label: 'Jardin', value: product.garden ? 'Oui' : 'Non' },
-        { icon: Home, label: 'Balcon', value: product.balcony ? 'Oui' : 'Non' }
+        { icon: Home, label: 'Type de propriété', value: product.real_estate_type || product.property_type },
+        { icon: Users, label: 'Nombre de pièces', value: product.real_estate_rooms || product.rooms ? `${product.real_estate_rooms || product.rooms} pièces` : null },
+        { icon: Home, label: 'Salles de bain', value: product.real_estate_bathrooms || product.bathrooms },
+        { icon: Layers, label: 'Surface habitable', value: product.real_estate_surface || product.surface ? `${product.real_estate_surface || product.surface} m²` : null },
+        { icon: Layers, label: 'Étage', value: product.real_estate_floor || product.floor },
+        { icon: Car, label: 'Parking', value: product.real_estate_parking || product.parking ? 'Oui' : 'Non' },
+        { icon: Layers, label: 'Jardin', value: product.real_estate_garden || product.garden ? 'Oui' : 'Non' },
+        { icon: Home, label: 'Balcon', value: product.real_estate_balcony || product.balcony ? 'Oui' : 'Non' },
+        { icon: Home, label: 'Meublé', value: product.real_estate_furnished ? 'Oui' : 'Non' },
+        { icon: Settings, label: 'État', value: product.real_estate_condition }
       ].filter(detail => detail.value);
 
       if (realEstateDetails.length === 0) return null;
@@ -441,15 +473,16 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
 
     // Job details
-    if (category === 'emploi' || category === 'travail' || category === 'job') {
+    if (category === 'emplois' || category === 'emploi' || category === 'travail' || category === 'job') {
       const jobDetails = [
-        { icon: Briefcase, label: 'Type de contrat', value: product.contract_type },
-        { icon: Layers, label: 'Secteur', value: product.sector },
-        { icon: Star, label: 'Expérience', value: product.experience_level },
-        { icon: GraduationCap, label: 'Formation', value: product.education_level },
-        { icon: DollarSign, label: 'Salaire', value: product.salary_range },
-        { icon: Home, label: 'Télétravail', value: product.remote_work ? 'Possible' : 'Non' },
-        { icon: Briefcase, label: 'Entreprise', value: product.company }
+        { icon: Briefcase, label: 'Type de contrat', value: product.job_type || product.contract_type },
+        { icon: Layers, label: 'Secteur d\'activité', value: product.job_sector || product.sector },
+        { icon: Star, label: 'Niveau d\'expérience', value: product.job_experience || product.experience_level },
+        { icon: GraduationCap, label: 'Formation requise', value: product.job_education || product.education_level },
+        { icon: DollarSign, label: 'Salaire', value: product.job_salary_min && product.job_salary_max ? `${product.job_salary_min} - ${product.job_salary_max} TND` : (product.salary_range || null) },
+        { icon: Home, label: 'Télétravail', value: product.job_remote_work || product.remote_work ? 'Possible' : 'Non' },
+        { icon: Briefcase, label: 'Entreprise', value: product.job_company || product.company },
+        { icon: MapPinIcon, label: 'Lieu de travail', value: product.job_location }
       ].filter(detail => detail.value);
 
       if (jobDetails.length === 0) return null;
