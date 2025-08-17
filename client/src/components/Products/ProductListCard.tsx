@@ -1,4 +1,4 @@
-import { Heart, MapPin, Clock, MessageCircle, Car, Fuel, Calendar, Gauge, Home, Users, Briefcase } from "lucide-react";
+import { Heart, MapPin, Clock, MessageCircle, Car, Fuel, Calendar, Gauge, Home, Users, Briefcase, Building } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -47,12 +47,13 @@ const getCategoryDetails = (product: any) => {
     case 'immobilier':
       if (product.surface) details.push({ icon: Home, text: `${product.surface} m²` });
       if (product.rooms) details.push({ icon: Users, text: `${product.rooms} pièces` });
-      if (product.property_type) details.push({ icon: Home, text: product.property_type });
+      if (product.property_type) details.push({ icon: Building, text: product.property_type });
       break;
       
     case 'emplois':
+    case 'emploi':
       if (product.job_type) details.push({ icon: Briefcase, text: product.job_type });
-      if (product.job_sector) details.push({ icon: Users, text: product.job_sector });
+      if (product.job_sector) details.push({ icon: Building, text: product.job_sector });
       if (product.job_experience) details.push({ icon: Calendar, text: product.job_experience });
       break;
       

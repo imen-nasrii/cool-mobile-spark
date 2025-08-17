@@ -51,6 +51,7 @@ const getCategoryDetails = (product: any) => {
       break;
       
     case 'emplois':
+    case 'emploi':
       if (product.job_type) details.push({ icon: Briefcase, text: product.job_type });
       if (product.job_sector) details.push({ icon: Building, text: product.job_sector });
       if (product.job_experience) details.push({ icon: Calendar, text: product.job_experience });

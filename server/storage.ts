@@ -197,6 +197,7 @@ export class DatabaseStorage implements IStorage {
       location: products.location,
       category: products.category,
       image_url: products.image_url,
+      images: products.images,
       is_promoted: products.is_promoted,
       is_reserved: products.is_reserved,
       is_free: products.is_free,
@@ -206,7 +207,26 @@ export class DatabaseStorage implements IStorage {
       rating: products.rating,
       created_at: products.created_at,
       updated_at: products.updated_at,
-      user_id: products.user_id
+      user_id: products.user_id,
+      // Car fields
+      car_year: products.car_year,
+      car_mileage: products.car_mileage,
+      car_fuel_type: products.car_fuel_type,
+      car_transmission: products.car_transmission,
+      car_condition: products.car_condition,
+      car_color: products.car_color,
+      car_doors: products.car_doors,
+      car_engine_size: products.car_engine_size,
+      // Real estate fields
+      real_estate_rooms: products.real_estate_rooms,
+      real_estate_surface: products.real_estate_surface,
+      real_estate_type: products.real_estate_type,
+      // Job fields
+      job_type: products.job_type,
+      job_sector: products.job_sector,
+      job_experience: products.job_experience,
+      job_salary_min: products.job_salary_min,
+      job_salary_max: products.job_salary_max
     };
 
     if (category && search) {
@@ -244,32 +264,36 @@ export class DatabaseStorage implements IStorage {
         .limit(limit)
         .offset(offset);
     } else {
-      rawProducts = await db.select({
-        id: products.id,
-        title: products.title,
-        description: products.description,
-        price: products.price,
-        location: products.location,
-        category: products.category,
-        image_url: products.image_url,
-        is_promoted: products.is_promoted,
-        is_reserved: products.is_reserved,
-        is_free: products.is_free,
-        is_advertisement: products.is_advertisement,
-        like_count: products.like_count,
-        view_count: products.view_count,
-        rating: products.rating,
-        created_at: products.created_at,
-        updated_at: products.updated_at,
-        user_id: products.user_id
-      }).from(products)
+      rawProducts = await db.select(baseSelect).from(products)
         .orderBy(desc(products.created_at))
         .limit(limit)
         .offset(offset);
     }
     
-    // Cache the results for better performance
-    const results = rawProducts as Product[];
+    // Map the fields to frontend format and cache the results
+    const results = rawProducts.map(product => ({
+      ...product,
+      // Map car database fields to frontend properties
+      year: product.car_year,
+      mileage: product.car_mileage,
+      fuel_type: product.car_fuel_type,
+      transmission: product.car_transmission,
+      condition: product.car_condition,
+      color: product.car_color,
+      doors: product.car_doors,
+      power: product.car_engine_size,
+      // Real estate mappings
+      rooms: product.real_estate_rooms,
+      surface: product.real_estate_surface,
+      property_type: product.real_estate_type,
+      // Job mappings
+      job_type: product.job_type,
+      job_sector: product.job_sector,
+      job_experience: product.job_experience,
+      job_salary_min: product.job_salary_min,
+      job_salary_max: product.job_salary_max
+    })) as Product[];
+    
     const cacheKey = `products_${category || 'all'}_${search || 'none'}_${limit}_${offset}`;
     storageCache.set(cacheKey, results, 120); // Cache for 2 minutes
     
