@@ -1,4 +1,4 @@
-import { Heart, MapPin, Clock, MessageCircle } from "lucide-react";
+import { Heart, MapPin, Clock, MessageCircle, Calendar, Gauge, Fuel, Home, Users, Building, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -32,6 +32,39 @@ const formatPrice = (price: string | number) => {
   return `${numPrice.toLocaleString()} TND`;
 };
 
+// Get category-specific details to display
+const getCategoryDetails = (product: any) => {
+  const details: Array<{ icon: any; text: string }> = [];
+  
+  switch (product.category?.toLowerCase()) {
+    case 'auto':
+    case 'voiture':
+      if (product.year) details.push({ icon: Calendar, text: product.year });
+      if (product.mileage) details.push({ icon: Gauge, text: `${product.mileage} km` });
+      if (product.fuel_type) details.push({ icon: Fuel, text: product.fuel_type });
+      break;
+      
+    case 'immobilier':
+      if (product.surface) details.push({ icon: Home, text: `${product.surface} m²` });
+      if (product.rooms) details.push({ icon: Users, text: `${product.rooms} pièces` });
+      if (product.property_type) details.push({ icon: Building, text: product.property_type });
+      break;
+      
+    case 'emplois':
+      if (product.job_type) details.push({ icon: Briefcase, text: product.job_type });
+      if (product.job_sector) details.push({ icon: Building, text: product.job_sector });
+      if (product.job_experience) details.push({ icon: Calendar, text: product.job_experience });
+      break;
+      
+    default:
+      // For "autres" category, show basic info if available
+      if (product.condition) details.push({ icon: Clock, text: product.condition });
+      break;
+  }
+  
+  return details.slice(0, 3); // Limit to 3 details max
+};
+
 interface Product {
   id: string;
   title: string;
@@ -45,6 +78,20 @@ interface Product {
   likes: number;
   category: string;
   isLiked?: boolean;
+  // Car details
+  year?: string;
+  mileage?: string;
+  fuel_type?: string;
+  // Real estate details
+  surface?: string;
+  rooms?: string;
+  property_type?: string;
+  // Job details
+  job_type?: string;
+  job_sector?: string;
+  job_experience?: string;
+  // General
+  condition?: string;
 }
 
 interface ProductCardProps {
@@ -136,6 +183,27 @@ const ProductCardComponent = ({
           <div className="text-sm sm:text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1 sm:mb-2">
             {product.isFree ? "Gratuit" : formatPrice(product.price)}
           </div>
+          
+          {/* Category-specific details */}
+          {(() => {
+            const details = getCategoryDetails(product);
+            if (details.length > 0) {
+              return (
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {details.map((detail, index) => {
+                    const Icon = detail.icon;
+                    return (
+                      <div key={index} className="flex items-center gap-1 text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        <Icon size={12} />
+                        <span className="truncate max-w-16">{detail.text}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            }
+            return null;
+          })()}
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">
             <MapPin size={10} className="mr-1 flex-shrink-0" />

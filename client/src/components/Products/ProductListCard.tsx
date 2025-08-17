@@ -32,6 +32,39 @@ const formatPrice = (price: string | number) => {
   return `${numPrice.toLocaleString()} TND`;
 };
 
+// Get category-specific details to display
+const getCategoryDetails = (product: any) => {
+  const details: Array<{ icon: any; text: string }> = [];
+  
+  switch (product.category?.toLowerCase()) {
+    case 'auto':
+    case 'voiture':
+      if (product.year) details.push({ icon: Calendar, text: product.year });
+      if (product.mileage) details.push({ icon: Gauge, text: `${product.mileage} km` });
+      if (product.fuel_type) details.push({ icon: Fuel, text: product.fuel_type });
+      break;
+      
+    case 'immobilier':
+      if (product.surface) details.push({ icon: Home, text: `${product.surface} m²` });
+      if (product.rooms) details.push({ icon: Users, text: `${product.rooms} pièces` });
+      if (product.property_type) details.push({ icon: Home, text: product.property_type });
+      break;
+      
+    case 'emplois':
+      if (product.job_type) details.push({ icon: Briefcase, text: product.job_type });
+      if (product.job_sector) details.push({ icon: Users, text: product.job_sector });
+      if (product.job_experience) details.push({ icon: Calendar, text: product.job_experience });
+      break;
+      
+    default:
+      // For "autres" category, show basic info if available
+      if (product.condition) details.push({ icon: Clock, text: product.condition });
+      break;
+  }
+  
+  return details.slice(0, 3); // Limit to 3 details max
+};
+
 interface Product {
   id: string;
   title: string;
@@ -153,47 +186,31 @@ export const ProductListCard = ({
               {product.isFree ? "Gratuit" : formatPrice(product.price)}
             </div>
             
+            {/* Category-specific details */}
+            {(() => {
+              const details = getCategoryDetails(product);
+              if (details.length > 0) {
+                return (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {details.map((detail, index) => {
+                      const Icon = detail.icon;
+                      return (
+                        <div key={index} className="flex items-center gap-1 text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded" style={{ fontFamily: 'Arial, sans-serif' }}>
+                          <Icon size={10} />
+                          <span className="truncate">{detail.text}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              }
+              return null;
+            })()}
+            
             <div className="flex items-center text-xs text-muted-foreground mb-2">
               <MapPin size={10} className="mr-1 flex-shrink-0" />
               <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.location}</span>
             </div>
-            
-
-            
-            {/* Real estate details */}
-            {product.category?.toLowerCase() === 'immobilier' && (
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
-                {product.rooms && (
-                  <div className="flex items-center gap-1">
-                    <Home size={8} />
-                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.rooms} pièces</span>
-                  </div>
-                )}
-                {product.surface && (
-                  <div className="flex items-center gap-1">
-                    <Users size={8} />
-                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.surface} m²</span>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {/* Job details */}
-            {product.category?.toLowerCase() === 'emploi' && (
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-xs text-muted-foreground mb-1">
-                {product.contract_type && (
-                  <div className="flex items-center gap-1">
-                    <Briefcase size={8} />
-                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.contract_type}</span>
-                  </div>
-                )}
-                {product.salary_range && (
-                  <div className="flex items-center gap-1">
-                    <span className="truncate" style={{ fontFamily: 'Arial, sans-serif' }}>{product.salary_range}</span>
-                  </div>
-                )}
-              </div>
-            )}
           </div>
           
           <div className="flex items-center justify-between">
