@@ -42,21 +42,28 @@ const getCategoryDetails = (product: any) => {
     car_mileage: product.car_mileage,
     car_fuel_type: product.car_fuel_type,
     real_estate_surface: product.real_estate_surface,
-    real_estate_rooms: product.real_estate_rooms
+    real_estate_rooms: product.real_estate_rooms,
+    // Also check mapped fields
+    year: product.year,
+    mileage: product.mileage,
+    fuel_type: product.fuel_type,
+    surface: product.surface,
+    rooms: product.rooms
   });
   
   switch (product.category?.toLowerCase()) {
     case 'auto':
     case 'voiture':
-      if (product.car_year) details.push({ icon: Calendar, text: product.car_year.toString() });
-      if (product.car_mileage) details.push({ icon: Gauge, text: `${Number(product.car_mileage).toLocaleString()} km` });
-      if (product.car_fuel_type) details.push({ icon: Fuel, text: product.car_fuel_type });
+      // Try both database fields and mapped fields
+      if (product.car_year || product.year) details.push({ icon: Calendar, text: (product.car_year || product.year).toString() });
+      if (product.car_mileage || product.mileage) details.push({ icon: Gauge, text: `${Number(product.car_mileage || product.mileage).toLocaleString()} km` });
+      if (product.car_fuel_type || product.fuel_type) details.push({ icon: Fuel, text: product.car_fuel_type || product.fuel_type });
       break;
       
     case 'immobilier':
-      if (product.real_estate_surface) details.push({ icon: Home, text: `${product.real_estate_surface} m²` });
-      if (product.real_estate_rooms) details.push({ icon: Users, text: `${product.real_estate_rooms} pièces` });
-      if (product.real_estate_type) details.push({ icon: Building, text: product.real_estate_type });
+      if (product.real_estate_surface || product.surface) details.push({ icon: Home, text: `${product.real_estate_surface || product.surface} m²` });
+      if (product.real_estate_rooms || product.rooms) details.push({ icon: Users, text: `${product.real_estate_rooms || product.rooms} pièces` });
+      if (product.real_estate_type || product.property_type) details.push({ icon: Building, text: product.real_estate_type || product.property_type });
       break;
       
     case 'emplois':
