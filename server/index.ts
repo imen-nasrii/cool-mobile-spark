@@ -14,9 +14,10 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   const staticDir = path.join(process.cwd(), 'dist/public');
   console.log('Serving static files from:', staticDir);
   
-  // Serve static files with correct MIME types
-  app.use(express.static(staticDir, {
+  // Serve assets directory with explicit routing and MIME types
+  app.use('/assets', express.static(path.join(staticDir, 'assets'), {
     setHeaders: (res, filePath) => {
+      console.log('Serving asset:', filePath);
       if (filePath.endsWith('.js')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
       }
@@ -26,15 +27,22 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
     }
   }));
   
-  // SPA fallback - only for non-asset routes
+  // Serve other static files
+  app.use(express.static(staticDir, {
+    index: false, // Don't serve index.html automatically
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      }
+    }
+  }));
+  
+  // SPA fallback for non-API, non-asset routes
   app.get("*", (req, res) => {
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'API route not found' });
     }
-    // Don't serve index.html for asset requests
-    if (req.path.startsWith('/assets/')) {
-      return res.status(404).send('Asset not found');
-    }
+    console.log('SPA fallback for:', req.path);
     res.sendFile(path.join(staticDir, "index.html"));
   });
 
