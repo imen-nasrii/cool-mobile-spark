@@ -14,34 +14,37 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   const staticDir = path.join(process.cwd(), 'dist/public');
   console.log('Serving static files from:', staticDir);
   
-  // Serve assets directory with explicit routing and MIME types
-  app.use('/assets', express.static(path.join(staticDir, 'assets'), {
+  // Disable all caching
+  app.use((req, res, next) => {
+    res.set({
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+      'Pragma': 'no-cache',
+      'Expires': '0'
+    });
+    next();
+  });
+
+  // Serve static files with correct MIME types
+  app.use(express.static(staticDir, {
     setHeaders: (res, filePath) => {
-      console.log('Serving asset:', filePath);
+      console.log('Serving file:', filePath);
       if (filePath.endsWith('.js')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-      }
-      if (filePath.endsWith('.css')) {
+      } else if (filePath.endsWith('.css')) {
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
-      }
-    }
-  }));
-  
-  // Serve other static files
-  app.use(express.static(staticDir, {
-    index: false, // Don't serve index.html automatically
-    setHeaders: (res, filePath) => {
-      if (filePath.endsWith('.html')) {
+      } else if (filePath.endsWith('.html')) {
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
       }
     }
   }));
   
-  // SPA fallback for non-API, non-asset routes
+  // API routes first
+  app.get('/api/*', (req, res) => {
+    res.status(404).json({ error: 'API route not found' });
+  });
+  
+  // SPA fallback only for non-API routes
   app.get("*", (req, res) => {
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({ error: 'API route not found' });
-    }
     console.log('SPA fallback for:', req.path);
     res.sendFile(path.join(staticDir, "index.html"));
   });
