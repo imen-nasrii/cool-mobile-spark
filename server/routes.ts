@@ -855,125 +855,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Object storage routes for profile photos
-  app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
-    try {
-      console.log('Upload request from user:', req.user?.id);
-      const { objectStorageService } = await import('./objectStorage');
-      const uploadURL = await objectStorageService.getObjectEntityUploadURL();
-      console.log('Generated upload URL successfully');
-      res.json({ uploadURL });
-    } catch (error: any) {
-      console.error('Error getting upload URL:', error);
-      res.status(500).json({ error: error.message });
-    }
-  });
+  // DISABLED: Object storage routes for profile photos
+  // app.post("/api/objects/upload", authenticateToken, async (req: any, res: any) => {
+  //   // Temporarily disabled to prevent MIME conflicts
+  // });
 
-  // Direct file upload route with multer for VPS
-  const multer = (await import('multer')).default;
-  const upload = multer({ storage: multer.memoryStorage() });
-  
-  app.post("/api/objects/upload/:objectId", authenticateToken, upload.single('file'), async (req: any, res: any) => {
-    try {
-      console.log('Direct upload request from user:', req.user?.id);
-      
-      if (!req.file) {
-        return res.status(400).json({ error: 'No file provided' });
-      }
-      
-      const objectId = req.params.objectId;
-      const { objectStorageService } = await import('./objectStorage');
-      
-      const filePath = await objectStorageService.saveUploadedFile(
-        objectId,
-        req.file.buffer,
-        req.file.mimetype
-      );
-      
-      console.log('File uploaded successfully:', filePath);
-      res.json({ 
-        success: true,
-        path: filePath,
-        url: filePath // Return the same path as URL
-      });
-    } catch (error: any) {
-      console.error('Error in direct upload:', error);
-      res.status(500).json({ error: error.message });
-    }
-  });
+  // DISABLED: Direct file upload route with multer for VPS  
+  // app.post("/api/objects/upload/:objectId", authenticateToken, upload.single('file'), async (req: any, res: any) => {
+  //   // Temporarily disabled to prevent MIME conflicts
+  // });
 
-  // Serve static assets from client/src/assets
-  app.get("/src/assets/:assetPath", (req: any, res: any) => {
-    const assetPath = req.params.assetPath;
-    
-    // Try different possible paths
-    const possiblePaths = [
-      path.join(__dirname, '../client/src/assets', assetPath),
-      path.join(process.cwd(), 'client/src/assets', assetPath),
-      path.join(__dirname, '../../client/src/assets', assetPath)
-    ];
-    
-    for (const fullPath of possiblePaths) {
-      if (fs.existsSync(fullPath)) {
-        // Determine correct MIME type based on file extension
-        const ext = path.extname(assetPath).toLowerCase();
-        let contentType = 'application/octet-stream';
-        
-        if (['.jpg', '.jpeg'].includes(ext)) {
-          contentType = 'image/jpeg';
-        } else if (ext === '.png') {
-          contentType = 'image/png';
-        } else if (ext === '.gif') {
-          contentType = 'image/gif';
-        } else if (ext === '.svg') {
-          contentType = 'image/svg+xml';
-        } else if (ext === '.js') {
-          contentType = 'application/javascript';
-        } else if (ext === '.css') {
-          contentType = 'text/css';
-        }
-        
-        res.set({
-          'Content-Type': contentType,
-          'Cache-Control': 'public, max-age=3600',
-          'Access-Control-Allow-Origin': '*'
-        });
-        return res.sendFile(fullPath);
-      }
-    }
-    
-    console.log('Asset not found in any path:', assetPath);
-    res.status(404).json({ error: 'Asset not found' });
-  });
+  // DISABLED: Serve static assets from client/src/assets - Let Vite handle this
+  // app.get("/src/assets/:assetPath", (req: any, res: any) => {
+  //   // Temporarily disabled to prevent MIME type conflicts with Vite
+  // });
 
-  // Serve object storage files (public access for avatars) and fallback to assets
-  app.get("/objects/:objectPath(*)", async (req: any, res: any) => {
-    try {
-      console.log('Serving file - Path:', req.path);
-      
-      const { objectStorageService, ObjectNotFoundError } = await import('./objectStorage');
-      try {
-        const objectFile = await objectStorageService.getObjectEntityFile(req.path);
-        
-        // Set cache headers for better performance
-        res.set({
-          'Cache-Control': 'public, max-age=3600', // 1 hour cache
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET',
-          'Access-Control-Allow-Headers': 'Content-Type'
-        });
-        
-        await objectStorageService.downloadObject(objectFile, res);
-      } catch (objectError) {
-        // If object not found, serve a default image from assets
-        console.log('Object not found, serving default image');
-        res.redirect('/src/assets/tesla-model3.jpg');
-      }
-    } catch (error: any) {
-      console.error('Error serving object:', error);
-      res.redirect('/src/assets/tesla-model3.jpg');
-    }
-  });
+  // DISABLED: Serve object storage files - preventing MIME conflicts
+  // app.get("/objects/:objectPath(*)", async (req: any, res: any) => {
+  //   // Temporarily disabled to prevent MIME type conflicts with Vite
+  // });
 
   // Get user profile
   app.get("/api/profile", authenticateToken, async (req: any, res: any) => {
