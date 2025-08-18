@@ -1,0 +1,17 @@
+motherboard-i5.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+modern-sofa.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+iphone-15-pro.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+mountain-bike.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+tesla-model3.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+tractor-holland.jpg:1 Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "image/jpeg". Strict MIME type checking is enforced for module scripts per HTML spec.
+(index):165 SW registered:  ServiceWorkerRegistration {installing: null, waiting: ServiceWorker, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/', …}
+client:536 WebSocket connection to 'wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=P-pR-YlvDG2-' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=P-pR-YlvDG2-' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555

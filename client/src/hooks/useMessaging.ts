@@ -44,16 +44,23 @@ export function useMessaging() {
     // Construct WebSocket URL safely
     let wsUrl: string;
     
-    // For Replit environments or when no port is specified, don't include port
-    if (!port || port === '443' || port === '80' || hostname.includes('replit.dev')) {
+    // For Replit environments, production, or when no port is specified
+    if (!port || port === '443' || port === '80' || hostname.includes('replit.dev') || hostname.includes('riker.prod.repl.run')) {
       wsUrl = `${protocol}//${hostname}/ws?userId=${user.id}`;
     } else {
-      // For development with custom ports
+      // For development with custom ports (like localhost:5000)
       wsUrl = `${protocol}//${hostname}:${port}/ws?userId=${user.id}`;
     }
     
     console.log('WebSocket Host:', hostname, 'Port:', port, 'Final URL:', wsUrl);
     
+    // Validate WebSocket URL before creating connection
+    if (wsUrl.includes('undefined') || !wsUrl.includes('ws')) {
+      console.error('Invalid WebSocket URL detected:', wsUrl);
+      setIsConnected(false);
+      return;
+    }
+
     try {
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;

@@ -915,8 +915,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     for (const fullPath of possiblePaths) {
       if (fs.existsSync(fullPath)) {
+        // Determine correct MIME type based on file extension
+        const ext = path.extname(assetPath).toLowerCase();
+        let contentType = 'application/octet-stream';
+        
+        if (['.jpg', '.jpeg'].includes(ext)) {
+          contentType = 'image/jpeg';
+        } else if (ext === '.png') {
+          contentType = 'image/png';
+        } else if (ext === '.gif') {
+          contentType = 'image/gif';
+        } else if (ext === '.svg') {
+          contentType = 'image/svg+xml';
+        } else if (ext === '.js') {
+          contentType = 'application/javascript';
+        } else if (ext === '.css') {
+          contentType = 'text/css';
+        }
+        
         res.set({
-          'Content-Type': 'image/jpeg',
+          'Content-Type': contentType,
           'Cache-Control': 'public, max-age=3600',
           'Access-Control-Allow-Origin': '*'
         });
