@@ -11,26 +11,16 @@ import { useLanguage } from "@/hooks/useLanguage";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 
-// Import product images
-import teslaImage from "@/assets/tesla-model3.jpg";
-import motherboardImage from "@/assets/motherboard-i5.jpg";
-import sofaImage from "@/assets/modern-sofa.jpg";
-import bikeImage from "@/assets/mountain-bike.jpg";
-import tractorImage from "@/assets/tractor-holland.jpg";
-import iphoneImage from "@/assets/iphone-15-pro.jpg";
-import ad1Image from "@/assets/ad-1.jpeg";
-import ad2Image from "@/assets/ad-2.jpeg";
-
-// Map image URLs to imported images
+// Map image URLs to static URLs (avoiding dynamic imports)
 const imageMap: { [key: string]: string } = {
-  '/src/assets/tesla-model3.jpg': teslaImage,
-  '/src/assets/motherboard-i5.jpg': motherboardImage,
-  '/src/assets/modern-sofa.jpg': sofaImage,
-  '/src/assets/mountain-bike.jpg': bikeImage,
-  '/src/assets/tractor-holland.jpg': tractorImage,
-  '/src/assets/iphone-15-pro.jpg': iphoneImage,
-  '/src/assets/ad-1.jpeg': ad1Image,
-  '/src/assets/ad-2.jpeg': ad2Image,
+  '/src/assets/tesla-model3.jpg': '/src/assets/tesla-model3.jpg',
+  '/src/assets/motherboard-i5.jpg': '/src/assets/motherboard-i5.jpg',
+  '/src/assets/modern-sofa.jpg': '/src/assets/modern-sofa.jpg',
+  '/src/assets/mountain-bike.jpg': '/src/assets/mountain-bike.jpg',
+  '/src/assets/tractor-holland.jpg': '/src/assets/tractor-holland.jpg',
+  '/src/assets/iphone-15-pro.jpg': '/src/assets/iphone-15-pro.jpg',
+  '/src/assets/ad-1.jpeg': '/src/assets/ad-1.jpeg',
+  '/src/assets/ad-2.jpeg': '/src/assets/ad-2.jpeg',
 };
 
 interface Product {

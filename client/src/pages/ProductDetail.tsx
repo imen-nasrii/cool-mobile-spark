@@ -17,13 +17,15 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
 import { useLanguage } from "@/hooks/useLanguage";
 
-// Default images for products
-import teslaImage from "@/assets/tesla-model3.jpg";
-import motherboardImage from "@/assets/motherboard-i5.jpg";
-import sofaImage from "@/assets/modern-sofa.jpg";
-import phoneImage from "@/assets/iphone-15-pro.jpg";
-import bikeImage from "@/assets/mountain-bike.jpg";
-import tractorImage from "@/assets/tractor-holland.jpg";
+// Default images for products (using static URLs)
+const defaultImageUrls = [
+  '/src/assets/tesla-model3.jpg',
+  '/src/assets/motherboard-i5.jpg', 
+  '/src/assets/modern-sofa.jpg',
+  '/src/assets/iphone-15-pro.jpg',
+  '/src/assets/mountain-bike.jpg',
+  '/src/assets/tractor-holland.jpg'
+];
 
 interface ProductDetailProps {
   productId?: string | null;
@@ -44,7 +46,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const { toast } = useToast();
   const { t } = useLanguage();
 
-  const defaultImages = [teslaImage, motherboardImage, sofaImage, phoneImage, bikeImage, tractorImage];
+  const defaultImages = defaultImageUrls;
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);

@@ -5,34 +5,31 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import { useState } from "react";
-import teslaImage from "@/assets/tesla-model3.jpg";
-import sofaImage from "@/assets/modern-sofa.jpg";
-import iphoneImage from "@/assets/iphone-15-pro.jpg";
-import motherboardImage from "@/assets/motherboard-i5.jpg";
-import bikeImage from "@/assets/mountain-bike.jpg";
-
-// Get correct image based on category and path
+// Get correct image based on category and path using static URLs
 const getCorrectImage = (imagePath: string, category: string) => {
   if (!imagePath || imagePath.startsWith('data:image')) {
     return null;
   }
   
-  if (imagePath.includes('/src/assets/')) {
+  // Use static asset URLs instead of dynamic imports
+  const baseUrl = window.location.origin;
+  
+  if (imagePath.includes('/src/assets/') || !imagePath.startsWith('http')) {
     switch (category?.toLowerCase()) {
       case 'voiture':
       case 'auto':
-        return teslaImage;
+        return `${baseUrl}/src/assets/tesla-model3.jpg`;
       case 'immobilier':
       case 'meubles':
-        return sofaImage;
+        return `${baseUrl}/src/assets/modern-sofa.jpg`;
       case 'emplois':
-        return iphoneImage;
+        return `${baseUrl}/src/assets/iphone-15-pro.jpg`;
       case 'électronique':
-        return motherboardImage;
+        return `${baseUrl}/src/assets/motherboard-i5.jpg`;
       case 'sport':
-        return bikeImage;
+        return `${baseUrl}/src/assets/mountain-bike.jpg`;
       default:
-        return teslaImage;
+        return `${baseUrl}/src/assets/tesla-model3.jpg`;
     }
   }
   
