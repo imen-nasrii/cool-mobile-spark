@@ -10,7 +10,8 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 (async () => {
   const server = await registerRoutes(app);
 
-  // Always use production mode to avoid Vite conflicts
+  // Force production mode to avoid Vite dev conflicts
+  process.env.NODE_ENV = 'production';
   const staticDir = path.join(process.cwd(), 'dist/public');
   console.log('Serving static files from:', staticDir);
   
