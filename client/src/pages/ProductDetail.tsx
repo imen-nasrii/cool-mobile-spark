@@ -367,64 +367,60 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       console.log('Car details found:', carDetails.length, carDetails);
 
       return (
-        <div className="space-y-4">
-          {/* Basic car details */}
-          <Card className="glass-card">
-            <CardContent className="p-4 md:p-6">
-              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Caractéristiques du véhicule
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                {carDetails.map((detail, index) => (
-                  <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                    <detail.icon size={18} className={`${detail.color} flex-shrink-0`} />
-                    <div className="flex-1">
-                      <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                        {detail.label}
-                      </span>
-                      <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                        {detail.value}
-                      </div>
+        <div className="border-t border-gray-200 pt-4 space-y-4">
+          {/* Basic car details - Sans conteneur */}
+          <div>
+            <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Caractéristiques du véhicule
+            </h3>
+            <div className="grid grid-cols-1 gap-3">
+              {carDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+                  <detail.icon size={18} className={`${detail.color} flex-shrink-0`} />
+                  <div className="flex-1">
+                    <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          {/* Equipment section with all features */}
-          <Card className="glass-card">
-            <CardContent className="p-4 md:p-6">
-              <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Équipements disponibles
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {equipmentList.map((equipment) => (
-                  <div 
-                    key={equipment.key} 
-                    className={`flex items-center gap-2 p-3 rounded-lg border transition-all ${
-                      equipment.available 
-                        ? 'bg-green-50 border-green-200 text-green-800' 
-                        : 'bg-gray-50 border-gray-200 text-gray-500'
-                    }`}
+          {/* Equipment section - Sans conteneur */}
+          <div>
+            <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Équipements disponibles
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              {equipmentList.map((equipment) => (
+                <div 
+                  key={equipment.key} 
+                  className={`flex items-center gap-2 py-2 px-3 rounded border ${
+                    equipment.available 
+                      ? 'bg-green-50 border-green-200 text-green-800' 
+                      : 'bg-gray-50 border-gray-200 text-gray-500'
+                  }`}
+                >
+                  <span 
+                    className="text-lg"
+                    style={{ 
+                      filter: equipment.available ? 'none' : 'grayscale(100%) brightness(0.7)',
+                      color: equipment.available ? '#000' : '#999'
+                    }}
                   >
-                    <span 
-                      className="text-lg"
-                      style={{ 
-                        filter: equipment.available ? 'none' : 'grayscale(100%) brightness(0.7)',
-                        color: equipment.available ? '#000' : '#999'
-                      }}
-                    >
-                      {equipment.icon}
-                    </span>
-                    <span className="text-xs font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {equipment.label}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                    {equipment.icon}
+                  </span>
+                  <span className="text-xs font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {equipment.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       );
     }
@@ -541,9 +537,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5 pb-20 md:pb-0 tomati-font-override">
+    <div className="min-h-screen bg-white pb-20 md:pb-0" style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Mobile Header */}
-      <div className="md:hidden sticky top-0 bg-white/90 backdrop-blur-md border-b border-gray-100 z-40 px-4 py-3">
+      <div className="md:hidden sticky top-0 bg-white border-b border-gray-200 z-40 px-4 py-3">
         <div className="flex items-center justify-between">
           <Button 
             variant="ghost" 
@@ -558,25 +554,17 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="ghost" 
               size="sm" 
-              className="p-2 hover:bg-blue-50 hover:text-blue-600"
+              className="p-2 hover:bg-gray-100 text-black"
               onClick={handleShare}
             >
               <Share size={18} />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className={`p-2 hover:bg-red-50 ${isLiked ? "text-red-600" : "hover:text-red-600"}`}
-              onClick={handleLike}
-            >
-              <Heart size={18} className={isLiked ? "fill-current" : ""} />
             </Button>
           </div>
         </div>
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden md:block sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100 z-40 px-6 py-4">
+      <div className="hidden md:block sticky top-0 bg-white border-b border-gray-200 z-40 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button 
@@ -587,15 +575,15 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             >
               <ArrowLeft size={20} />
             </Button>
-            <h1 className="text-2xl font-semibold text-foreground">
-              Product Details
+            <h1 className="text-2xl font-semibold text-black">
+              Détails du produit
             </h1>
           </div>
           
           <div className="flex gap-3">
             {isOwner && (
               <>
-                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)}>
+                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className="border-black text-black hover:bg-gray-100">
                   <Edit size={16} />
                 </Button>
                 <Button 
@@ -603,7 +591,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   size="sm" 
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
-                  className="hover:bg-red-50 hover:text-red-600 hover:border-red-300"
+                  className="border-red-500 text-red-500 hover:bg-red-50"
                 >
                   <Trash2 size={16} />
                 </Button>
@@ -612,21 +600,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2 hover:bg-blue-50 hover:text-blue-600"
+              className="gap-2 border-black text-black hover:bg-gray-100"
               onClick={handleShare}
             >
               <Share size={16} />
               Partager
             </Button>
-            <LikeButton 
-              productId={product.id}
-              initialLikeCount={product.like_count || 0}
-              isPromoted={product.is_promoted}
-              size="md"
-              variant="outline"
-              showCount={true}
-              showPromotedBadge={true}
-            />
           </div>
         </div>
       </div>
@@ -645,31 +624,24 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           />
         </div>
 
-        {/* Mobile Content */}
-        <div className="px-4 py-4 space-y-4">
-          {/* Price & Title */}
-          <div className="space-y-3">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>{product.title}</h2>
-              <div className="text-2xl font-bold text-primary mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                {product.is_free ? 'Gratuit' : formatPrice(product.price)}
-              </div>
-              <div className="flex gap-2 mb-3">
-                <Badge variant="secondary">{product.category}</Badge>
-                {product.is_free && (
-                  <Badge variant="outline" className="text-green-600 border-green-600">
-                    Gratuit
-                  </Badge>
-                )}
-                {product.is_reserved && (
-                  <Badge variant="outline" className="text-red-600 border-red-600">
-                    Réservé
-                  </Badge>
-                )}
-              </div>
+        {/* Mobile Content - Sans conteneurs */}
+        <div className="px-4 py-4 space-y-6">
+          {/* Titre et Prix */}
+          <div>
+            <h2 className="text-2xl font-bold text-black mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>{product.title}</h2>
+            <div className="text-3xl font-bold text-red-500 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+              {product.is_free ? 'Gratuit' : formatPrice(product.price)}
             </div>
-            
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <div className="flex gap-2 mb-3">
+              <span className="px-2 py-1 bg-gray-100 text-black text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
+              {product.is_free && (
+                <span className="px-2 py-1 bg-green-100 text-green-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Gratuit</span>
+              )}
+              {product.is_reserved && (
+                <span className="px-2 py-1 bg-red-100 text-red-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Réservé</span>
+              )}
+            </div>
+            <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
               <MapPin size={14} />
               <span>{product.location}</span>
               <span>•</span>
@@ -677,59 +649,94 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </div>
           </div>
 
-          {/* Product Details with Icons */}
-          {renderProductDetails()}
-
-          {/* Description with Car Details */}
-          <Card>
-            <CardContent className="p-4">
-              <h3 className="text-lg font-semibold text-foreground mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
-
-              
-              <p className="text-muted-foreground leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
-                {product.description || "Aucune description fournie."}
-              </p>
-            </CardContent>
-          </Card>
-
-          {/* Stats */}
-          <Card>
-            <CardContent className="p-4">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-xl font-bold text-primary">{product.like_count || 0}</div>
-                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
+          {/* Informations du Vendeur */}
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
+            <div className="flex items-start gap-3 mb-4">
+              <Avatar className="h-12 w-12 border-2 border-gray-200">
+                <AvatarFallback className="bg-gray-100 text-black font-semibold">
+                  {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="font-semibold text-black mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  {product.user_name || 'Utilisateur'}
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-primary">{product.view_count || 0}</div>
-                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
+                <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
                 </div>
-                <div>
-                  <div className="text-xl font-bold text-primary">
-                    {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
+                <div className="flex gap-4 text-sm text-gray-600">
+                  <div>
+                    <span className="font-medium text-black">Annonces:</span> {product.user_product_count || 1}
                   </div>
-                  <div className="text-xs text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
-                  {/* Interactive Rating Stars */}
-                  <div className="flex gap-1 mt-2 justify-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={cn(
-                          "w-4 h-4 cursor-pointer transition-colors",
-                          (hoveredRating || userRating) >= star
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300 hover:text-yellow-300"
-                        )}
-                        onClick={() => handleRating(star)}
-                        onMouseEnter={() => setHoveredRating(star)}
-                        onMouseLeave={() => setHoveredRating(0)}
-                      />
-                    ))}
+                  <div>
+                    <span className="font-medium text-black">Note:</span> ⭐ {(product.user_rating || 4.5).toFixed(1)}
                   </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => setShowChat(true)}
+                className="flex-1 bg-red-500 hover:bg-red-600 text-white border-0"
+                style={{ fontFamily: 'Arial, sans-serif' }}
+              >
+                <MessageCircle size={18} className="mr-2" />
+                Contacter
+              </Button>
+              <Button 
+                variant="outline" 
+                className="px-4 border-black text-black hover:bg-gray-100"
+                onClick={handleShare}
+              >
+                <Share size={18} />
+              </Button>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="border-t border-gray-200 pt-4">
+            <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
+            <p className="text-gray-600 leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
+              {product.description || "Aucune description fournie."}
+            </p>
+          </div>
+
+          {/* Caractéristiques du produit - Sans conteneurs */}
+          {renderProductDetails()}
+
+          {/* Statistiques */}
+          <div className="border-t border-gray-200 pt-4">
+            <div className="grid grid-cols-2 gap-6 text-center">
+              <div>
+                <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
+                <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-red-500">
+                  {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
+                </div>
+                <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
+                {/* Interactive Rating Stars */}
+                <div className="flex gap-1 mt-2 justify-center">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={cn(
+                        "w-4 h-4 cursor-pointer transition-colors",
+                        (hoveredRating || userRating) >= star
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300 hover:text-yellow-300"
+                      )}
+                      onClick={() => handleRating(star)}
+                      onMouseEnter={() => setHoveredRating(star)}
+                      onMouseLeave={() => setHoveredRating(0)}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Chat Mobile */}
           {showChat && !isOwner && (
