@@ -21,13 +21,16 @@ app.use(express.urlencoded({ extended: true }));
 
   // Serve static files from dist/public with proper MIME types
   const staticDir = path.join(process.cwd(), 'dist/public');
+  console.log('Static directory:', staticDir);
   app.use(express.static(staticDir, { 
     extensions: ["html"],
-    setHeaders: (res, path) => {
-      if (path.endsWith('.js')) {
+    maxAge: '1d',
+    setHeaders: (res, filePath) => {
+      console.log('Serving file:', filePath);
+      if (filePath.endsWith('.js')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
       }
-      if (path.endsWith('.css')) {
+      if (filePath.endsWith('.css')) {
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
       }
     }
