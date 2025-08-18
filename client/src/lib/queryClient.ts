@@ -5,7 +5,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 3 * 60 * 1000, // 3 minutes - reduced for fresher data
-      cacheTime: 10 * 60 * 1000, // 10 minutes in cache
+      gcTime: 10 * 60 * 1000, // 10 minutes in cache (renamed from cacheTime in v5)
       refetchOnWindowFocus: false,
       refetchOnReconnect: 'always',
       retry: 1, // Reduced retry attempts for faster failure handling

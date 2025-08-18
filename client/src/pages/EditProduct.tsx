@@ -60,11 +60,18 @@ export const EditProduct = ({ productId, onBack, onSave }: EditProductProps) => 
       });
 
       // Load existing images
-      const images = product.images ? JSON.parse(product.images) : [];
-      if (images.length > 0) {
-        setSelectedImages(images);
-      } else if (product.image_url) {
-        setSelectedImages([product.image_url]);
+      try {
+        const images = product.images ? JSON.parse(product.images) : [];
+        if (images.length > 0) {
+          setSelectedImages(images);
+        } else if (product.image_url) {
+          setSelectedImages([product.image_url]);
+        }
+      } catch (e) {
+        console.error('Error parsing product images:', e);
+        if (product.image_url) {
+          setSelectedImages([product.image_url]);
+        }
       }
     }
   }, [product]);

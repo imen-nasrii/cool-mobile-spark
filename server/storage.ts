@@ -306,10 +306,11 @@ export class DatabaseStorage implements IStorage {
     
     if (!product) return undefined;
     
-    // Map car database fields to frontend properties (explicitly typed as any for flexibility)
+    // Map car database fields to frontend properties
     return {
       ...product,
       year: product.car_year,
+      mileage: product.car_mileage,
       fuel_type: product.car_fuel_type,
       transmission: product.car_transmission,
       condition: product.car_condition,
@@ -322,9 +323,11 @@ export class DatabaseStorage implements IStorage {
       property_type: product.real_estate_type,
       // Job mappings
       contract_type: product.job_type,
+      job_sector: product.job_sector,
+      job_experience: product.job_experience,
       salary_range: product.job_salary_min && product.job_salary_max ? 
         `${product.job_salary_min}-${product.job_salary_max}€` : null
-    } as any;
+    } as Product;
   }
 
   async getUserProducts(userId: string): Promise<Product[]> {

@@ -614,8 +614,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         <div className="w-full">
           <ImageGallery 
             images={(() => {
-              const images = (product as any).images ? JSON.parse((product as any).images) : [];
-              return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
+              try {
+                const images = (product as any).images ? JSON.parse((product as any).images) : [];
+                return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
+              } catch (e) {
+                console.error('Error parsing product images:', e);
+                return product.image_url ? [product.image_url] : defaultImages.slice(0, 3);
+              }
             })()} 
             title={product.title}
             className="w-full aspect-square"
@@ -756,8 +761,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="sticky top-24 h-fit space-y-6">
             <ImageGallery 
               images={(() => {
-                const images = (product as any).images ? JSON.parse((product as any).images) : [];
-                return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
+                try {
+                  const images = (product as any).images ? JSON.parse((product as any).images) : [];
+                  return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
+                } catch (e) {
+                  console.error('Error parsing product images:', e);
+                  return product.image_url ? [product.image_url] : defaultImages.slice(0, 3);
+                }
               })()} 
               title={product.title}
               className="rounded-2xl shadow-xl w-full"

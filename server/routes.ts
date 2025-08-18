@@ -21,24 +21,20 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key-change-in-production";
+import { randomBytes } from 'crypto';
+
+const JWT_SECRET = process.env.JWT_SECRET || (() => {
+  console.warn('WARNING: JWT_SECRET not set in environment variables. Using random secret.');
+  return randomBytes(64).toString('hex');
+})();
 
 // Middleware to authenticate JWT tokens
 const authenticateToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  // Log for like endpoints and object upload endpoints to debug
-  if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
-    console.log('Auth request - Path:', req.path);
-    console.log('Auth request - Auth header:', authHeader);
-    console.log('Auth request - Token extracted:', token ? `Token present (${token.substring(0, 20)}...)` : 'No token');
-  }
 
   if (!token || token === 'null' || token === 'undefined') {
-    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
-      console.log('Auth request - No valid token provided');
-    }
     return res.status(401).json({ error: 'Access token required' });
   }
 
@@ -46,20 +42,11 @@ const authenticateToken = async (req: any, res: any, next: any) => {
     const decoded = jwt.verify(token, JWT_SECRET) as any;
     const user = await storage.getUser(decoded.userId);
     if (!user) {
-      if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
-        console.log('Auth request - User not found for userId:', decoded.userId);
-      }
       return res.status(401).json({ error: 'Invalid token' });
-    }
-    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
-      console.log('Auth request - User authenticated successfully:', user.email);
     }
     req.user = user;
     next();
   } catch (error) {
-    if (req.path.includes('/like') || req.path.includes('/objects/upload')) {
-      console.log('Auth request - Token verification failed:', error);
-    }
     return res.status(403).json({ error: 'Invalid token' });
   }
 };
@@ -252,6 +239,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const requestData = { ...req.body };
       if (requestData.car_equipment && Array.isArray(requestData.car_equipment)) {
         requestData.car_equipment = JSON.stringify(requestData.car_equipment);
+      }
+      if (requestData.job_benefits && Array.isArray(requestData.job_benefits)) {
+        requestData.job_benefits = JSON.stringify(requestData.job_benefits);
       }
       
       const productData = insertProductSchema.parse({
