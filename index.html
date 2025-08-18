@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>Tomati Market - Marketplace Tunisienne</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Plateforme de petites annonces tunisienne - Voitures, Immobilier, Emplois, Électronique" />
+    <meta name="theme-color" content="#ef4444" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Tomati" />
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: Arial, sans-serif; 
+            line-height: 1.6; 
+            color: black; 
+            background: white; 
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+        .header { background: #ef4444; color: white; padding: 24px 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .title { font-size: 2rem; font-weight: bold; margin: 0; }
+        .subtitle { font-size: 1.125rem; margin: 4px 0 0 0; }
+        .main { padding: 32px 0; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+        .section-title { font-size: 1.875rem; font-weight: bold; color: black; margin: 0; }
+        .count-badge { background: #ef4444; color: white; padding: 8px 16px; border-radius: 4px; font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+        .card { border: 2px solid black; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card-content { padding: 16px; }
+        .card-title { font-size: 1.25rem; font-weight: bold; color: black; margin: 0 0 8px 0; }
+        .card-price { font-size: 1.5rem; font-weight: bold; color: #ef4444; margin: 0 0 12px 0; }
+        .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .category-tag { background: black; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.875rem; }
+        .views { color: black; font-weight: bold; font-size: 0.875rem; }
+        .description { color: black; font-size: 0.875rem; margin-bottom: 12px; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; }
+        .location { color: black; font-weight: bold; font-size: 0.875rem; }
+        .btn { background: #ef4444; color: white; padding: 4px 12px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: #dc2626; }
+        .loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .loading-text { font-size: 1.5rem; font-weight: bold; color: #ef4444; }
+        .footer { background: black; color: white; padding: 16px 0; margin-top: 48px; text-align: center; }
+        .empty { text-align: center; padding: 64px 0; }
+        .empty-icon { font-size: 4rem; margin-bottom: 16px; }
+        .empty-title { font-size: 1.25rem; font-weight: bold; color: black; margin: 0 0 8px 0; }
+        .empty-subtitle { color: black; margin: 0; }
+        
+        /* PWA Install Banner */
+        .pwa-install-banner {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border: 3px solid #ef4444;
+            border-radius: 10px;
+            padding: 16px;
+            z-index: 1000;
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        .pwa-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .pwa-icon {
+            font-size: 2rem;
+            color: #ef4444;
+        }
+        
+        .pwa-text {
+            flex: 1;
+        }
+        
+        .pwa-text strong {
+            color: black;
+            font-size: 1.1rem;
+        }
+        
+        .pwa-text p {
+            color: #666;
+            margin: 4px 0 0 0;
+            font-size: 0.9rem;
+        }
+        
+        .pwa-button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .pwa-button:hover {
+            background: #dc2626;
+        }
+        
+        .pwa-dismiss {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .header .title { font-size: 1.5rem; }
+            .section-header { flex-direction: column; gap: 16px; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root">
+        <div class="loading">
+            <div class="loading-text">🍅 Chargement Tomati...</div>
+        </div>
+    </div>
+
+    <script>
+        // Application Tomati Mobile PWA
+        let products = [];
+        let loading = true;
+        let deferredPrompt;
+
+        // Données de démonstration
+        const demoProducts = [
+            { id: 1, title: 'Tesla Model 3', price: 85000, category: 'Auto', description: 'Voiture électrique haut de gamme', location: 'Tunis', image: 'tesla-model3.jpg', view_count: 123 },
+            { id: 2, title: 'iPhone 15 Pro', price: 3200, category: 'Électronique', description: 'Smartphone dernière génération', location: 'Sfax', image: 'iphone-15-pro.jpg', view_count: 89 },
+            { id: 3, title: 'Mountain Bike Trek', price: 850, category: 'Sport', description: 'VTT professionnel tout terrain', location: 'Sousse', image: 'mountain-bike.jpg', view_count: 45 },
+            { id: 4, title: 'Canapé Moderne', price: 1200, category: 'Meubles', description: 'Canapé 3 places en cuir italien', location: 'Ariana', image: 'modern-sofa.jpg', view_count: 67 },
+            { id: 5, title: 'Appartement 3 Pièces', price: 180000, category: 'Immobilier', description: 'Appartement neuf avec terrasse', location: 'Tunis', image: 'apartment.jpg', view_count: 234 },
+            { id: 6, title: 'Poste Développeur Web', price: 2500, category: 'Emplois', description: 'Développeur React/Node.js senior', location: 'Sfax', image: 'job-dev.jpg', view_count: 156 }
+        ];
+
+        function createProductCard(product) {
+            return `
+                <div class="card">
+                    <img 
+                        src="https://via.placeholder.com/300x200/ef4444/ffffff?text=${encodeURIComponent(product.category)}" 
+                        alt="${product.title}"
+                    />
+                    <div class="card-content">
+                        <h3 class="card-title">${product.title}</h3>
+                        <p class="card-price">${product.price.toLocaleString()} TND</p>
+                        <div class="card-meta">
+                            <span class="category-tag">${product.category}</span>
+                            <span class="views">👁 ${product.view_count || 0}</span>
+                        </div>
+                        <p class="description">${product.description}</p>
+                        <div class="card-footer">
+                            <span class="location">📍 ${product.location}</span>
+                            <button class="btn" onclick="showProduct(${product.id})">Voir</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                alert(`🍅 ${product.title}\n\n💰 Prix: ${product.price.toLocaleString()} TND\n📍 Localisation: ${product.location}\n👁 Vues: ${product.view_count}\n\n📝 ${product.description}`);
+            }
+        }
+
+        function renderApp() {
+            const root = document.getElementById('root');
+            
+            if (loading) {
+                return;
+            }
+
+            const productsHTML = products.map(createProductCard).join('');
+            const emptyHTML = products.length === 0 ? `
+                <div class="empty">
+                    <div class="empty-icon">🍅</div>
+                    <p class="empty-title">Aucun produit disponible</p>
+                    <p class="empty-subtitle">Vérifiez votre connexion</p>
+                </div>
+            ` : '';
+
+            root.innerHTML = `
+                <header class="header">
+                    <div class="container">
+                        <h1 class="title">🍅 tomati</h1>
+                        <p class="subtitle">Marketplace Tunisienne</p>
+                    </div>
+                </header>
+                
+                <main class="main">
+                    <div class="container">
+                        <div class="section-header">
+                            <h2 class="section-title">Produits Disponibles</h2>
+                            <div class="count-badge">${products.length} produits</div>
+                        </div>
+                        
+                        ${products.length > 0 ? `<div class="grid">${productsHTML}</div>` : emptyHTML}
+                    </div>
+                </main>
+                
+                <footer class="footer">
+                    <div class="container">
+                        <p>© 2025 Tomati Market - Marketplace Tunisienne</p>
+                        <p style="margin-top: 8px; opacity: 0.8;">Application PWA installable sur mobile</p>
+                    </div>
+                </footer>
+            `;
+        }
+
+        function loadProducts() {
+            // Charger les données de démonstration
+            products = demoProducts;
+            loading = false;
+            renderApp();
+            
+            // Tenter de charger les vraies données depuis l'API
+            fetch('/api/products')
+                .then(res => res.ok ? res.json() : Promise.reject())
+                .then(data => {
+                    if (data && data.length > 0) {
+                        products = data;
+                        renderApp();
+                    }
+                })
+                .catch(() => {
+                    console.log('Utilisation des données de démonstration');
+                });
+        }
+
+        // PWA Functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered:', registration))
+                    .catch(error => console.log('SW registration failed:', error));
+            });
+        }
+
+        // Gérer l'installation PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Créer bannière d'installation
+            const banner = document.createElement('div');
+            banner.className = 'pwa-install-banner';
+            banner.innerHTML = `
+                <div class="pwa-content">
+                    <div class="pwa-icon">📱</div>
+                    <div class="pwa-text">
+                        <strong>Installer Tomati</strong>
+                        <p>Accédez rapidement à vos annonces</p>
+                    </div>
+                    <button id="install-btn" class="pwa-button">Installer</button>
+                    <button id="dismiss-btn" class="pwa-dismiss">×</button>
+                </div>
+            `;
+            document.body.appendChild(banner);
+            
+            // Événements
+            document.getElementById('install-btn').onclick = async () => {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`Installation: ${outcome}`);
+                banner.remove();
+            };
+            
+            document.getElementById('dismiss-btn').onclick = () => {
+                banner.remove();
+                localStorage.setItem('pwa-dismissed', 'true');
+            };
+        });
+
+        // Initialiser l'application
+        loadProducts();
+    </script>
+</body>
+</html>
