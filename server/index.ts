@@ -19,16 +19,21 @@ app.use(express.urlencoded({ extended: true }));
     }
   });
 
-  // Serve static files from dist/public with proper MIME types
+  // Always serve static files from dist/public (built version)
   const staticDir = path.join(process.cwd(), 'dist/public');
+  
+  // Static files middleware
   app.use(express.static(staticDir, { 
     extensions: ["html"],
-    setHeaders: (res, path) => {
-      if (path.endsWith('.js')) {
+    setHeaders: (res, filePath) => {
+      if (filePath.endsWith('.js')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
       }
-      if (path.endsWith('.css')) {
+      if (filePath.endsWith('.css')) {
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
+      }
+      if (filePath.endsWith('.html')) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
       }
     }
   }));
@@ -38,7 +43,8 @@ app.use(express.urlencoded({ extended: true }));
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'API route not found' });
     }
-    res.sendFile(path.join(staticDir, "index.html"));
+    const indexPath = path.join(staticDir, "index.html");
+    res.sendFile(indexPath);
   });
 
   const port = parseInt(process.env.PORT || "5000", 10);

@@ -367,54 +367,55 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       console.log('Car details found:', carDetails.length, carDetails);
 
       return (
-        <div className="border-t border-gray-200 pt-4 space-y-4">
-          {/* Basic car details - Sans conteneur */}
+        <div className="pt-4 space-y-4">
+          {/* Basic car details - Complètement plat */}
           <div>
             <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Caractéristiques du véhicule
             </h3>
-            <div className="grid grid-cols-1 gap-3">
+            <div className="space-y-2">
               {carDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
-                  <detail.icon size={18} className={`${detail.color} flex-shrink-0`} />
+                <div key={index} className="flex items-center gap-3 py-1">
+                  <detail.icon size={18} className="text-black flex-shrink-0" />
                   <div className="flex-1">
                     <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
+                      {detail.label}: 
                     </span>
-                    <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <span className="text-sm font-medium text-black ml-2" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.value}
-                    </div>
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Equipment section - Sans conteneur */}
+          {/* Equipment section - Complètement plat */}
           <div>
             <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Équipements disponibles
             </h3>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="space-y-1">
               {equipmentList.map((equipment) => (
                 <div 
                   key={equipment.key} 
-                  className={`flex items-center gap-2 py-2 px-3 rounded border ${
-                    equipment.available 
-                      ? 'bg-green-50 border-green-200 text-green-800' 
-                      : 'bg-gray-50 border-gray-200 text-gray-500'
-                  }`}
+                  className="flex items-center gap-2 py-1"
                 >
                   <span 
                     className="text-lg"
                     style={{ 
-                      filter: equipment.available ? 'none' : 'grayscale(100%) brightness(0.7)',
                       color: equipment.available ? '#000' : '#999'
                     }}
                   >
                     {equipment.icon}
                   </span>
-                  <span className="text-xs font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  <span 
+                    className="text-sm" 
+                    style={{ 
+                      fontFamily: 'Arial, sans-serif',
+                      color: equipment.available ? '#000' : '#999'
+                    }}
+                  >
                     {equipment.label}
                   </span>
                 </div>
@@ -443,28 +444,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (realEstateDetails.length === 0) return null;
 
       return (
-        <Card className="glass-card">
-          <CardContent className="p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div className="pt-4 space-y-4">
+          {/* Real Estate details - Complètement plat */}
+          <div>
+            <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Caractéristiques du bien
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-2">
               {realEstateDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                <div key={index} className="flex items-center gap-3 py-1">
+                  <detail.icon size={18} className="text-black flex-shrink-0" />
                   <div className="flex-1">
-                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
+                    <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}: 
                     </span>
-                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <span className="text-sm font-medium text-black ml-2" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.value}
-                    </div>
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       );
     }
 
@@ -484,28 +486,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (jobDetails.length === 0) return null;
 
       return (
-        <Card className="glass-card">
-          <CardContent className="p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div className="pt-4 space-y-4">
+          {/* Job details - Complètement plat */}
+          <div>
+            <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Détails de l'offre d'emploi
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="space-y-2">
               {jobDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                <div key={index} className="flex items-center gap-3 py-1">
+                  <detail.icon size={18} className="text-black flex-shrink-0" />
                   <div className="flex-1">
-                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
+                    <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}: 
                     </span>
-                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    <span className="text-sm font-medium text-black ml-2" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.value}
-                    </div>
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       );
     }
 
@@ -649,23 +652,21 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </div>
           </div>
 
-          {/* Informations du Vendeur */}
-          <div className="border-t border-gray-200 pt-4">
+          {/* Informations du Vendeur - Complètement plat */}
+          <div className="pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
             <div className="flex items-start gap-3 mb-4">
-              <Avatar className="h-12 w-12 border-2 border-gray-200">
-                <AvatarFallback className="bg-gray-100 text-black font-semibold">
-                  {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
-                </AvatarFallback>
-              </Avatar>
+              <div className="h-12 w-12 bg-gray-200 flex items-center justify-center text-black font-bold text-lg">
+                {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
+              </div>
               <div className="flex-1">
-                <div className="font-semibold text-black mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
+                <div className="font-bold text-black mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
                   {product.user_name || 'Utilisateur'}
                 </div>
                 <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
                   Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
                 </div>
-                <div className="flex gap-4 text-sm text-gray-600">
+                <div className="space-y-1 text-sm text-gray-600">
                   <div>
                     <span className="font-medium text-black">Annonces:</span> {product.user_product_count || 1}
                   </div>
@@ -676,38 +677,38 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </div>
             </div>
             <div className="flex gap-3">
-              <Button 
+              <button 
                 onClick={() => setShowChat(true)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white border-0"
+                className="flex-1 bg-red-500 text-white px-4 py-3 font-medium"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               >
-                <MessageCircle size={18} className="mr-2" />
+                <MessageCircle size={18} className="mr-2 inline" />
                 Contacter
-              </Button>
-              <Button 
-                variant="outline" 
-                className="px-4 border-black text-black hover:bg-gray-100"
+              </button>
+              <button 
+                className="px-4 py-3 bg-white text-black font-medium"
                 onClick={handleShare}
+                style={{ fontFamily: 'Arial, sans-serif' }}
               >
                 <Share size={18} />
-              </Button>
+              </button>
             </div>
           </div>
 
-          {/* Description */}
-          <div className="border-t border-gray-200 pt-4">
+          {/* Description - Complètement plat */}
+          <div className="pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
             <p className="text-gray-600 leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
               {product.description || "Aucune description fournie."}
             </p>
           </div>
 
-          {/* Caractéristiques du produit - Sans conteneurs */}
+          {/* Caractéristiques du produit - Complètement plat */}
           {renderProductDetails()}
 
-          {/* Statistiques */}
-          <div className="border-t border-gray-200 pt-4">
-            <div className="grid grid-cols-2 gap-6 text-center">
+          {/* Statistiques - Complètement plat */}
+          <div className="pt-4">
+            <div className="flex justify-around text-center">
               <div>
                 <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
                 <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
@@ -717,16 +718,16 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
                 </div>
                 <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
-                {/* Interactive Rating Stars */}
+                {/* Interactive Rating Stars - Plat */}
                 <div className="flex gap-1 mt-2 justify-center">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={star}
                       className={cn(
-                        "w-4 h-4 cursor-pointer transition-colors",
+                        "w-4 h-4 cursor-pointer",
                         (hoveredRating || userRating) >= star
                           ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300 hover:text-yellow-300"
+                          : "text-gray-300"
                       )}
                       onClick={() => handleRating(star)}
                       onMouseEnter={() => setHoveredRating(star)}
