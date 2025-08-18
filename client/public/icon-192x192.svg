@@ -1,7 +1,0 @@
-<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="192" height="192" rx="20" fill="#ef4444"/>
-  <circle cx="96" cy="70" r="35" fill="white"/>
-  <path d="M96 40 L85 55 L96 70 L107 55 Z" fill="#22c55e"/>
-  <text x="96" y="130" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">tomati</text>
-  <text x="96" y="150" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="white" opacity="0.8">Marketplace</text>
-</svg>

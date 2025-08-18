@@ -1,109 +1,39 @@
 {
-  "name": "Tomati Market - Marketplace Tunisienne",
+  "name": "Tomati Market",
   "short_name": "Tomati",
-  "description": "Plateforme de petites annonces tunisienne - Voitures, Immobilier, Emplois, Électronique",
+  "description": "Plateforme de petites annonces en Tunisie",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ef4444",
-  "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "fr",
-  "categories": ["shopping", "business"],
+  "orientation": "portrait",
   "icons": [
     {
-      "src": "/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-192x192.png",
+      "src": "/tomati-logo.jpg",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "type": "image/jpeg"
     },
     {
-      "src": "/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-512x512.png",
+      "src": "/tomati-logo.jpg",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "type": "image/jpeg"
     }
   ],
+  "categories": ["shopping", "business"],
   "shortcuts": [
     {
-      "name": "Rechercher Auto",
-      "short_name": "Auto",
-      "description": "Voir les voitures disponibles",
-      "url": "/?category=auto",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Immobilier",
-      "short_name": "Immo",
-      "description": "Voir les biens immobiliers",
-      "url": "/?category=immobilier",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Emplois",
-      "short_name": "Emploi",
-      "description": "Chercher un emploi",
-      "url": "/?category=emploi",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
-    },
-    {
-      "name": "Ajouter Annonce",
+      "name": "Publier une annonce",
       "short_name": "Publier",
-      "description": "Publier une nouvelle annonce",
-      "url": "/add",
-      "icons": [{ "src": "/icon-96x96.png", "sizes": "96x96" }]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "Tomati Market - Vue d'ensemble"
+      "description": "Créer une nouvelle annonce",
+      "url": "/add?category=auto",
+      "icons": [{ "src": "/icons/add-192x192.png", "sizes": "192x192" }]
     },
     {
-      "src": "/screenshot-narrow.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Tomati Market - Mobile"
+      "name": "Mes messages",
+      "short_name": "Messages",
+      "description": "Voir mes conversations",
+      "url": "/messages",
+      "icons": [{ "src": "/icons/messages-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

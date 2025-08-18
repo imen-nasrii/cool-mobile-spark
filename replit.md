@@ -141,14 +141,3 @@ The platform is built with a clear separation between client and server. The fro
     * Advertisement system with selective labeling
   - **Production environment fully stable and accessible at https://tomati.org**
   - **All core functionality operational in HTTPS with proper SSL security**
-- **Transformed into Progressive Web App (PWA) for mobile installation:**
-  - **Date: August 17, 2025**
-  - Created complete PWA configuration with manifest.json for app store requirements
-  - Implemented Service Worker for offline functionality and caching strategy
-  - Added automatic installation banner for Chrome/Android users
-  - Generated high-quality SVG icons (192x192, 512x512) with Tomati branding
-  - PWA features: standalone display mode, push notifications, app shortcuts
-  - Mobile-optimized viewport and touch interactions
-  - Background/theme colors configured for native app appearance
-  - Cache-first strategy for improved performance and offline access
-  - **Application ready for installation as native mobile app on Android/iOS**
