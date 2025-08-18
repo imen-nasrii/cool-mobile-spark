@@ -26,10 +26,14 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
     }
   }));
   
-  // SPA fallback
+  // SPA fallback - only for non-asset routes
   app.get("*", (req, res) => {
     if (req.path.startsWith('/api/')) {
       return res.status(404).json({ error: 'API route not found' });
+    }
+    // Don't serve index.html for asset requests
+    if (req.path.startsWith('/assets/')) {
+      return res.status(404).send('Asset not found');
     }
     res.sendFile(path.join(staticDir, "index.html"));
   });
