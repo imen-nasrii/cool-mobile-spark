@@ -350,33 +350,35 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       console.log('Equipment from database:', selectedEquipment);
       
       const equipmentList = [
-        { key: 'seats_ventilated', icon: '🪑', label: 'Sièges ventilés', available: selectedEquipment.includes('seats_ventilated') },
-        { key: 'steering_heated', icon: '🔥', label: 'Volant chauffant', available: selectedEquipment.includes('steering_heated') },
-        { key: 'navigation', icon: '🧭', label: 'Navigation', available: selectedEquipment.includes('navigation') },
-        { key: 'speed_regulator', icon: '⏱️', label: 'Régulateur de vitesse', available: selectedEquipment.includes('speed_regulator') },
-        { key: 'parking_sensors', icon: '📡', label: 'Capteurs stationnement', available: selectedEquipment.includes('parking_sensors') },
-        { key: 'camera_rear', icon: '📹', label: 'Caméra arrière', available: selectedEquipment.includes('camera_rear') },
-        { key: 'traffic_aid', icon: '🛡️', label: 'Aide trafic transversal', available: selectedEquipment.includes('traffic_aid') },
-        { key: 'emergency_brake', icon: '🛑', label: 'Freinage d\'urgence', available: selectedEquipment.includes('emergency_brake') },
-        { key: 'view_360', icon: '👁️', label: 'Vue 360°', available: selectedEquipment.includes('view_360') },
-        { key: 'voice_alert', icon: '🛣️', label: 'Avertissement voie', available: selectedEquipment.includes('voice_alert') },
-        { key: 'roof_opening', icon: '☀️', label: 'Toit ouvrant', available: selectedEquipment.includes('roof_opening') },
-        { key: 'smoking_allowed', icon: '🚭', label: 'Fumeur autorisé', available: selectedEquipment.includes('smoking_allowed') }
+        { key: 'abs', icon: '🛡️', label: 'ABS', available: selectedEquipment.includes('abs') || true },
+        { key: 'direction_assistee', icon: '🔄', label: 'Direction assistée', available: selectedEquipment.includes('direction_assistee') || true },
+        { key: 'climatisation', icon: '❄️', label: 'Climatisation', available: selectedEquipment.includes('climatisation') || true },
+        { key: 'esp', icon: '⚡', label: 'ESP', available: selectedEquipment.includes('esp') || true },
+        { key: 'vitres_electriques', icon: '🪟', label: 'Vitres électriques', available: selectedEquipment.includes('vitres_electriques') || true },
+        { key: 'fermeture_centrale', icon: '🔒', label: 'Fermeture centrale', available: selectedEquipment.includes('fermeture_centrale') || true },
+        { key: 'airbags', icon: '💨', label: 'Airbags', available: selectedEquipment.includes('airbags') || true },
+        { key: 'mp3_bluetooth', icon: '🎵', label: 'MP3 Bluetooth', available: selectedEquipment.includes('mp3_bluetooth') || true },
+        { key: 'antipatinage', icon: '⚙️', label: 'Antipatinage', available: selectedEquipment.includes('antipatinage') || true },
+        { key: 'limiteur_vitesse', icon: '⏱️', label: 'Limiteur De Vitesse', available: selectedEquipment.includes('limiteur_vitesse') || true },
+        { key: 'regulateur_vitesse', icon: '🎯', label: 'Régulateur de vitesse', available: selectedEquipment.includes('regulateur_vitesse') || true },
+        { key: 'sieges_ventiles', icon: '🪑', label: 'Sièges ventilés', available: selectedEquipment.includes('sieges_ventiles') || false }
       ];
 
       console.log('Car details found:', carDetails.length, carDetails);
 
       return (
-        <div className="border-t border-gray-200 pt-4 space-y-4">
-          {/* Basic car details - Sans conteneur */}
+        <div className="border-t border-gray-200 pt-4">
+          {/* Toutes les infos dans un seul conteneur - Design plat */}
           <div>
             <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Caractéristiques du véhicule
             </h3>
-            <div className="grid grid-cols-1 gap-3">
+            
+            {/* Détails du véhicule */}
+            <div className="grid grid-cols-1 gap-2 mb-6">
               {carDetails.map((detail, index) => (
                 <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
-                  <detail.icon size={18} className={`${detail.color} flex-shrink-0`} />
+                  <detail.icon size={18} className="text-black flex-shrink-0" />
                   <div className="flex-1">
                     <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
                       {detail.label}
@@ -388,32 +390,31 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 </div>
               ))}
             </div>
-          </div>
 
-          {/* Equipment section - Sans conteneur */}
-          <div>
             <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
               Équipements disponibles
             </h3>
+            
+            {/* Équipements dans le même conteneur */}
             <div className="grid grid-cols-2 gap-2">
               {equipmentList.map((equipment) => (
                 <div 
                   key={equipment.key} 
-                  className="flex items-center gap-2 py-2 px-3 border border-gray-200"
+                  className="flex items-center gap-2 py-3 px-3 border border-gray-200"
                   style={{
-                    backgroundColor: equipment.available ? '#fff' : '#f5f5f5',
+                    backgroundColor: '#fff',
                     color: equipment.available ? '#000' : '#666'
                   }}
                 >
                   <span 
-                    className="text-lg"
+                    className="text-base"
                     style={{ 
                       color: equipment.available ? '#000' : '#999'
                     }}
                   >
                     {equipment.icon}
                   </span>
-                  <span className="text-xs font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  <span className="text-sm font-medium" style={{ fontFamily: 'Arial, sans-serif' }}>
                     {equipment.label}
                   </span>
                 </div>
@@ -442,28 +443,26 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (realEstateDetails.length === 0) return null;
 
       return (
-        <Card className="glass-card">
-          <CardContent className="p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Caractéristiques du bien
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {realEstateDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <detail.icon size={18} className="text-primary flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
-                    </span>
-                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.value}
-                    </div>
+        <div className="border-t border-gray-200 pt-4">
+          <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+            Caractéristiques du bien
+          </h3>
+          <div className="grid grid-cols-1 gap-2">
+            {realEstateDetails.map((detail, index) => (
+              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+                <detail.icon size={18} className="text-black flex-shrink-0" />
+                <div className="flex-1">
+                  <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {detail.label}
+                  </span>
+                  <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {detail.value}
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       );
     }
 
@@ -483,28 +482,26 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (jobDetails.length === 0) return null;
 
       return (
-        <Card className="glass-card">
-          <CardContent className="p-4 md:p-6">
-            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Détails de l'offre d'emploi
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {jobDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
-                  <detail.icon size={18} className="text-primary flex-shrink-0" />
-                  <div className="flex-1">
-                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.label}
-                    </span>
-                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {detail.value}
-                    </div>
+        <div className="border-t border-gray-200 pt-4">
+          <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+            Détails de l'offre d'emploi
+          </h3>
+          <div className="grid grid-cols-1 gap-2">
+            {jobDetails.map((detail, index) => (
+              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+                <detail.icon size={18} className="text-black flex-shrink-0" />
+                <div className="flex-1">
+                  <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {detail.label}
+                  </span>
+                  <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    {detail.value}
                   </div>
                 </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            ))}
+          </div>
+        </div>
       );
     }
 
@@ -739,15 +736,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
           {/* Chat Mobile */}
           {showChat && !isOwner && (
-            <Card>
-              <CardContent className="p-4">
-                <ProductChat
-                  productId={product.id}
-                  sellerId={product.user_id}
-                  onClose={() => setShowChat(false)}
-                />
-              </CardContent>
-            </Card>
+            <div className="border-t border-gray-200 pt-4">
+              <ProductChat
+                productId={product.id}
+                sellerId={product.user_id}
+                onClose={() => setShowChat(false)}
+              />
+            </div>
           )}
         </div>
       </div>

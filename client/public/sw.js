@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tomati-v1';
+const CACHE_NAME = 'tomati-market-v1';
 const urlsToCache = [
   '/',
   '/static/js/bundle.js',
@@ -6,17 +6,38 @@ const urlsToCache = [
   '/manifest.json'
 ];
 
-self.addEventListener('install', (event) => {
+// Installation du service worker
+self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
+      .then(function(cache) {
+        console.log('Cache ouvert');
+        return cache.addAll(urlsToCache);
+      })
   );
 });
 
-self.addEventListener('fetch', (event) => {
+// Activation du service worker
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.map(function(cacheName) {
+          if (cacheName !== CACHE_NAME) {
+            console.log('Suppression de l\'ancien cache:', cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});
+
+// Interception des requêtes
+self.addEventListener('fetch', function(event) {
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
+      .then(function(response) {
         // Cache hit - return response
         if (response) {
           return response;
@@ -24,35 +45,5 @@ self.addEventListener('fetch', (event) => {
         return fetch(event.request);
       }
     )
-  );
-});
-
-// Push notifications
-self.addEventListener('push', (event) => {
-  const options = {
-    body: event.data ? event.data.text() : 'Nouvelle notification Tomati',
-    icon: '/android-chrome-192x192.png',
-    badge: '/icons/badge-72x72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: '2'
-    },
-    actions: [
-      {
-        action: 'explore', 
-        title: 'Voir',
-        icon: '/icons/checkmark.png'
-      },
-      {
-        action: 'close', 
-        title: 'Fermer',
-        icon: '/icons/xmark.png'
-      }
-    ]
-  };
-
-  event.waitUntil(
-    self.registration.showNotification('Tomati Market', options)
   );
 });
