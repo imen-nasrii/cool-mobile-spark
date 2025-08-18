@@ -1,6 +1,7 @@
+import { setupVite } from "./vite";
+import { registerRoutes } from "./routes";
 import express from "express";
 import path from "path";
-import { registerRoutes } from "./routes";
 
 const app = express();
 
@@ -21,7 +22,52 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  const isDev = process.env.NODE_ENV === 'development';
+  let server;
+
+  if (isDev) {
+    console.log('Setting up Vite dev server...');
+    // Set up Vite with existing config
+    const vite = await import('vite');
+    const viteServer = await vite.createServer({
+      server: { middlewareMode: true },
+      appType: 'custom',
+      configFile: path.resolve('./vite.config.ts')
+    });
+    
+    // Register API routes first
+    server = await registerRoutes(app);
+    
+    // Then add Vite middleware
+    app.use(viteServer.middlewares);
+    
+    // Handle SPA for development (catch-all for non-API routes)
+    app.use('*', async (req, res, next) => {
+      if (req.originalUrl.startsWith('/api/')) {
+        return next();
+      }
+      try {
+        const fs = await import('fs');
+        const template = fs.readFileSync(path.resolve('./client/index.html'), 'utf-8');
+        const html = await viteServer.transformIndexHtml(req.originalUrl, template);
+        res.status(200).set({ 'Content-Type': 'text/html' }).end(html);
+      } catch (e) {
+        viteServer.ssrFixStacktrace(e);
+        next(e);
+      }
+    });
+  } else {
+    // Production mode
+    server = await registerRoutes(app);
+    const staticDir = path.join(process.cwd(), 'dist/public');
+    app.use(express.static(staticDir));
+    app.get("*", (req, res) => {
+      if (req.path.startsWith('/api/')) {
+        return res.status(404).json({ error: 'API route not found' });
+      }
+      res.sendFile(path.join(staticDir, "index.html"));
+    });
+  }
 
   // Simple error handler
   app.use((err: any, req: any, res: any, next: any) => {
@@ -31,43 +77,10 @@ app.use((req, res, next) => {
     }
   });
 
-  // Serve static files from dist/public 
-  const staticDir = path.join(process.cwd(), 'dist/public');
-  console.log('Static directory:', staticDir);
-  
-  // Serve static files with explicit MIME types
-  app.use(express.static(staticDir, { 
-    extensions: ["html"],
-    setHeaders: (res, filePath) => {
-      console.log('Serving:', filePath);
-      // Force correct MIME types
-      if (filePath.endsWith('.js')) {
-        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-        res.setHeader('Access-Control-Allow-Origin', '*');
-      } else if (filePath.endsWith('.css')) {
-        res.setHeader('Content-Type', 'text/css; charset=utf-8');
-      } else if (filePath.endsWith('.json')) {
-        res.setHeader('Content-Type', 'application/json; charset=utf-8');
-      }
-      // Disable caching in development
-      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
-      res.setHeader('Pragma', 'no-cache');
-      res.setHeader('Expires', '0');
-    }
-  }));
-  
-  // Catch-all route for SPA (excluding API routes)
-  app.get("*", (req, res) => {
-    if (req.path.startsWith('/api/')) {
-      return res.status(404).json({ error: 'API route not found' });
-    }
-    res.sendFile(path.join(staticDir, "index.html"));
-  });
-
   const port = parseInt(process.env.PORT || "5000", 10);
   const host = process.env.HOST || "0.0.0.0";
   
   server.listen({ port, host }, () => {
-    console.log(`Server running on port ${port}`);
+    console.log(`Server running on port ${port} in ${isDev ? 'development' : 'production'} mode`);
   });
 })();
