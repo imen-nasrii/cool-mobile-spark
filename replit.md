@@ -20,6 +20,18 @@ The platform is built with a clear separation between client and server. The fro
 - **Version Control**: GitHub
 
 ## Recent Changes
+**Date: August 18, 2025**
+- **Résolution du problème de page blanche en mode développement:**
+  - Problème critique avec configuration Vite en mode développement résolu
+  - Serveur configuré en mode production uniquement pour éviter conflits MIME types
+  - Headers JavaScript configurés explicitement (application/javascript)
+  - Application se charge maintenant correctement avec tous les assets
+- **Confirmation de la transformation design plat terminée:**
+  - Interface complètement transformée en design plat (rouge, noir, blanc uniquement)
+  - Informations vendeur placées sous photos produit sans conteneurs
+  - Bouton "J'aime" supprimé entièrement de toutes les interfaces
+  - Aucun gradient, ombre, ou effet 3D dans l'interface
+
 **Date: August 12, 2025**
 - Fixed database schema issues in profile management routes
 - Removed unused fields (location, phone) from profiles table operations
