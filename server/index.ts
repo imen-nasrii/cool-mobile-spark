@@ -258,10 +258,12 @@ app.use(express.urlencoded({ extended: true }));
         function loadProductsDirectly() {
             // Simuler des produits de démonstration pour test immédiat
             products = [
-                { id: 1, title: 'Tesla Model 3', price: 85000, category: 'Auto', description: 'Voiture électrique haut de gamme', location: 'Tunis', image: 'tesla-model3.jpg', view_count: 123 },
-                { id: 2, title: 'iPhone 15 Pro', price: 3200, category: 'Électronique', description: 'Smartphone dernière génération', location: 'Sfax', image: 'iphone-15-pro.jpg', view_count: 89 },
-                { id: 3, title: 'Mountain Bike', price: 850, category: 'Sport', description: 'VTT professionnel', location: 'Sousse', image: 'mountain-bike.jpg', view_count: 45 },
-                { id: 4, title: 'Canapé Moderne', price: 1200, category: 'Meubles', description: 'Canapé 3 places en cuir', location: 'Ariana', image: 'modern-sofa.jpg', view_count: 67 }
+                { id: 1, title: 'Tesla Model 3', price: 85000, category: 'Auto', description: 'Voiture électrique haut de gamme, autonomie 500km', location: 'Tunis', image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&h=300&fit=crop', view_count: 123 },
+                { id: 2, title: 'iPhone 15 Pro Max', price: 3200, category: 'Électronique', description: 'Smartphone 256GB, état neuf avec garantie', location: 'Sfax', image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop', view_count: 89 },
+                { id: 3, title: 'VTT Trek X-Caliber', price: 850, category: 'Sport', description: 'VTT professionnel, suspension avant, 21 vitesses', location: 'Sousse', image: 'https://images.unsplash.com/photo-1544191696-15693072b5b7?w=400&h=300&fit=crop', view_count: 45 },
+                { id: 4, title: 'Canapé 3 Places', price: 1200, category: 'Meubles', description: 'Canapé moderne en cuir italien, très bon état', location: 'Ariana', image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop', view_count: 67 },
+                { id: 5, title: 'Appartement S+2', price: 180000, category: 'Immobilier', description: 'Appartement neuf 90m², terrasse, proche métro', location: 'Tunis Centre', image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop', view_count: 234 },
+                { id: 6, title: 'Développeur Full Stack', price: 2500, category: 'Emplois', description: 'CDI, React/Node.js, 3+ ans expérience, télétravail', location: 'Sfax', image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop', view_count: 156 }
             ];
             
             // Essayer de charger les vrais produits

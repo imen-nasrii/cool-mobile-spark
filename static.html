@@ -35,7 +35,14 @@
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .card { border: 2px solid black; border-radius: 8px; overflow: hidden; background: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .card:hover { box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card img { 
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover; 
+            border-bottom: 2px solid black;
+            transition: transform 0.2s ease;
+        }
+        .card:hover img { transform: scale(1.02); }
         .card-content { padding: 16px; }
         .card-title { font-size: 1.25rem; font-weight: bold; color: black; margin: 0 0 8px 0; }
         .card-price { font-size: 1.5rem; font-weight: bold; color: #ef4444; margin: 0 0 12px 0; }
@@ -143,22 +150,98 @@
         let loading = true;
         let deferredPrompt;
 
-        // Données de démonstration
+        // Données de démonstration avec images réelles
         const demoProducts = [
-            { id: 1, title: 'Tesla Model 3', price: 85000, category: 'Auto', description: 'Voiture électrique haut de gamme', location: 'Tunis', image: 'tesla-model3.jpg', view_count: 123 },
-            { id: 2, title: 'iPhone 15 Pro', price: 3200, category: 'Électronique', description: 'Smartphone dernière génération', location: 'Sfax', image: 'iphone-15-pro.jpg', view_count: 89 },
-            { id: 3, title: 'Mountain Bike Trek', price: 850, category: 'Sport', description: 'VTT professionnel tout terrain', location: 'Sousse', image: 'mountain-bike.jpg', view_count: 45 },
-            { id: 4, title: 'Canapé Moderne', price: 1200, category: 'Meubles', description: 'Canapé 3 places en cuir italien', location: 'Ariana', image: 'modern-sofa.jpg', view_count: 67 },
-            { id: 5, title: 'Appartement 3 Pièces', price: 180000, category: 'Immobilier', description: 'Appartement neuf avec terrasse', location: 'Tunis', image: 'apartment.jpg', view_count: 234 },
-            { id: 6, title: 'Poste Développeur Web', price: 2500, category: 'Emplois', description: 'Développeur React/Node.js senior', location: 'Sfax', image: 'job-dev.jpg', view_count: 156 }
+            { 
+                id: 1, 
+                title: 'Tesla Model 3', 
+                price: 85000, 
+                category: 'Auto', 
+                description: 'Voiture électrique haut de gamme, autonomie 500km', 
+                location: 'Tunis', 
+                image: 'https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=400&h=300&fit=crop',
+                view_count: 123 
+            },
+            { 
+                id: 2, 
+                title: 'iPhone 15 Pro Max', 
+                price: 3200, 
+                category: 'Électronique', 
+                description: 'Smartphone 256GB, état neuf avec garantie', 
+                location: 'Sfax', 
+                image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400&h=300&fit=crop',
+                view_count: 89 
+            },
+            { 
+                id: 3, 
+                title: 'VTT Trek X-Caliber', 
+                price: 850, 
+                category: 'Sport', 
+                description: 'VTT professionnel, suspension avant, 21 vitesses', 
+                location: 'Sousse', 
+                image: 'https://images.unsplash.com/photo-1544191696-15693072b5b7?w=400&h=300&fit=crop',
+                view_count: 45 
+            },
+            { 
+                id: 4, 
+                title: 'Canapé 3 Places', 
+                price: 1200, 
+                category: 'Meubles', 
+                description: 'Canapé moderne en cuir italien, très bon état', 
+                location: 'Ariana', 
+                image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+                view_count: 67 
+            },
+            { 
+                id: 5, 
+                title: 'Appartement S+2', 
+                price: 180000, 
+                category: 'Immobilier', 
+                description: 'Appartement neuf 90m², terrasse, proche métro', 
+                location: 'Tunis Centre', 
+                image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=400&h=300&fit=crop',
+                view_count: 234 
+            },
+            { 
+                id: 6, 
+                title: 'Développeur Full Stack', 
+                price: 2500, 
+                category: 'Emplois', 
+                description: 'CDI, React/Node.js, 3+ ans expérience, télétravail', 
+                location: 'Sfax', 
+                image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=300&fit=crop',
+                view_count: 156 
+            },
+            { 
+                id: 7, 
+                title: 'Villa S+4 Hammamet', 
+                price: 320000, 
+                category: 'Immobilier', 
+                description: 'Villa avec piscine, jardin 500m², proche plage', 
+                location: 'Hammamet', 
+                image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=400&h=300&fit=crop',
+                view_count: 312 
+            },
+            { 
+                id: 8, 
+                title: 'MacBook Pro M3', 
+                price: 4500, 
+                category: 'Électronique', 
+                description: 'MacBook Pro 14" M3, 16GB RAM, 512GB SSD, neuf', 
+                location: 'Tunis', 
+                image: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&h=300&fit=crop',
+                view_count: 198 
+            }
         ];
 
         function createProductCard(product) {
             return `
                 <div class="card">
                     <img 
-                        src="https://via.placeholder.com/300x200/ef4444/ffffff?text=${encodeURIComponent(product.category)}" 
+                        src="${product.image}" 
                         alt="${product.title}"
+                        loading="lazy"
+                        onerror="this.src='https://via.placeholder.com/400x300/ef4444/ffffff?text=${encodeURIComponent(product.category)}'"
                     />
                     <div class="card-content">
                         <h3 class="card-title">${product.title}</h3>
@@ -211,7 +294,7 @@
                 <main class="main">
                     <div class="container">
                         <div class="section-header">
-                            <h2 class="section-title">Produits Disponibles</h2>
+                            <h2 class="section-title">Produits Récents</h2>
                             <div class="count-badge">${products.length} produits</div>
                         </div>
                         
