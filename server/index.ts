@@ -4,49 +4,40 @@ import { registerRoutes } from "./routes";
 
 const app = express();
 
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// Basic middleware only
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 (async () => {
   const server = await registerRoutes(app);
 
-  // Force production mode to avoid Vite dev conflicts
-  process.env.NODE_ENV = 'production';
-  const staticDir = path.join(process.cwd(), 'dist/public');
-  console.log('Serving static files from:', staticDir);
-  
-  // Disable all caching
-  app.use((req, res, next) => {
-    res.set({
-      'Cache-Control': 'no-cache, no-store, must-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0'
-    });
-    next();
+  // Simple error handler
+  app.use((err: any, req: any, res: any, next: any) => {
+    console.error('Server error:', err.message);
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Server error' });
+    }
   });
 
-  // Serve static files with correct MIME types
-  app.use(express.static(staticDir, {
-    setHeaders: (res, filePath) => {
-      console.log('Serving file:', filePath);
-      if (filePath.endsWith('.js')) {
+  // Serve static files from dist/public with proper MIME types
+  const staticDir = path.join(process.cwd(), 'dist/public');
+  app.use(express.static(staticDir, { 
+    extensions: ["html"],
+    setHeaders: (res, path) => {
+      if (path.endsWith('.js')) {
         res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-      } else if (filePath.endsWith('.css')) {
+      }
+      if (path.endsWith('.css')) {
         res.setHeader('Content-Type', 'text/css; charset=utf-8');
-      } else if (filePath.endsWith('.html')) {
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
       }
     }
   }));
   
-  // API routes first
-  app.get('/api/*', (req, res) => {
-    res.status(404).json({ error: 'API route not found' });
-  });
-  
-  // SPA fallback only for non-API routes
+  // Catch-all route for SPA (excluding API routes)
   app.get("*", (req, res) => {
-    console.log('SPA fallback for:', req.path);
+    if (req.path.startsWith('/api/')) {
+      return res.status(404).json({ error: 'API route not found' });
+    }
     res.sendFile(path.join(staticDir, "index.html"));
   });
 
@@ -54,6 +45,6 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   const host = process.env.HOST || "0.0.0.0";
   
   server.listen({ port, host }, () => {
-    console.log(`Server running on port ${port} (production mode)`);
+    console.log(`Server running on port ${port}`);
   });
 })();

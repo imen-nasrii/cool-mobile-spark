@@ -425,7 +425,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       );
     }
 
-    // Real Estate details - Sans conteneur
+    // Real Estate details
     if (category === 'immobilier' || category === 'logement') {
       const realEstateDetails = [
         { icon: Home, label: 'Type de propriété', value: product.real_estate_type || product.property_type },
@@ -443,30 +443,32 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (realEstateDetails.length === 0) return null;
 
       return (
-        <div className="border-t border-gray-200 pt-4">
-          <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-            Caractéristiques du bien
-          </h3>
-          <div className="grid grid-cols-1 gap-3">
-            {realEstateDetails.map((detail, index) => (
-              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
-                <detail.icon size={18} className="text-red-500 flex-shrink-0" />
-                <div className="flex-1">
-                  <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {detail.label}
-                  </span>
-                  <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {detail.value}
+        <Card className="glass-card">
+          <CardContent className="p-4 md:p-6">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Caractéristiques du bien
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {realEstateDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       );
     }
 
-    // Job details - Sans conteneur
+    // Job details
     if (category === 'emplois' || category === 'emploi' || category === 'travail' || category === 'job') {
       const jobDetails = [
         { icon: Briefcase, label: 'Type de contrat', value: product.job_type || product.contract_type },
@@ -482,26 +484,28 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (jobDetails.length === 0) return null;
 
       return (
-        <div className="border-t border-gray-200 pt-4">
-          <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-            Détails de l'offre d'emploi
-          </h3>
-          <div className="grid grid-cols-1 gap-3">
-            {jobDetails.map((detail, index) => (
-              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
-                <detail.icon size={18} className="text-red-500 flex-shrink-0" />
-                <div className="flex-1">
-                  <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {detail.label}
-                  </span>
-                  <div className="text-sm font-medium text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {detail.value}
+        <Card className="glass-card">
+          <CardContent className="p-4 md:p-6">
+            <h3 className="text-lg md:text-xl font-semibold text-foreground mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              Détails de l'offre d'emploi
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {jobDetails.map((detail, index) => (
+                <div key={index} className="flex items-center gap-3 p-3 bg-background/50 rounded-lg">
+                  <detail.icon size={18} className="text-primary flex-shrink-0" />
+                  <div className="flex-1">
+                    <span className="text-sm text-muted-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.label}
+                    </span>
+                    <div className="text-sm font-medium text-foreground" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      {detail.value}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       );
     }
 
@@ -734,190 +738,206 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </div>
           </div>
 
-          {/* Chat Mobile - Sans conteneur */}
+          {/* Chat Mobile */}
           {showChat && !isOwner && (
-            <div className="border-t border-gray-200 pt-4">
-              <ProductChat
-                productId={product.id}
-                sellerId={product.user_id}
-                onClose={() => setShowChat(false)}
-              />
-            </div>
+            <Card>
+              <CardContent className="p-4">
+                <ProductChat
+                  productId={product.id}
+                  sellerId={product.user_id}
+                  onClose={() => setShowChat(false)}
+                />
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
 
-      {/* Desktop Layout - 2 Column Grid - Design plat */}
+      {/* Desktop Layout - 2 Column Grid with Sticky Images */}
       <div className="hidden md:block max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Left Column - Images */}
-          <div className="space-y-6">
+          {/* Left Column - Sticky Images */}
+          <div className="sticky top-24 h-fit space-y-6">
             <ImageGallery 
               images={(() => {
                 const images = (product as any).images ? JSON.parse((product as any).images) : [];
                 return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
               })()} 
               title={product.title}
-              className="w-full"
+              className="rounded-2xl shadow-xl w-full"
             />
             
-            {/* Informations du Vendeur - Sous la photo */}
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-xl font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
-              <div className="flex items-start gap-4 mb-4">
-                <Avatar className="h-16 w-16 border-2 border-gray-200">
-                  {sellerProfile?.avatar_url ? (
-                    <img 
-                      src={sellerProfile.avatar_url} 
-                      alt={sellerProfile?.display_name || "Vendeur"} 
-                      className="w-full h-full object-cover rounded-full"
-                    />
-                  ) : (
-                    <AvatarFallback className="bg-gray-100 text-black font-semibold text-xl">
-                      {(sellerProfile?.display_name || sellerProfile?.email || 'U').charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  )}
-                </Avatar>
-                <div className="flex-1">
-                  <div className="font-bold text-black mb-1 text-lg" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    {sellerProfile?.display_name || sellerProfile?.email?.split('@')[0] || 'Vendeur'}
+            {/* Quick Stats Card */}
+            <Card className="glass-card">
+              <CardContent className="p-6">
+                <div className="grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <div className="text-2xl font-bold text-primary">{product.like_count || 0}</div>
+                    <div className="text-sm text-muted-foreground">J'aime</div>
                   </div>
-                  <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Membre depuis {sellerProfile?.created_at ? new Date(sellerProfile.created_at).getFullYear() : '2025'}
+                  <div>
+                    <div className="text-2xl font-bold text-primary">{product.view_count || 0}</div>
+                    <div className="text-sm text-muted-foreground">Vues</div>
                   </div>
-                  <div className="flex gap-6 text-sm text-gray-600 mb-3">
-                    <div>
-                      <span className="font-medium text-black">Annonces:</span> {product.user_product_count || 1}
+                  <div>
+                    <div className="text-2xl font-bold text-primary">
+                      {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "5.0"}
                     </div>
-                    <div>
-                      <span className="font-medium text-black">Note:</span> ⭐ 4.8
-                    </div>
+                    <div className="text-sm text-muted-foreground">Note</div>
                   </div>
-                  {sellerProfile?.bio && (
-                    <p className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {sellerProfile.bio}
-                    </p>
-                  )}
                 </div>
-              </div>
-              <div className="flex gap-3">
-                <Button 
-                  onClick={() => setShowChat(true)}
-                  className="flex-1 bg-red-500 hover:bg-red-600 text-white border-0"
-                  style={{ fontFamily: 'Arial, sans-serif' }}
-                >
-                  <MessageCircle size={18} className="mr-2" />
-                  Contacter le vendeur
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="px-4 border-black text-black hover:bg-gray-100"
-                  onClick={handleShare}
-                >
-                  <Share size={18} />
-                </Button>
-              </div>
-            </div>
-            
-            {/* Stats - Sans conteneur */}
-            <div className="border-t border-gray-200 pt-4">
-              <div className="grid grid-cols-2 gap-6 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-red-500">
-                    {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
-                  </div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Right Column - Product Details - Sans conteneurs */}
-          <div className="space-y-6">
-            {/* Price & Title - Sans conteneur */}
-            <div>
-              <h2 className="text-3xl font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>{product.title}</h2>
-              <div className="text-4xl font-bold text-red-500 mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                {product.is_free ? 'Gratuit' : formatPrice(product.price)}
-              </div>
-              <div className="flex gap-2 mb-4">
-                <span className="px-3 py-1 bg-gray-100 text-black text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
-                {product.is_free && (
-                  <span className="px-3 py-1 bg-green-100 text-green-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Gratuit</span>
-                )}
-                {product.is_reserved && (
-                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Réservé</span>
-                )}
-              </div>
-              <div className="flex items-center gap-2 text-gray-600 mb-6">
-                <MapPin size={16} />
-                <span className="text-base">{product.location}</span>
-                <span>•</span>
-                <span>{formatTimeAgo(product.created_at)}</span>
-              </div>
-            </div>
+          {/* Right Column - Scrollable Product Details */}
+          <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+            {/* Price & Title */}
+            <Card className="glass-card">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <h2 className="text-3xl font-bold text-foreground mb-2">{product.title}</h2>
+                    <Badge variant="secondary" className="mb-4">{product.category}</Badge>
+                    {product.is_free && (
+                      <Badge variant="outline" className="mb-4 ml-2 text-green-600 border-green-600">
+                        Gratuit
+                      </Badge>
+                    )}
+                    {product.is_reserved && (
+                      <Badge variant="outline" className="mb-4 ml-2 text-red-600 border-red-600">
+                        Réservé
+                      </Badge>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-4xl font-bold text-primary">{product.is_free ? 'Gratuit' : formatPrice(product.price)}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin size={16} />
+                    <span className="text-base">{product.location}</span>
+                    <span>•</span>
+                    <span>{formatTimeAgo(product.created_at)}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Description - Sans conteneur */}
-            <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-xl font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
-              <p className="text-gray-600 leading-relaxed text-base" style={{ fontFamily: 'Arial, sans-serif' }}>
-                {product.description || "Aucune description fournie."}
-              </p>
-            </div>
-
-            {/* Product Details with Icons - Sans conteneurs */}
+            {/* Product Details with Icons */}
             {renderProductDetails()}
 
-            {/* Action Buttons - Sans conteneur */}
-            {!isOwner && (
-              <div className="border-t border-gray-200 pt-6">
-                <div className="flex gap-4">
-                  <Button 
-                    onClick={() => setShowChat(true)}
-                    className="flex-1 bg-red-500 hover:bg-red-600 text-white border-0 h-12 text-base"
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <MessageCircle size={18} className="mr-2" />
-                    Envoyer message
-                  </Button>
+            {/* Description */}
+            <Card className="glass-card">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Description</h3>
+                <p className="text-muted-foreground leading-relaxed text-base mb-6">
+                  {product.description || "Aucune description fournie."}
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Seller Info */}
+            <Card className="glass-card">
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-foreground mb-4">Informations vendeur</h3>
+                <div className="flex items-center gap-4">
+                  <Avatar className="w-16 h-16 border-2 border-primary/20">
+                    {sellerProfile?.avatar_url ? (
+                      <img 
+                        src={sellerProfile.avatar_url} 
+                        alt={sellerProfile?.display_name || "Vendeur"} 
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
+                        {(sellerProfile?.display_name || sellerProfile?.email || 'U').charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    )}
+                  </Avatar>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="text-lg font-semibold text-foreground">
+                        {sellerProfile?.display_name || sellerProfile?.email?.split('@')[0] || 'Vendeur'}
+                      </h4>
+                      <Shield size={18} className="text-green-600" />
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground mb-1">
+                      <Star size={14} className="text-yellow-500 fill-yellow-500" />
+                      <span>4.8</span>
+                      <span>•</span>
+                      <span>Membre vérifié</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Membre depuis {sellerProfile?.created_at ? new Date(sellerProfile.created_at).getFullYear() : '2025'}
+                    </p>
+                    {sellerProfile?.bio && (
+                      <p className="text-sm text-muted-foreground mt-2 italic">
+                        "{sellerProfile.bio}"
+                      </p>
+                    )}
+                  </div>
+                  
                   <Button 
                     variant="outline" 
-                    className="px-6 border-black text-black hover:bg-gray-100 h-12"
+                    className="border-primary/20 text-primary hover:bg-primary/10"
+                    onClick={() => setShowSellerProfile(true)}
                   >
-                    <Phone size={18} />
+                    Voir profil
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* Sidebar Ad */}
+            <AdBanner position="sidebar" category={product.category} />
+
+            {/* Action Buttons */}
+            {!isOwner && (
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 border-primary/20 text-primary hover:bg-primary/10 h-14 text-lg"
+                >
+                  <Phone size={20} className="mr-2" />
+                  Appeler
+                </Button>
+                <Button 
+                  size="lg" 
+                  className="flex-1 bg-primary hover:bg-primary/90 text-white h-14 text-lg"
+                  onClick={() => setShowChat(true)}
+                >
+                  <MessageCircle size={20} className="mr-2" />
+                  Envoyer message
+                </Button>
               </div>
             )}
 
-            {/* Owner Action Buttons - Sans conteneur */}
+            {/* Owner Action Buttons */}
             {isOwner && (
-              <div className="border-t border-gray-200 pt-6">
-                <div className="flex gap-4">
-                  <Button 
-                    variant="outline" 
-                    className="flex-1 border-black text-black hover:bg-gray-100 h-12"
-                    onClick={() => onEdit?.(product.id)}
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <Edit size={18} className="mr-2" />
-                    Modifier
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="flex-1 border-red-500 text-red-500 hover:bg-red-50 h-12"
-                    onClick={handleDelete}
-                    disabled={deleteProductMutation.isPending}
-                    style={{ fontFamily: 'Arial, sans-serif' }}
-                  >
-                    <Trash2 size={18} className="mr-2" />
-                    {deleteProductMutation.isPending ? "Suppression..." : "Supprimer"}
-                  </Button>
-                </div>
+              <div className="flex gap-4">
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 border-blue-500/20 text-blue-600 hover:bg-blue-50 h-14 text-lg"
+                  onClick={() => onEdit?.(product.id)}
+                >
+                  <Edit size={20} className="mr-2" />
+                  Modifier
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className="flex-1 border-red-500/20 text-red-600 hover:bg-red-50 h-14 text-lg"
+                  onClick={handleDelete}
+                  disabled={deleteProductMutation.isPending}
+                >
+                  <Trash2 size={20} className="mr-2" />
+                  {deleteProductMutation.isPending ? "Suppression..." : "Supprimer"}
+                </Button>
               </div>
             )}
 
