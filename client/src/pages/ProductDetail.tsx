@@ -399,16 +399,15 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               {equipmentList.map((equipment) => (
                 <div 
                   key={equipment.key} 
-                  className={`flex items-center gap-2 py-2 px-3 rounded border ${
-                    equipment.available 
-                      ? 'bg-green-50 border-green-200 text-green-800' 
-                      : 'bg-gray-50 border-gray-200 text-gray-500'
-                  }`}
+                  className="flex items-center gap-2 py-2 px-3 border border-gray-200"
+                  style={{
+                    backgroundColor: equipment.available ? '#fff' : '#f5f5f5',
+                    color: equipment.available ? '#000' : '#666'
+                  }}
                 >
                   <span 
                     className="text-lg"
                     style={{ 
-                      filter: equipment.available ? 'none' : 'grayscale(100%) brightness(0.7)',
                       color: equipment.available ? '#000' : '#999'
                     }}
                   >
@@ -544,7 +543,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <Button 
             variant="ghost" 
             size="sm" 
-            className="p-2 hover:bg-gray-100 rounded-full -ml-2"
+            className="p-2 -ml-2"
             onClick={onBack}
           >
             <ArrowLeft size={20} />
@@ -554,7 +553,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="ghost" 
               size="sm" 
-              className="p-2 hover:bg-gray-100 text-black"
+              className="p-2 text-black"
               onClick={handleShare}
             >
               <Share size={18} />
@@ -570,7 +569,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="ghost" 
               size="sm" 
-              className="p-2 hover:bg-gray-100 rounded-full"
+              className="p-2"
               onClick={onBack}
             >
               <ArrowLeft size={20} />
@@ -583,7 +582,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="flex gap-3">
             {isOwner && (
               <>
-                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className="border-black text-black hover:bg-gray-100">
+                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className="border-black text-black">
                   <Edit size={16} />
                 </Button>
                 <Button 
@@ -591,7 +590,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   size="sm" 
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
-                  className="border-red-500 text-red-500 hover:bg-red-50"
+                  className="border-red-500 text-red-500"
                 >
                   <Trash2 size={16} />
                 </Button>
@@ -600,7 +599,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2 border-black text-black hover:bg-gray-100"
+              className="gap-2 border-black text-black"
               onClick={handleShare}
             >
               <Share size={16} />
@@ -678,7 +677,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <div className="flex gap-3">
               <Button 
                 onClick={() => setShowChat(true)}
-                className="flex-1 bg-red-500 hover:bg-red-600 text-white border-0"
+                className="flex-1 bg-red-500 text-white border-0"
                 style={{ fontFamily: 'Arial, sans-serif' }}
               >
                 <MessageCircle size={18} className="mr-2" />
@@ -686,7 +685,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </Button>
               <Button 
                 variant="outline" 
-                className="px-4 border-black text-black hover:bg-gray-100"
+                className="px-4 border-black text-black"
                 onClick={handleShare}
               >
                 <Share size={18} />
@@ -723,10 +722,10 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     <Star
                       key={star}
                       className={cn(
-                        "w-4 h-4 cursor-pointer transition-colors",
+                        "w-4 h-4 cursor-pointer",
                         (hoveredRating || userRating) >= star
                           ? "fill-yellow-400 text-yellow-400"
-                          : "text-gray-300 hover:text-yellow-300"
+                          : "text-gray-300"
                       )}
                       onClick={() => handleRating(star)}
                       onMouseEnter={() => setHoveredRating(star)}
