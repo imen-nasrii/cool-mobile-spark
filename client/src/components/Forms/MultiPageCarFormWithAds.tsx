@@ -49,7 +49,7 @@ export const MultiPageCarFormWithAds = ({ onSubmit, onCancel }: MultiPageCarForm
 
       {/* Popup pour les publicités */}
       <Dialog open={showAdPopup} onOpenChange={setShowAdPopup}>
-        <DialogContent className="max-w-2xl mx-auto bg-white border-2 border-red-500">
+        <DialogContent className="max-w-md mx-auto bg-white border-2 border-red-500">
           <div className="relative">
             <Button
               onClick={() => setShowAdPopup(false)}
@@ -60,23 +60,23 @@ export const MultiPageCarFormWithAds = ({ onSubmit, onCancel }: MultiPageCarForm
               <X size={16} className="text-black" />
             </Button>
             
-            <div className="p-4">
-              <div className="text-center mb-4">
-                <h3 className="text-lg font-bold text-black">
-                  {currentStep === 1 ? "Étape 1 - Offre spéciale !" : "Étape 2 - Promotion !"}
+            <div className="p-3">
+              <div className="text-center mb-3">
+                <h3 className="text-base font-bold text-black">
+                  {currentStep === 1 ? "Étape 1 - Offre !" : "Étape 2 - Promo !"}
                 </h3>
               </div>
               
               <img 
                 src={currentAdImage} 
                 alt="Publicité" 
-                className="w-full h-auto object-cover rounded border border-gray-200"
+                className="w-full h-auto max-h-48 object-cover rounded border border-gray-200"
               />
               
-              <div className="mt-4 text-center">
+              <div className="mt-3 text-center">
                 <Button
                   onClick={() => setShowAdPopup(false)}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2"
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-1 text-sm"
                 >
                   Continuer
                 </Button>
