@@ -515,16 +515,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     );
   }
 
-  // Debug temporaire
-  console.log('ProductDetail Debug:', { 
-    product: product ? `${product.title} (${product.id})` : 'null',
-    loading, 
-    productData: productData ? `${productData.title} (${productData.id})` : 'null',
-    isLoading,
-    productId,
-    productExists: !!product,
-    productType: typeof product
-  });
 
   if (!product) {
     console.log('Product is falsy, showing not found page');
@@ -539,14 +529,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     );
   }
 
-  console.log('Product exists, rendering main content for:', product.title);
-
   return (
     <div className="min-h-screen bg-white pb-20 md:pb-0" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Debug visible test */}
-      <div className="p-4 bg-red-100 text-black font-bold">
-        DEBUG: Page rendered for {product.title}
-      </div>
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 bg-white  z-40 px-4 py-3">
         <div className="flex items-center justify-between">
