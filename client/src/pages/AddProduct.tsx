@@ -74,38 +74,36 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
   // If no category selected, show category selection
   if (!selectedCategory) {
     return (
-      <div className="min-h-screen pb-20 bg-gray-50">
+      <div className="min-h-screen pb-20 bg-white" style={{ fontFamily: 'Arial, sans-serif' }}>
         <div className="px-4 py-8">
-          <div className="max-w-2xl mx-auto">
+          <div className="max-w-md mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">Publier une annonce</h1>
-              <p className="text-gray-600">Choisissez une catégorie pour commencer</p>
+              <h1 className="text-2xl font-bold text-black mb-4">Publier une annonce</h1>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-3">
               {Object.entries(categoryMap).map(([key, category]) => {
                 const Icon = category.icon;
                 return (
-                  <Card
+                  <button
                     key={key}
-                    className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 border-2 hover:border-red-500"
                     onClick={() => setSelectedCategory(key)}
+                    className="w-full flex items-center gap-3 p-4 text-left border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-colors"
                   >
-                    <CardContent className="p-6 text-center">
-                      <div className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${category.color}`}>
-                        <Icon size={32} className="text-white" />
-                      </div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{category.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        {key === "voiture" && "Vendez votre véhicule rapidement"}
-                        {key === "immobilier" && "Publiez votre bien immobilier"}
-                        {key === "emplois" && "Diffusez une offre d'emploi"}
-                        {key === "autres" && "Autres produits et services"}
-                      </p>
-                    </CardContent>
-                  </Card>
+                    <Icon size={20} className="text-black" />
+                    <span className="text-black font-medium">{category.name}</span>
+                  </button>
                 );
               })}
+            </div>
+            
+            <div className="mt-6">
+              <button
+                onClick={handleCancel}
+                className="w-full p-3 text-gray-600 hover:text-black transition-colors"
+              >
+                Annuler
+              </button>
             </div>
           </div>
         </div>
