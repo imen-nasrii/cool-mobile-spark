@@ -15,9 +15,9 @@ interface MainLayoutProps {
 
 export const MainLayout = ({ 
   children, 
-  showHeader = true, 
-  showBottomNav = true,
-  showAddButton = true 
+  showHeader = false, 
+  showBottomNav = false,
+  showAddButton = false 
 }: MainLayoutProps) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -121,9 +121,7 @@ export const MainLayout = ({
         <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
       )}
       
-      {showAddButton && (
-        <AddButton onCategorySelect={handleFloatingCategorySelect} />
-      )}
+      {/* AddButton is now handled by Index.tsx */}
     </div>
   );
 };

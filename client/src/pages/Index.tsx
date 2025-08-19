@@ -148,6 +148,7 @@ const Index = () => {
   };
 
   const handleFloatingCategorySelect = (categoryId: string) => {
+    console.log('handleFloatingCategorySelect called with:', categoryId);
     if (!user) {
       toast({
         title: "Connexion requise",
@@ -157,6 +158,7 @@ const Index = () => {
       navigate("/auth");
       return;
     }
+    console.log('Setting activeTab to add and category to:', categoryId);
     setActiveTab("add");
     setSelectedCategory(categoryId);
     toast({
