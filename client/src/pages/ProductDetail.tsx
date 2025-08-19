@@ -760,23 +760,37 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               className=" w-full"
             />
             
-            {/* Quick Stats Card */}
+            {/* Informations vendeur Card */}
             <Card className="">
               <CardContent className="p-6">
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-primary">{product.like_count || 0}</div>
-                    <div className="text-sm text-muted-foreground">J'aime</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-primary">{product.view_count || 0}</div>
-                    <div className="text-sm text-muted-foreground">Vues</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-primary">
-                      {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "5.0"}
+                <h3 className="text-lg font-semibold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  Informations vendeur
+                </h3>
+                <div className="flex items-start gap-4">
+                  <Avatar className="w-12 h-12 bg-red-100">
+                    <AvatarFallback className="bg-red-100 text-red-600 font-bold text-lg">
+                      {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-semibold text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
+                        {product.user_name || 'Utilisateur user'}
+                      </span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     </div>
-                    <div className="text-sm text-muted-foreground">Note</div>
+                    <div className="flex items-center gap-1 mb-1 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      <span className="text-yellow-500">⭐</span>
+                      <span className="text-black">4.8</span>
+                      <span className="text-gray-500">•</span>
+                      <span className="text-gray-600">Membre vérifié</span>
+                    </div>
+                    <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
+                    </div>
+                    <div className="text-sm text-gray-600 italic" style={{ fontFamily: 'Arial, sans-serif' }}>
+                      "Membre actif de la communauté Tomati Market."
+                    </div>
                   </div>
                 </div>
               </CardContent>
