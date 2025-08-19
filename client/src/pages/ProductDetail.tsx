@@ -362,7 +362,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
 
       return (
-        <div className="border-t border-gray-200 pt-4">
+        <div className=" pt-4">
           {/* Toutes les infos dans un seul conteneur - Design plat */}
           <div>
             <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -372,7 +372,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {/* Détails du véhicule */}
             <div className="grid grid-cols-1 gap-2 mb-6">
               {carDetails.map((detail, index) => (
-                <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+                <div key={index} className="flex items-center gap-3 py-2 ">
                   <detail.icon size={18} className="text-black flex-shrink-0" />
                   <div className="flex-1">
                     <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -395,7 +395,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               {equipmentList.map((equipment) => (
                 <div 
                   key={equipment.key} 
-                  className="flex items-center gap-2 py-3 px-3 border border-gray-200"
+                  className="flex items-center gap-2 py-3 px-3 "
                   style={{
                     backgroundColor: '#fff',
                     color: equipment.available ? '#000' : '#666'
@@ -438,13 +438,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (realEstateDetails.length === 0) return null;
 
       return (
-        <div className="border-t border-gray-200 pt-4">
+        <div className=" pt-4">
           <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
             Caractéristiques du bien
           </h3>
           <div className="grid grid-cols-1 gap-2">
             {realEstateDetails.map((detail, index) => (
-              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+              <div key={index} className="flex items-center gap-3 py-2 ">
                 <detail.icon size={18} className="text-black flex-shrink-0" />
                 <div className="flex-1">
                   <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -477,13 +477,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       if (jobDetails.length === 0) return null;
 
       return (
-        <div className="border-t border-gray-200 pt-4">
+        <div className=" pt-4">
           <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
             Détails de l'offre d'emploi
           </h3>
           <div className="grid grid-cols-1 gap-2">
             {jobDetails.map((detail, index) => (
-              <div key={index} className="flex items-center gap-3 py-2 border-b border-gray-100">
+              <div key={index} className="flex items-center gap-3 py-2 ">
                 <detail.icon size={18} className="text-black flex-shrink-0" />
                 <div className="flex-1">
                   <span className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -508,7 +508,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="tomati-brand mb-4">Tomati</div>
-          <div className="h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
+          <div className="h-8 w-8  mx-auto"></div>
           <p className="text-sm text-muted-foreground mt-4">Chargement du produit...</p>
         </div>
       </div>
@@ -530,7 +530,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   return (
     <div className="min-h-screen bg-white pb-20 md:pb-0" style={{ fontFamily: 'Arial, sans-serif' }}>
       {/* Mobile Header */}
-      <div className="md:hidden sticky top-0 bg-white border-b border-gray-200 z-40 px-4 py-3">
+      <div className="md:hidden sticky top-0 bg-white  z-40 px-4 py-3">
         <div className="flex items-center justify-between">
           <Button 
             variant="ghost" 
@@ -555,7 +555,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       </div>
 
       {/* Desktop Header */}
-      <div className="hidden md:block sticky top-0 bg-white border-b border-gray-200 z-40 px-6 py-4">
+      <div className="hidden md:block sticky top-0 bg-white  z-40 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button 
@@ -574,7 +574,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="flex gap-3">
             {isOwner && (
               <>
-                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className="border-black text-black">
+                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className=" text-black">
                   <Edit size={16} />
                 </Button>
                 <Button 
@@ -582,7 +582,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   size="sm" 
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
-                  className="border-red-500 text-red-500"
+                  className=" text-red-500"
                 >
                   <Trash2 size={16} />
                 </Button>
@@ -591,7 +591,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <Button 
               variant="outline" 
               size="sm" 
-              className="gap-2 border-black text-black"
+              className="gap-2  text-black"
               onClick={handleShare}
             >
               <Share size={16} />
@@ -646,10 +646,10 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </div>
 
           {/* Informations du Vendeur */}
-          <div className="border-t border-gray-200 pt-4">
+          <div className=" pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
             <div className="flex items-start gap-3 mb-4">
-              <Avatar className="h-12 w-12 border-2 border-gray-200">
+              <Avatar className="h-12 w-12 ">
                 <AvatarFallback className="bg-gray-100 text-black font-semibold">
                   {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
                 </AvatarFallback>
@@ -674,7 +674,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <div className="flex gap-3">
               <Button 
                 onClick={() => setShowChat(true)}
-                className="flex-1 bg-red-500 text-white border-0"
+                className="flex-1 bg-red-500 text-white "
                 style={{ fontFamily: 'Arial, sans-serif' }}
               >
                 <MessageCircle size={18} className="mr-2" />
@@ -682,7 +682,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </Button>
               <Button 
                 variant="outline" 
-                className="px-4 border-black text-black"
+                className="px-4  text-black"
                 onClick={handleShare}
               >
                 <Share size={18} />
@@ -691,7 +691,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </div>
 
           {/* Description */}
-          <div className="border-t border-gray-200 pt-4">
+          <div className=" pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
             <p className="text-gray-600 leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
               {product.description || "Aucune description fournie."}
@@ -702,7 +702,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {renderProductDetails()}
 
           {/* Statistiques */}
-          <div className="border-t border-gray-200 pt-4">
+          <div className=" pt-4">
             <div className="grid grid-cols-2 gap-6 text-center">
               <div>
                 <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
@@ -734,7 +734,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
           {/* Chat Mobile */}
           {showChat && !isOwner && (
-            <div className="border-t border-gray-200 pt-4">
+            <div className=" pt-4">
               <ProductChat
                 productId={product.id}
                 sellerId={product.user_id}
@@ -761,11 +761,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 }
               })()} 
               title={product.title}
-              className="border border-gray-200 w-full"
+              className=" w-full"
             />
             
             {/* Quick Stats Card */}
-            <Card className="border border-gray-200">
+            <Card className="">
               <CardContent className="p-6">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
@@ -790,19 +790,19 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Right Column - Scrollable Product Details */}
           <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Price & Title */}
-            <Card className="border border-gray-200">
+            <Card className="">
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-2">{product.title}</h2>
                     <Badge variant="secondary" className="mb-4">{product.category}</Badge>
                     {product.is_free && (
-                      <Badge variant="outline" className="mb-4 ml-2 text-green-600 border-green-600">
+                      <Badge variant="outline" className="mb-4 ml-2 text-green-600 ">
                         Gratuit
                       </Badge>
                     )}
                     {product.is_reserved && (
-                      <Badge variant="outline" className="mb-4 ml-2 text-red-600 border-red-600">
+                      <Badge variant="outline" className="mb-4 ml-2 text-red-600 ">
                         Réservé
                       </Badge>
                     )}
@@ -826,7 +826,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {renderProductDetails()}
 
             {/* Description */}
-            <Card className="border border-gray-200">
+            <Card className="">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Description</h3>
                 <p className="text-muted-foreground leading-relaxed text-base mb-6">
@@ -836,11 +836,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </Card>
 
             {/* Seller Info */}
-            <Card className="border border-gray-200">
+            <Card className="">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Informations vendeur</h3>
                 <div className="flex items-center gap-4">
-                  <Avatar className="w-16 h-16 border-2 border-primary/20">
+                  <Avatar className="w-16 h-16 ">
                     {sellerProfile?.avatar_url ? (
                       <img 
                         src={sellerProfile.avatar_url} 
@@ -879,7 +879,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   
                   <Button 
                     variant="outline" 
-                    className="border-primary/20 text-primary"
+                    className=" text-primary"
                     onClick={() => setShowSellerProfile(true)}
                   >
                     Voir profil
@@ -897,7 +897,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-primary/20 text-primary h-14 text-lg"
+                  className="flex-1  text-primary h-14 text-lg"
                 >
                   <Phone size={20} className="mr-2" />
                   Appeler
@@ -919,7 +919,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-blue-500/20 text-blue-600 h-14 text-lg"
+                  className="flex-1  text-blue-600 h-14 text-lg"
                   onClick={() => onEdit?.(product.id)}
                 >
                   <Edit size={20} className="mr-2" />
@@ -928,7 +928,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-red-500/20 text-red-600 h-14 text-lg"
+                  className="flex-1 /20 text-red-600 h-14 text-lg"
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
                 >
@@ -939,7 +939,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             )}
 
             {/* Map Section */}
-            <Card className="border border-gray-200">
+            <Card className="">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Localisation</h3>
                 <ProductMap location={product.location} readonly className="w-full" />
@@ -948,7 +948,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Chat Section */}
             {showChat && !isOwner && (
-              <Card className="border border-gray-200">
+              <Card className="">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-4">Discussion avec le vendeur</h3>
                   <ProductChat
@@ -965,7 +965,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
       {/* Mobile Fixed Bottom Bar */}
       {!isOwner && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-50">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white  p-4 z-50">
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <div className="text-2xl font-bold text-primary">{product.price}</div>
@@ -1006,7 +1006,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="space-y-6">
             {/* Avatar and Basic Info */}
             <div className="text-center">
-              <Avatar className="w-24 h-24 mx-auto border-4 border-primary/20 mb-4">
+              <Avatar className="w-24 h-24 mx-auto  mb-4">
                 {sellerProfile?.avatar_url ? (
                   <img 
                     src={sellerProfile.avatar_url} 
@@ -1037,7 +1037,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Bio */}
             {sellerProfile?.bio && (
-              <div className="bg-gray-50 p-4 border border-gray-200">
+              <div className="bg-gray-50 p-4 ">
                 <h4 className="font-medium text-foreground mb-2">À propos</h4>
                 <p className="text-sm text-muted-foreground">
                   {sellerProfile.bio}
