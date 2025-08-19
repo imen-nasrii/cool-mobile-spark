@@ -96,7 +96,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const likeMutation = useMutation({
     mutationFn: async (id: string) => {
       const token = localStorage.getItem('authToken');
-      console.log('ProductDetail like - Token:', token ? `Present (${token.substring(0, 20)}...)` : 'Missing');
       
       const response = await fetch(`/api/products/${id}/like`, {
         method: 'POST',
@@ -323,9 +322,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     const category = product.category?.toLowerCase();
     
     // Car details with complete information
-    console.log('Category check:', category, 'Product category:', product.category, 'Product ID:', product.id, 'Car details:', {
-      brand: product.car_brand, model: product.car_model, year: product.car_year, fuel_type: product.car_fuel_type
-    });
     if (category === 'auto' || category === 'voiture' || category === 'voitures' || category === 'véhicules') {
       const carDetails = [
         { icon: Car, label: 'Marque', value: product.car_brand, color: 'text-blue-600' },
@@ -349,7 +345,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         console.error('Error parsing car_equipment:', error);
         selectedEquipment = [];
       }
-      console.log('Equipment from database:', selectedEquipment);
       
       const equipmentList = [
         { key: 'abs', icon: '🛡️', label: 'ABS', available: selectedEquipment.includes('abs') || true },
@@ -366,7 +361,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         { key: 'sieges_ventiles', icon: '🪑', label: 'Sièges ventilés', available: selectedEquipment.includes('sieges_ventiles') || false }
       ];
 
-      console.log('Car details found:', carDetails.length, carDetails);
 
       return (
         <div className="border-t border-gray-200 pt-4">

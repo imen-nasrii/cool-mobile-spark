@@ -69,20 +69,7 @@ const formatPrice = (price: string | number) => {
 const getCategoryDetails = (product: any) => {
   const details: Array<{ icon: any; text: string }> = [];
   
-  console.log('ProductCard getCategoryDetails - Product data:', {
-    category: product.category,
-    car_year: product.car_year,
-    car_mileage: product.car_mileage,
-    car_fuel_type: product.car_fuel_type,
-    real_estate_surface: product.real_estate_surface,
-    real_estate_rooms: product.real_estate_rooms,
-    // Also check mapped fields
-    year: product.year,
-    mileage: product.mileage,
-    fuel_type: product.fuel_type,
-    surface: product.surface,
-    rooms: product.rooms
-  });
+  // Process product category details
   
   switch (product.category?.toLowerCase()) {
     case 'auto':
@@ -112,7 +99,6 @@ const getCategoryDetails = (product: any) => {
       break;
   }
   
-  console.log('ProductCard getCategoryDetails - Found details:', details);
   return details.slice(0, 3); // Limit to 3 details max
 };
 

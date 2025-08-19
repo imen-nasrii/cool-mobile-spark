@@ -34,7 +34,10 @@ export function useMessaging() {
 
   // WebSocket connection
   useEffect(() => {
-    if (!user) return;
+    if (!user || !user.id) {
+      setIsConnected(false);
+      return;
+    }
 
     // Determine WebSocket URL based on environment
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
@@ -52,7 +55,6 @@ export function useMessaging() {
       wsUrl = `${protocol}//${hostname}:${port}/ws?userId=${user.id}`;
     }
     
-    console.log('WebSocket Host:', hostname, 'Port:', port, 'Final URL:', wsUrl);
     
     // Validate WebSocket URL before creating connection
     if (wsUrl.includes('undefined') || !wsUrl.includes('ws')) {
@@ -67,7 +69,6 @@ export function useMessaging() {
 
       ws.onopen = () => {
         setIsConnected(true);
-        console.log('WebSocket connected successfully');
       };
 
       ws.onmessage = (event) => {
@@ -84,8 +85,7 @@ export function useMessaging() {
 
       ws.onclose = () => {
         setIsConnected(false);
-        console.log('WebSocket disconnected');
-      };
+        };
 
       ws.onerror = (error) => {
         console.error('WebSocket error:', error);

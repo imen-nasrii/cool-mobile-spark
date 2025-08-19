@@ -1,0 +1,28 @@
+client:536 WebSocket connection to 'wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=_UDgNd7C64HJ' failed: 
+setupWebSocket @ client:536Understand this error
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=_UDgNd7C64HJ' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)Understand this error
+chunk-RPCDYKBN.js?v=874844e6:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+ProductGrid.tsx:83 Fetching products with URL: /api/products?limit=20
+(index):165 SW registered:  ServiceWorkerRegistration
+ProductGrid.tsx:89 Fetched products: 3 items for category: undefined
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductCard.tsx:72 ProductCard getCategoryDetails - Product data: Object
+ProductCard.tsx:115 ProductCard getCategoryDetails - Found details: Array(0)
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object
+ProductDetail.tsx:326 Category check: immobilier Product category: Immobilier Product ID: 7561796d-ba16-47ba-acef-c44516c00249 Car details: Object

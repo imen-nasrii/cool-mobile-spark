@@ -80,13 +80,11 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         params.append('limit', '20'); // Paginate with 20 items
         
         const url = `/api/products?${params.toString()}`;
-        console.log('Fetching products with URL:', url);
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
-        console.log('Fetched products:', result.length, 'items for category:', category);
         return result;
       } catch (error) {
         console.error('Error fetching products:', error);
