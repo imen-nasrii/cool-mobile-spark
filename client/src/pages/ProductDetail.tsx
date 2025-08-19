@@ -486,7 +486,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {/* Caractéristiques du produit */}
             {renderProductDetails()}
 
-            {/* Statistiques */}
+            {/* Statistiques - Vues et J'aime */}
             <div className="pt-4">
               <div className="grid grid-cols-2 gap-6 text-center">
                 <div>
