@@ -157,54 +157,116 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
     switch (product.category) {
       case 'Auto':
+      case 'Voiture':
+        const carEquipment = product.car_equipment ? JSON.parse(product.car_equipment || '[]') : [];
+        
         return (
           <div className="pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
               Caractéristiques véhicule
             </h3>
             <div className="space-y-2">
-              {product.brand && (
+              {(product.car_brand || product.brand) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Marque:</span>
-                  <span className="text-black font-medium">{product.brand}</span>
+                  <span className="text-black font-medium">{product.car_brand || product.brand}</span>
                 </div>
               )}
-              {product.model && (
+              {(product.car_model || product.model) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Modèle:</span>
-                  <span className="text-black font-medium">{product.model}</span>
+                  <span className="text-black font-medium">{product.car_model || product.model}</span>
                 </div>
               )}
-              {product.year && (
+              {(product.car_year || product.year) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Année:</span>
-                  <span className="text-black font-medium">{product.year}</span>
+                  <span className="text-black font-medium">{product.car_year || product.year}</span>
                 </div>
               )}
-              {product.mileage && (
+              {(product.car_mileage || product.mileage) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Kilométrage:</span>
-                  <span className="text-black font-medium">{product.mileage} km</span>
+                  <span className="text-black font-medium">{(product.car_mileage || product.mileage).toLocaleString()} km</span>
                 </div>
               )}
-              {product.fuel_type && (
+              {(product.car_fuel_type || product.fuel_type) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Carburant:</span>
-                  <span className="text-black font-medium">{product.fuel_type}</span>
+                  <span className="text-black font-medium">{product.car_fuel_type || product.fuel_type}</span>
                 </div>
               )}
-              {product.transmission && (
+              {(product.car_transmission || product.transmission) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Transmission:</span>
-                  <span className="text-black font-medium">{product.transmission}</span>
+                  <span className="text-black font-medium">{product.car_transmission || product.transmission}</span>
                 </div>
               )}
-              {product.condition && (
+              {(product.car_condition || product.condition) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">État:</span>
-                  <span className="text-black font-medium">{product.condition}</span>
+                  <span className="text-black font-medium">{product.car_condition || product.condition}</span>
                 </div>
               )}
+              {product.car_engine_size && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Cylindrée:</span>
+                  <span className="text-black font-medium">{product.car_engine_size}</span>
+                </div>
+              )}
+              {product.car_doors && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Portes:</span>
+                  <span className="text-black font-medium">{product.car_doors}</span>
+                </div>
+              )}
+              {product.car_seats && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Places:</span>
+                  <span className="text-black font-medium">{product.car_seats}</span>
+                </div>
+              )}
+              {product.car_color && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Couleur:</span>
+                  <span className="text-black font-medium">{product.car_color}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Équipements disponibles */}
+            {carEquipment.length > 0 && (
+              <div className="pt-4">
+                <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  Équipements disponibles
+                </h4>
+                <div className="grid grid-cols-2 gap-2">
+                  {carEquipment.map((equipment: string, index: number) => (
+                    <div key={index} className="text-sm text-gray-700 bg-gray-50 px-2 py-1 rounded">
+                      • {equipment}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Options spéciales */}
+            <div className="pt-4">
+              <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Options spéciales
+              </h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {product.car_navigation && <span className="text-green-600">• Navigation</span>}
+                {product.car_cruise_control && <span className="text-green-600">• Régulateur de vitesse</span>}
+                {product.car_parking_sensors && <span className="text-green-600">• Capteurs de stationnement</span>}
+                {product.car_rear_camera && <span className="text-green-600">• Caméra arrière</span>}
+                {product.car_360_view && <span className="text-green-600">• Vue 360°</span>}
+                {product.car_lane_departure && <span className="text-green-600">• Aide au maintien de voie</span>}
+                {product.car_sunroof && <span className="text-green-600">• Toit ouvrant</span>}
+                {product.car_ventilated_seats && <span className="text-green-600">• Sièges ventilés</span>}
+                {product.car_heated_steering && <span className="text-green-600">• Volant chauffant</span>}
+                {product.car_non_smoking && <span className="text-green-600">• Véhicule non fumeur</span>}
+              </div>
             </div>
           </div>
         );
@@ -216,41 +278,62 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               Caractéristiques immobilier
             </h3>
             <div className="space-y-2">
-              {product.property_type && (
+              {(product.real_estate_type || product.property_type) && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Type:</span>
-                  <span className="text-black font-medium">{product.property_type}</span>
+                  <span className="text-gray-600">Type de bien:</span>
+                  <span className="text-black font-medium">{product.real_estate_type || product.property_type}</span>
                 </div>
               )}
-              {product.surface_area && (
+              {(product.real_estate_surface || product.surface_area) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Surface:</span>
-                  <span className="text-black font-medium">{product.surface_area} m²</span>
+                  <span className="text-black font-medium">{product.real_estate_surface || product.surface_area} m²</span>
                 </div>
               )}
-              {product.bedrooms && (
+              {(product.real_estate_rooms || product.bedrooms) && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Chambres:</span>
-                  <span className="text-black font-medium">{product.bedrooms}</span>
+                  <span className="text-gray-600">Pièces:</span>
+                  <span className="text-black font-medium">{product.real_estate_rooms || product.bedrooms}</span>
                 </div>
               )}
-              {product.bathrooms && (
+              {(product.real_estate_bathrooms || product.bathrooms) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Salles de bain:</span>
-                  <span className="text-black font-medium">{product.bathrooms}</span>
+                  <span className="text-black font-medium">{product.real_estate_bathrooms || product.bathrooms}</span>
                 </div>
               )}
-              {product.floor && (
+              {(product.real_estate_floor || product.floor) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Étage:</span>
-                  <span className="text-black font-medium">{product.floor}</span>
+                  <span className="text-black font-medium">{product.real_estate_floor || product.floor}</span>
                 </div>
               )}
+              {product.real_estate_condition && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">État:</span>
+                  <span className="text-black font-medium">{product.real_estate_condition}</span>
+                </div>
+              )}
+            </div>
+            
+            {/* Commodités */}
+            <div className="pt-4">
+              <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Commodités
+              </h4>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                {product.real_estate_furnished && <span className="text-green-600">• Meublé</span>}
+                {product.real_estate_parking && <span className="text-green-600">• Place de parking</span>}
+                {product.real_estate_garden && <span className="text-green-600">• Jardin</span>}
+                {product.real_estate_balcony && <span className="text-green-600">• Balcon</span>}
+              </div>
             </div>
           </div>
         );
 
       case 'Emplois':
+        const jobBenefits = product.job_benefits ? JSON.parse(product.job_benefits || '[]') : [];
+        
         return (
           <div className="pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
@@ -259,29 +342,76 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             <div className="space-y-2">
               {product.job_type && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Type:</span>
+                  <span className="text-gray-600">Type de contrat:</span>
                   <span className="text-black font-medium">{product.job_type}</span>
                 </div>
               )}
-              {product.company && (
+              {(product.job_company || product.company) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Entreprise:</span>
-                  <span className="text-black font-medium">{product.company}</span>
+                  <span className="text-black font-medium">{product.job_company || product.company}</span>
                 </div>
               )}
-              {product.experience_level && (
+              {product.job_sector && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Secteur:</span>
+                  <span className="text-black font-medium">{product.job_sector}</span>
+                </div>
+              )}
+              {(product.job_experience || product.experience_level) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Expérience:</span>
-                  <span className="text-black font-medium">{product.experience_level}</span>
+                  <span className="text-black font-medium">{product.job_experience || product.experience_level}</span>
                 </div>
               )}
-              {product.salary_range && (
+              {product.job_education && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Formation:</span>
+                  <span className="text-black font-medium">{product.job_education}</span>
+                </div>
+              )}
+              {(product.job_salary_min || product.job_salary_max || product.salary_range) && (
                 <div className="flex justify-between">
                   <span className="text-gray-600">Salaire:</span>
-                  <span className="text-black font-medium">{product.salary_range}</span>
+                  <span className="text-black font-medium">
+                    {product.salary_range || 
+                     (product.job_salary_min && product.job_salary_max ? 
+                      `${product.job_salary_min.toLocaleString()} - ${product.job_salary_max.toLocaleString()} TND` :
+                      product.job_salary_min ? `À partir de ${product.job_salary_min.toLocaleString()} TND` :
+                      product.job_salary_max ? `Jusqu'à ${product.job_salary_max.toLocaleString()} TND` : 'À négocier'
+                     )}
+                  </span>
+                </div>
+              )}
+              {product.job_urgency && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Urgence:</span>
+                  <span className="text-black font-medium">{product.job_urgency}</span>
+                </div>
+              )}
+              {product.job_remote !== undefined && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Télétravail:</span>
+                  <span className="text-black font-medium">{product.job_remote ? 'Possible' : 'Non'}</span>
                 </div>
               )}
             </div>
+            
+            {/* Avantages */}
+            {jobBenefits.length > 0 && (
+              <div className="pt-4">
+                <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  Avantages
+                </h4>
+                <div className="grid grid-cols-1 gap-2">
+                  {jobBenefits.map((benefit: string, index: number) => (
+                    <div key={index} className="text-sm text-gray-700 bg-gray-50 px-2 py-1 rounded">
+                      • {benefit}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         );
 
@@ -371,12 +501,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Layout principal en 2 colonnes */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          
-          {/* COLONNE GAUCHE - FIXE : Photo + Vendeur */}
-          <div className="space-y-6">
+      {/* Layout principal en 2 colonnes avec scroll */}
+      <div className="flex h-[calc(100vh-80px)] max-w-7xl mx-auto">
+        
+        {/* COLONNE GAUCHE - FIXE : Photo + Vendeur */}
+        <div className="w-1/2 p-6 space-y-6">
             {/* Galerie d'images */}
             <ImageGallery 
               images={(() => {
@@ -437,7 +566,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </div>
           </div>
 
-          {/* COLONNE DROITE - DYNAMIQUE : Infos produit */}
+        {/* COLONNE DROITE - SCROLLABLE : Infos produit */}
+        <div className="w-1/2 overflow-y-auto p-6">
           <div className="space-y-6">
             {/* Titre et Prix */}
             <div>
