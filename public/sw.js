@@ -43,10 +43,16 @@ self.addEventListener('fetch', function(event) {
           return response;
         }
         
-        // Tenter la requête réseau avec gestion d'erreur
+        // Tenter la requête réseau - ignorer les erreurs externes
         return fetch(event.request).catch(function(error) {
-          console.log('Network request failed:', error);
-          // Retourner une réponse par défaut ou vide en cas d'échec
+          // Retourner une réponse vide pour les erreurs CORS/externes
+          if (event.request.url.includes('nominatim.openstreetmap.org')) {
+            return new Response('{}', {
+              status: 200,
+              headers: { 'Content-Type': 'application/json' }
+            });
+          }
+          // Pour autres erreurs, retourner erreur service
           return new Response('Network error', {
             status: 503,
             statusText: 'Service Unavailable'

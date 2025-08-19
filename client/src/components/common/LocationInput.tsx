@@ -34,30 +34,36 @@ export function LocationInput({
   const debounceRef = useRef<NodeJS.Timeout>();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Fonction pour rechercher des suggestions de localisation
+  // Utiliser des villes tunisiennes prédéfinies pour éviter les erreurs CORS
+  const tunisianCities = [
+    { display_name: "Tunis, Tunisie", lat: "36.8065", lon: "10.1815", place_id: "tunis" },
+    { display_name: "Sfax, Tunisie", lat: "34.7406", lon: "10.7603", place_id: "sfax" },
+    { display_name: "Sousse, Tunisie", lat: "35.8256", lon: "10.6369", place_id: "sousse" },
+    { display_name: "Monastir, Tunisie", lat: "35.7777", lon: "10.8263", place_id: "monastir" },
+    { display_name: "Bizerte, Tunisie", lat: "37.2746", lon: "9.8739", place_id: "bizerte" },
+    { display_name: "Gabès, Tunisie", lat: "33.8815", lon: "10.0982", place_id: "gabes" },
+    { display_name: "Kairouan, Tunisie", lat: "35.6781", lon: "10.0963", place_id: "kairouan" },
+    { display_name: "Nabeul, Tunisie", lat: "36.4561", lon: "10.7376", place_id: "nabeul" },
+    { display_name: "Mahdia, Tunisie", lat: "35.5047", lon: "11.0622", place_id: "mahdia" },
+    { display_name: "Médenine, Tunisie", lat: "33.3548", lon: "10.5055", place_id: "medenine" },
+  ];
+
+  // Fonction pour rechercher des suggestions locales (sans API externe)
   const searchLocations = async (query: string) => {
-    if (query.length < 3) {
+    if (query.length < 2) {
       setSuggestions([]);
       return;
     }
 
     setIsLoading(true);
-    try {
-      // Utiliser l'API Nominatim d'OpenStreetMap (gratuite)
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=tn&q=${encodeURIComponent(query)}`
+    setTimeout(() => {
+      const filtered = tunisianCities.filter(city =>
+        city.display_name.toLowerCase().includes(query.toLowerCase())
       );
-      
-      if (response.ok) {
-        const data = await response.json();
-        setSuggestions(data);
-        setShowSuggestions(true);
-      }
-    } catch (error) {
-      console.error('Erreur de géolocalisation:', error);
-    } finally {
+      setSuggestions(filtered);
+      setShowSuggestions(true);
       setIsLoading(false);
-    }
+    }, 200);
   };
 
   // Debounce pour éviter trop de requêtes API
@@ -111,32 +117,8 @@ export function LocationInput({
           // Utiliser les coordonnées directement comme fallback
           const simpleLocation = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
           
-          try {
-            // Tentative de géocodage inverse
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 5000);
-            
-            const response = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
-              { signal: controller.signal }
-            );
-            
-            clearTimeout(timeoutId);
-            
-            if (response.ok) {
-              const data = await response.json();
-              const location = data.display_name || simpleLocation;
-              onChange(location, { lat: latitude, lon: longitude });
-              
-              toast({
-                title: "Position actuelle détectée",
-                description: location,
-              });
-              return;
-            }
-          } catch (apiError) {
-            // Fallback silencieux aux coordonnées
-          }
+          // Éviter les appels API externes qui causent des erreurs CORS
+          // Utiliser directement les coordonnées comme position
           
           // Utiliser les coordonnées comme fallback
           onChange(simpleLocation, { lat: latitude, lon: longitude });
