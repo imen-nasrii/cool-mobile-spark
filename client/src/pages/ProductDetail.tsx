@@ -508,7 +508,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="tomati-brand mb-4">Tomati</div>
-          <div className="rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
+          <div className="h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
           <p className="text-sm text-muted-foreground mt-4">Chargement du produit...</p>
         </div>
       </div>
@@ -629,12 +629,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               {product.is_free ? 'Gratuit' : formatPrice(product.price)}
             </div>
             <div className="flex gap-2 mb-3">
-              <span className="px-2 py-1 bg-gray-100 text-black text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
+              <span className="px-2 py-1 bg-gray-100 text-black text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>{product.category}</span>
               {product.is_free && (
-                <span className="px-2 py-1 bg-green-100 text-green-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Gratuit</span>
+                <span className="px-2 py-1 bg-green-100 text-green-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>Gratuit</span>
               )}
               {product.is_reserved && (
-                <span className="px-2 py-1 bg-red-100 text-red-600 text-sm rounded" style={{ fontFamily: 'Arial, sans-serif' }}>Réservé</span>
+                <span className="px-2 py-1 bg-red-100 text-red-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>Réservé</span>
               )}
             </div>
             <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
@@ -761,7 +761,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 }
               })()} 
               title={product.title}
-              className="rounded-2xl border border-gray-200 w-full"
+              className="border border-gray-200 w-full"
             />
             
             {/* Quick Stats Card */}
@@ -845,7 +845,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       <img 
                         src={sellerProfile.avatar_url} 
                         alt={sellerProfile?.display_name || "Vendeur"} 
-                        className="w-full h-full object-cover rounded-full"
+                        className="w-full h-full object-cover"
                       />
                     ) : (
                       <AvatarFallback className="bg-primary/10 text-primary font-medium text-xl">
@@ -1011,7 +1011,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   <img 
                     src={sellerProfile.avatar_url} 
                     alt={sellerProfile?.display_name || "Vendeur"} 
-                    className="w-full h-full object-cover rounded-full"
+                    className="w-full h-full object-cover"
                   />
                 ) : (
                   <AvatarFallback className="bg-primary/10 text-primary font-medium text-3xl">
@@ -1037,7 +1037,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Bio */}
             {sellerProfile?.bio && (
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 border border-gray-200">
                 <h4 className="font-medium text-foreground mb-2">À propos</h4>
                 <p className="text-sm text-muted-foreground">
                   {sellerProfile.bio}
