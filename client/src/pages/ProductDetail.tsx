@@ -603,8 +603,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Mobile Layout - Force visible */}
-      <div className="block">
+      {/* Mobile Layout */}
+      <div className="md:hidden">
         {/* Mobile Images */}
         <div className="w-full">
           <ImageGallery 
