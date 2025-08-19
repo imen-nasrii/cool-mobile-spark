@@ -1,0 +1,67 @@
+Thanks for pasting the updated logs 🙏 — now it’s clear what’s happening:
+
+The browser first tries the right URL:
+
+wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=...
+
+
+→ This fails to connect (likely backend not accepting WS, or wrong endpoint).
+
+Then your code falls back and tries:
+
+wss://localhost:undefined/?token=...
+
+
+→ This crashes immediately because the URL is invalid (undefined port).
+
+🔍 Two separate problems
+
+Invalid fallback URL
+
+Your fallback is building localhost:undefined because process.env.PORT (or whatever variable you use) isn’t defined in the browser.
+
+Fix: give it a hardcoded default (e.g. 3000) instead of relying on an undefined env var.
+
+function getLocalWsUrl(token: string) {
+  const port = 3000; // or your backend’s port
+  return `ws://localhost:${port}/?token=${token}`;
+}
+
+
+Primary URL connection failure
+
+Even the “correct” Replit URL (wss://...riker.replit.dev) is failing to connect.
+
+That usually means:
+
+The backend server isn’t upgrading requests to WebSocket on that route, or
+
+You’re trying to connect to the wrong path (maybe the server listens on /ws instead of /).
+
+👉 Double-check how your backend creates the WebSocket server.
+For example, in Node/Express + ws you’d typically do:
+
+const WebSocket = require("ws");
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server, path: "/ws" });
+
+wss.on("connection", (socket) => {
+  console.log("Client connected");
+});
+
+server.listen(process.env.PORT || 3000);
+
+
+And then your client must connect to:
+
+const ws = new WebSocket(`wss://${window.location.host}/ws?token=${token}`);
+
+✅ Next steps for you
+
+Fix your URL builder so fallback never produces localhost:undefined.
+
+Confirm your backend WebSocket server path (/, /ws, etc.) and make sure the client matches it.
+
+Ensure the backend is actually listening for WS connections (not just HTTP).
+
+Do you want me to help you adjust both the client URL builder and the server WebSocket setup so they align (so we can be sure they’re pointing at the same path)?
