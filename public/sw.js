@@ -42,7 +42,16 @@ self.addEventListener('fetch', function(event) {
         if (response) {
           return response;
         }
-        return fetch(event.request);
+        
+        // Tenter la requête réseau avec gestion d'erreur
+        return fetch(event.request).catch(function(error) {
+          console.log('Network request failed:', error);
+          // Retourner une réponse par défaut ou vide en cas d'échec
+          return new Response('Network error', {
+            status: 503,
+            statusText: 'Service Unavailable'
+          });
+        });
       }
     )
   );

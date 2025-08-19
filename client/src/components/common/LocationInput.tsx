@@ -108,21 +108,43 @@ export function LocationInput({
         const { latitude, longitude } = position.coords;
         
         try {
-          // Géocodage inverse pour obtenir l'adresse
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
-          );
+          // Utiliser les coordonnées directement comme fallback
+          const simpleLocation = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
           
-          if (response.ok) {
-            const data = await response.json();
-            const location = data.display_name;
-            onChange(location, { lat: latitude, lon: longitude });
+          try {
+            // Tentative de géocodage inverse
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
             
-            toast({
-              title: "Position actuelle détectée",
-              description: location,
-            });
+            const response = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`,
+              { signal: controller.signal }
+            );
+            
+            clearTimeout(timeoutId);
+            
+            if (response.ok) {
+              const data = await response.json();
+              const location = data.display_name || simpleLocation;
+              onChange(location, { lat: latitude, lon: longitude });
+              
+              toast({
+                title: "Position actuelle détectée",
+                description: location,
+              });
+              return;
+            }
+          } catch (apiError) {
+            // Fallback silencieux aux coordonnées
           }
+          
+          // Utiliser les coordonnées comme fallback
+          onChange(simpleLocation, { lat: latitude, lon: longitude });
+          toast({
+            title: "Position détectée",
+            description: simpleLocation,
+          });
+          
         } catch (error) {
           toast({
             title: "Erreur de géolocalisation",
