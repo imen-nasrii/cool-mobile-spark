@@ -666,7 +666,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
                 "Membre actif de la communauté Tomati Market."
               </div>
-            </div>
             <div className="flex gap-3">
               <Button 
                 onClick={() => setShowChat(true)}
@@ -724,7 +723,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     />
                   ))}
                 </div>
-              </div>
             </div>
           </div>
 
@@ -760,9 +758,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               className=" w-full"
             />
             
-            {/* Informations vendeur Card */}
-            <Card className="">
-              <CardContent className="p-6">
+            {/* Informations vendeur div */}
+            <div className="p-6">
                 <h3 className="text-lg font-semibold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
                   Informations vendeur
                 </h3>
@@ -777,7 +774,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       <span className="font-semibold text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
                         {product.user_name || 'Utilisateur user'}
                       </span>
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      <div className="w-2 h-2 bg-green-500 "></div>
                     </div>
                     <div className="flex items-center gap-1 mb-1 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
                       <span className="text-yellow-500">⭐</span>
@@ -795,7 +792,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   <div className="flex flex-col gap-2 ml-4">
                     <Button 
                       size="sm"
-                      className="w-8 h-8 p-0 bg-red-500 text-white rounded-sm"
+                      className="w-8 h-8 p-0 bg-red-500 text-white "
                       onClick={() => {}}
                       style={{ fontFamily: 'Arial, sans-serif' }}
                     >
@@ -803,7 +800,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     </Button>
                     <Button 
                       size="sm"
-                      className="w-8 h-8 p-0 bg-red-500 text-white rounded-sm"
+                      className="w-8 h-8 p-0 bg-red-500 text-white "
                       onClick={() => setShowChat(true)}
                       style={{ fontFamily: 'Arial, sans-serif' }}
                     >
@@ -815,7 +812,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 {/* Boutons d'action en bas */}
                 <div className="grid grid-cols-2 gap-3 mt-4">
                   <Button 
-                    className="bg-red-500 text-white py-3 rounded-sm"
+                    className="bg-red-500 text-white py-3 "
                     onClick={() => {}}
                     style={{ fontFamily: 'Arial, sans-serif' }}
                   >
@@ -823,7 +820,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     Appeler
                   </Button>
                   <Button 
-                    className="bg-red-500 text-white py-3 rounded-sm"
+                    className="bg-red-500 text-white py-3 "
                     onClick={() => setShowChat(true)}
                     style={{ fontFamily: 'Arial, sans-serif' }}
                   >
@@ -831,15 +828,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     Envoyer message
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
           </div>
 
           {/* Right Column - Scrollable Product Details */}
           <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Price & Title */}
-            <Card className="">
-              <CardContent className="p-6">
+            <div className="p-6">
                 <div className="space-y-4">
                   <div>
                     <h2 className="text-3xl font-bold text-foreground mb-2">{product.title}</h2>
@@ -867,25 +862,21 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     <span>{formatTimeAgo(product.created_at)}</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
             {/* Product Details with Icons */}
             {renderProductDetails()}
 
             {/* Description */}
-            <Card className="">
-              <CardContent className="p-6">
+            <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Description</h3>
                 <p className="text-muted-foreground leading-relaxed text-base mb-6">
                   {product.description || "Aucune description fournie."}
                 </p>
-              </CardContent>
-            </Card>
+            </div>
 
             {/* Seller Info */}
-            <Card className="">
-              <CardContent className="p-6">
+            <div className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Informations vendeur</h3>
                 <div className="flex items-center gap-4">
                   <Avatar className="w-16 h-16 ">
@@ -933,8 +924,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     Voir profil
                   </Button>
                 </div>
-              </CardContent>
-            </Card>
+            </div>
 
             {/* Sidebar Ad */}
             <AdBanner position="sidebar" category={product.category} />
@@ -987,25 +977,23 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             )}
 
             {/* Map Section */}
-            <Card className="">
-              <CardContent className="p-6">
+            <div className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Localisation</h3>
                 <ProductMap location={product.location} readonly className="w-full" />
-              </CardContent>
-            </Card>
+            </div>
 
             {/* Chat Section */}
             {showChat && !isOwner && (
-              <Card className="">
-                <CardContent className="p-6">
+              <div className="">
+                <div className="p-6">
                   <h3 className="text-xl font-semibold mb-4">Discussion avec le vendeur</h3>
                   <ProductChat
                     productId={product.id}
                     sellerId={product.user_id}
                     onClose={() => setShowChat(false)}
                   />
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             )}
           </div>
         </div>
@@ -1134,6 +1122,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           </div>
         </DialogContent>
       </Dialog>
+      </div>
+      </div>
     </div>
   );
 };
