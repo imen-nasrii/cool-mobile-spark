@@ -187,18 +187,27 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen">
-      {currentView === "product" ? (
-        <ProductDetail 
-          productId={selectedProduct}
-          onBack={handleBackToMain}
-          onEdit={handleProductEdit}
-        />
-      ) : (
-        <>
-          {renderContent()}
+    <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Arial, sans-serif' }}>
+      {/* Header Navigation */}
+      <Header 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange} 
+        onSearch={handleSearch} 
+      />
+      
+      {/* Main Content */}
+      <main className="pb-20 pt-4">
+        {currentView === "product" ? (
+          <ProductDetail 
+            productId={selectedProduct}
+            onBack={handleBackToMain}
+            onEdit={handleProductEdit}
+          />
+        ) : (
+          <>
+            {renderContent()}
 
-          {/* Category Modal */}
+            {/* Category Modal */}
           <Dialog open={showCategoryModal} onOpenChange={setShowCategoryModal}>
             <DialogContent className="max-w-sm mx-auto p-0 bg-white rounded-2xl">
               <div className="p-6 space-y-4">
@@ -224,7 +233,14 @@ const Index = () => {
             </DialogContent>
           </Dialog>
         </>
-      )}
+        )}
+      </main>
+      
+      {/* Bottom Navigation */}
+      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      
+      {/* Floating Add Button */}
+      <AddButton onCategorySelect={handleFloatingCategorySelect} />
     </div>
   );
 };
