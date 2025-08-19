@@ -52,7 +52,7 @@ const formatPrice = (price: string | number) => {
   
   // Handle "Free" text
   if (typeof price === 'string' && (price.toLowerCase() === 'free' || price.toLowerCase() === 'gratuit')) {
-    return "Gratuit";
+    return "0 TND";
   }
   
   // Remove currency symbols and clean the price string
@@ -65,7 +65,7 @@ const formatPrice = (price: string | number) => {
     return "Prix invalide";
   }
   
-  if (numPrice === 0) return "Gratuit";
+  if (numPrice === 0) return "0 TND";
   return `${numPrice.toLocaleString()} TND`;
 };
 
