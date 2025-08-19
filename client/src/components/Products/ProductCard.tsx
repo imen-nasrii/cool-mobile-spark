@@ -1,4 +1,4 @@
-import { Heart, MapPin, Clock, MessageCircle, Calendar, Gauge, Fuel, Home, Users, Building, Briefcase } from "lucide-react";
+import { Heart, MapPin, Clock, MessageCircle, Calendar, Gauge, Fuel, Home, Users, Building, Briefcase, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -73,37 +73,38 @@ const formatPrice = (price: string | number) => {
 const getCategoryDetails = (product: any) => {
   const details: Array<{ icon: any; text: string }> = [];
   
-  // Process product category details
-  
   switch (product.category?.toLowerCase()) {
     case 'auto':
     case 'voiture':
-      // Try both database fields and mapped fields
+      // Voiture: année, kilométrage, carburant, marque/modèle
+      if (product.car_brand || product.brand) details.push({ icon: Car, text: product.car_brand || product.brand });
       if (product.car_year || product.year) details.push({ icon: Calendar, text: (product.car_year || product.year).toString() });
       if (product.car_mileage || product.mileage) details.push({ icon: Gauge, text: `${Number(product.car_mileage || product.mileage).toLocaleString()} km` });
       if (product.car_fuel_type || product.fuel_type) details.push({ icon: Fuel, text: product.car_fuel_type || product.fuel_type });
       break;
       
     case 'immobilier':
+      // Immobilier: type (villa/appartement), surface, pièces
+      if (product.real_estate_type || product.property_type) details.push({ icon: Building, text: product.real_estate_type || product.property_type });
       if (product.real_estate_surface || product.surface) details.push({ icon: Home, text: `${product.real_estate_surface || product.surface} m²` });
       if (product.real_estate_rooms || product.rooms) details.push({ icon: Users, text: `${product.real_estate_rooms || product.rooms} pièces` });
-      if (product.real_estate_type || product.property_type) details.push({ icon: Building, text: product.real_estate_type || product.property_type });
       break;
       
     case 'emplois':
     case 'emploi':
+      // Emploi: type contrat, secteur, expérience
       if (product.job_type) details.push({ icon: Briefcase, text: product.job_type });
       if (product.job_sector) details.push({ icon: Building, text: product.job_sector });
       if (product.job_experience) details.push({ icon: Calendar, text: product.job_experience });
       break;
       
     default:
-      // For "autres" category, show basic info if available
+      // Autres: état seulement (pas de champs supplémentaires)
       if (product.condition) details.push({ icon: Clock, text: product.condition });
       break;
   }
   
-  return details.slice(0, 3); // Limit to 3 details max
+  return details.slice(0, 4); // Augmenté à 4 détails max
 };
 
 interface Product {
