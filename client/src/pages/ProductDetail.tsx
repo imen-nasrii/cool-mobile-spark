@@ -66,15 +66,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const fetchProduct = async () => {
     try {
       setLoading(true);
-      const response = await apiClient(`/api/products/${productId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setProduct(data);
-      }
+      const data = await apiClient.getProduct(productId!);
+      setProduct(data);
     } catch (error) {
       console.error('Error fetching product:', error);
       toast({
-        title: "Erreur",
+        title: "Erreur", 
         description: "Impossible de charger le produit",
         variant: "destructive",
       });
@@ -85,7 +82,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   const incrementViewCount = async () => {
     try {
-      await apiClient(`/api/products/${productId}/view`, {
+      await apiClient.request(`/products/${productId}/view`, {
         method: 'POST'
       });
     } catch (error) {
@@ -104,20 +101,17 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
 
     try {
-      const response = await apiClient(`/api/products/${productId}/rate`, {
+      await apiClient.request(`/products/${productId}/rate`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ rating })
       });
 
-      if (response.ok) {
-        setUserRating(rating);
-        fetchProduct(); // Refresh to get updated rating
-        toast({
-          title: "Note enregistrée",
-          description: `Vous avez donné ${rating} étoile${rating > 1 ? 's' : ''} à ce produit`,
-        });
-      }
+      setUserRating(rating);
+      fetchProduct(); // Refresh to get updated rating
+      toast({
+        title: "Note enregistrée",
+        description: `Vous avez donné ${rating} étoile${rating > 1 ? 's' : ''} à ce produit`,
+      });
     } catch (error) {
       console.error('Error rating product:', error);
       toast({
@@ -152,17 +146,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
     
     try {
-      const response = await apiClient(`/api/products/${productId}`, {
-        method: 'DELETE'
+      await apiClient.deleteProduct(productId!);
+      toast({
+        title: "Produit supprimé",
+        description: "Le produit a été supprimé avec succès",
       });
-
-      if (response.ok) {
-        toast({
-          title: "Produit supprimé",
-          description: "Le produit a été supprimé avec succès",
-        });
-        onBack?.();
-      }
+      onBack?.();
     } catch (error) {
       console.error('Error deleting product:', error);
       toast({
