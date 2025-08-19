@@ -32,12 +32,17 @@ export function useMessaging() {
   const wsRef = useRef<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
-  // WebSocket connection
+  // WebSocket connection - Temporarily disabled
   useEffect(() => {
     if (!user || !user.id) {
       setIsConnected(false);
       return;
     }
+    
+    // Disable WebSocket for now to avoid confusion
+    console.log('WebSocket messaging disabled for debugging');
+    setIsConnected(false);
+    return;
 
     // Determine WebSocket URL based on environment
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
