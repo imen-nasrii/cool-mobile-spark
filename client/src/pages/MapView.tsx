@@ -95,13 +95,11 @@ export default function MapView() {
           });
         },
         (error) => {
-          console.error("Error getting location:", error);
-          // Default to Tunis center if geolocation fails
+          // Silent fallback to Tunis - no console error needed
           setUserLocation([36.8065, 10.1815]);
           toast({
             title: "Position par défaut",
             description: "Utilisation de Tunis comme position par défaut.",
-            variant: "destructive",
           });
         },
         {

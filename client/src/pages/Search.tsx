@@ -80,13 +80,16 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
 
   useEffect(() => {
     setProducts(productsData);
-    if (productsData.length > 0) {
-      applyFiltersAndSort(productsData);
+    setLoading(queryLoading);
+  }, [productsData, queryLoading]);
+
+  useEffect(() => {
+    if (products.length > 0) {
+      applyFiltersAndSort(products);
     } else {
       setFilteredProducts([]);
     }
-    setLoading(queryLoading);
-  }, [productsData, queryLoading]);
+  }, [products]);
 
 
   const handleSearch = async (query: string) => {
