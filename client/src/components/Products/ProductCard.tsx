@@ -1,10 +1,11 @@
+import React, { useState } from "react";
 import { Heart, MapPin, Clock, MessageCircle, Calendar, Gauge, Fuel, Home, Users, Building, Briefcase, Car } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
-import React, { useState } from "react";
+import { CarEquipmentIcons } from "@/components/UI/CarEquipmentIcons";
 // Import default images  
 import teslaImage from '@/assets/tesla-model3.jpg';
 import sofaImage from '@/assets/modern-sofa.jpg';
@@ -68,6 +69,7 @@ const formatPrice = (price: string | number) => {
   if (numPrice === 0) return "Gratuit";
   return `${numPrice.toLocaleString()} TND`;
 };
+
 
 // Get category-specific details to display
 const getCategoryDetails = (product: any) => {
@@ -266,6 +268,13 @@ const ProductCardComponent = ({
             }
             return null;
           })()}
+          
+          {/* Car equipment for voiture category */}
+          {(product.category?.toLowerCase() === 'auto' || product.category?.toLowerCase() === 'voiture') && (product as any).car_equipment && (
+            <div className="mb-2">
+              <CarEquipmentIcons carEquipment={JSON.parse((product as any).car_equipment || '[]')} variant="compact" />
+            </div>
+          )}
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">
             <MapPin size={10} className="mr-1 flex-shrink-0" />
