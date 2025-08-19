@@ -149,6 +149,9 @@ const Index = () => {
 
   const handleFloatingCategorySelect = (categoryId: string) => {
     console.log('handleFloatingCategorySelect called with:', categoryId);
+    console.log('Current user:', user);
+    console.log('Current activeTab:', activeTab);
+    
     if (!user) {
       toast({
         title: "Connexion requise",
@@ -158,9 +161,19 @@ const Index = () => {
       navigate("/auth");
       return;
     }
+    
     console.log('Setting activeTab to add and category to:', categoryId);
+    
+    // Force state updates
+    setCurrentView("main"); // Make sure we're in main view
     setActiveTab("add");
     setSelectedCategory(categoryId);
+    
+    // Force re-render with a small delay
+    setTimeout(() => {
+      console.log('After timeout - activeTab:', activeTab, 'selectedCategory:', selectedCategory);
+    }, 100);
+    
     toast({
       title: "Catégorie sélectionnée",
       description: `Ajout d'une annonce: ${categories.find(c => c.id === categoryId)?.name}`,
@@ -168,12 +181,15 @@ const Index = () => {
   };
 
   const renderContent = () => {
+    console.log('renderContent called with activeTab:', activeTab, 'selectedCategory:', selectedCategory);
+    
     switch (activeTab) {
       case "home":
         return <HomePage onProductClick={handleProductClick} activeTab={activeTab} onTabChange={handleTabChange} searchTerm={homeSearchTerm} />;
       case "search":
         return <Search activeTab={activeTab} onTabChange={handleTabChange} onProductClick={handleProductClick} />;
       case "add":
+        console.log('Rendering AddProduct with category:', selectedCategory);
         return <AddProduct activeTab={activeTab} onTabChange={handleTabChange} selectedCategory={selectedCategory} />;
       case "messages":
         return <MessagesPage />;
