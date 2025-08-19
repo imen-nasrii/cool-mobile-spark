@@ -182,8 +182,7 @@ export default function MapView() {
   }
 
   return (
-    <div className="min-h-screen">
-      
+    <div className="h-full">
       {/* Map Header with Filters */}
       <div className="bg-white border-b p-4">
         <div className="max-w-7xl mx-auto">
@@ -295,14 +294,14 @@ export default function MapView() {
         {/* Map */}
         <div className="flex-1 relative">
           {isLoading ? (
-            <div className="flex items-center justify-center h-screen">
+            <div className="flex items-center justify-center h-[calc(100vh-140px)]">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
             </div>
           ) : (
             <MapContainer
               center={userLocation}
               zoom={13}
-              className="h-screen w-full"
+              className="h-[calc(100vh-140px)] w-full"
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
