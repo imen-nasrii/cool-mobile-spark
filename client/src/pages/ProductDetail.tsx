@@ -515,6 +515,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     );
   }
 
+  // Debug temporaire
+  console.log('ProductDetail Debug:', { product, loading, productData, isLoading });
+
   if (!product) {
     return (
       <div className="min-h-screen flex items-center justify-center">
