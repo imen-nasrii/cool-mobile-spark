@@ -73,7 +73,7 @@ const Index = () => {
 
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
-    if ((tab === "add" || tab === "messages") && !user) {
+    if ((tab === "messages") && !user) {
       toast({
         title: "Authentication Required",
         description: "Please sign in to access this feature.",
@@ -81,6 +81,11 @@ const Index = () => {
       });
       navigate("/auth");
       return;
+    }
+    
+    // Allow add tab without auth for testing
+    if (tab === "add" && !user) {
+      console.log('Allowing add tab without auth for testing');
     }
     
     // Handle navigation to other pages - let MainLayout handle this
@@ -152,14 +157,16 @@ const Index = () => {
     console.log('Current user:', user);
     console.log('Current activeTab:', activeTab);
     
+    // Permettre l'ajout sans authentification pour les tests
     if (!user) {
-      toast({
-        title: "Connexion requise",
-        description: "Veuillez vous connecter pour publier une annonce.",
-        variant: "destructive",
-      });
-      navigate("/auth");
-      return;
+      console.log('No user - showing form anyway for testing');
+      // toast({
+      //   title: "Connexion requise",
+      //   description: "Veuillez vous connecter pour publier une annonce.",
+      //   variant: "destructive",
+      // });
+      // navigate("/auth");
+      // return;
     }
     
     console.log('Setting activeTab to add and category to:', categoryId);
