@@ -80,20 +80,23 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         params.append('limit', '20'); // Paginate with 20 items
         
         const url = `/api/products?${params.toString()}`;
+        console.log('ProductGrid - Fetching products from:', url);
         const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const result = await response.json();
+        console.log('ProductGrid - Fetched products:', result.length, 'items');
         return result;
       } catch (error) {
         console.error('Error fetching products:', error);
         throw error;
       }
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes cache for better performance
+    staleTime: 30 * 1000, // 30 seconds cache for faster updates
     retry: 1, // Reduced retries for faster error handling
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: true, // Refetch when window gains focus
+    refetchOnMount: true, // Always refetch when component mounts
   });
 
   // Apply search filter and sorting to products

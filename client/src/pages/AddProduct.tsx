@@ -38,9 +38,12 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
         description: "Votre annonce a été publiée avec succès",
       });
       
+      // Invalidate all product-related queries
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.refetchQueries({ queryKey: ['/api/products'] });
+      
       // Reset and redirect
       setSelectedCategory("");
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
       onTabChange?.("home");
     },
     onError: (error: any) => {
