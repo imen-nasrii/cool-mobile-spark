@@ -574,11 +574,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           <div className="flex gap-3">
             {isOwner && (
               <>
-                <Button variant="outline" size="sm" onClick={() => onEdit?.(product.id)} className=" text-black">
+                <Button  size="sm" onClick={() => onEdit?.(product.id)} className=" text-black">
                   <Edit size={16} />
                 </Button>
                 <Button 
-                  variant="outline" 
+                   
                   size="sm" 
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
@@ -589,7 +589,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </>
             )}
             <Button 
-              variant="outline" 
+               
               size="sm" 
               className="gap-2  text-black"
               onClick={handleShare}
@@ -648,27 +648,23 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Informations du Vendeur */}
           <div className=" pt-4">
             <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Vendeur</h3>
-            <div className="flex items-start gap-3 mb-4">
-              <Avatar className="h-12 w-12 ">
+            <div className="text-center mb-4">
+              <Avatar className="h-16 w-16 mx-auto mb-3">
                 <AvatarFallback className="bg-gray-100 text-black font-semibold">
                   {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1">
-                <div className="font-semibold text-black mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  {product.user_name || 'Utilisateur'}
-                </div>
-                <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
-                </div>
-                <div className="flex gap-4 text-sm text-gray-600">
-                  <div>
-                    <span className="font-medium text-black">Annonces:</span> {product.user_product_count || 1}
-                  </div>
-                  <div>
-                    <span className="font-medium text-black">Note:</span> ⭐ {(product.user_rating || 4.5).toFixed(1)}
-                  </div>
-                </div>
+              <div className="font-semibold text-black mb-1" style={{ fontFamily: 'Arial, sans-serif' }}>
+                {product.user_name || 'Utilisateur'}
+              </div>
+              <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                4.8 • Membre vérifié
+              </div>
+              <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
+              </div>
+              <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                "Membre actif de la communauté Tomati Market."
               </div>
             </div>
             <div className="flex gap-3">
@@ -681,7 +677,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 Contacter
               </Button>
               <Button 
-                variant="outline" 
+                 
                 className="px-4  text-black"
                 onClick={handleShare}
               >
@@ -797,12 +793,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     <h2 className="text-3xl font-bold text-foreground mb-2">{product.title}</h2>
                     <Badge variant="secondary" className="mb-4">{product.category}</Badge>
                     {product.is_free && (
-                      <Badge variant="outline" className="mb-4 ml-2 text-green-600 ">
+                      <Badge  className="mb-4 ml-2 text-green-600 ">
                         Gratuit
                       </Badge>
                     )}
                     {product.is_reserved && (
-                      <Badge variant="outline" className="mb-4 ml-2 text-red-600 ">
+                      <Badge  className="mb-4 ml-2 text-red-600 ">
                         Réservé
                       </Badge>
                     )}
@@ -878,7 +874,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   </div>
                   
                   <Button 
-                    variant="outline" 
+                     
                     className=" text-primary"
                     onClick={() => setShowSellerProfile(true)}
                   >
@@ -895,7 +891,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {!isOwner && (
               <div className="flex gap-4">
                 <Button 
-                  variant="outline" 
+                   
                   size="lg" 
                   className="flex-1  text-primary h-14 text-lg"
                 >
@@ -917,7 +913,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {isOwner && (
               <div className="flex gap-4">
                 <Button 
-                  variant="outline" 
+                   
                   size="lg" 
                   className="flex-1  text-blue-600 h-14 text-lg"
                   onClick={() => onEdit?.(product.id)}
@@ -926,7 +922,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   Modifier
                 </Button>
                 <Button 
-                  variant="outline" 
+                   
                   size="lg" 
                   className="flex-1 /20 text-red-600 h-14 text-lg"
                   onClick={handleDelete}
@@ -972,7 +968,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               <div className="text-xs text-muted-foreground">Prix</div>
             </div>
             <Button 
-              variant="outline" 
+               
               size="sm"
               className="px-4 py-2"
             >
@@ -1065,7 +1061,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {/* Action Buttons */}
             <div className="flex gap-3">
               <Button 
-                variant="outline" 
+                 
                 className="flex-1"
                 onClick={() => setShowSellerProfile(false)}
               >
