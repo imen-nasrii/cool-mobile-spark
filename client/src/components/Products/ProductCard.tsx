@@ -5,38 +5,42 @@ import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
 import React, { useState } from "react";
-// Get correct image based on category and path using static URLs
+// Import default images  
+import teslaImage from '@/assets/tesla-model3.jpg';
+import sofaImage from '@/assets/modern-sofa.jpg';
+import iphoneImage from '@/assets/iphone-15-pro.jpg';
+import motherboardImage from '@/assets/motherboard-i5.jpg';
+import bikeImage from '@/assets/mountain-bike.jpg';
+
+// Get correct image based on category and path
 const getCorrectImage = (imagePath: string, category: string) => {
-  // If it's already a base64 or starts with data:, skip
-  if (!imagePath || imagePath.startsWith('data:image')) {
-    return null;
+  // If it's already a base64 or starts with data:, return it
+  if (imagePath && imagePath.startsWith('data:image')) {
+    return imagePath;
   }
   
-  // Use static asset URLs instead of dynamic imports
-  const baseUrl = window.location.origin;
-  
-  // If it's an asset path, map to correct static image
-  if (imagePath.includes('/src/assets/') || !imagePath.startsWith('http')) {
-    switch (category?.toLowerCase()) {
-      case 'voiture':
-      case 'auto':
-        return `${baseUrl}/src/assets/tesla-model3.jpg`;
-      case 'immobilier':
-      case 'meubles':
-        return `${baseUrl}/src/assets/modern-sofa.jpg`;
-      case 'emplois':
-        return `${baseUrl}/src/assets/iphone-15-pro.jpg`;
-      case 'électronique':
-        return `${baseUrl}/src/assets/motherboard-i5.jpg`;
-      case 'sport':
-        return `${baseUrl}/src/assets/mountain-bike.jpg`;
-      default:
-        return `${baseUrl}/src/assets/tesla-model3.jpg`;
-    }
+  // If it's a valid HTTP URL, return it
+  if (imagePath && imagePath.startsWith('http')) {
+    return imagePath;
   }
   
-  // Otherwise return the original path
-  return imagePath;
+  // If no valid image path, use default based on category
+  switch (category?.toLowerCase()) {
+    case 'voiture':
+    case 'auto':
+      return teslaImage;
+    case 'immobilier':
+    case 'meubles':
+      return sofaImage;
+    case 'emplois':
+      return iphoneImage;
+    case 'électronique':
+      return motherboardImage;
+    case 'sport':
+      return bikeImage;
+    default:
+      return teslaImage;
+  }
 };
 
 // Format price in TND (Tunisian Dinar)
