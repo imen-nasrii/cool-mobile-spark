@@ -603,8 +603,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Mobile Layout */}
-      <div className="md:hidden">
+      {/* Mobile Layout - Always visible for now */}
+      <div className="block">
         {/* Mobile Images */}
         <div className="w-full">
           <ImageGallery 
@@ -741,8 +741,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Desktop Layout - 2 Column Grid with Sticky Images */}
-      <div className="hidden md:block max-w-7xl mx-auto px-6 py-8">
+      {/* Desktop Layout - Hidden for now */}
+      <div className="hidden max-w-7xl mx-auto px-6 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Sticky Images */}
           <div className="sticky top-24 h-fit space-y-6">
