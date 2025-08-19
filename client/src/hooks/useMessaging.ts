@@ -51,8 +51,9 @@ export function useMessaging() {
     if (!port || port === '443' || port === '80' || hostname.includes('replit.dev') || hostname.includes('riker.prod.repl.run')) {
       wsUrl = `${protocol}//${hostname}/ws?userId=${user.id}`;
     } else {
-      // For development with custom ports (like localhost:5000)
-      wsUrl = `${protocol}//${hostname}:${port}/ws?userId=${user.id}`;
+      // For development with custom ports - use 5000 as fallback if port is undefined
+      const devPort = port || '5000';
+      wsUrl = `${protocol}//${hostname}:${devPort}/ws?userId=${user.id}`;
     }
     
     
@@ -62,6 +63,8 @@ export function useMessaging() {
       setIsConnected(false);
       return;
     }
+
+    console.log('Attempting WebSocket connection to:', wsUrl);
 
     try {
       const ws = new WebSocket(wsUrl);
