@@ -154,32 +154,24 @@ const Index = () => {
 
   const handleFloatingCategorySelect = (categoryId: string) => {
     console.log('handleFloatingCategorySelect called with:', categoryId);
-    console.log('Current user:', user);
-    console.log('Current activeTab:', activeTab);
     
     // Permettre l'ajout sans authentification pour les tests
     if (!user) {
       console.log('No user - showing form anyway for testing');
-      // toast({
-      //   title: "Connexion requise",
-      //   description: "Veuillez vous connecter pour publier une annonce.",
-      //   variant: "destructive",
-      // });
-      // navigate("/auth");
-      // return;
     }
     
-    console.log('Setting activeTab to add and category to:', categoryId);
-    
-    // Force state updates
-    setCurrentView("main"); // Make sure we're in main view
-    setActiveTab("add");
+    // Force state updates in correct order
+    setCurrentView("main");
     setSelectedCategory(categoryId);
+    setActiveTab("add");
     
-    // Force re-render with a small delay
-    setTimeout(() => {
-      console.log('After timeout - activeTab:', activeTab, 'selectedCategory:', selectedCategory);
-    }, 100);
+    // Update URL to reflect the change
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', 'add');
+    url.searchParams.set('category', categoryId);
+    window.history.replaceState({}, '', url.toString());
+    
+    console.log('Navigation updated - tab: add, category:', categoryId);
     
     toast({
       title: "Catégorie sélectionnée",

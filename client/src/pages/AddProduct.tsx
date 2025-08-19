@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Car, Building, Briefcase, Grid3X3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +28,15 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
   const [selectedCategory, setSelectedCategory] = useState(preSelectedCategory || "");
   const { toast } = useToast();
   const { user } = useAuth();
+  
+  // Update local category when prop changes
+  useEffect(() => {
+    console.log('AddProduct - preSelectedCategory changed to:', preSelectedCategory);
+    if (preSelectedCategory && preSelectedCategory !== selectedCategory) {
+      setSelectedCategory(preSelectedCategory);
+      console.log('AddProduct - Updated selectedCategory to:', preSelectedCategory);
+    }
+  }, [preSelectedCategory]);
 
   // React Query mutation for creating products
   const createProductMutation = useMutation({
