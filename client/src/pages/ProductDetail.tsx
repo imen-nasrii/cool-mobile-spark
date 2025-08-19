@@ -235,37 +235,97 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </div>
             
             {/* Équipements disponibles */}
-            {carEquipment.length > 0 && (
-              <div className="pt-4">
-                <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  Équipements disponibles
-                </h4>
-                <div className="grid grid-cols-2 gap-2">
-                  {carEquipment.map((equipment: string, index: number) => (
-                    <div key={index} className="text-sm text-gray-700 bg-gray-50 px-2 py-1 rounded">
-                      • {equipment}
-                    </div>
-                  ))}
-                </div>
+            <div className="pt-4">
+              <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                Équipements disponibles
+              </h4>
+              <div className="space-y-2">
+                {[
+                  { key: 'Jantes aluminium', value: carEquipment.includes('Jantes alliage') },
+                  { key: 'ABS', value: carEquipment.includes('ABS') },
+                  { key: 'Direction assistée', value: carEquipment.includes('Direction assistée') },
+                  { key: 'Climatisation', value: carEquipment.includes('Climatisation') },
+                  { key: 'Vitres électriques', value: carEquipment.includes('Vitres électriques') || carEquipment.includes('Electric windows') },
+                  { key: 'Fermeture centrale', value: carEquipment.includes('Fermeture centrale') || carEquipment.includes('Central locking') },
+                  { key: 'Airbags', value: carEquipment.includes('Airbags') },
+                  { key: 'Toit ouvrant', value: carEquipment.includes('Toit ouvrant') }
+                ].map((item, index) => (
+                  <div key={index} className="flex justify-between text-sm">
+                    <span className="text-gray-600">{item.key}:</span>
+                    <span className={`font-medium ${item.value ? 'text-green-600' : 'text-red-600'}`}>
+                      {item.value ? 'Oui' : 'Non'}
+                    </span>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
             
             {/* Options spéciales */}
             <div className="pt-4">
               <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
                 Options spéciales
               </h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {product.car_navigation && <span className="text-green-600">• Navigation</span>}
-                {product.car_cruise_control && <span className="text-green-600">• Régulateur de vitesse</span>}
-                {product.car_parking_sensors && <span className="text-green-600">• Capteurs de stationnement</span>}
-                {product.car_rear_camera && <span className="text-green-600">• Caméra arrière</span>}
-                {product.car_360_view && <span className="text-green-600">• Vue 360°</span>}
-                {product.car_lane_departure && <span className="text-green-600">• Aide au maintien de voie</span>}
-                {product.car_sunroof && <span className="text-green-600">• Toit ouvrant</span>}
-                {product.car_ventilated_seats && <span className="text-green-600">• Sièges ventilés</span>}
-                {product.car_heated_steering && <span className="text-green-600">• Volant chauffant</span>}
-                {product.car_non_smoking && <span className="text-green-600">• Véhicule non fumeur</span>}
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Navigation:</span>
+                  <span className={`font-medium ${product.car_navigation ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_navigation ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Régulateur de vitesse:</span>
+                  <span className={`font-medium ${product.car_cruise_control ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_cruise_control ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Capteurs de stationnement:</span>
+                  <span className={`font-medium ${product.car_parking_sensors ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_parking_sensors ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Caméra arrière:</span>
+                  <span className={`font-medium ${product.car_rear_camera ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_rear_camera ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Vue 360°:</span>
+                  <span className={`font-medium ${product.car_360_view ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_360_view ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Aide au maintien de voie:</span>
+                  <span className={`font-medium ${product.car_lane_departure ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_lane_departure ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Toit ouvrant:</span>
+                  <span className={`font-medium ${product.car_sunroof ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_sunroof ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Sièges ventilés:</span>
+                  <span className={`font-medium ${product.car_ventilated_seats ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_ventilated_seats ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Volant chauffant:</span>
+                  <span className={`font-medium ${product.car_heated_steering ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_heated_steering ? 'Oui' : 'Non'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Véhicule non fumeur:</span>
+                  <span className={`font-medium ${product.car_non_smoking ? 'text-green-600' : 'text-red-600'}`}>
+                    {product.car_non_smoking ? 'Oui' : 'Non'}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
