@@ -51,14 +51,24 @@ const Index = () => {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const tabParam = urlParams.get('tab');
+    const categoryParam = urlParams.get('category');
     const pathname = window.location.pathname;
     
     if (pathname === '/post') {
       setActiveTab('add');
     } else if (tabParam) {
       setActiveTab(tabParam);
+      
+      // Si on arrive sur l'onglet add avec une catégorie, la sélectionner
+      if (tabParam === 'add' && categoryParam) {
+        setSelectedCategory(categoryParam);
+        toast({
+          title: "Catégorie sélectionnée",
+          description: `Ajout d'une annonce: ${categories.find(c => c.id === categoryParam)?.name}`,
+        });
+      }
     }
-  }, []);
+  }, [toast]);
 
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features

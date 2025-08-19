@@ -23,7 +23,7 @@ export const AddButton = ({ onCategorySelect }: AddButtonProps) => {
   };
 
   return (
-    <div className="fixed bottom-20 right-4 z-[9999]">
+    <div className="fixed bottom-20 right-4 z-[10000]">
       {/* Menu des catégories */}
       {isMenuOpen && (
         <div className="absolute bottom-20 right-0 bg-white rounded-2xl shadow-2xl border p-3 min-w-[180px]">
