@@ -50,9 +50,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
           setLoading(false);
         })
-        .catch(() => {
-          // Token invalid, clear it
+        .catch((error) => {
+          // Token invalid, clear all auth data
+          console.log('Auth verification failed, clearing session');
           apiClient.clearToken();
+          localStorage.removeItem('authToken');
           setUser(null);
           setLoading(false);
         });
