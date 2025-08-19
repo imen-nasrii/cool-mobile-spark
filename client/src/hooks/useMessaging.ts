@@ -43,20 +43,6 @@ export function useMessaging() {
     console.log('WebSocket messaging disabled for debugging');
     setIsConnected(false);
     return;
-
-    // Determine WebSocket URL based on environment
-    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    
-    // Construct WebSocket URL safely
-    let wsUrl: string;
-    
-    if (window.location.hostname.includes("replit.dev")) {
-      // Use same host as current page for Replit
-      wsUrl = `${protocol}//${window.location.host}/ws?userId=${user.id}`;
-    } else {
-      // Local development - use port 5000
-      wsUrl = `${protocol}//localhost:5000/ws?userId=${user.id}`;
-    }
     
     
     // Validate WebSocket URL before creating connection
