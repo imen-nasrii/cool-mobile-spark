@@ -39,60 +39,8 @@ export function useMessaging() {
       return;
     }
     
-    // Disable WebSocket for now to avoid confusion
-    console.log('WebSocket messaging disabled for debugging');
+    // WebSocket messaging disabled in development
     setIsConnected(false);
-    return;
-    
-    
-    // Validate WebSocket URL before creating connection
-    if (wsUrl.includes('undefined') || !wsUrl.includes('ws')) {
-      console.error('Invalid WebSocket URL detected:', wsUrl);
-      setIsConnected(false);
-      return;
-    }
-
-    console.log('App WebSocket connecting to:', wsUrl);
-
-    try {
-      const ws = new WebSocket(wsUrl);
-      wsRef.current = ws;
-
-      ws.onopen = () => {
-        setIsConnected(true);
-      };
-
-      ws.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        
-        if (data.type === 'new_message') {
-          // Invalidate conversations and messages queries
-          queryClient.invalidateQueries({ queryKey: ['/api/conversations'] });
-          queryClient.invalidateQueries({ 
-            queryKey: ['/api/conversations', data.conversationId, 'messages'] 
-          });
-        }
-      };
-
-      ws.onclose = () => {
-        setIsConnected(false);
-        };
-
-      ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        console.error('Failed to connect to WebSocket URL:', wsUrl);
-        setIsConnected(false);
-      };
-
-      return () => {
-        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
-          ws.close();
-        }
-      };
-    } catch (error) {
-      console.error('Failed to create WebSocket connection:', error);
-      setIsConnected(false);
-    }
   }, [user, queryClient]);
 
   // Get conversations

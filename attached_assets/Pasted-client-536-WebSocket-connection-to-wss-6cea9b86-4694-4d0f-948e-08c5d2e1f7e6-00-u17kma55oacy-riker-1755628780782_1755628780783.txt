@@ -1,0 +1,35 @@
+client:536 WebSocket connection to 'wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=pVnjJ3f-ZDWV' failed: 
+setupWebSocket @ client:536
+(anonymous) @ client:531
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=pVnjJ3f-ZDWV' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+setupWebSocket @ client:536
+fallback @ client:509
+(anonymous) @ client:555
+chunk-RPCDYKBN.js?v=874844e6:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+(index):165 SW registered:  ServiceWorkerRegistration {installing: null, waiting: null, active: ServiceWorker, navigationPreload: NavigationPreloadManager, scope: 'https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/', …}
+LikeButton.tsx:125 Updating liked state from query: false
+ImageManager.tsx:79 Error uploading images: TypeError: Failed to fetch
+    at traffic.js:1:1605
+    at new Promise (<anonymous>)
+    at C.apply.then.$.json (traffic.js:1:1582)
+    at handleImageUpload (ImageManager.tsx:58:43)
+handleImageUpload @ ImageManager.tsx:79
+await in handleImageUpload
+callCallback2 @ chunk-RPCDYKBN.js?v=874844e6:3674
+invokeGuardedCallbackDev @ chunk-RPCDYKBN.js?v=874844e6:3699
+invokeGuardedCallback @ chunk-RPCDYKBN.js?v=874844e6:3733
+invokeGuardedCallbackAndCatchFirstError @ chunk-RPCDYKBN.js?v=874844e6:3736
+executeDispatch @ chunk-RPCDYKBN.js?v=874844e6:7014
+processDispatchQueueItemsInOrder @ chunk-RPCDYKBN.js?v=874844e6:7034
+processDispatchQueue @ chunk-RPCDYKBN.js?v=874844e6:7043
+dispatchEventsForPlugins @ chunk-RPCDYKBN.js?v=874844e6:7051
+(anonymous) @ chunk-RPCDYKBN.js?v=874844e6:7174
+batchedUpdates$1 @ chunk-RPCDYKBN.js?v=874844e6:18913
+batchedUpdates @ chunk-RPCDYKBN.js?v=874844e6:3579
+dispatchEventForPluginEventSystem @ chunk-RPCDYKBN.js?v=874844e6:7173
+dispatchEventWithEnableCapturePhaseSelectiveHydrationWithoutDiscreteEventReplay @ chunk-RPCDYKBN.js?v=874844e6:5478
+dispatchEvent @ chunk-RPCDYKBN.js?v=874844e6:5472
+dispatchDiscreteEvent @ chunk-RPCDYKBN.js?v=874844e6:5449

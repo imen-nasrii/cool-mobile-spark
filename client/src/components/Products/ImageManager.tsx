@@ -40,31 +40,15 @@ export const ImageManager = ({
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         if (file.type.startsWith('image/')) {
-          // Upload to object storage instead of converting to base64
-          const objectId = `product-${Date.now()}-${i}`;
-          const formData = new FormData();
-          formData.append('file', file);
-          
-          const token = localStorage.getItem('token');
-          const response = await fetch(`/api/objects/upload/${objectId}`, {
-            method: 'POST',
-            headers: {
-              ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-            },
-            body: formData
+          // Convert to base64 for simple storage
+          const reader = new FileReader();
+          const base64Promise = new Promise<string>((resolve) => {
+            reader.onload = () => resolve(reader.result as string);
+            reader.readAsDataURL(file);
           });
           
-          if (response.ok) {
-            const result = await response.json();
-            newImages.push(result.url || result.path);
-          } else {
-            console.error('Failed to upload image:', response.statusText);
-            toast({
-              title: "Erreur d'upload",
-              description: `Impossible d'uploader ${file.name}`,
-              variant: "destructive"
-            });
-          }
+          const base64 = await base64Promise;
+          newImages.push(base64);
         }
       }
       
