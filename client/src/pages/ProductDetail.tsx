@@ -792,6 +792,44 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       "Membre actif de la communauté Tomati Market."
                     </div>
                   </div>
+                  <div className="flex flex-col gap-2 ml-4">
+                    <Button 
+                      size="sm"
+                      className="w-8 h-8 p-0 bg-red-500 text-white rounded-sm"
+                      onClick={() => {}}
+                      style={{ fontFamily: 'Arial, sans-serif' }}
+                    >
+                      <Phone size={14} />
+                    </Button>
+                    <Button 
+                      size="sm"
+                      className="w-8 h-8 p-0 bg-red-500 text-white rounded-sm"
+                      onClick={() => setShowChat(true)}
+                      style={{ fontFamily: 'Arial, sans-serif' }}
+                    >
+                      <MessageCircle size={14} />
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Boutons d'action en bas */}
+                <div className="grid grid-cols-2 gap-3 mt-4">
+                  <Button 
+                    className="bg-red-500 text-white py-3 rounded-sm"
+                    onClick={() => {}}
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                  >
+                    <Phone size={18} className="mr-2" />
+                    Appeler
+                  </Button>
+                  <Button 
+                    className="bg-red-500 text-white py-3 rounded-sm"
+                    onClick={() => setShowChat(true)}
+                    style={{ fontFamily: 'Arial, sans-serif' }}
+                  >
+                    <MessageCircle size={18} className="mr-2" />
+                    Envoyer message
+                  </Button>
                 </div>
               </CardContent>
             </Card>
