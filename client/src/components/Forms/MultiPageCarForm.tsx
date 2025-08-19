@@ -13,6 +13,8 @@ import { useToast } from "@/hooks/use-toast";
 interface MultiPageCarFormProps {
   onSubmit: (data: any) => void;
   onCancel: () => void;
+  onStepChange?: (step: number) => void;
+  currentStep?: number;
 }
 
 const carBrands = [
@@ -44,8 +46,8 @@ const carEquipment = [
   "Sièges en cuir", "Sièges chauffants", "Régulateur de vitesse", "Jantes alliage"
 ];
 
-export const MultiPageCarForm = ({ onSubmit, onCancel }: MultiPageCarFormProps) => {
-  const [currentStep, setCurrentStep] = useState(1);
+export const MultiPageCarForm = ({ onSubmit, onCancel, onStepChange, currentStep: externalCurrentStep }: MultiPageCarFormProps) => {
+  const [currentStep, setCurrentStep] = useState(externalCurrentStep || 1);
   const [mainImage, setMainImage] = useState<string>("");
   const [exteriorImages, setExteriorImages] = useState<string[]>([]);
   const [additionalImage, setAdditionalImage] = useState<string>(""); 
@@ -112,13 +114,17 @@ export const MultiPageCarForm = ({ onSubmit, onCancel }: MultiPageCarFormProps) 
     }
     
     if (currentStep < 4) {
-      setCurrentStep(currentStep + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      onStepChange?.(nextStep);
     }
   };
 
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      onStepChange?.(prevStep);
     }
   };
 
