@@ -575,17 +575,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 {product.title}
               </h1>
               <div className="text-4xl font-bold text-red-500 mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                {product.is_free ? 'Gratuit' : formatPrice(product.price)}
+                {formatPrice(product.price)}
               </div>
               <div className="flex gap-2 mb-4">
                 <span className="px-3 py-1 bg-gray-100 text-black text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
                   {product.category}
                 </span>
-                {product.is_free && (
-                  <span className="px-3 py-1 bg-green-100 text-green-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Gratuit
-                  </span>
-                )}
                 {product.is_reserved && (
                   <span className="px-3 py-1 bg-red-100 text-red-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
                     Réservé

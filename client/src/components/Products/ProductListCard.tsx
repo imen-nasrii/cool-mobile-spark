@@ -229,16 +229,12 @@ export const ProductListCard = ({
           
           {/* Status badges */}
           <div className="absolute top-1 left-1 flex gap-1">
-            {product.isFree && (
-              <Badge className="bg-success text-success-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Free</Badge>
-            )}
             {product.isReserved && (
               <Badge className="bg-info text-info-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Reserved</Badge>
             )}
             {product.isAdvertisement && (
               <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Publicité</Badge>
             )}
-
           </div>
         </div>
         
@@ -250,7 +246,7 @@ export const ProductListCard = ({
             </h3>
             
             <div className="text-lg font-bold text-primary mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-              {product.isFree ? "Gratuit" : formatPrice(product.price)}
+              {formatPrice(product.price)}
             </div>
             
             {/* Category-specific details */}

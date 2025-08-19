@@ -360,11 +360,7 @@ export default function MapView() {
                         <div className="space-y-3">
                           <div className="flex items-center justify-between">
                             <div className="text-lg font-bold text-primary">
-                              {product.is_free ? (
-                                <Badge variant="secondary">Gratuit</Badge>
-                              ) : (
-                                product.price
-                              )}
+                              {product.price}
                             </div>
                             <div className="flex items-center gap-1 text-sm text-muted-foreground">
                               <Heart size={12} />

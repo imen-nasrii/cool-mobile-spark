@@ -220,11 +220,6 @@ const ProductCardComponent = ({
         
         {/* Status badges */}
         <div className="absolute top-2 left-2 flex gap-2">
-          {product.isFree && (
-            <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white text-xs modern-shadow">
-              Gratuit
-            </Badge>
-          )}
           {product.isReserved && (
             <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs modern-shadow">
               Réservé
@@ -235,7 +230,6 @@ const ProductCardComponent = ({
               Publicité
             </Badge>
           )}
-
         </div>
         
         {/* Overlay gradient */}
@@ -249,7 +243,7 @@ const ProductCardComponent = ({
           </h3>
           
           <div className="text-sm sm:text-lg font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-1 sm:mb-2">
-            {product.isFree ? "Gratuit" : formatPrice(product.price)}
+            {formatPrice(product.price)}
           </div>
           
           {/* Category-specific details */}
