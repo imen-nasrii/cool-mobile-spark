@@ -765,7 +765,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             />
             
             {/* Quick Stats Card */}
-            <Card className="glass-card">
+            <Card className="border border-gray-200">
               <CardContent className="p-6">
                 <div className="grid grid-cols-3 gap-4 text-center">
                   <div>
@@ -790,7 +790,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
           {/* Right Column - Scrollable Product Details */}
           <div className="space-y-6 overflow-y-auto max-h-[calc(100vh-12rem)] pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {/* Price & Title */}
-            <Card className="glass-card">
+            <Card className="border border-gray-200">
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div>
@@ -826,7 +826,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             {renderProductDetails()}
 
             {/* Description */}
-            <Card className="glass-card">
+            <Card className="border border-gray-200">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Description</h3>
                 <p className="text-muted-foreground leading-relaxed text-base mb-6">
@@ -836,7 +836,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             </Card>
 
             {/* Seller Info */}
-            <Card className="glass-card">
+            <Card className="border border-gray-200">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold text-foreground mb-4">Informations vendeur</h3>
                 <div className="flex items-center gap-4">
@@ -939,7 +939,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             )}
 
             {/* Map Section */}
-            <Card className="glass-card">
+            <Card className="border border-gray-200">
               <CardContent className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Localisation</h3>
                 <ProductMap location={product.location} readonly className="w-full" />
@@ -948,7 +948,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Chat Section */}
             {showChat && !isOwner && (
-              <Card className="glass-card">
+              <Card className="border border-gray-200">
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-4">Discussion avec le vendeur</h3>
                   <ProductChat
