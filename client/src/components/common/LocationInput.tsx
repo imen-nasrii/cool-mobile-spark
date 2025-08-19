@@ -148,10 +148,17 @@ export function LocationInput({
     );
   };
 
+  // Référence pour le conteneur des suggestions
+  const suggestionRef = useRef<HTMLDivElement>(null);
+
   // Fermer les suggestions si on clique ailleurs
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (inputRef.current && !inputRef.current.contains(event.target as Node)) {
+      const target = event.target as Node;
+      const isClickInsideInput = inputRef.current && inputRef.current.contains(target);
+      const isClickInsideSuggestions = suggestionRef.current && suggestionRef.current.contains(target);
+      
+      if (!isClickInsideInput && !isClickInsideSuggestions) {
         setShowSuggestions(false);
       }
     };
@@ -202,11 +209,17 @@ export function LocationInput({
 
       {/* Liste des suggestions */}
       {showSuggestions && suggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
+        <div 
+          ref={suggestionRef}
+          className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto"
+        >
           {suggestions.map((suggestion) => (
             <div
               key={suggestion.place_id}
-              onClick={() => selectSuggestion(suggestion)}
+              onMouseDown={(e) => {
+                e.preventDefault(); // Empêche le blur de l'input
+                selectSuggestion(suggestion);
+              }}
               className="px-4 py-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
             >
               <div className="flex items-start gap-2">
