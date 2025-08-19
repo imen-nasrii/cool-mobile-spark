@@ -15,7 +15,7 @@ import { BottomNav } from "@/components/Layout/BottomNav";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -37,7 +37,6 @@ const Index = () => {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
 
   const handleSearch = (query: string) => {
     if (activeTab === "home") {
@@ -51,32 +50,26 @@ const Index = () => {
 
   // Check URL for tab parameter and route
   useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    const categoryParam = searchParams.get('category');
-    const pathname = location.pathname;
-    
-    console.log('URL changed:', { tabParam, categoryParam, pathname });
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    const categoryParam = urlParams.get('category');
+    const pathname = window.location.pathname;
     
     if (pathname === '/post') {
       setActiveTab('add');
     } else if (tabParam) {
-      console.log('Setting active tab to:', tabParam);
       setActiveTab(tabParam);
       
       // Si on arrive sur l'onglet add avec une catégorie, la sélectionner
       if (tabParam === 'add' && categoryParam) {
-        console.log('Setting category to:', categoryParam);
         setSelectedCategory(categoryParam);
         toast({
           title: "Catégorie sélectionnée",
           description: `Ajout d'une annonce: ${categories.find(c => c.id === categoryParam)?.name}`,
         });
       }
-    } else {
-      // Si pas de tab param, retour à home
-      setActiveTab('home');
     }
-  }, [searchParams, location.pathname, toast]);
+  }, [toast, location.search, location.pathname]);
 
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
