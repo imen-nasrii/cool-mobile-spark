@@ -301,7 +301,8 @@ export default function MapView() {
             <MapContainer
               center={userLocation}
               zoom={13}
-              className="h-[calc(100vh-140px)] w-full"
+              className="h-[calc(100vh-160px)] w-full z-10"
+              style={{ zIndex: 10 }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
