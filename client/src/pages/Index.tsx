@@ -15,7 +15,7 @@ import { BottomNav } from "@/components/Layout/BottomNav";
 
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
@@ -36,6 +36,7 @@ const Index = () => {
   const { toast } = useToast();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearch = (query: string) => {
     if (activeTab === "home") {
@@ -68,7 +69,7 @@ const Index = () => {
         });
       }
     }
-  }, [toast]);
+  }, [toast, location.search, location.pathname]);
 
   const handleTabChange = (tab: string) => {
     // Check if user is trying to access protected features
