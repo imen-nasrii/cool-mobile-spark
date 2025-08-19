@@ -521,10 +521,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     loading, 
     productData: productData ? `${productData.title} (${productData.id})` : 'null',
     isLoading,
-    productId
+    productId,
+    productExists: !!product,
+    productType: typeof product
   });
 
   if (!product) {
+    console.log('Product is falsy, showing not found page');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -535,6 +538,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       </div>
     );
   }
+
+  console.log('Product exists, rendering main content for:', product.title);
 
   return (
     <div className="min-h-screen bg-white pb-20 md:pb-0" style={{ fontFamily: 'Arial, sans-serif' }}>

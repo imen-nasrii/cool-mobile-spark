@@ -47,8 +47,8 @@ export function useMessaging() {
     // Construct WebSocket URL safely
     let wsUrl: string;
     
-    // For Replit environments, production, or when no port is specified
-    if (!port || port === '443' || port === '80' || hostname.includes('replit.dev') || hostname.includes('riker.replit.dev')) {
+    // For Replit environments (detect riker.replit.dev pattern)
+    if (!port || port === '443' || port === '80' || hostname.includes('replit.dev') || hostname.includes('riker.replit.dev') || hostname.match(/^[a-f0-9-]+\.riker\.replit\.dev$/)) {
       wsUrl = `${protocol}//${hostname}/ws?userId=${user.id}`;
     } else {
       // For development with custom ports - always use 5000 for localhost
