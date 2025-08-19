@@ -72,9 +72,19 @@ const Index = () => {
       return;
     }
     
-    // Handle map navigation
+    // Handle navigation to other pages - let MainLayout handle this
     if (tab === "map") {
       navigate("/map");
+      return;
+    }
+    
+    if (tab === "messages") {
+      navigate("/messages");
+      return;
+    }
+    
+    if (tab === "profile") {
+      navigate("/profile");
       return;
     }
     
@@ -175,11 +185,7 @@ const Index = () => {
         />
       ) : (
         <>
-          <Header activeTab={activeTab} onTabChange={handleTabChange} onSearch={handleSearch} />
-          
           {renderContent()}
-          
-          <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
 
           {/* Category Modal */}
           <Dialog open={showCategoryModal} onOpenChange={setShowCategoryModal}>
@@ -206,15 +212,6 @@ const Index = () => {
               </div>
             </DialogContent>
           </Dialog>
-          
-          {/* Add Button */}
-          <AddButton 
-            onCategorySelect={handleFloatingCategorySelect}
-          />
-
-
-
-
         </>
       )}
     </div>

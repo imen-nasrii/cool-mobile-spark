@@ -9,6 +9,7 @@ import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
 import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { MainLayout } from "@/components/Layout/MainLayout";
 import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -38,10 +39,10 @@ const App = () => (
             <BrowserRouter>
             <Routes>
               <Route path="/" element={
-                <>
+                <MainLayout>
                   <Index />
                   <PWAInstallPrompt />
-                </>
+                </MainLayout>
               } />
               <Route path="/auth" element={<Auth />} />
               <Route 
@@ -58,16 +59,24 @@ const App = () => (
                 path="/profile" 
                 element={
                   <ProtectedRoute>
-                    <Profile />
+                    <MainLayout>
+                      <Profile />
+                    </MainLayout>
                   </ProtectedRoute>
                 } 
               />
-              <Route path="/map" element={<MapView />} />
+              <Route path="/map" element={
+                <MainLayout>
+                  <MapView />
+                </MainLayout>
+              } />
               <Route 
                 path="/messages" 
                 element={
                   <ProtectedRoute>
-                    <MessagesPage />
+                    <MainLayout>
+                      <MessagesPage />
+                    </MainLayout>
                   </ProtectedRoute>
                 } 
               />

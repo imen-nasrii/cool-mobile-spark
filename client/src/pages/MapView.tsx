@@ -12,7 +12,6 @@ import { useQuery } from "@tanstack/react-query";
 import { apiClient } from "@/lib/apiClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/hooks/useAuth';
-import { Header } from "@/components/Layout/Header";
 import "leaflet/dist/leaflet.css";
 
 // Fix for default markers in React Leaflet
@@ -184,8 +183,6 @@ export default function MapView() {
 
   return (
     <div className="min-h-screen">
-      {/* Header with Navigation */}
-      <Header onSearch={setSearchTerm} />
       
       {/* Map Header with Filters */}
       <div className="bg-white border-b p-4">
