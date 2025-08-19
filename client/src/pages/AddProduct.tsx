@@ -10,6 +10,7 @@ import { CarFormWithAds } from "@/components/Forms/CarFormWithAds";
 import { MultiPageCarFormWithAds } from "@/components/Forms/MultiPageCarFormWithAds";
 import { RealEstateForm } from "@/components/Forms/RealEstateForm";
 import { JobForm } from "@/components/Forms/JobForm";
+import { BasicForm } from "@/components/Forms/BasicForm";
 
 // Category definitions
 const categoryMap = {
@@ -125,14 +126,7 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
         <JobForm onSubmit={handleSubmit} onCancel={handleCancel} />
       )}
       {selectedCategory === "autres" && (
-        <div className="min-h-screen pb-20 bg-gray-50 flex items-center justify-center">
-          <div className="text-center p-8">
-            <Grid3X3 size={48} className="mx-auto mb-4 text-gray-400" />
-            <h2 className="text-xl font-semibold mb-2">Catégorie "Autres" en cours de développement</h2>
-            <p className="text-gray-600 mb-4">Cette catégorie sera bientôt disponible</p>
-            <Button onClick={handleCancel}>Retour</Button>
-          </div>
-        </div>
+        <BasicForm onSubmit={handleSubmit} onCancel={handleCancel} />
       )}
     </div>
   );
