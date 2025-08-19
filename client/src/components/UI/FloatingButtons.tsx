@@ -18,6 +18,7 @@ export const AddButton = ({ onCategorySelect }: AddButtonProps) => {
   ];
 
   const handleCategorySelect = (categoryId: string) => {
+    console.log('FloatingButton: Category selected:', categoryId);
     onCategorySelect(categoryId);
     setIsMenuOpen(false);
   };
@@ -26,21 +27,22 @@ export const AddButton = ({ onCategorySelect }: AddButtonProps) => {
     <div className="fixed bottom-20 right-4 z-[10000]">
       {/* Menu des catégories */}
       {isMenuOpen && (
-        <div className="absolute bottom-20 right-0 bg-white rounded-2xl shadow-2xl border p-3 min-w-[180px]">
-          <div className="grid grid-cols-1 gap-2">
-            {categories.map((category, index) => {
+        <div className="absolute bottom-16 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-2 min-w-[160px] z-[10001]">
+          <div className="space-y-1">
+            {categories.map((category) => {
               const Icon = category.icon;
               return (
                 <button
                   key={category.id}
-                  onClick={() => handleCategorySelect(category.id)}
-                  className={cn(
-                    "flex items-center gap-3 p-3 rounded-xl transition-all duration-200 hover:scale-105 text-left",
-                    category.color.replace('bg-', 'hover:bg-').replace('hover:bg-', 'hover:bg-') + " hover:text-white text-gray-700 hover:shadow-lg"
-                  )}
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Clicking category:', category.id);
+                    handleCategorySelect(category.id);
+                  }}
+                  className="flex items-center gap-3 p-3 w-full text-left text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors rounded-md"
                 >
-                  <Icon size={20} />
+                  <Icon size={16} />
                   <span className="font-medium text-sm">{category.label}</span>
                 </button>
               );
