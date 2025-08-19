@@ -531,10 +531,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   return (
     <div className="min-h-screen bg-white pb-20 md:pb-0" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Test visuel simple */}
-      <div className="p-4 bg-blue-500 text-white">
-        TEST: {product.title} - {product.price}
-      </div>
       {/* Mobile Header */}
       <div className="md:hidden sticky top-0 bg-white  z-40 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -607,8 +603,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Mobile Layout */}
-      <div className="md:hidden">
+      {/* Mobile Layout - Force visible */}
+      <div className="block">
         {/* Mobile Images */}
         <div className="w-full">
           <ImageGallery 
