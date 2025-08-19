@@ -41,7 +41,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const [showSellerProfile, setShowSellerProfile] = useState(false);
   const [sellerProfile, setSellerProfile] = useState<any>(null);
   const [userRating, setUserRating] = useState<number>(0);
-  const [hoveredRating, setHoveredRating] = useState<number>(0);
   const { user } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
@@ -328,8 +327,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         { icon: Car, label: 'Modèle', value: product.car_model, color: 'text-blue-600' },
         { icon: Calendar, label: 'Année', value: product.car_year, color: 'text-green-600' },
         { icon: Gauge, label: 'Kilométrage', value: product.car_mileage ? `${Number(product.car_mileage).toLocaleString()} km` : null, color: 'text-orange-600' },
-        { icon: Fuel, label: 'Carburant', value: product.car_fuel_type, color: 'text-purple-600' },
-        { icon: Settings, label: 'Transmission', value: product.car_transmission, color: 'text-indigo-600' },
+        { icon: Fuel, label: 'Carburant', value: product.car_fuel_type, color: 'text-red-600' },
+        { icon: Settings, label: 'Transmission', value: product.car_transmission, color: 'text-red-600' },
         { icon: Settings, label: 'État', value: product.car_condition, color: 'text-gray-600' },
         { icon: Settings, label: 'Couleur', value: product.car_color, color: 'text-pink-600' },
         { icon: Settings, label: 'Portes', value: product.car_doors ? `${product.car_doors} portes` : null, color: 'text-yellow-600' },
@@ -508,8 +507,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="tomati-brand animate-pulse mb-4">Tomati</div>
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
+          <div className="tomati-brand mb-4">Tomati</div>
+          <div className="rounded-full h-8 w-8 border-b-2 border-tomati-red mx-auto"></div>
           <p className="text-sm text-muted-foreground mt-4">Chargement du produit...</p>
         </div>
       </div>
@@ -721,13 +720,11 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                       key={star}
                       className={cn(
                         "w-4 h-4 cursor-pointer",
-                        (hoveredRating || userRating) >= star
+                        userRating >= star
                           ? "fill-yellow-400 text-yellow-400"
                           : "text-gray-300"
                       )}
                       onClick={() => handleRating(star)}
-                      onMouseEnter={() => setHoveredRating(star)}
-                      onMouseLeave={() => setHoveredRating(0)}
                     />
                   ))}
                 </div>
@@ -764,7 +761,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 }
               })()} 
               title={product.title}
-              className="rounded-2xl shadow-xl w-full"
+              className="rounded-2xl border border-gray-200 w-full"
             />
             
             {/* Quick Stats Card */}
@@ -882,7 +879,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                   
                   <Button 
                     variant="outline" 
-                    className="border-primary/20 text-primary hover:bg-primary/10"
+                    className="border-primary/20 text-primary"
                     onClick={() => setShowSellerProfile(true)}
                   >
                     Voir profil
@@ -900,14 +897,14 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-primary/20 text-primary hover:bg-primary/10 h-14 text-lg"
+                  className="flex-1 border-primary/20 text-primary h-14 text-lg"
                 >
                   <Phone size={20} className="mr-2" />
                   Appeler
                 </Button>
                 <Button 
                   size="lg" 
-                  className="flex-1 bg-primary hover:bg-primary/90 text-white h-14 text-lg"
+                  className="flex-1 bg-primary text-white h-14 text-lg"
                   onClick={() => setShowChat(true)}
                 >
                   <MessageCircle size={20} className="mr-2" />
@@ -922,7 +919,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-blue-500/20 text-blue-600 hover:bg-blue-50 h-14 text-lg"
+                  className="flex-1 border-blue-500/20 text-blue-600 h-14 text-lg"
                   onClick={() => onEdit?.(product.id)}
                 >
                   <Edit size={20} className="mr-2" />
@@ -931,7 +928,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 <Button 
                   variant="outline" 
                   size="lg" 
-                  className="flex-1 border-red-500/20 text-red-600 hover:bg-red-50 h-14 text-lg"
+                  className="flex-1 border-red-500/20 text-red-600 h-14 text-lg"
                   onClick={handleDelete}
                   disabled={deleteProductMutation.isPending}
                 >
@@ -1076,7 +1073,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 Appeler
               </Button>
               <Button 
-                className="flex-1 bg-primary hover:bg-primary/90"
+                className="flex-1 bg-primary"
                 onClick={() => {
                   setShowSellerProfile(false);
                   setShowChat(true);
