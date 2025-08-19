@@ -516,7 +516,13 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   }
 
   // Debug temporaire
-  console.log('ProductDetail Debug:', { product, loading, productData, isLoading });
+  console.log('ProductDetail Debug:', { 
+    product: product ? `${product.title} (${product.id})` : 'null',
+    loading, 
+    productData: productData ? `${productData.title} (${productData.id})` : 'null',
+    isLoading,
+    productId
+  });
 
   if (!product) {
     return (
