@@ -275,12 +275,9 @@ const ProductCardComponent = ({
             const hasCarCategory = category === 'auto' || category === 'voiture';
             const carEquipment = (product as any).car_equipment;
             
-            console.log('ProductCard - Category:', category, 'HasCarCategory:', hasCarCategory, 'CarEquipment:', carEquipment);
-            
             if (hasCarCategory && carEquipment) {
               try {
                 const parsedEquipment = JSON.parse(carEquipment || '[]');
-                console.log('ProductCard - Parsed equipment:', parsedEquipment);
                 
                 if (Array.isArray(parsedEquipment) && parsedEquipment.length > 0) {
                   return (
