@@ -495,23 +495,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-red-500">
-                    {product.rating && product.rating > 0 ? product.rating.toFixed(1) : "0.0"}
+                    {product.like_count || 0}
                   </div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Note</div>
-                  <div className="flex gap-1 mt-2 justify-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        className={cn(
-                          "w-4 h-4 cursor-pointer",
-                          userRating >= star
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300"
-                        )}
-                        onClick={() => handleRating(star)}
-                      />
-                    ))}
-                  </div>
+                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
                 </div>
               </div>
             </div>
