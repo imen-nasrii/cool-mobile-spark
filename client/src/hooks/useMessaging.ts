@@ -41,18 +41,16 @@ export function useMessaging() {
 
     // Determine WebSocket URL based on environment
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const hostname = window.location.hostname;
-    const port = window.location.port;
     
     // Construct WebSocket URL safely
     let wsUrl: string;
     
-    // For Replit environments (detect riker.replit.dev pattern)
-    if (!port || port === '443' || port === '80' || hostname.includes('replit.dev') || hostname.includes('riker.replit.dev') || hostname.match(/^[a-f0-9-]+\.riker\.replit\.dev$/)) {
-      wsUrl = `${protocol}//${hostname}/ws?userId=${user.id}`;
+    if (window.location.hostname.includes("replit.dev")) {
+      // Use same host as current page for Replit
+      wsUrl = `${protocol}//${window.location.host}/ws?userId=${user.id}`;
     } else {
-      // For development with custom ports - always use 5000 for localhost
-      wsUrl = `${protocol}//${hostname}:5000/ws?userId=${user.id}`;
+      // Local development - use port 5000
+      wsUrl = `${protocol}//localhost:5000/ws?userId=${user.id}`;
     }
     
     
@@ -63,7 +61,7 @@ export function useMessaging() {
       return;
     }
 
-    console.log('WebSocket Details:', { protocol, hostname, port, wsUrl });
+    console.log('WebSocket Details:', { protocol, wsUrl });
 
     try {
       const ws = new WebSocket(wsUrl);
