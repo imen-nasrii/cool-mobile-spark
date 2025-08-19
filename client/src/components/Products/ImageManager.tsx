@@ -135,14 +135,14 @@ export const ImageManager = ({
           className="hidden"
           id="image-upload-manager"
         />
-        <label htmlFor="image-upload-manager" className="cursor-pointer">
+        <label htmlFor="image-upload-manager" className="cursor-pointer block">
           <Upload size={32} className="mx-auto text-gray-400 mb-3" />
           <p className="text-lg font-medium text-gray-700 mb-2">
             Ajouter des photos
           </p>
-          <Button type="button" variant="outline" className="mb-4">
+          <div className="inline-block border border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-md font-medium text-gray-700 mb-4">
             Sélectionner des images
-          </Button>
+          </div>
           <div className="text-sm text-gray-500">
             {images.length}/{maxImages} images • PNG, JPG jusqu'à 10MB
           </div>
