@@ -38,13 +38,17 @@ export const AddProduct = ({ activeTab, onTabChange, selectedCategory: preSelect
         description: "Votre annonce a été publiée avec succès",
       });
       
-      // Invalidate all product-related queries
-      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
-      queryClient.refetchQueries({ queryKey: ['/api/products'] });
+      // Clear all caches completely
+      queryClient.clear();
       
       // Reset and redirect
       setSelectedCategory("");
       onTabChange?.("home");
+      
+      // Force a full page reload to ensure fresh data
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
     },
     onError: (error: any) => {
       console.error('Error creating product:', error);

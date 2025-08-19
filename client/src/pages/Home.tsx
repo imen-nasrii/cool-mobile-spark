@@ -38,7 +38,7 @@ export const Home = ({ onProductClick, activeTab, onTabChange, searchTerm: exter
 
   // Fetch promoted products
   const { data: promotedProducts } = useQuery({
-    queryKey: ['/products/promoted'],
+    queryKey: ['/api/products/promoted'],
     queryFn: () => apiClient.request('/products/promoted'),
     staleTime: 2 * 60 * 1000,
   });
@@ -59,7 +59,10 @@ export const Home = ({ onProductClick, activeTab, onTabChange, searchTerm: exter
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/products'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/products'] });
+      queryClient.invalidateQueries({ predicate: (query) => {
+        return query.queryKey[0] === '/api/products';
+      }});
       toast({
         title: "Produit aimé !",
         description: "Vous avez aimé ce produit"
