@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { StepsIndicator } from "@/components/UI/StepsIndicator";
 import { ImageManager } from "@/components/Products/ImageManager";
+import { LocationInput } from "@/components/common/LocationInput";
 import { useToast } from "@/hooks/use-toast";
 
 interface CarFormProps {
@@ -233,11 +234,11 @@ export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
-                  <Input
-                    placeholder="Ville, région"
+                  <LocationInput
                     value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    className="h-12"
+                    onChange={(location) => setFormData(prev => ({ ...prev, location }))}
+                    placeholder="Ville, région"
+                    required
                   />
                 </div>
               </div>

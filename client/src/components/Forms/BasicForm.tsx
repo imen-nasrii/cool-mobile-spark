@@ -4,9 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Grid3X3, Upload, X, MapPin } from "lucide-react";
+import { Grid3X3, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ImageManager } from "../Products/ImageManager";
+import { LocationInput } from "../common/LocationInput";
 
 interface BasicFormProps {
   onSubmit: (data: any) => void;
@@ -103,15 +104,12 @@ export function BasicForm({ onSubmit, onCancel }: BasicFormProps) {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Localisation *
                 </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                  <Input
-                    value={formData.location}
-                    onChange={(e) => handleInputChange('location', e.target.value)}
-                    placeholder="Ex: Tunis, Sfax, Sousse..."
-                    className="h-12 pl-10"
-                  />
-                </div>
+                <LocationInput
+                  value={formData.location}
+                  onChange={(location) => handleInputChange('location', location)}
+                  placeholder="Ex: Tunis, Sfax, Sousse..."
+                  required
+                />
               </div>
 
               {/* Condition */}
