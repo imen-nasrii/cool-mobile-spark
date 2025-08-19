@@ -183,7 +183,12 @@ export const RealEstateForm = ({ onSubmit, onCancel }: RealEstateFormProps) => {
                     <label className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
                     <LocationInput
                       value={formData.location}
-                      onChange={(location) => setFormData(prev => ({ ...prev, location }))}
+                      onChange={(location, coordinates) => {
+                        setFormData(prev => ({ ...prev, location }));
+                        if (coordinates) {
+                          console.log('Coordinates saved:', coordinates);
+                        }
+                      }}
                       placeholder="Ville, quartier"
                       required
                     />

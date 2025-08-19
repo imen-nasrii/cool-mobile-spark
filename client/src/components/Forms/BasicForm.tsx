@@ -106,7 +106,12 @@ export function BasicForm({ onSubmit, onCancel }: BasicFormProps) {
                 </label>
                 <LocationInput
                   value={formData.location}
-                  onChange={(location) => handleInputChange('location', location)}
+                  onChange={(location, coordinates) => {
+                    handleInputChange('location', location);
+                    if (coordinates) {
+                      console.log('Coordinates saved:', coordinates);
+                    }
+                  }}
                   placeholder="Ex: Tunis, Sfax, Sousse..."
                   required
                 />
