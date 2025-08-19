@@ -270,11 +270,31 @@ const ProductCardComponent = ({
           })()}
           
           {/* Car equipment for voiture category */}
-          {(product.category?.toLowerCase() === 'auto' || product.category?.toLowerCase() === 'voiture') && (product as any).car_equipment && (
-            <div className="mb-2">
-              <CarEquipmentIcons carEquipment={JSON.parse((product as any).car_equipment || '[]')} variant="compact" />
-            </div>
-          )}
+          {(() => {
+            const category = product.category?.toLowerCase();
+            const hasCarCategory = category === 'auto' || category === 'voiture';
+            const carEquipment = (product as any).car_equipment;
+            
+            console.log('ProductCard - Category:', category, 'HasCarCategory:', hasCarCategory, 'CarEquipment:', carEquipment);
+            
+            if (hasCarCategory && carEquipment) {
+              try {
+                const parsedEquipment = JSON.parse(carEquipment || '[]');
+                console.log('ProductCard - Parsed equipment:', parsedEquipment);
+                
+                if (Array.isArray(parsedEquipment) && parsedEquipment.length > 0) {
+                  return (
+                    <div className="mb-2">
+                      <CarEquipmentIcons carEquipment={parsedEquipment} variant="compact" />
+                    </div>
+                  );
+                }
+              } catch (e) {
+                console.error('ProductCard - Error parsing car_equipment:', e, carEquipment);
+              }
+            }
+            return null;
+          })()}
           
           <div className="flex items-center text-xs text-muted-foreground mb-2">
             <MapPin size={10} className="mr-1 flex-shrink-0" />
