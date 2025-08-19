@@ -59,7 +59,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   useEffect(() => {
     if (productId) {
       fetchProduct();
-      incrementViewCount();
     }
   }, [productId]);
 
@@ -80,15 +79,6 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   };
 
-  const incrementViewCount = async () => {
-    try {
-      await apiClient.request(`/products/${productId}/view`, {
-        method: 'POST'
-      });
-    } catch (error) {
-      console.error('Error incrementing view count:', error);
-    }
-  };
 
   const handleRating = async (rating: number) => {
     if (!user) {
