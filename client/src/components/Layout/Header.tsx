@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
+import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
 
 interface HeaderProps {
   activeTab?: string;
@@ -83,9 +84,11 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center cursor-pointer" onClick={() => navigate('/')}>
-            <div className="text-3xl font-bold text-red-600">
-              tomati
-            </div>
+            <img 
+              src={tomatiLogo} 
+              alt="Tomati" 
+              className="h-12 w-auto object-contain"
+            />
           </div>
           
           {/* Search Bar */}
