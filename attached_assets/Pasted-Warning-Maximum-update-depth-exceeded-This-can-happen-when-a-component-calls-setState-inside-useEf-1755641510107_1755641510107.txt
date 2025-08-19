@@ -1,0 +1,35 @@
+Warning: Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.
+    at Search (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/pages/Search.tsx:52:3)
+    at main
+    at div
+    at Index (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/pages/Index.tsx:44:37)
+    at RenderedRoute (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=874844e6:5524:26)
+    at Routes (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=874844e6:6257:3)
+    at Router (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=874844e6:6200:13)
+    at BrowserRouter (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/react-router-dom.js?v=874844e6:9270:3)
+    at PreferencesProvider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/contexts/PreferencesContext.tsx:22:39)
+    at AuthProvider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/hooks/useAuth.tsx:30:32)
+    at LanguageProvider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/hooks/useLanguage.tsx:93:36)
+    at Provider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/chunk-U27FYV5Z.js?v=874844e6:38:15)
+    at TooltipProvider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@radix-ui_react-tooltip.js?v=874844e6:66:5)
+    at QueryClientProvider (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/@fs/home/runner/workspace/node_modules/.vite/deps/@tanstack_react-query.js?v=874844e6:2805:3)
+    at ErrorBoundary (https://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/src/components/ErrorBoundary.tsx:9:5)
+    at App
+printWarning @ chunk-RPCDYKBN.js?v=874844e6:521
+error @ chunk-RPCDYKBN.js?v=874844e6:505
+checkForNestedUpdates @ chunk-RPCDYKBN.js?v=874844e6:19665
+scheduleUpdateOnFiber @ chunk-RPCDYKBN.js?v=874844e6:18533
+dispatchSetState @ chunk-RPCDYKBN.js?v=874844e6:12403
+(anonymous) @ Search.tsx:82
+commitHookEffectListMount @ chunk-RPCDYKBN.js?v=874844e6:16915
+commitPassiveMountOnFiber @ chunk-RPCDYKBN.js?v=874844e6:18156
+commitPassiveMountEffects_complete @ chunk-RPCDYKBN.js?v=874844e6:18129
+commitPassiveMountEffects_begin @ chunk-RPCDYKBN.js?v=874844e6:18119
+commitPassiveMountEffects @ chunk-RPCDYKBN.js?v=874844e6:18109
+flushPassiveEffectsImpl @ chunk-RPCDYKBN.js?v=874844e6:19490
+flushPassiveEffects @ chunk-RPCDYKBN.js?v=874844e6:19447
+(anonymous) @ chunk-RPCDYKBN.js?v=874844e6:19328
+workLoop @ chunk-RPCDYKBN.js?v=874844e6:197
+flushWork @ chunk-RPCDYKBN.js?v=874844e6:176
+performWorkUntilDeadline @ chunk-RPCDYKBN.js?v=874844e6:384Understand this error
+Index.tsx:183 renderContent called with act

@@ -84,12 +84,16 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
   }, [productsData, queryLoading]);
 
   useEffect(() => {
-    if (products.length > 0) {
-      applyFiltersAndSort(products);
+    if (productsData.length > 0) {
+      // Sort by date (most recent first) directly
+      const sorted = [...productsData].sort((a, b) => {
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      });
+      setFilteredProducts(sorted);
     } else {
       setFilteredProducts([]);
     }
-  }, [products]);
+  }, [productsData]);
 
 
   const handleSearch = async (query: string) => {
@@ -98,27 +102,26 @@ export const Search = ({ activeTab, onTabChange, onProductClick }: {
     
     try {
       if (query.trim()) {
-        const filtered = products.filter(product =>
+        const filtered = productsData.filter(product =>
           product.title.toLowerCase().includes(query.toLowerCase()) ||
           product.category.toLowerCase().includes(query.toLowerCase()) ||
           product.location.toLowerCase().includes(query.toLowerCase())
         );
-        applyFiltersAndSort(filtered);
+        // Sort filtered results
+        const sorted = [...filtered].sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+        setFilteredProducts(sorted);
       } else {
-        applyFiltersAndSort(products);
+        // Show all products sorted
+        const sorted = [...productsData].sort((a, b) => {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+        setFilteredProducts(sorted);
       }
     } finally {
       setSearchLoading(false);
     }
-  };
-
-  const applyFiltersAndSort = (productsList: Product[]) => {
-    // Sort by date (most recent first)
-    const sorted = [...productsList].sort((a, b) => {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    });
-
-    setFilteredProducts(sorted);
   };
 
 
