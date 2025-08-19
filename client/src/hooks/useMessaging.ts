@@ -61,7 +61,7 @@ export function useMessaging() {
       return;
     }
 
-    console.log('WebSocket Details:', { protocol, wsUrl });
+    console.log('App WebSocket connecting to:', wsUrl);
 
     try {
       const ws = new WebSocket(wsUrl);
