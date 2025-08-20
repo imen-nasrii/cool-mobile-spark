@@ -157,7 +157,7 @@ export const Notifications = ({ activeTab, onTabChange }: NotificationProps) => 
                           </h3>
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-gray-500">
-                              {getTimeAgo(notification.created_at)}
+                              {getTimeAgo(notification.created_at.toString())}
                             </span>
                             <Button
                               variant="ghost"

@@ -24,6 +24,7 @@ import { ProductManagement } from "./pages/ProductManagement";
 import { OrganizedProducts } from "./pages/OrganizedProducts";
 import AdminProducts from "./pages/AdminProducts";
 import AdminAdvertisements from "./pages/AdminAdvertisements";
+import { Notifications } from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 
@@ -123,6 +124,16 @@ const App = () => (
                     <AdminRoute>
                       <AdminAdvertisements />
                     </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Notifications />
+                    </MainLayout>
                   </ProtectedRoute>
                 } 
               />

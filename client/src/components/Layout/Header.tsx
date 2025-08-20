@@ -1,4 +1,4 @@
-import { Search, Plus, User, LogOut, LogIn, Settings, Shield } from "lucide-react";
+import { Search, Plus, User, LogOut, LogIn, Settings, Shield, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { useNotifications } from "@/hooks/useNotifications";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
 import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
 
@@ -26,6 +27,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { unreadCount } = useNotifications();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -109,6 +111,23 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           
           {/* Right Side Buttons */}
           <div className="flex items-center gap-2">
+            {/* Notifications Bell - Only show for logged in users */}
+            {user && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/notifications')}
+                className="relative p-2 hover:bg-gray-100 rounded-full"
+              >
+                <Bell size={20} className="text-gray-600" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {unreadCount > 9 ? '9+' : unreadCount}
+                  </span>
+                )}
+              </Button>
+            )}
+            
             {/* User Menu */}
             {user ? (
               <DropdownMenu>
