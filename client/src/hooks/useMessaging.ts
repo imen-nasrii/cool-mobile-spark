@@ -29,7 +29,7 @@ interface Message {
 export function useMessaging() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const wsRef = useRef<WebSocket | null>(null);
+  // const wsRef = useRef<WebSocket | null>(null); // Temporarily disabled to fix error
   const [isConnected, setIsConnected] = useState(false);
 
   // WebSocket connection - Temporarily disabled
