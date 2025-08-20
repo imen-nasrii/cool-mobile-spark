@@ -10,20 +10,7 @@ interface BottomNavProps {
 }
 
 export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
-  const { t } = useLanguage();
-  const [isDesktop, setIsDesktop] = useState(false);
-  
-  useEffect(() => {
-    const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= 768);
-    };
-    
-    checkScreenSize();
-    window.addEventListener('resize', checkScreenSize);
-    
-    return () => window.removeEventListener('resize', checkScreenSize);
-  }, []);
-  
-  // Force complete removal - navigation moved to header dropdown
+  // COMPLETELY DISABLED - Navigation moved to header dropdown
+  // This component should NEVER render anything
   return null;
 };
