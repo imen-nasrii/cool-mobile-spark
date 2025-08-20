@@ -111,8 +111,8 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
             </form>
           </div>
           
-          {/* Desktop Navigation Dropdown - Hidden on mobile */}
-          <div className="hidden md:block">
+          {/* Desktop Navigation Dropdown - Force visible for testing */}
+          <div className="block">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
