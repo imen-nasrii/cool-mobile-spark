@@ -11,6 +11,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { apiClient, queryClient } from "@/lib/queryClient";
 import { CarEquipmentIcons } from "@/components/UI/CarEquipmentIcons";
+import { ProductMap } from "@/components/Map/ProductMap";
 
 // Default images for products
 const defaultImageUrls = [
@@ -659,6 +660,26 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Caractéristiques du produit */}
             {renderProductDetails()}
+
+            {/* Localisation sur la carte */}
+            <div className="pt-4">
+              <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+                <MapPin size={20} className="text-red-500" />
+                Localisation
+              </h3>
+              <div className="bg-gray-50 rounded-lg p-4 mb-2">
+                <p className="text-gray-700 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+                  📍 {product.location}
+                </p>
+                <div className="h-64 w-full rounded-lg overflow-hidden">
+                  <ProductMap 
+                    location={product.location} 
+                    readonly={true}
+                    className="w-full h-full"
+                  />
+                </div>
+              </div>
+            </div>
 
             {/* Statistiques - Vues et J'aime */}
             <div className="pt-4">

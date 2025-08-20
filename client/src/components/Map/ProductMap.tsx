@@ -100,8 +100,21 @@ export const ProductMap = ({ location, onLocationSelect, readonly = false, class
   useEffect(() => {
     if (location && location !== searchQuery) {
       setSearchQuery(location);
+      // Automatically search for the location if in readonly mode
+      if (readonly && map.current) {
+        handleSearch();
+      }
     }
-  }, [location]);
+  }, [location, readonly]);
+
+  // Auto-search on mount if location is provided and in readonly mode
+  useEffect(() => {
+    if (readonly && location && map.current) {
+      setTimeout(() => {
+        handleSearch();
+      }, 1000); // Wait for map to be fully initialized
+    }
+  }, [readonly, location]);
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
