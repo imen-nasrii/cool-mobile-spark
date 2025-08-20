@@ -2,6 +2,7 @@ import { Home, Search, MapPin, MessageCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/hooks/useLanguage";
+import { useState, useEffect } from "react";
 
 interface BottomNavProps {
   activeTab: string;
@@ -10,6 +11,23 @@ interface BottomNavProps {
 
 export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   const { t } = useLanguage();
+  const [isDesktop, setIsDesktop] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+  
+  // Don't render on desktop
+  if (isDesktop) {
+    return null;
+  }
   
   const tabs = [
     { id: "home", icon: Home, label: t('home') },
@@ -20,7 +38,7 @@ export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-red-500 px-4 py-3 z-[1000] shadow-lg block md:hidden">
+    <div className="fixed bottom-0 left-0 right-0 bg-white border-t-2 border-red-500 px-4 py-3 z-[1000] shadow-lg">
       <div className="flex justify-around items-center max-w-md mx-auto">
         {tabs.map(({ id, icon: Icon, label }) => (
           <Button

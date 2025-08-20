@@ -1,8 +1,8 @@
 import { Search, Plus, User, LogOut, LogIn, Settings, Shield, Bell, Home, MapPin, MessageCircle, Menu } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -26,10 +26,22 @@ interface HeaderProps {
 export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const { user, signOut } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isDesktop, setIsDesktop] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
   const { unreadCount } = useNotifications();
   const { t } = useLanguage();
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,7 +124,8 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           </div>
           
           {/* Desktop Navigation Dropdown - Visible only on desktop */}
-          <div className="hidden md:block">
+          {isDesktop && (
+          <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -147,6 +160,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          )}
           
           {/* Right Side Buttons */}
           <div className="flex items-center gap-2">
