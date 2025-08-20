@@ -242,80 +242,66 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               )}
             </div>
             
-            {/* Équipements disponibles */}
+            {/* Équipements avec icônes - Style comme l'image */}
             <div className="pt-4">
-              <h4 className="text-lg font-bold text-blue-600 mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <h4 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
                 Équipements:
               </h4>
-              <CarEquipmentIcons carEquipment={carEquipment} variant="detailed" />
-            </div>
-            
-            {/* Options spéciales */}
-            <div className="pt-4">
-              <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Options spéciales
-              </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Navigation:</span>
-                  <span className={`font-medium ${product.car_navigation ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_navigation ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Régulateur de vitesse:</span>
-                  <span className={`font-medium ${product.car_cruise_control ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_cruise_control ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Capteurs de stationnement:</span>
-                  <span className={`font-medium ${product.car_parking_sensors ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_parking_sensors ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Caméra arrière:</span>
-                  <span className={`font-medium ${product.car_rear_camera ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_rear_camera ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Vue 360°:</span>
-                  <span className={`font-medium ${product.car_360_view ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_360_view ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Aide au maintien de voie:</span>
-                  <span className={`font-medium ${product.car_lane_departure ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_lane_departure ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Toit ouvrant:</span>
-                  <span className={`font-medium ${product.car_sunroof ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_sunroof ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Sièges ventilés:</span>
-                  <span className={`font-medium ${product.car_ventilated_seats ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_ventilated_seats ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Volant chauffant:</span>
-                  <span className={`font-medium ${product.car_heated_steering ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_heated_steering ? 'Oui' : 'Non'}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Véhicule non fumeur:</span>
-                  <span className={`font-medium ${product.car_non_smoking ? 'text-green-600' : 'text-red-600'}`}>
-                    {product.car_non_smoking ? 'Oui' : 'Non'}
-                  </span>
-                </div>
+              <div className="grid grid-cols-3 gap-4">
+                {[
+                  { key: 'alloy_wheels', label: 'Jantes\naluminium', icon: '⚙️' },
+                  { key: 'abs', label: 'ABS', icon: '🛡️' },
+                  { key: 'power_steering', label: 'Direction\nassistée', icon: '🎯' },
+                  { key: 'air_conditioning', label: 'Climatisation', icon: '❄️' },
+                  { key: 'esp', label: 'ESP', icon: '⚖️' },
+                  { key: 'electric_windows', label: 'Vitres\nélectriques', icon: '🪟' },
+                  { key: 'car_navigation', label: 'Système de\nnavigation', icon: '📍', dbField: 'car_navigation' },
+                  { key: 'central_locking', label: 'Fermeture\ncentrale', icon: '🔐' },
+                  { key: 'airbags', label: 'Airbags', icon: '🎈' },
+                  { key: 'bluetooth', label: 'MP3\nBluetooth', icon: '📡' },
+                  { key: 'car_rear_camera', label: 'Radar De\nRecul', icon: '📶', dbField: 'car_rear_camera' },
+                  { key: 'traction_control', label: 'Antipatinage', icon: '🛞' },
+                  { key: 'speed_limiter', label: 'Limiteur De\nVitesse', icon: '⏱️' },
+                  { key: 'car_cruise_control', label: 'Régulateur\nde vitesse', icon: '⚡', dbField: 'car_cruise_control' },
+                  { key: 'car_parking_sensors', label: 'Capteurs de\nstationnement', icon: '📡', dbField: 'car_parking_sensors' },
+                  { key: 'car_sunroof', label: 'Toit ouvrant', icon: '🌞', dbField: 'car_sunroof' }
+                ].map((equip) => {
+                  // Vérifier si l'équipement est activé
+                  let isActive = false;
+                  
+                  // Chercher dans les champs de base de données spécifiques
+                  if (equip.dbField && product[equip.dbField as keyof typeof product]) {
+                    isActive = true;
+                  }
+                  // Chercher dans la liste d'équipements générale  
+                  else if (equipment.some(item => 
+                    item.toLowerCase().includes(equip.label.toLowerCase().split('\n')[0]) || 
+                    item.toLowerCase().includes(equip.key.toLowerCase())
+                  )) {
+                    isActive = true;
+                  }
+                  
+                  return (
+                    <div 
+                      key={equip.key}
+                      className={`border-2 rounded-lg p-3 text-center transition-all ${
+                        isActive 
+                          ? 'border-red-500 bg-red-50' 
+                          : 'border-gray-200 bg-gray-50 opacity-50'
+                      }`}
+                    >
+                      <div className="text-2xl mb-2">{equip.icon}</div>
+                      <div 
+                        className={`text-xs font-medium whitespace-pre-line ${
+                          isActive ? 'text-black' : 'text-gray-400'
+                        }`}
+                        style={{ fontFamily: 'Arial, sans-serif' }}
+                      >
+                        {equip.label}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
