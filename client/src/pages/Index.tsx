@@ -253,8 +253,7 @@ const Index = () => {
         )}
       </main>
       
-      {/* Bottom Navigation */}
-      <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
+      {/* Bottom Navigation removed - navigation moved to header dropdown */}
       
       {/* Floating Add Button */}
       <AddButton onCategorySelect={handleFloatingCategorySelect} />
