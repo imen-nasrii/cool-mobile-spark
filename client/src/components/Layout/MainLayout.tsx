@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Layout/Header";
-import { BottomNav } from "@/components/Layout/BottomNav";
+// BottomNav removed - navigation moved to header dropdown
 import { AddButton } from "@/components/UI/FloatingButtons";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -9,14 +9,14 @@ import { useToast } from "@/hooks/use-toast";
 interface MainLayoutProps {
   children: React.ReactNode;
   showHeader?: boolean;
-  showBottomNav?: boolean;
+  // showBottomNav removed - navigation moved to header
   showAddButton?: boolean;
 }
 
 export const MainLayout = ({ 
   children, 
-  showHeader = false, 
-  showBottomNav = false,
+  showHeader = true, 
+  // showBottomNav = false, // removed
   showAddButton = false 
 }: MainLayoutProps) => {
   const location = useLocation();
@@ -113,13 +113,9 @@ export const MainLayout = ({
         />
       )}
       
-      <main className={showBottomNav ? "pb-20" : ""}>
+      <main>
         {children}
       </main>
-      
-      {showBottomNav && (
-        <BottomNav activeTab={activeTab} onTabChange={handleTabChange} />
-      )}
       
       {/* AddButton is now handled by Index.tsx */}
     </div>

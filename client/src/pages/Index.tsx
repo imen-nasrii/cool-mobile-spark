@@ -10,7 +10,7 @@ import Profile from "./Profile";
 import { Favorites } from "./Favorites";
 import { Notifications } from "./Notifications";
 import { Header } from "@/components/Layout/Header";
-import { BottomNav } from "@/components/Layout/BottomNav";
+// BottomNav removed - navigation moved to header dropdown
 
 
 import { useToast } from "@/hooks/use-toast";
@@ -205,12 +205,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Header Navigation */}
-      <Header 
-        activeTab={activeTab} 
-        onTabChange={handleTabChange} 
-        onSearch={handleSearch} 
-      />
+      {/* Header Navigation - removed as it's now handled by MainLayout */}
       
       {/* Main Content */}
       <main className="pb-20 pt-4">
