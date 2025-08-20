@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Layout/Header";
-// BottomNav removed - navigation moved to header dropdown
+import { BottomNav } from "@/components/Layout/BottomNav";
 import { AddButton } from "@/components/UI/FloatingButtons";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -113,9 +113,15 @@ export const MainLayout = ({
         />
       )}
       
-      <main>
+      <main className="pb-20 md:pb-0">
         {children}
       </main>
+      
+      {/* BottomNav pour mobile uniquement */}
+      <BottomNav 
+        activeTab={activeTab} 
+        onTabChange={handleTabChange} 
+      />
       
       {/* AddButton is now handled by Index.tsx */}
     </div>

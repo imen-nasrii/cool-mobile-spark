@@ -123,8 +123,8 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
             </form>
           </div>
           
-          {/* Navigation Dropdown Menu */}
-          <div>
+          {/* Navigation Dropdown Menu - Masqué en mobile */}
+          <div className="hidden md:block">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
