@@ -122,21 +122,46 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
   const handleShare = async () => {
     try {
-      if (navigator.share) {
+      // Check if Web Share API is available and supported
+      if (navigator.share && typeof navigator.share === 'function') {
         await navigator.share({
-          title: product?.title,
-          text: product?.description,
+          title: product?.title || 'Produit Tomati Market',
+          text: product?.description || 'Découvrez ce produit',
           url: window.location.href,
         });
-      } else {
+        return;
+      }
+
+      // Fallback to clipboard API if available
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
         await navigator.clipboard.writeText(window.location.href);
         toast({
           title: "Lien copié",
           description: "Le lien du produit a été copié dans le presse-papiers",
         });
+        return;
       }
+
+      // Final fallback - show link in a prompt for manual copying
+      const dummy = document.createElement('input');
+      dummy.value = window.location.href;
+      document.body.appendChild(dummy);
+      dummy.select();
+      document.execCommand('copy');
+      document.body.removeChild(dummy);
+      
+      toast({
+        title: "Lien copié",
+        description: "Le lien a été copié dans le presse-papiers",
+      });
     } catch (error) {
       console.error('Error sharing:', error);
+      // Show error message to user instead of silent failure
+      toast({
+        title: "Erreur de partage",
+        description: "Impossible de partager le lien. Veuillez copier l'URL manuellement.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -274,7 +299,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
                     isActive = true;
                   }
                   // Chercher dans la liste d'équipements générale  
-                  else if (equipment.some(item => 
+                  else if (carEquipment.some((item: string) => 
                     item.toLowerCase().includes(equip.label.toLowerCase().split('\n')[0]) || 
                     item.toLowerCase().includes(equip.key.toLowerCase())
                   )) {

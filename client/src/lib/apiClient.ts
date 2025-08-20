@@ -6,7 +6,7 @@ class ApiClient {
   constructor() {
     // Get token from localStorage if available
     if (typeof window !== 'undefined') {
-      this.token = localStorage.getItem('authToken') || 'test-token-bypass';
+      this.token = localStorage.getItem('authToken') || null;
     }
   }
 

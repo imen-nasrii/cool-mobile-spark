@@ -15,32 +15,38 @@ import bikeImage from '@/assets/mountain-bike.jpg';
 
 // Get correct image based on category and path
 const getCorrectImage = (imagePath: string, category: string) => {
-  // If it's already a base64 or starts with data:, return it
-  if (imagePath && imagePath.startsWith('data:image')) {
-    return imagePath;
-  }
-  
-  // If it's a valid HTTP URL, return it
-  if (imagePath && imagePath.startsWith('http')) {
-    return imagePath;
-  }
-  
-  // If no valid image path, use default based on category
-  switch (category?.toLowerCase()) {
-    case 'voiture':
-    case 'auto':
-      return teslaImage;
-    case 'immobilier':
-    case 'meubles':
-      return sofaImage;
-    case 'emplois':
-      return iphoneImage;
-    case 'électronique':
-      return motherboardImage;
-    case 'sport':
-      return bikeImage;
-    default:
-      return teslaImage;
+  try {
+    // If it's already a base64 or starts with data:, return it
+    if (imagePath && typeof imagePath === 'string' && imagePath.startsWith('data:image')) {
+      return imagePath;
+    }
+    
+    // If it's a valid HTTP URL, return it
+    if (imagePath && typeof imagePath === 'string' && imagePath.startsWith('http')) {
+      return imagePath;
+    }
+    
+    // If no valid image path, use default based on category
+    const categoryLower = category?.toLowerCase() || '';
+    switch (categoryLower) {
+      case 'voiture':
+      case 'auto':
+        return teslaImage;
+      case 'immobilier':
+      case 'meubles':
+        return sofaImage;
+      case 'emplois':
+        return iphoneImage;
+      case 'électronique':
+        return motherboardImage;
+      case 'sport':
+        return bikeImage;
+      default:
+        return teslaImage;
+    }
+  } catch (error) {
+    console.error('Error getting image:', error);
+    return teslaImage; // Safe fallback
   }
 };
 
