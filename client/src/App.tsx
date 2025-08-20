@@ -1,162 +1,155 @@
-import { BrowserRouter } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
+import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
+import { AdminRoute } from "@/components/Auth/AdminRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { MainLayout } from "@/components/Layout/MainLayout";
+import { queryClient } from "@/lib/queryClient";
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import AdminDashboard from "./pages/AdminDashboard";
+import Profile from "./pages/Profile";
+import MapView from "./pages/MapView";
+import MessagesPage from "./pages/Messages";
+import { AdminInfo } from "./components/Auth/AdminInfo";
+import { Settings } from "./pages/Settings";
+import { TestPromotion } from "./pages/TestPromotion";
+import { ProductManagement } from "./pages/ProductManagement";
+import { OrganizedProducts } from "./pages/OrganizedProducts";
+import AdminProducts from "./pages/AdminProducts";
+import AdminAdvertisements from "./pages/AdminAdvertisements";
+import { Notifications } from "./pages/Notifications";
+import NotFound from "./pages/NotFound";
+import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        {/* Header */}
-        <header className="bg-white border-b-2 border-red-500 p-4 shadow-sm">
-          <div className="container mx-auto">
-            <h1 className="text-2xl font-bold text-red-500">Tomati Market</h1>
-            <p className="text-gray-600 text-sm">Marketplace Tunisienne</p>
-          </div>
-        </header>
-        
-        {/* Main content */}
-        <main className="flex-1 p-6">
-          <div className="container mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-6 text-gray-800">Bienvenue sur Tomati Market</h2>
-            <p className="text-lg text-gray-600 mb-8">Achetez et vendez en toute confiance</p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
-              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <span className="text-blue-600 text-xl">🚗</span>
-                </div>
-                <h3 className="font-bold text-lg text-blue-600 mb-2">Voitures</h3>
-                <p className="text-sm text-gray-600">Trouvez votre voiture idéale</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <span className="text-green-600 text-xl">🏠</span>
-                </div>
-                <h3 className="font-bold text-lg text-green-600 mb-2">Immobilier</h3>
-                <p className="text-sm text-gray-600">Maisons et appartements</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <span className="text-purple-600 text-xl">💼</span>
-                </div>
-                <h3 className="font-bold text-lg text-purple-600 mb-2">Emplois</h3>
-                <p className="text-sm text-gray-600">Opportunités de carrière</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                <div className="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-                  <span className="text-gray-600 text-xl">📦</span>
-                </div>
-                <h3 className="font-bold text-lg text-gray-600 mb-2">Autres</h3>
-                <p className="text-sm text-gray-600">Tout ce dont vous avez besoin</p>
-              </div>
-            </div>
-          </div>
-        </main>
-        
-        {/* Bottom navigation - MOBILE ONLY */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t-2 border-red-500 md:hidden">
-          <div className="flex justify-around items-center py-2">
-            <button className="flex flex-col items-center p-3 text-red-500 transition-colors">
-              <span className="text-2xl mb-1">🏠</span>
-              <span className="text-xs font-medium">Accueil</span>
-            </button>
-            <button className="flex flex-col items-center p-3 text-gray-600 hover:text-red-500 transition-colors">
-              <span className="text-2xl mb-1">🔍</span>
-              <span className="text-xs">Recherche</span>
-            </button>
-            <button className="flex flex-col items-center p-3 text-gray-600 hover:text-red-500 transition-colors">
-              <span className="text-2xl mb-1">🗺️</span>
-              <span className="text-xs">Carte</span>
-            </button>
-            <button className="flex flex-col items-center p-3 text-gray-600 hover:text-red-500 transition-colors">
-              <span className="text-2xl mb-1">💬</span>
-              <span className="text-xs">Messages</span>
-            </button>
-            <button className="flex flex-col items-center p-3 text-gray-600 hover:text-red-500 transition-colors">
-              <span className="text-2xl mb-1">👤</span>
-              <span className="text-xs">Profil</span>
-            </button>
-          </div>
-        </div>
-        
-        {/* Footer - DESKTOP ONLY */}
-        <footer className="hidden md:block bg-gradient-to-br from-gray-900 via-red-900 to-black text-white py-12 mt-auto">
-          <div className="container mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              {/* Brand Section */}
-              <div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Tomati Market</h3>
-                <p className="text-gray-300 leading-relaxed mb-4">
-                  Votre marketplace de confiance en Tunisie. Achetez, vendez et découvrez 
-                  des milliers de produits dans un environnement sécurisé.
-                </p>
-                <div className="flex space-x-4">
-                  <button className="text-gray-300 hover:text-red-400 p-2 rounded transition-colors">
-                    <span className="text-sm">Facebook</span>
-                  </button>
-                  <button className="text-gray-300 hover:text-red-400 p-2 rounded transition-colors">
-                    <span className="text-sm">Twitter</span>
-                  </button>
-                  <button className="text-gray-300 hover:text-red-400 p-2 rounded transition-colors">
-                    <span className="text-sm">Instagram</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Quick Links */}
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Navigation</h4>
-                <ul className="space-y-2">
-                  <li><a href="/" className="text-gray-300 hover:text-red-400 transition-colors">Accueil</a></li>
-                  <li><a href="/search" className="text-gray-300 hover:text-red-400 transition-colors">Rechercher</a></li>
-                  <li><a href="/map" className="text-gray-300 hover:text-red-400 transition-colors">Carte</a></li>
-                  <li><a href="/messages" className="text-gray-300 hover:text-red-400 transition-colors">Messages</a></li>
-                  <li><a href="/profile" className="text-gray-300 hover:text-red-400 transition-colors">Mon Profil</a></li>
-                </ul>
-              </div>
-
-              {/* Categories */}
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Catégories</h4>
-                <ul className="space-y-2">
-                  <li><a href="/voiture" className="text-gray-300 hover:text-red-400 transition-colors">🚗 Voitures</a></li>
-                  <li><a href="/immobilier" className="text-gray-300 hover:text-red-400 transition-colors">🏠 Immobilier</a></li>
-                  <li><a href="/emplois" className="text-gray-300 hover:text-red-400 transition-colors">💼 Emplois</a></li>
-                  <li><a href="/autres" className="text-gray-300 hover:text-red-400 transition-colors">📦 Autres</a></li>
-                </ul>
-              </div>
-
-              {/* Contact Info */}
-              <div>
-                <h4 className="text-lg font-semibold text-white mb-4">Contact</h4>
-                <div className="space-y-3">
-                  <p className="text-gray-300">📧 contact@tomatimarket.tn</p>
-                  <p className="text-gray-300">📞 +216 20 123 456</p>
-                  <p className="text-gray-300">📍 Tunis, Tunisie</p>
-                </div>
-                <button className="mt-4 bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg transition-colors font-medium">
-                  Nous Contacter
-                </button>
-              </div>
-            </div>
-            
-            {/* Bottom Bar */}
-            <div className="border-t border-gray-700 mt-12 pt-8">
-              <div className="flex flex-col md:flex-row justify-between items-center">
-                <p className="text-gray-300 mb-4 md:mb-0">© 2024 Tomati Market. Tous droits réservés.</p>
-                <div className="flex space-x-6">
-                  <a href="/privacy" className="text-gray-300 hover:text-red-400 transition-colors">Confidentialité</a>
-                  <a href="/terms" className="text-gray-300 hover:text-red-400 transition-colors">Conditions</a>
-                  <a href="/help" className="text-gray-300 hover:text-red-400 transition-colors">Aide</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </footer>
-      </div>
-    </BrowserRouter>
-  );
-}
+const App = () => (
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <PreferencesProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+            <Routes>
+              <Route path="/" element={
+                <MainLayout>
+                  <Index />
+                  <PWAInstallPrompt />
+                </MainLayout>
+              } />
+              <Route path="/auth" element={<Auth />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Profile />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/map" element={
+                <MainLayout>
+                  <MapView />
+                </MainLayout>
+              } />
+              <Route 
+                path="/messages" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <MessagesPage />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/test-promotion" 
+                element={
+                  <ProtectedRoute>
+                    <TestPromotion />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/products-management" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <ProductManagement />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/products" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminProducts />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/advertisements" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminAdvertisements />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Notifications />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/products" element={<OrganizedProducts />} />
+              <Route path="/admin-info" element={<AdminInfo />} />
+              <Route path="/post" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            </BrowserRouter>
+            </PreferencesProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
+);
 
 export default App;
