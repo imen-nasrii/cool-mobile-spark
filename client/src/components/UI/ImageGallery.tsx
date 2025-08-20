@@ -34,7 +34,7 @@ export const ImageGallery = ({ images, title, className }: ImageGalleryProps) =>
   return (
     <>
       {/* Main Gallery */}
-      <div className={cn("relative overflow-hidden rounded-xl max-w-sm mx-auto", className)}>
+      <div className={cn("relative overflow-hidden rounded-xl max-w-xs mx-auto", className)}>
         <div className="relative aspect-[3/2] bg-muted">
           <img
             src={images[currentIndex]}
