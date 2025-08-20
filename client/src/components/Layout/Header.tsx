@@ -1,4 +1,4 @@
-import { Search, Plus, User, LogOut, LogIn, Settings, Shield, Bell } from "lucide-react";
+import { Search, Plus, User, LogOut, LogIn, Settings, Shield, Bell, Home, MapPin, MessageCircle, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useLanguage } from "@/hooks/useLanguage";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
 import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
 
@@ -28,6 +29,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { unreadCount } = useNotifications();
+  const { t } = useLanguage();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,6 +109,43 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                 />
               </div>
             </form>
+          </div>
+          
+          {/* Desktop Navigation Dropdown - Hidden on mobile */}
+          <div className="hidden md:block">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 rounded font-medium flex items-center gap-2 text-sm"
+                >
+                  <Menu size={16} />
+                  <span>Navigation</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-48">
+                <DropdownMenuItem onClick={() => onTabChange?.('home')} className={activeTab === 'home' ? 'bg-red-50 text-red-600' : ''}>
+                  <Home className="mr-2 h-4 w-4" />
+                  <span>{t('home') || 'Accueil'}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTabChange?.('search')} className={activeTab === 'search' ? 'bg-red-50 text-red-600' : ''}>
+                  <Search className="mr-2 h-4 w-4" />
+                  <span>{t('search') || 'Rechercher'}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/map')} className={activeTab === 'map' ? 'bg-red-50 text-red-600' : ''}>
+                  <MapPin className="mr-2 h-4 w-4" />
+                  <span>Carte</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTabChange?.('messages')} className={activeTab === 'messages' ? 'bg-red-50 text-red-600' : ''}>
+                  <MessageCircle className="mr-2 h-4 w-4" />
+                  <span>{t('messages') || 'Messages'}</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onTabChange?.('profile')} className={activeTab === 'profile' ? 'bg-red-50 text-red-600' : ''}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>{t('profile') || 'Profil'}</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           
           {/* Right Side Buttons */}
