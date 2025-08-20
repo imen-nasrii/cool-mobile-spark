@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
+// import { Footer } from "@/components/Layout/Footer";
 import { AddButton } from "@/components/UI/FloatingButtons";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -104,7 +105,7 @@ export const MainLayout = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50" style={{ fontFamily: 'Arial, sans-serif' }}>
+    <div className="min-h-screen bg-gray-50 flex flex-col" style={{ fontFamily: 'Arial, sans-serif' }}>
       {showHeader && (
         <Header 
           activeTab={activeTab} 
@@ -113,7 +114,7 @@ export const MainLayout = ({
         />
       )}
       
-      <main className="pb-20 md:pb-0">
+      <main className="flex-1 pb-20 md:pb-0">
         {children}
       </main>
       
@@ -122,6 +123,13 @@ export const MainLayout = ({
         activeTab={activeTab} 
         onTabChange={handleTabChange} 
       />
+      
+      {/* Simple Footer pour desktop uniquement */}
+      <footer className="hidden md:block bg-gray-900 text-white py-8 mt-auto">
+        <div className="container mx-auto px-6 text-center">
+          <p className="text-gray-300">© 2024 Tomati Market. Tous droits réservés.</p>
+        </div>
+      </footer>
       
       {/* AddButton is now handled by Index.tsx */}
     </div>

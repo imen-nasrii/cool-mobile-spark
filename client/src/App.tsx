@@ -1,6 +1,6 @@
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+// import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
@@ -31,10 +31,9 @@ import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <PreferencesProvider>
+      <LanguageProvider>
+        <AuthProvider>
+          <PreferencesProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -42,7 +41,6 @@ const App = () => (
               <Route path="/" element={
                 <MainLayout>
                   <Index />
-                  <PWAInstallPrompt />
                 </MainLayout>
               } />
               <Route path="/auth" element={<Auth />} />
@@ -147,7 +145,6 @@ const App = () => (
             </PreferencesProvider>
           </AuthProvider>
         </LanguageProvider>
-      </TooltipProvider>
     </QueryClientProvider>
   </ErrorBoundary>
 );
