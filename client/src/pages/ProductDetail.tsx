@@ -48,13 +48,19 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     return `${Math.floor(diffInMinutes / 1440)}j`;
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('fr-TN', {
-      style: 'currency',
-      currency: 'TND',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 3
-    }).format(price);
+  const formatPrice = (price: any) => {
+    // Gérer les produits gratuits
+    if (price === 'Free' || price === 'free' || price === 'Gratuit' || price === 'gratuit') {
+      return 'Gratuit';
+    }
+    
+    // Convertir en nombre et vérifier si c'est valide
+    const numPrice = parseFloat(price);
+    if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
+      return 'Prix non spécifié';
+    }
+    
+    return `${numPrice.toLocaleString('fr-FR')} TND`;
   };
 
   useEffect(() => {
