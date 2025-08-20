@@ -171,7 +171,7 @@ const ProductCardComponent = ({
       )}
       onClick={onClick}
     >
-      <div className="relative aspect-square bg-gradient-to-br from-white to-gray-50 overflow-hidden">
+      <div className="relative aspect-[4/3] h-32 bg-gradient-to-br from-white to-gray-50 overflow-hidden">
         {/* Product image */}
         {(() => {
           let mainImage = null;
