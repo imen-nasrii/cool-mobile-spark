@@ -24,10 +24,8 @@ export const BottomNav = ({ activeTab, onTabChange }: BottomNavProps) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
   
-  // Don't render on desktop
-  if (isDesktop) {
-    return null;
-  }
+  // Don't render at all - navigation moved to header dropdown
+  return null;
   
   const tabs = [
     { id: "home", icon: Home, label: t('home') },

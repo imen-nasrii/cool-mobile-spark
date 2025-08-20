@@ -123,8 +123,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
             </form>
           </div>
           
-          {/* Desktop Navigation Dropdown - Visible only on desktop */}
-          {isDesktop && (
+          {/* Navigation Dropdown Menu */}
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -133,17 +132,17 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                   className="border-gray-300 text-gray-700 hover:bg-gray-50 px-3 py-2 rounded font-medium flex items-center gap-2 text-sm"
                 >
                   <Menu size={16} />
-                  <span>Navigation</span>
+                  <span>Menu</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="w-48">
                 <DropdownMenuItem onClick={() => onTabChange?.('home')} className={activeTab === 'home' ? 'bg-red-50 text-red-600' : ''}>
                   <Home className="mr-2 h-4 w-4" />
-                  <span>{t('home') || 'Accueil'}</span>
+                  <span>Accueil</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onTabChange?.('search')} className={activeTab === 'search' ? 'bg-red-50 text-red-600' : ''}>
                   <Search className="mr-2 h-4 w-4" />
-                  <span>{t('search') || 'Rechercher'}</span>
+                  <span>Rechercher</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/map')} className={activeTab === 'map' ? 'bg-red-50 text-red-600' : ''}>
                   <MapPin className="mr-2 h-4 w-4" />
@@ -151,16 +150,15 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onTabChange?.('messages')} className={activeTab === 'messages' ? 'bg-red-50 text-red-600' : ''}>
                   <MessageCircle className="mr-2 h-4 w-4" />
-                  <span>{t('messages') || 'Messages'}</span>
+                  <span>Messages</span>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onTabChange?.('profile')} className={activeTab === 'profile' ? 'bg-red-50 text-red-600' : ''}>
                   <User className="mr-2 h-4 w-4" />
-                  <span>{t('profile') || 'Profil'}</span>
+                  <span>Profil</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          )}
           
           {/* Right Side Buttons */}
           <div className="flex items-center gap-2">
