@@ -11,18 +11,39 @@ export const useNotifications = () => {
     error
   } = useQuery({
     queryKey: ['/api/notifications'],
-    queryFn: () => apiClient.request('/notifications') as Promise<Notification[]>,
+    queryFn: async () => {
+      console.log('🔔 Fetching notifications from API...');
+      console.log('🔑 Token exists:', !!localStorage.getItem('authToken'));
+      try {
+        const result = await apiClient.request('/notifications') as Promise<Notification[]>;
+        console.log('📱 Notifications received:', Array.isArray(result) ? result.length : 0, result);
+        return result;
+      } catch (error) {
+        console.error('❌ Notifications query error:', error);
+        throw error;
+      }
+    },
     refetchInterval: 30000, // Refetch every 30 seconds
-    enabled: !!localStorage.getItem('token'), // Only fetch if authenticated
+    enabled: !!localStorage.getItem('authToken'), // Only fetch if authenticated
   });
 
   const {
     data: unreadCount = 0
   } = useQuery({
     queryKey: ['/api/notifications/unread-count'],
-    queryFn: () => apiClient.request('/notifications/unread-count').then((res: any) => res.count),
+    queryFn: async () => {
+      console.log('📊 Fetching unread count...');
+      try {
+        const res: any = await apiClient.request('/notifications/unread-count');
+        console.log('📊 Unread count:', res?.count || 0);
+        return res?.count || 0;
+      } catch (error) {
+        console.error('❌ Unread count query error:', error);
+        return 0;
+      }
+    },
     refetchInterval: 15000, // Refetch every 15 seconds
-    enabled: !!localStorage.getItem('token'), // Only fetch if authenticated
+    enabled: !!localStorage.getItem('authToken'), // Only fetch if authenticated
   });
 
   const markAsReadMutation = useMutation({
