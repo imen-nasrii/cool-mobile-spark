@@ -658,6 +658,55 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </p>
             </div>
 
+            {/* Informations générales du produit */}
+            <div className="pt-4">
+              <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Informations générales</h3>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Date de publication:</span>
+                  <span className="text-black font-medium">
+                    {formatTimeAgo(product.created_at)}
+                  </span>
+                </div>
+                {product.updated_at && product.updated_at !== product.created_at && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Dernière modification:</span>
+                    <span className="text-black font-medium">
+                      {formatTimeAgo(product.updated_at)}
+                    </span>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Catégorie:</span>
+                  <span className="text-black font-medium">{product.category}</span>
+                </div>
+                {product.is_free && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type:</span>
+                    <span className="text-green-600 font-medium">Gratuit</span>
+                  </div>
+                )}
+                {product.is_reserved && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Statut:</span>
+                    <span className="text-orange-600 font-medium">Réservé</span>
+                  </div>
+                )}
+                {product.is_promoted && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Promotion:</span>
+                    <span className="text-blue-600 font-medium">Produit mis en avant</span>
+                  </div>
+                )}
+                {product.is_advertisement && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type d'annonce:</span>
+                    <span className="text-yellow-600 font-medium">Publicité</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
             {/* Caractéristiques du produit */}
             {renderProductDetails()}
 
@@ -681,18 +730,27 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
               </div>
             </div>
 
-            {/* Statistiques - Vues et J'aime */}
+            {/* Statistiques - Vues, J'aime et Notes */}
             <div className="pt-4">
-              <div className="grid grid-cols-2 gap-6 text-center">
-                <div>
+              <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Statistiques</h3>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div className="bg-gray-50 rounded-lg p-4">
                   <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
                   <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
                 </div>
-                <div>
+                <div className="bg-gray-50 rounded-lg p-4">
                   <div className="text-2xl font-bold text-red-500">
                     {product.like_count || 0}
                   </div>
                   <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
+                </div>
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="text-2xl font-bold text-red-500">
+                    {product.rating ? product.rating.toFixed(1) : '0.0'}
+                  </div>
+                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
+                    Note ({product.rating_count || 0} avis)
+                  </div>
                 </div>
               </div>
             </div>
