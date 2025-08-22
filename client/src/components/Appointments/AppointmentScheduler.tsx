@@ -73,7 +73,7 @@ export const AppointmentScheduler = ({
   // Get minimum date (today)
   const today = new Date().toISOString().split('T')[0];
   
-  // Get minimum time if today is selected
+  // Get minimum time (30 minutes from now if today)
   const now = new Date();
   const minTime = appointmentDate === today 
     ? `${now.getHours().toString().padStart(2, '0')}:${(now.getMinutes() + 30).toString().padStart(2, '0')}`
@@ -95,102 +95,100 @@ export const AppointmentScheduler = ({
         </div>
 
         <div className="p-4">
-        <div className="text-center mb-4">
-          <p className="text-sm text-gray-600">
-            Demande de rendez-vous pour :
-          </p>
-          <p className="font-semibold text-red-600">{productTitle}</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Date Selection */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-black flex items-center gap-2">
-              <Calendar size={14} className="text-red-500" />
-              Date du rendez-vous *
-            </Label>
-            <Input
-              type="date"
-              value={appointmentDate}
-              onChange={(e) => setAppointmentDate(e.target.value)}
-              min={today}
-              required
-              className="border-gray-300 focus:border-red-500 focus:ring-red-500"
-            />
+          <div className="text-center mb-4">
+            <p className="text-sm text-gray-600">
+              Demande de rendez-vous pour :
+            </p>
+            <p className="font-semibold text-red-600">{productTitle}</p>
           </div>
 
-          {/* Time Selection */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-black flex items-center gap-2">
-              <Clock size={14} className="text-red-500" />
-              Heure du rendez-vous *
-            </Label>
-            <Input
-              type="time"
-              value={appointmentTime}
-              onChange={(e) => setAppointmentTime(e.target.value)}
-              min={minTime}
-              required
-              className="border-gray-300 focus:border-red-500 focus:ring-red-500"
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Date Selection */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-black flex items-center gap-2">
+                <Calendar size={14} className="text-red-500" />
+                Date du rendez-vous
+              </Label>
+              <Input
+                type="date"
+                value={appointmentDate}
+                onChange={(e) => setAppointmentDate(e.target.value)}
+                min={today}
+                required
+                className="border-gray-300"
+              />
+            </div>
 
-          {/* Location */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-black flex items-center gap-2">
-              <MapPin size={14} className="text-red-500" />
-              Lieu de rendez-vous
-            </Label>
-            <Input
-              type="text"
-              placeholder="Ex: Café Central, Tunis ou chez le vendeur"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="border-gray-300 focus:border-red-500 focus:ring-red-500"
-            />
-          </div>
+            {/* Time Selection */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-black flex items-center gap-2">
+                <Clock size={14} className="text-red-500" />
+                Heure souhaitée
+              </Label>
+              <Input
+                type="time"
+                value={appointmentTime}
+                onChange={(e) => setAppointmentTime(e.target.value)}
+                min={appointmentDate === today ? minTime : "08:00"}
+                max="22:00"
+                required
+                className="border-gray-300"
+              />
+              <p className="text-xs text-gray-500">
+                Horaires disponibles : 08:00 - 22:00
+              </p>
+            </div>
 
-          {/* Notes */}
-          <div className="space-y-2">
-            <Label className="text-sm font-medium text-black flex items-center gap-2">
-              <FileText size={14} className="text-red-500" />
-              Notes additionnelles
-            </Label>
-            <Textarea
-              placeholder="Détails supplémentaires pour le rendez-vous..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={3}
-              className="border-gray-300 focus:border-red-500 focus:ring-red-500 resize-none"
-            />
-          </div>
+            {/* Location */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-black flex items-center gap-2">
+                <MapPin size={14} className="text-red-500" />
+                Lieu de rencontre
+              </Label>
+              <Input
+                type="text"
+                placeholder="Ex: Café Central, Avenue Habib Bourguiba..."
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="border-gray-300"
+              />
+            </div>
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClose}
-              className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-black"
-            >
-              Annuler
-            </Button>
+            {/* Notes */}
+            <div className="space-y-2">
+              <Label className="text-sm font-medium text-black flex items-center gap-2">
+                <FileText size={14} className="text-red-500" />
+                Notes (optionnel)
+              </Label>
+              <Textarea
+                placeholder="Précisions supplémentaires sur le rendez-vous..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                rows={3}
+                className="border-gray-300"
+              />
+            </div>
+
+            {/* Submit Button */}
             <Button
               type="submit"
+              className="w-full bg-red-500 hover:bg-red-600 text-white"
               disabled={createAppointment.isPending}
-              className="flex-1 bg-red-600 hover:bg-red-700 text-white"
             >
               {createAppointment.isPending ? (
-                "Envoi..."
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Envoi en cours...
+                </>
               ) : (
                 <>
-                  <Check size={16} className="mr-2" />
-                  Demander le RDV
+                  <Check className="h-4 w-4 mr-2" />
+                  Programmer le rendez-vous
                 </>
               )}
             </Button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

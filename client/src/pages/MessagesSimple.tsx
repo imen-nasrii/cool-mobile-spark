@@ -125,8 +125,6 @@ export default function MessagesPage() {
     setActiveCall(null);
   };
 
-  const selectedConversationData = conversations.find((c: any) => c.id === selectedConversation);
-
   if (isLoadingConversations) {
     return (
       <div className="container mx-auto px-4 py-8">
