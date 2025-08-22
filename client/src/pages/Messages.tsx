@@ -491,15 +491,6 @@ export default function MessagesPage() {
                       onFileSelect={handleFileSelect}
                       disabled={isSendingMessage || uploadingFile}
                     />
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="border-gray-300 text-gray-600 hover:bg-gray-50"
-                      onClick={() => setShowAppointmentBooking(true)}
-                      title="Prendre rendez-vous"
-                    >
-                      <Calendar className="h-4 w-4" />
-                    </Button>
                     <div className="flex-1 flex gap-3">
                       <Input
                         placeholder="Tapez votre message..."
@@ -548,22 +539,6 @@ export default function MessagesPage() {
         />
       )}
 
-      {/* Appointment Booking Modal */}
-      {showAppointmentBooking && selectedConversationData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <AppointmentBooking
-              conversationId={selectedConversation!}
-              productId={selectedConversationData.product_id}
-              productTitle={selectedConversationData.product_title}
-              productLocation={selectedConversationData.product_location || 'À définir'}
-              sellerId={selectedConversationData.seller_id}
-              currentUserId={user?.id || ''}
-              onClose={() => setShowAppointmentBooking(false)}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
