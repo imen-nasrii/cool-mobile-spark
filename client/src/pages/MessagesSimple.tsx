@@ -461,6 +461,15 @@ export default function MessagesPage() {
                     <Button variant="outline" size="sm" className="border-gray-300 text-red-500 hover:bg-red-50">
                       <Smile className="h-4 w-4" />
                     </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setShowAppointmentModal(true)}
+                      className="border-gray-300 text-red-500 hover:bg-red-50"
+                      title="Prendre rendez-vous"
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </Button>
                     <FileUpload
                       onFileSelect={handleFileSelect}
                       disabled={isSendingMessage || uploadingFile}
