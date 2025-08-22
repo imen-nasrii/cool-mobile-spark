@@ -416,7 +416,8 @@ export default function MessagesPage() {
                       onClick={() => setShowAppointmentModal(true)}
                       className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
-                      📅 Rendez-vous
+                      <Calendar className="h-3 w-3 mr-1" />
+                      Rendez-vous
                     </Button>
                     <Button 
                       variant="outline" 
