@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { useNotifications } from "@/hooks/useNotifications";
 import { useLanguage } from "@/hooks/useLanguage";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
 import { apiClient } from "@/lib/apiClient";
@@ -30,7 +29,8 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
   const [isDesktop, setIsDesktop] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { unreadCount } = useNotifications();
+  // Notifications temporarily disabled
+  const unreadCount = 0;
   const { t } = useLanguage();
   
   useEffect(() => {
@@ -163,24 +163,7 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           
           {/* Right Side Buttons */}
           <div className="flex items-center gap-2">
-            {/* Notifications Bell - Only show for logged in users */}
-            {user && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/notifications')}
-                className="relative p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
-              >
-                <Bell size={20} className={`transition-colors duration-200 ${
-                  unreadCount > 0 ? 'text-red-500 animate-pulse' : 'text-gray-600'
-                }`} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </Button>
-            )}
+            {/* Notifications temporarily disabled */}
             
             {/* User Menu */}
             {user ? (
