@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
 import { Footer } from "@/components/Layout/Footer";
+import { NotificationBanner } from "@/components/Notifications/NotificationBanner";
 import { AddButton } from "@/components/UI/FloatingButtons";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -117,6 +118,9 @@ export const MainLayout = ({
       <main className="pb-20">
         {children}
       </main>
+      
+      {/* Notification Banner */}
+      <NotificationBanner />
       
       {/* Navigation visible sur toutes les tailles d'écran */}
       <BottomNav 

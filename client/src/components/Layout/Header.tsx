@@ -15,6 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useNotifications } from "@/hooks/useNotifications";
 import { useLanguage } from "@/hooks/useLanguage";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
+import { apiClient } from "@/lib/apiClient";
 import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
 
 interface HeaderProps {
@@ -164,19 +165,43 @@ export const Header = ({ activeTab, onTabChange, onSearch }: HeaderProps) => {
           <div className="flex items-center gap-2">
             {/* Notifications Bell - Only show for logged in users */}
             {user && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/notifications')}
-                className="relative p-2 hover:bg-gray-100 rounded-full"
-              >
-                <Bell size={20} className="text-gray-600" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
+              <div className="relative">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/notifications')}
+                  className="relative p-2 hover:bg-gray-100 rounded-full transition-all duration-200"
+                >
+                  <Bell size={20} className={`transition-colors duration-200 ${
+                    unreadCount > 0 ? 'text-red-500 animate-pulse' : 'text-gray-600'
+                  }`} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-bounce">
+                      {unreadCount > 9 ? '9+' : unreadCount}
+                    </span>
+                  )}
+                </Button>
+                
+                {/* Demo notification creator for testing - admin only */}
+                {user?.role === 'admin' && (
+                  <button
+                    onClick={async () => {
+                      try {
+                        await apiClient.request('/notifications/demo', { method: 'POST' });
+                        toast({
+                          title: "✨ Notifications de démo créées",
+                          description: "5 notifications d'exemple ont été ajoutées",
+                        });
+                      } catch (error) {
+                        console.error('Failed to create demo notifications:', error);
+                      }
+                    }}
+                    className="absolute -bottom-8 left-0 text-xs text-blue-600 hover:text-blue-800 opacity-50 hover:opacity-100"
+                  >
+                    + Demo
+                  </button>
                 )}
-              </Button>
+              </div>
             )}
             
             {/* User Menu */}

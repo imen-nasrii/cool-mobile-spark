@@ -546,6 +546,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Additional notification routes for complete system
+  app.get("/api/notifications/stats", authenticateToken, async (req, res) => {
+    try {
+      const stats = await notificationService.getNotificationStats((req as any).user.id);
+      res.json(stats);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.get("/api/notifications/type/:type", authenticateToken, async (req, res) => {
+    try {
+      const notifications = await notificationService.getNotificationsByType((req as any).user.id, req.params.type);
+      res.json(notifications);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/notifications/mark-all-read/:type", authenticateToken, async (req, res) => {
+    try {
+      const count = await notificationService.markAllAsReadByType((req as any).user.id, req.params.type);
+      res.json({ markedCount: count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.delete("/api/notifications/type/:type", authenticateToken, async (req, res) => {
+    try {
+      const count = await notificationService.deleteAllByType((req as any).user.id, req.params.type);
+      res.json({ deletedCount: count });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Test notification creation for demo
+  app.post("/api/notifications/demo", authenticateToken, async (req, res) => {
+    try {
+      const userId = (req as any).user.id;
+      
+      // Create sample notifications
+      const sampleNotifications = [
+        {
+          user_id: userId,
+          title: "💬 Nouveau message reçu",
+          message: "Ahmed vous a envoyé un message concernant votre annonce de voiture.",
+          type: "message",
+          is_read: false
+        },
+        {
+          user_id: userId,
+          title: "❤️ Votre produit a été aimé",
+          message: "Quelqu'un a ajouté \"iPhone 15 Pro\" aux favoris.",
+          type: "like",
+          is_read: false
+        },
+        {
+          user_id: userId,
+          title: "⭐ Nouvelle évaluation",
+          message: "Votre produit \"Appartement à Tunis\" a reçu ⭐⭐⭐⭐⭐ (5/5)",
+          type: "review",
+          is_read: true
+        },
+        {
+          user_id: userId,
+          title: "🎉 Produit vendu !",
+          message: "Félicitations ! Votre produit \"MacBook Pro\" a trouvé un acheteur",
+          type: "sale",
+          is_read: false
+        },
+        {
+          user_id: userId,
+          title: "🔄 Mise à jour système",
+          message: "Nouvelles fonctionnalités disponibles : centre de notifications amélioré !",
+          type: "system",
+          is_read: false
+        }
+      ];
+      
+      const createdNotifications = [];
+      for (const notifData of sampleNotifications) {
+        const notification = await notificationService.createNotification(notifData);
+        createdNotifications.push(notification);
+      }
+      
+      res.json({ 
+        success: true, 
+        message: `${createdNotifications.length} notifications de démonstration créées`,
+        notifications: createdNotifications 
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.delete("/api/notifications/:id", authenticateToken, async (req, res) => {
     try {
       const success = await notificationService.deleteNotification(req.params.id, (req as any).user.id);
