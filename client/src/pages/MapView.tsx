@@ -187,25 +187,19 @@ export default function MapView() {
       {/* Main Header with Navigation */}
       <Header />
       
-      {/* Simplified Controls - NO DUPLICATE NAV */}
-      <div className="bg-white border-b px-4 py-2">
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
-          <Badge variant="secondary" className="text-sm">
-            📍 {filteredProducts.length} produits trouvés
-          </Badge>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
-            className="text-sm"
-          >
-            <Filter size={14} className="mr-1" />
-            Filtres
-          </Button>
-        </div>
-      </div>
+      {/* Just the map - no extra bars */}
 
-      <div className="flex">
+      <div className="flex relative">
+        {/* Floating Filters Button */}
+        <Button
+          onClick={() => setShowFilters(!showFilters)}
+          className="fixed top-20 right-4 z-10 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 shadow-lg"
+          size="sm"
+        >
+          <Filter size={16} className="mr-1" />
+          Filtres {filteredProducts.length && `(${filteredProducts.length})`}
+        </Button>
+        
         {/* Filters Sidebar */}
         {showFilters && (
           <div className="w-80 bg-white border-r p-6 h-screen overflow-y-auto">
