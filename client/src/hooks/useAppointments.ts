@@ -27,10 +27,15 @@ export interface CreateAppointmentData {
 }
 
 export const useAppointments = () => {
-  return useQuery<Appointment[]>({
+  const appointmentsQuery = useQuery<Appointment[]>({
     queryKey: ['/api/appointments'],
     staleTime: 30000, // 30 seconds
   });
+
+  return {
+    appointments: appointmentsQuery.data || [],
+    isLoadingAppointments: appointmentsQuery.isLoading,
+  };
 };
 
 export const useCreateAppointment = () => {

@@ -228,13 +228,13 @@ const ProductCardComponent = ({
         
         {/* Status badges */}
         <div className="absolute top-2 left-2 flex gap-2">
-          {product.isReserved && (
-            <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs modern-shadow">
+          {product.is_reserved && (
+            <Badge className="bg-red-500 text-white text-xs border border-red-600">
               Réservé
             </Badge>
           )}
-          {product.isAdvertisement && (
-            <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs modern-shadow">
+          {product.is_advertisement && (
+            <Badge className="bg-yellow-500 text-black text-xs border border-yellow-600">
               Publicité
             </Badge>
           )}

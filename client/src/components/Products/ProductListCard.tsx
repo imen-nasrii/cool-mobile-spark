@@ -108,8 +108,8 @@ interface Product {
   timeAgo: string;
   image?: string;
   isFree?: boolean;
-  isReserved?: boolean;
-  isAdvertisement?: boolean;
+  is_reserved?: boolean;
+  is_advertisement?: boolean;
   likes: number;
   category: string;
   isLiked?: boolean;
@@ -229,10 +229,10 @@ export const ProductListCard = ({
           
           {/* Status badges */}
           <div className="absolute top-1 left-1 flex gap-1">
-            {product.isReserved && (
+            {product.is_reserved && (
               <Badge className="bg-info text-info-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Reserved</Badge>
             )}
-            {product.isAdvertisement && (
+            {product.is_advertisement && (
               <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Publicité</Badge>
             )}
           </div>

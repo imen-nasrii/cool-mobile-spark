@@ -10,6 +10,8 @@ import { cn } from "@/lib/utils";
 
 interface AppointmentCardProps {
   appointment: Appointment;
+  currentUserId: string;
+  isInMessage?: boolean;
   className?: string;
 }
 
@@ -53,8 +55,7 @@ const getStatusConfig = (status: string) => {
   }
 };
 
-export const AppointmentCard = ({ appointment, className }: AppointmentCardProps) => {
-  const { user } = useAuth();
+export const AppointmentCard = ({ appointment, currentUserId, isInMessage = false, className }: AppointmentCardProps) => {
   const updateStatus = useUpdateAppointmentStatus();
   const cancelAppointment = useCancelAppointment();
   const { toast } = useToast();
@@ -63,8 +64,8 @@ export const AppointmentCard = ({ appointment, className }: AppointmentCardProps
   const StatusIcon = statusConfig.icon;
   
   // Check if current user is the owner (seller)
-  const isOwner = user?.id === appointment.owner_id;
-  const isRequester = user?.id === appointment.requester_id;
+  const isOwner = currentUserId === appointment.owner_id;
+  const isRequester = currentUserId === appointment.requester_id;
 
   // Format date and time
   const appointmentDateTime = new Date(appointment.appointment_date);
@@ -142,9 +143,14 @@ export const AppointmentCard = ({ appointment, className }: AppointmentCardProps
   };
 
   return (
-    <Card className={cn("border border-red-100 bg-white", className)}>
-      <CardContent className="p-4">
-        <div className="space-y-4">
+    <div className={cn(
+      "border rounded-lg p-4 space-y-3",
+      isInMessage 
+        ? "bg-blue-50 border-blue-200" 
+        : "bg-white border-gray-200 hover:border-gray-300",
+      className
+    )} style={{ fontFamily: 'Arial, sans-serif' }}>
+      <div className="space-y-4">
           {/* Header with status */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -257,7 +263,6 @@ export const AppointmentCard = ({ appointment, className }: AppointmentCardProps
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+    </div>
   );
 };

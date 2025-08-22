@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCreateAppointment, CreateAppointmentData } from "@/hooks/useAppointments";
 import { useToast } from "@/hooks/use-toast";
 
@@ -81,28 +80,28 @@ export const AppointmentScheduler = ({
     : "08:00";
 
   return (
-    <Card className="w-full max-w-md mx-auto border border-red-200">
-      <CardHeader className="border-b border-red-100">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-black flex items-center gap-2">
-            <Calendar className="w-5 h-5 text-red-500" />
-            Planifier un rendez-vous
-          </CardTitle>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" style={{ fontFamily: 'Arial, sans-serif' }}>
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-4">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-black">📅 Prendre rendez-vous</h2>
           <Button
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="h-8 w-8 p-0 text-gray-500 hover:text-black hover:bg-gray-100"
+            className="text-gray-500 hover:text-gray-700"
           >
-            <X size={16} />
+            <X className="h-4 w-4" />
           </Button>
         </div>
-        <p className="text-sm text-gray-600">
-          Pour: <span className="font-medium text-black">{productTitle}</span>
-        </p>
-      </CardHeader>
 
-      <CardContent className="p-6">
+        <div className="p-4">
+        <div className="text-center mb-4">
+          <p className="text-sm text-gray-600">
+            Demande de rendez-vous pour :
+          </p>
+          <p className="font-semibold text-red-600">{productTitle}</p>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Date Selection */}
           <div className="space-y-2">
@@ -192,7 +191,7 @@ export const AppointmentScheduler = ({
             </Button>
           </div>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
