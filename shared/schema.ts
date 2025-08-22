@@ -153,6 +153,21 @@ export const message_reads = pgTable("message_reads", {
   read_at: timestamp("read_at").defaultNow().notNull(),
 });
 
+// Appointments table for meeting scheduling
+export const appointments = pgTable("appointments", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  conversation_id: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade" }).notNull(),
+  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
+  requester_id: uuid("requester_id").references(() => users.id, { onDelete: "cascade" }).notNull(), // Qui demande le rdv
+  owner_id: uuid("owner_id").references(() => users.id, { onDelete: "cascade" }).notNull(), // Propriétaire du produit
+  appointment_date: timestamp("appointment_date").notNull(), // Date et heure du rdv
+  location: text("location"), // Lieu de rencontre
+  notes: text("notes"), // Notes supplémentaires
+  status: text("status").default("pending").notNull(), // 'pending', 'confirmed', 'cancelled', 'completed'
+  created_at: timestamp("created_at").defaultNow().notNull(),
+  updated_at: timestamp("updated_at").defaultNow().notNull(),
+});
+
 // Product likes for tracking user likes on products
 export const product_likes = pgTable("product_likes", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -300,6 +315,12 @@ export const insertUserPreferencesSchema = createInsertSchema(user_preferences).
   updated_at: true,
 });
 
+export const insertAppointmentSchema = createInsertSchema(appointments).omit({
+  id: true,
+  created_at: true,
+  updated_at: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -326,3 +347,5 @@ export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 export type ProductRating = typeof product_ratings.$inferSelect;
 export type InsertProductRating = z.infer<typeof insertProductRatingSchema>;
+export type Appointment = typeof appointments.$inferSelect;
+export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;

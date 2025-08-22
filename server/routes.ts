@@ -5,7 +5,7 @@ import {
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema, insertNotificationSchema,
   insertAdvertisementSchema, insertProductRatingSchema, insertUserPreferencesSchema,
-  users, products, profiles 
+  insertAppointmentSchema, users, products, profiles, appointments 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
 import { notificationService } from "./notifications";
@@ -1059,6 +1059,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Routes pour les rendez-vous
+  app.post("/api/appointments", authenticateToken, async (req: any, res: any) => {
+    try {
+      const appointmentData = insertAppointmentSchema.parse(req.body);
+      const appointment = await storage.createAppointment(appointmentData);
+      
+      // Envoyer une notification au propriétaire du produit
+      await notificationService.createNotification({
+        user_id: appointmentData.owner_id,
+        type: 'appointment_request',
+        title: 'Nouvelle demande de rendez-vous',
+        message: `${req.user.display_name || req.user.email} souhaite prendre rendez-vous pour votre produit.`,
+        related_id: appointmentData.conversation_id
+      });
+      
+      res.json(appointment);
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      res.status(400).json({ error: 'Failed to create appointment' });
+    }
+  });
+
+  app.get("/api/appointments", authenticateToken, async (req: any, res: any) => {
+    try {
+      const appointments = await storage.getUserAppointments(req.user.id);
+      res.json(appointments);
+    } catch (error) {
+      console.error('Error fetching appointments:', error);
+      res.status(500).json({ error: 'Failed to fetch appointments' });
+    }
+  });
+
+  app.patch("/api/appointments/:id/status", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      
+      if (!['confirmed', 'cancelled', 'completed'].includes(status)) {
+        return res.status(400).json({ error: 'Invalid status' });
+      }
+      
+      const appointment = await storage.updateAppointmentStatus(id, status, req.user.id);
+      
+      if (!appointment) {
+        return res.status(404).json({ error: 'Appointment not found' });
+      }
+      
+      // Envoyer une notification de confirmation/annulation
+      const notificationUserId = appointment.requester_id === req.user.id 
+        ? appointment.owner_id 
+        : appointment.requester_id;
+        
+      let notificationMessage = '';
+      switch (status) {
+        case 'confirmed':
+          notificationMessage = 'Votre demande de rendez-vous a été confirmée !';
+          break;
+        case 'cancelled':
+          notificationMessage = 'Le rendez-vous a été annulé.';
+          break;
+        case 'completed':
+          notificationMessage = 'Le rendez-vous a été marqué comme terminé.';
+          break;
+      }
+      
+      await notificationService.createNotification({
+        user_id: notificationUserId,
+        type: 'appointment_update',
+        title: 'Rendez-vous mis à jour',
+        message: notificationMessage,
+        related_id: appointment.conversation_id
+      });
+      
+      res.json(appointment);
+    } catch (error) {
+      console.error('Error updating appointment status:', error);
+      res.status(500).json({ error: 'Failed to update appointment status' });
+    }
+  });
+
+  // Route pour marquer un produit comme réservé
+  app.patch("/api/products/:id/reserve", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { id } = req.params;
+      const product = await storage.reserveProduct(id, req.user.id);
+      
+      if (!product) {
+        return res.status(404).json({ error: 'Product not found or already reserved' });
+      }
+      
+      res.json(product);
+    } catch (error) {
+      console.error('Error reserving product:', error);
+      res.status(500).json({ error: 'Failed to reserve product' });
+    }
+  });
+
   const httpServer = createServer(app);
   
   // WebSocket server for real-time messaging  
@@ -1213,5 +1310,3 @@ function getChatbotResponse(message: string, userContext: any = {}) {
     timestamp: new Date().toISOString()
   };
 }
-
-

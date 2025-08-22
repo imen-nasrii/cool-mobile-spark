@@ -8,14 +8,15 @@ const storageCache = new NodeCache({
   checkperiod: 30,
 });
 import { 
-  users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences,
+  users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences, appointments,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
   type Advertisement, type InsertAdvertisement,
   type ProductRating, type InsertProductRating,
-  type UserPreferences, type InsertUserPreferences
+  type UserPreferences, type InsertUserPreferences,
+  type Appointment, type InsertAppointment
 } from "@shared/schema";
 
 export interface IStorage {
@@ -81,6 +82,14 @@ export interface IStorage {
   }>;
   
   // Legacy message methods removed - use MessagingService instead
+  
+  // Appointment methods
+  createAppointment(appointment: InsertAppointment): Promise<Appointment>;
+  getUserAppointments(userId: string): Promise<Appointment[]>;
+  updateAppointmentStatus(appointmentId: string, status: string, userId: string): Promise<Appointment | undefined>;
+  
+  // Product reservation
+  reserveProduct(productId: string, userId: string): Promise<Product | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -592,6 +601,60 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Legacy message methods removed - use MessagingService instead
+  
+  // Appointment methods
+  async createAppointment(appointment: InsertAppointment): Promise<Appointment> {
+    const result = await db.insert(appointments).values(appointment).returning();
+    return result[0];
+  }
+
+  async getUserAppointments(userId: string): Promise<Appointment[]> {
+    const result = await db
+      .select()
+      .from(appointments)
+      .where(or(eq(appointments.requester_id, userId), eq(appointments.owner_id, userId)))
+      .orderBy(desc(appointments.created_at));
+    
+    return result;
+  }
+
+  async updateAppointmentStatus(appointmentId: string, status: string, userId: string): Promise<Appointment | undefined> {
+    // Vérifier que l'utilisateur a le droit de modifier ce rendez-vous
+    const appointment = await db
+      .select()
+      .from(appointments)
+      .where(eq(appointments.id, appointmentId))
+      .limit(1);
+
+    if (!appointment[0] || (appointment[0].requester_id !== userId && appointment[0].owner_id !== userId)) {
+      return undefined;
+    }
+
+    const result = await db
+      .update(appointments)
+      .set({ status, updated_at: new Date() })
+      .where(eq(appointments.id, appointmentId))
+      .returning();
+
+    return result[0];
+  }
+
+  // Product reservation
+  async reserveProduct(productId: string, userId: string): Promise<Product | undefined> {
+    try {
+      // Marquer le produit comme réservé
+      const result = await db
+        .update(products)
+        .set({ is_reserved: true })
+        .where(and(eq(products.id, productId), eq(products.is_reserved, false)))
+        .returning();
+
+      return result[0];
+    } catch (error) {
+      console.error('Error reserving product:', error);
+      return undefined;
+    }
+  }
 }
 
 export const storage = new DatabaseStorage();

@@ -3,13 +3,14 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft, Video, ImageIcon } from 'lucide-react';
+import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft, Video, ImageIcon, Calendar } from 'lucide-react';
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CallInterface } from '@/components/MessagingComponents/CallInterface';
 import { FileUpload, FilePreview } from '@/components/MessagingComponents/FileUpload';
+import { AppointmentBooking } from '@/components/Appointments/AppointmentBooking';
 
 export default function MessagesPage() {
   const { user } = useAuth();
@@ -32,6 +33,7 @@ export default function MessagesPage() {
     callerName: string;
     isActive: boolean;
   } | null>(null);
+  const [showAppointmentBooking, setShowAppointmentBooking] = useState(false);
 
   const messagesQuery = useConversationMessages(selectedConversation);
 
@@ -489,6 +491,15 @@ export default function MessagesPage() {
                       onFileSelect={handleFileSelect}
                       disabled={isSendingMessage || uploadingFile}
                     />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="border-gray-300 text-gray-600 hover:bg-gray-50"
+                      onClick={() => setShowAppointmentBooking(true)}
+                      title="Prendre rendez-vous"
+                    >
+                      <Calendar className="h-4 w-4" />
+                    </Button>
                     <div className="flex-1 flex gap-3">
                       <Input
                         placeholder="Tapez votre message..."
@@ -535,6 +546,23 @@ export default function MessagesPage() {
           callType={activeCall.type}
           isActive={activeCall.isActive}
         />
+      )}
+
+      {/* Appointment Booking Modal */}
+      {showAppointmentBooking && selectedConversationData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <AppointmentBooking
+              conversationId={selectedConversation!}
+              productId={selectedConversationData.product_id}
+              productTitle={selectedConversationData.product_title}
+              productLocation={selectedConversationData.product_location || 'À définir'}
+              sellerId={selectedConversationData.seller_id}
+              currentUserId={user?.id || ''}
+              onClose={() => setShowAppointmentBooking(false)}
+            />
+          </div>
+        </div>
       )}
     </div>
   );
