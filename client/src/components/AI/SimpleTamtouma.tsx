@@ -3,16 +3,21 @@ import React, { useState } from 'react';
 export const SimpleTamtouma = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { id: '1', text: "Salut ! Je suis Tamtouma 🍅 ! Comment puis-je vous aider ?", isBot: true }
+    { id: '1', text: "Yoo ! 🍅 Tamtouma dans la place ! Ton assistant perso le plus stylé ! Qu'est-ce qu'on fait aujourd'hui ? 🔥😎", isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
 
   const quickResponses = [
-    { keywords: ['salut', 'bonjour', 'hello'], response: "Bonjour ! Je suis Tamtouma 🍅 Comment puis-je vous aider ?" },
-    { keywords: ['vendre', 'publier'], response: "Pour vendre : Cliquez sur '+' → Choisissez catégorie → Publiez ! 🚀" },
-    { keywords: ['acheter'], response: "Pour acheter : Trouvez produit → Contactez vendeur → Négociez ! 💬" },
-    { keywords: ['rendez-vous'], response: "Rendez-vous : Dans conversation, cliquez calendrier 📅" },
-    { keywords: ['aide', 'help'], response: "Je suis là pour vous aider ! 🆘" }
+    { keywords: ['salut', 'bonjour', 'hello', 'yo', 'hey'], response: "Yoo ! 🍅 Tamtouma dans la place ! Prêt pour faire des affaires de ouf ? 🔥" },
+    { keywords: ['vendre', 'publier', 'poster'], response: "🚀 VENDRE COMME UN BOSS ! Clique sur + → Choisis ta catégorie → Publie ton truc → Deviens riche ! 💰✨" },
+    { keywords: ['acheter', 'shopping', 'achat'], response: "🛒 MODE SHOPPING ACTIVÉ ! Trouve ton crush produit → Contacte le vendeur → Négocie comme un chef ! 😎💪" },
+    { keywords: ['rendez-vous', 'rdv', 'meeting'], response: "📅 TIME TO MEET ! Dans tes conversations, clique sur le calendrier et fixe ton RDV ! Easy peasy ! 🤝" },
+    { keywords: ['aide', 'help', 'au secours'], response: "🆘 Tamtouma à la rescousse ! Je suis ton assistant perso ! Dis-moi tout ! 🦸‍♂️" },
+    { keywords: ['prix', 'combien', 'coût'], response: "💰 Ah le prix ! Secret de négociation : commence bas, monte doucement, et charm ton vendeur ! 😉💸" },
+    { keywords: ['cool', 'génial', 'top'], response: "😎 Tu as bon goût mon pote ! Tamtouma c'est la classe internationale ! 🌟🍅" },
+    { keywords: ['merci', 'thanks'], response: "🙏 Avec plaisir boss ! Tamtouma est toujours là pour toi ! On fait équipe ! 💪❤️" },
+    { keywords: ['blague', 'joke', 'drôle'], response: "😂 Pourquoi les tomates rougissent ? Parce qu'elles voient les prix sur Tomati ! 🍅💸 BOOM !" },
+    { keywords: ['qui es tu', 'qui', 'toi'], response: "🤖 Moi ? Je suis Tamtouma ! L'IA la plus stylée de Tunisie ! Mi-tomate, mi-robot, 100% cool ! 🍅⚡" }
   ];
 
   const handleSendMessage = () => {
@@ -23,7 +28,7 @@ export const SimpleTamtouma = () => {
     
     const response = quickResponses.find(r => 
       r.keywords.some(k => inputValue.toLowerCase().includes(k))
-    )?.response || "Je ne comprends pas. Essayez : vendre, acheter, rendez-vous, aide 🤔";
+    )?.response || "🤔 Hmm... Je n'ai pas compris ! Essaie : vendre, acheter, rdv, aide, prix, blague ! Ou dis juste salut ! 😄🍅";
     
     setTimeout(() => {
       const botMessage = { id: (Date.now() + 1).toString(), text: response, isBot: true };
@@ -87,7 +92,7 @@ export const SimpleTamtouma = () => {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '20px' }}>🤖</span>
-          <span style={{ fontWeight: 'bold' }}>Tamtouma</span>
+          <span style={{ fontWeight: 'bold' }}>Tamtouma 🔥</span>
         </div>
         <button 
           onClick={() => setIsOpen(false)}
@@ -154,7 +159,7 @@ export const SimpleTamtouma = () => {
       }}>
         <input
           type="text"
-          placeholder="Tapez votre question..."
+          placeholder="Dis-moi tout mon pote ! 🔥"
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
