@@ -43,10 +43,19 @@ export const NotificationSettings = () => {
 
   const loadSettings = async () => {
     try {
-      const response = await apiClient.request('/user/notification-settings');
-      if (response) {
-        setSettings(response);
-      }
+      // For now, just use default settings since API route doesn't exist yet
+      setSettings({
+        email_notifications: true,
+        push_notifications: true,
+        sound_notifications: true,
+        message_notifications: true,
+        like_notifications: true,
+        review_notifications: true,
+        follow_notifications: true,
+        price_notifications: true,
+        system_notifications: true,
+        security_notifications: true,
+      });
     } catch (error) {
       console.error('Failed to load notification settings:', error);
     } finally {
@@ -57,11 +66,8 @@ export const NotificationSettings = () => {
   const saveSettings = async (newSettings: NotificationSettings) => {
     setIsSaving(true);
     try {
-      await apiClient.request('/user/notification-settings', {
-        method: 'PATCH',
-        body: JSON.stringify(newSettings),
-        headers: { 'Content-Type': 'application/json' }
-      });
+      // For now, just save to localStorage since API route doesn't exist yet
+      localStorage.setItem('notification-settings', JSON.stringify(newSettings));
       
       toast({
         title: "Paramètres sauvegardés",
