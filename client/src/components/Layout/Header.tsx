@@ -15,7 +15,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/useLanguage";
 import { PreferencesDialog } from "@/components/preferences/PreferencesDialog";
 import { apiClient } from "@/lib/apiClient";
-import tomatiLogo from "@assets/image_1755872663834.png";
+import tomatiLogo from "@assets/497601036_122096320736877515_5702241569772347584_n_1755873871709.jpg";
 
 interface HeaderProps {
   activeTab?: string;
