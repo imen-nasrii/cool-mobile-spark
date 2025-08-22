@@ -10,8 +10,6 @@ import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CallInterface } from '@/components/MessagingComponents/CallInterface';
 import { FileUpload, FilePreview } from '@/components/MessagingComponents/FileUpload';
-import { AppointmentScheduler, AppointmentStatus } from '@/components/AppointmentScheduler/AppointmentScheduler';
-import { useAppointments } from '@/hooks/useAppointments';
 
 export default function MessagesPage() {
   const { user } = useAuth();
@@ -22,7 +20,6 @@ export default function MessagesPage() {
     sendMessage, 
     isSendingMessage 
   } = useMessaging();
-  const { useConversationAppointments, updateAppointmentStatus } = useAppointments();
   
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
@@ -35,10 +32,8 @@ export default function MessagesPage() {
     callerName: string;
     isActive: boolean;
   } | null>(null);
-  const [showAppointmentScheduler, setShowAppointmentScheduler] = useState(false);
 
   const messagesQuery = useConversationMessages(selectedConversation);
-  const appointmentsQuery = useConversationAppointments(selectedConversation);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return;
@@ -337,25 +332,6 @@ export default function MessagesPage() {
               </CardHeader>
               
               <CardContent className="flex-1 flex flex-col p-0 bg-white">
-                {/* Appointments Section */}
-                {appointmentsQuery.data && appointmentsQuery.data.length > 0 && (
-                  <div className="border-b p-4 bg-gray-50">
-                    <h4 className="font-bold text-sm text-black mb-3">Rendez-vous planifiés</h4>
-                    <div className="space-y-3">
-                      {appointmentsQuery.data.map((appointment: any) => (
-                        <AppointmentStatus
-                          key={appointment.id}
-                          appointment={appointment}
-                          isOwner={appointment.owner_id === user?.id}
-                          onAccept={() => updateAppointmentStatus.mutate({ id: appointment.id, status: 'accepted' })}
-                          onReject={() => updateAppointmentStatus.mutate({ id: appointment.id, status: 'rejected' })}
-                          onCancel={() => updateAppointmentStatus.mutate({ id: appointment.id, status: 'cancelled' })}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px] relative">
                   {messagesQuery.isLoading ? (
@@ -468,7 +444,7 @@ export default function MessagesPage() {
                       Localisation
                     </button>
                     <button 
-                      onClick={() => setShowAppointmentScheduler(true)}
+                      onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
                       className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
                     >
                       Rendez-vous
@@ -531,22 +507,6 @@ export default function MessagesPage() {
                       </Button>
                     </div>
                   </div>
-
-                  {/* Appointment Scheduler Modal */}
-                  {showAppointmentScheduler && selectedConversationData && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                      <AppointmentScheduler
-                        productId={selectedConversationData.product_id}
-                        conversationId={selectedConversation!}
-                        ownerId={selectedConversationData.seller_id}
-                        onClose={() => setShowAppointmentScheduler(false)}
-                        onSuccess={() => {
-                          appointmentsQuery.refetch();
-                          setShowAppointmentScheduler(false);
-                        }}
-                      />
-                    </div>
-                  )}
                   
 
                 </div>

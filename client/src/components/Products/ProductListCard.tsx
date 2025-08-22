@@ -174,11 +174,10 @@ export const ProductListCard = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden hover:shadow-lg transition-all duration-200 w-full", 
-        product.isReserved ? "opacity-60 cursor-not-allowed" : "cursor-pointer",
+        "overflow-hidden hover:shadow-lg transition-all duration-200 cursor-pointer w-full", 
         className
       )}
-      onClick={product.isReserved ? undefined : onClick}
+      onClick={onClick}
       style={{ fontFamily: 'Arial, sans-serif' }}
     >
       <CardContent className="p-3 flex gap-3 sm:gap-4">
@@ -231,7 +230,7 @@ export const ProductListCard = ({
           {/* Status badges */}
           <div className="absolute top-1 left-1 flex gap-1">
             {product.isReserved && (
-              <Badge className="bg-red-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Réservé</Badge>
+              <Badge className="bg-info text-info-foreground text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Reserved</Badge>
             )}
             {product.isAdvertisement && (
               <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-xs" style={{ fontFamily: 'Arial, sans-serif' }}>Publicité</Badge>

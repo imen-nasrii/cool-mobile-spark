@@ -172,11 +172,10 @@ const ProductCardComponent = ({
   return (
     <Card 
       className={cn(
-        "overflow-hidden glass-card card-3d border-0 modern-shadow hover:modern-shadow-lg transition-all duration-300 w-full group", 
-        product.isReserved ? "opacity-60 cursor-not-allowed" : "cursor-pointer",
+        "overflow-hidden glass-card card-3d border-0 modern-shadow hover:modern-shadow-lg transition-all duration-300 cursor-pointer w-full group", 
         className
       )}
-      onClick={product.isReserved ? undefined : onClick}
+      onClick={onClick}
     >
       <div className="relative aspect-[4/3] h-32 bg-gradient-to-br from-white to-gray-50 overflow-hidden">
         {/* Product image */}

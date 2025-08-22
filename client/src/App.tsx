@@ -1,33 +1,155 @@
-import React from 'react';
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/hooks/useAuth";
+import { LanguageProvider } from "@/hooks/useLanguage";
+import { PreferencesProvider } from "@/contexts/PreferencesContext";
+import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
+import { AdminRoute } from "@/components/Auth/AdminRoute";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { MainLayout } from "@/components/Layout/MainLayout";
+import { queryClient } from "@/lib/queryClient";
+import Index from "./pages/Index";
+import Auth from "./pages/Auth";
+import AdminDashboard from "./pages/AdminDashboard";
+import Profile from "./pages/Profile";
+import MapView from "./pages/MapView";
+import MessagesPage from "./pages/Messages";
+import { AdminInfo } from "./components/Auth/AdminInfo";
+import { Settings } from "./pages/Settings";
+import { TestPromotion } from "./pages/TestPromotion";
+import { ProductManagement } from "./pages/ProductManagement";
+import { OrganizedProducts } from "./pages/OrganizedProducts";
+import AdminProducts from "./pages/AdminProducts";
+import AdminAdvertisements from "./pages/AdminAdvertisements";
+import { Notifications } from "./pages/Notifications";
+import NotFound from "./pages/NotFound";
+import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 
-// Ultra minimal test - just plain HTML with proper React import
-function App() {
-  return (
-    <div style={{ 
-      minHeight: '100vh', 
-      backgroundColor: 'white', 
-      display: 'flex', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      fontFamily: 'Arial, sans-serif'
-    }}>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '60px', marginBottom: '16px' }}>🍅</div>
-        <h1 style={{ fontSize: '32px', fontWeight: 'bold', color: '#ef4444', marginBottom: '8px' }}>
-          Tomati Market
-        </h1>
-        <p style={{ fontSize: '20px', color: '#374151', marginBottom: '16px' }}>
-          مرحبا بك في توماتي!
-        </p>
-        <p style={{ fontSize: '18px', color: '#6b7280' }}>
-          Marhaba bik fi Tomati App!
-        </p>
-        <p style={{ color: '#9ca3af', marginTop: '16px' }}>
-          Ultra minimal version (no Tailwind, no hooks)
-        </p>
-      </div>
-    </div>
-  );
-}
+const App = () => (
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <PreferencesProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+            <Routes>
+              <Route path="/" element={
+                <MainLayout>
+                  <Index />
+                  <PWAInstallPrompt />
+                </MainLayout>
+              } />
+              <Route path="/auth" element={<Auth />} />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminDashboard />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/profile" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Profile />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/map" element={
+                <MainLayout>
+                  <MapView />
+                </MainLayout>
+              } />
+              <Route 
+                path="/messages" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <MessagesPage />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/test-promotion" 
+                element={
+                  <ProtectedRoute>
+                    <TestPromotion />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/products-management" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <ProductManagement />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/products" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminProducts />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin/advertisements" 
+                element={
+                  <ProtectedRoute>
+                    <AdminRoute>
+                      <AdminAdvertisements />
+                    </AdminRoute>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/notifications" 
+                element={
+                  <ProtectedRoute>
+                    <MainLayout>
+                      <Notifications />
+                    </MainLayout>
+                  </ProtectedRoute>
+                } 
+              />
+              <Route path="/products" element={<OrganizedProducts />} />
+              <Route path="/admin-info" element={<AdminInfo />} />
+              <Route path="/post" element={<Index />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            </BrowserRouter>
+            </PreferencesProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
+);
 
 export default App;

@@ -8,15 +8,14 @@ const storageCache = new NodeCache({
   checkperiod: 30,
 });
 import { 
-  users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences, appointments,
+  users, profiles, categories, products, advertisements, product_likes, product_ratings, user_preferences,
   type User, type InsertUser,
   type Profile, type InsertProfile,
   type Category, type InsertCategory,
   type Product, type InsertProduct,
   type Advertisement, type InsertAdvertisement,
   type ProductRating, type InsertProductRating,
-  type UserPreferences, type InsertUserPreferences,
-  type Appointment, type InsertAppointment
+  type UserPreferences, type InsertUserPreferences
 } from "@shared/schema";
 
 export interface IStorage {
@@ -80,13 +79,6 @@ export interface IStorage {
     totalLikes: number;
     promotedProducts: number;
   }>;
-  
-  // Appointments
-  createAppointment(appointment: InsertAppointment): Promise<Appointment>;
-  getAppointmentsByConversation(conversationId: string): Promise<Appointment[]>;
-  getAppointmentsByUser(userId: string): Promise<Appointment[]>;
-  updateAppointmentStatus(id: string, status: string, userId: string): Promise<Appointment | undefined>;
-  updateProductReservation(productId: string, isReserved: boolean): Promise<void>;
   
   // Legacy message methods removed - use MessagingService instead
 }
@@ -600,60 +592,6 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Legacy message methods removed - use MessagingService instead
-  // Appointments
-  async createAppointment(appointment: InsertAppointment): Promise<Appointment> {
-    const result = await db.insert(appointments).values(appointment).returning();
-    return result[0];
-  }
-
-  async getAppointmentsByConversation(conversationId: string): Promise<Appointment[]> {
-    const result = await db.select()
-      .from(appointments)
-      .where(eq(appointments.conversation_id, conversationId))
-      .orderBy(desc(appointments.created_at));
-    return result;
-  }
-
-  async getAppointmentsByUser(userId: string): Promise<Appointment[]> {
-    const result = await db.select()
-      .from(appointments)
-      .where(or(
-        eq(appointments.requester_id, userId),
-        eq(appointments.owner_id, userId)
-      ))
-      .orderBy(desc(appointments.created_at));
-    return result;
-  }
-
-  async updateAppointmentStatus(id: string, status: string, userId: string): Promise<Appointment | undefined> {
-    // First check if user has permission to update this appointment
-    const appointment = await db.select()
-      .from(appointments)
-      .where(eq(appointments.id, id))
-      .limit(1);
-    
-    if (!appointment[0]) return undefined;
-    
-    // Only the owner can accept/reject, only the requester can cancel
-    if (status === 'accepted' || status === 'rejected') {
-      if (appointment[0].owner_id !== userId) return undefined;
-    } else if (status === 'cancelled') {
-      if (appointment[0].requester_id !== userId) return undefined;
-    }
-
-    const result = await db.update(appointments)
-      .set({ status, updated_at: new Date() })
-      .where(eq(appointments.id, id))
-      .returning();
-    
-    return result[0];
-  }
-
-  async updateProductReservation(productId: string, isReserved: boolean): Promise<void> {
-    await db.update(products)
-      .set({ is_reserved: isReserved, updated_at: new Date() })
-      .where(eq(products.id, productId));
-  }
 }
 
 export const storage = new DatabaseStorage();

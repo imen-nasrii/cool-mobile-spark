@@ -5,7 +5,6 @@ import {
   insertUserSchema, insertProfileSchema, insertProductSchema, 
   insertCategorySchema, insertMessageSchema, insertNotificationSchema,
   insertAdvertisementSchema, insertProductRatingSchema, insertUserPreferencesSchema,
-  insertAppointmentSchema, appointments,
   users, products, profiles 
 } from "@shared/schema";
 import { messagingService } from "./messaging";
@@ -1098,91 +1097,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('WebSocket connection error:', error);
       ws.close(1011, 'Server error');
-    }
-  });
-
-  // Appointment routes
-  app.post("/api/appointments", authenticateToken, async (req, res) => {
-    try {
-      const appointmentData = insertAppointmentSchema.parse(req.body);
-      
-      // Validate that the requester is different from the owner
-      if (appointmentData.requester_id === appointmentData.owner_id) {
-        return res.status(400).json({ error: "Cannot schedule appointment with yourself" });
-      }
-
-      const appointment = await storage.createAppointment(appointmentData);
-      
-      // Send notification to product owner
-      await notificationService.createNotification({
-        user_id: appointmentData.owner_id,
-        title: "Nouvelle demande de rendez-vous",
-        message: `Quelqu'un souhaite planifier un rendez-vous pour voir votre produit`,
-        type: "appointment_request",
-        related_id: appointment.id
-      });
-
-      res.json(appointment);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
-    }
-  });
-
-  app.get("/api/appointments/conversation/:conversationId", authenticateToken, async (req, res) => {
-    try {
-      const { conversationId } = req.params;
-      const appointments = await storage.getAppointmentsByConversation(conversationId);
-      res.json(appointments);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.get("/api/appointments/user", authenticateToken, async (req, res) => {
-    try {
-      const userId = req.user.id;
-      const appointments = await storage.getAppointmentsByUser(userId);
-      res.json(appointments);
-    } catch (error: any) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-
-  app.patch("/api/appointments/:id/status", authenticateToken, async (req, res) => {
-    try {
-      const { id } = req.params;
-      const { status } = req.body;
-      
-      if (!['accepted', 'rejected', 'cancelled', 'completed'].includes(status)) {
-        return res.status(400).json({ error: "Invalid status" });
-      }
-
-      const appointment = await storage.updateAppointmentStatus(id, status, req.user.id);
-      
-      if (!appointment) {
-        return res.status(404).json({ error: "Appointment not found or access denied" });
-      }
-
-      // If appointment is accepted, mark product as reserved
-      if (status === 'accepted') {
-        await storage.updateProductReservation(appointment.product_id, true);
-        
-        // Notify requester about acceptance
-        await notificationService.createNotification({
-          user_id: appointment.requester_id,
-          title: "Rendez-vous accepté !",
-          message: `Votre demande de rendez-vous a été acceptée`,
-          type: "appointment_accepted",
-          related_id: appointment.id
-        });
-      } else if (status === 'rejected' || status === 'cancelled') {
-        // If appointment is rejected/cancelled, unreserve product
-        await storage.updateProductReservation(appointment.product_id, false);
-      }
-
-      res.json(appointment);
-    } catch (error: any) {
-      res.status(400).json({ error: error.message });
     }
   });
 

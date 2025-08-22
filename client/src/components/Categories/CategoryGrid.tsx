@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Car, Sofa, Home, ShirtIcon as Shirt, Laptop, Dumbbell, Baby, Gamepad2, LucideIcon, Smartphone, Bike, CarFront, Grid3X3, Briefcase, Building } from "lucide-react";
+import { Car, Sofa, Home, ShirtIcon as Shirt, Laptop, Dumbbell, Baby, Gamepad2, LucideIcon, Smartphone, Bike, CarFront } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
@@ -22,36 +22,17 @@ interface DatabaseCategory {
 
 // Map icon names to Lucide icons
 const iconMap: { [key: string]: LucideIcon } = {
-  'Car': Car,
   'car': Car,
   'car-front': CarFront,
-  'CarFront': CarFront,
-  'Sofa': Sofa,
   'sofa': Sofa,
-  'Home': Home,
   'home': Home,
-  'Building': Building,
-  'building': Building,
-  'Shirt': Shirt,
   'shirt': Shirt,
-  'Laptop': Laptop,
   'laptop': Laptop,
-  'Smartphone': Smartphone,
   'smartphone': Smartphone,
-  'Dumbbell': Dumbbell,
   'dumbbell': Dumbbell,
-  'Baby': Baby,
   'baby': Baby,
-  'Gamepad2': Gamepad2,
   'gamepad2': Gamepad2,
-  'Bike': Bike,
   'bike': Bike,
-  'Grid3X3': Grid3X3,
-  'grid3x3': Grid3X3,
-  'Briefcase': Briefcase,
-  'briefcase': Briefcase,
-  '📱': Smartphone, // Handle emoji icons
-  'phone': Smartphone,
 };
 
 // Color combinations for categories
@@ -83,29 +64,17 @@ export const CategoryGrid = ({ selectedCategory, onCategorySelect }: CategoryGri
         // Fetch categories from our API
         const categoriesData = await apiClient.getCategories();
         
-        const categoriesWithCounts = categoriesData.map((category: DatabaseCategory, index: number) => {
-          // Safe icon resolution
-          const IconComponent = iconMap[category.icon] || iconMap[category.icon?.toLowerCase()] || Laptop;
-          
-          return {
-            id: category.id,
-            name: category.name,
-            icon: IconComponent,
-            color: colorCombinations[index % colorCombinations.length],
-            count: Math.floor(Math.random() * 20) + 1 // Mock count for now
-          };
-        });
+        const categoriesWithCounts = categoriesData.map((category: DatabaseCategory, index: number) => ({
+          id: category.id,
+          name: category.name,
+          icon: iconMap[category.icon] || Laptop,
+          color: colorCombinations[index % colorCombinations.length],
+          count: Math.floor(Math.random() * 20) + 1 // Mock count for now
+        }));
 
         setCategories(categoriesWithCounts);
       } catch (error) {
         console.error('Error fetching categories:', error);
-        // Set fallback categories if API fails
-        setCategories([
-          { id: '1', name: 'Auto', icon: Car, color: 'bg-blue-100 text-blue-600', count: 5 },
-          { id: '2', name: 'Immobilier', icon: Building, color: 'bg-green-100 text-green-600', count: 3 },
-          { id: '3', name: 'Emplois', icon: Briefcase, color: 'bg-purple-100 text-purple-600', count: 8 },
-          { id: '4', name: 'Autres', icon: Grid3X3, color: 'bg-gray-100 text-gray-600', count: 12 }
-        ]);
       } finally {
         setLoading(false);
       }

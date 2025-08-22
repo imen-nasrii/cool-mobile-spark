@@ -228,22 +228,6 @@ export const user_preferences = pgTable("user_preferences", {
   updated_at: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Appointments table for managing meeting schedules
-export const appointments = pgTable("appointments", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  product_id: uuid("product_id").references(() => products.id, { onDelete: "cascade" }).notNull(),
-  conversation_id: uuid("conversation_id").references(() => conversations.id, { onDelete: "cascade" }).notNull(),
-  requester_id: uuid("requester_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
-  owner_id: uuid("owner_id").references(() => users.id, { onDelete: "cascade" }).notNull(),
-  appointment_date: timestamp("appointment_date").notNull(),
-  location: text("location"),
-  notes: text("notes"),
-  status: text("status").default("pending").notNull(), // pending, accepted, rejected, cancelled, completed
-  reminder_sent: boolean("reminder_sent").default(false).notNull(),
-  created_at: timestamp("created_at").defaultNow().notNull(),
-  updated_at: timestamp("updated_at").defaultNow().notNull(),
-});
-
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({
   id: true,
@@ -316,12 +300,6 @@ export const insertUserPreferencesSchema = createInsertSchema(user_preferences).
   updated_at: true,
 });
 
-export const insertAppointmentSchema = createInsertSchema(appointments).omit({
-  id: true,
-  created_at: true,
-  updated_at: true,
-});
-
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -348,6 +326,3 @@ export type Notification = typeof notifications.$inferSelect;
 export type InsertNotification = z.infer<typeof insertNotificationSchema>;
 export type ProductRating = typeof product_ratings.$inferSelect;
 export type InsertProductRating = z.infer<typeof insertProductRatingSchema>;
-
-export type Appointment = typeof appointments.$inferSelect;
-export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
