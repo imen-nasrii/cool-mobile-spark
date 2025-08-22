@@ -45,7 +45,7 @@ export const useCreateAppointment = () => {
     mutationFn: (data: CreateAppointmentData) =>
       apiRequest("/api/appointments", {
         method: "POST",
-        body: data,
+        body: JSON.stringify(data),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });
@@ -61,7 +61,7 @@ export const useUpdateAppointmentStatus = () => {
     mutationFn: ({ appointmentId, status }: { appointmentId: string; status: string }) =>
       apiRequest(`/api/appointments/${appointmentId}/status`, {
         method: "PATCH",
-        body: { status },
+        body: JSON.stringify({ status }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/appointments'] });

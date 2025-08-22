@@ -19,6 +19,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 import { apiClient } from "@/lib/queryClient";
 import { ProductMap } from "@/components/Map/ProductMap";
+import { CarEquipmentIcons } from "@/components/UI/CarEquipmentIcons";
 
 // Default images for products
 const defaultImageUrls = [
@@ -323,6 +324,33 @@ export const ProductDetail = ({
                 <span>{formatTimeAgo(product.created_at)}</span>
               </div>
             </div>
+
+            {/* Équipements de voiture */}
+            {(() => {
+              const category = product.category?.toLowerCase();
+              const hasCarCategory = category === 'auto' || category === 'voiture';
+              const carEquipment = (product as any).car_equipment;
+              
+              if (hasCarCategory && carEquipment) {
+                try {
+                  const parsedEquipment = JSON.parse(carEquipment || '[]');
+                  
+                  if (Array.isArray(parsedEquipment) && parsedEquipment.length > 0) {
+                    return (
+                      <div className="pt-4 border-t border-gray-200">
+                        <h3 className="text-lg font-bold text-blue-500 mb-4">Équipements:</h3>
+                        <div className="bg-white">
+                          <CarEquipmentIcons carEquipment={parsedEquipment} variant="detailed" />
+                        </div>
+                      </div>
+                    );
+                  }
+                } catch (e) {
+                  console.error('ProductDetail - Error parsing car_equipment:', e, carEquipment);
+                }
+              }
+              return null;
+            })()}
 
             {/* Description */}
             <div className="pt-4">
