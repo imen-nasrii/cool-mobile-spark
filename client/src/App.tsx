@@ -46,7 +46,6 @@ const App = () => {
                 <Toaster />
                 <Sonner />
                 {!isLoaded && <AppLoading />}
-                {isLoaded && showWelcome && <WelcomeScreen onClose={hideWelcome} />}
                 <BrowserRouter>
             <Routes>
               <Route path="/" element={
