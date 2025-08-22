@@ -1,4 +1,3 @@
-import { NotificationCenter } from "@/components/Notifications/NotificationCenter";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Bell } from "lucide-react";
