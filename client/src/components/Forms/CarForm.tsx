@@ -394,27 +394,24 @@ export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
             <div className="space-y-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-4">Équipements et description</h2>
               
-              {/* Équipements avec icônes - Style moderne */}
+              {/* Équipements - Style exact de l'image */}
               <div>
-                <label className="block text-lg font-semibold text-black mb-4">Équipements:</label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <label className="block text-lg font-semibold text-blue-500 mb-4">Équipements:</label>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
                   {[
-                    { key: 'Jantes aluminium', label: 'Jantes\naluminium', icon: '⚙️' },
+                    { key: 'Jantes aluminium', label: 'Jantes\naluminium', icon: '🛞' },
                     { key: 'ABS', label: 'ABS', icon: '🛡️' },
                     { key: 'Direction assistée', label: 'Direction\nassistée', icon: '🎯' },
                     { key: 'Climatisation', label: 'Climatisation', icon: '❄️' },
                     { key: 'ESP', label: 'ESP', icon: '⚖️' },
                     { key: 'Vitres électriques', label: 'Vitres\nélectriques', icon: '🪟' },
                     { key: 'Système de navigation', label: 'Système de\nnavigation', icon: '📍' },
-                    { key: 'Fermeture centrale', label: 'Fermeture\ncentrale', icon: '🔐' },
-                    { key: 'Airbags', label: 'Airbags', icon: '🎈' },
-                    { key: 'MP3 Bluetooth', label: 'MP3\nBluetooth', icon: '📡' },
-                    { key: 'Radar de recul', label: 'Radar De\nRecul', icon: '📶' },
+                    { key: 'Fermeture centrale', label: 'Fermeture\ncentrale', icon: '🔒' },
+                    { key: 'AirBags', label: 'AirBags', icon: '🎈' },
+                    { key: 'Radar De Recul', label: 'Radar De\nRecul', icon: '📶' },
                     { key: 'Antipatinage', label: 'Antipatinage', icon: '🛞' },
-                    { key: 'Limiteur de vitesse', label: 'Limiteur De\nVitesse', icon: '⏱️' },
-                    { key: 'Régulateur de vitesse', label: 'Régulateur\nde vitesse', icon: '⚡' },
-                    { key: 'Capteurs de stationnement', label: 'Capteurs de\nstationnement', icon: '📡' },
-                    { key: 'Toit ouvrant', label: 'Toit ouvrant', icon: '🌞' }
+                    { key: 'Limiteur De Vitesse', label: 'Limiteur De\nVitesse', icon: '⏱️' },
+                    { key: 'Régulateur de vitesse', label: 'Régulateur\nde vitesse', icon: '⚡' }
                   ].map((equip) => {
                     const isSelected = formData.equipment.includes(equip.key);
                     
@@ -429,15 +426,15 @@ export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
                         />
                         <label
                           htmlFor={equip.key}
-                          className={`block cursor-pointer border-2 rounded-lg p-3 text-center transition-all ${
+                          className={`block cursor-pointer border-2 rounded-lg p-3 text-center transition-all h-20 flex flex-col justify-center ${
                             isSelected 
-                              ? 'border-red-500 bg-red-50' 
+                              ? 'border-blue-500 bg-blue-50' 
                               : 'border-gray-200 bg-gray-50 hover:border-gray-300'
                           }`}
                         >
-                          <div className="text-2xl mb-2">{equip.icon}</div>
+                          <div className="text-lg mb-1">{equip.icon}</div>
                           <div 
-                            className={`text-xs font-medium whitespace-pre-line ${
+                            className={`text-xs font-medium whitespace-pre-line leading-tight ${
                               isSelected ? 'text-black' : 'text-gray-600'
                             }`}
                             style={{ fontFamily: 'Arial, sans-serif' }}
@@ -445,7 +442,7 @@ export const CarForm = ({ onSubmit, onCancel }: CarFormProps) => {
                             {equip.label}
                           </div>
                           {isSelected && (
-                            <div className="absolute top-2 right-2 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center text-xs">
+                            <div className="absolute top-1 right-1 w-4 h-4 bg-blue-500 text-white rounded-full flex items-center justify-center text-xs">
                               ✓
                             </div>
                           )}
