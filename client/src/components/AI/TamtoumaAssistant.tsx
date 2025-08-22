@@ -24,6 +24,9 @@ export const TamtoumaAssistant = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
 
+  // Debug: s'assurer que le composant est rendu
+  console.log('TamtoumaAssistant rendered, isOpen:', isOpen);
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
     

@@ -27,7 +27,7 @@ import AdminAdvertisements from "./pages/AdminAdvertisements";
 import { Notifications } from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
-import { TamtoumaAssistant } from "./components/AI/TamtoumaAssistant";
+import { SimpleTamtouma } from "./components/AI/SimpleTamtouma";
 
 const App = () => (
   <ErrorBoundary>
@@ -39,7 +39,7 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
-            <TamtoumaAssistant />
+            <SimpleTamtouma />
             <Routes>
               <Route path="/" element={
                 <MainLayout>
