@@ -72,6 +72,7 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
   // Use react-query to fetch products with pagination
   const { data: fetchedProducts = [], isLoading: loading, error } = useQuery({
     queryKey: ['/api/products', category, searchTerm],
+    enabled: true, // Always enabled but with fallback handling
     queryFn: async () => {
       try {
         const params = new URLSearchParams();
