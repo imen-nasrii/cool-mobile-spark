@@ -1,5 +1,14 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Share, Heart, MessageCircle, Star, MapPin, Edit, Trash2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Share,
+  Heart,
+  MessageCircle,
+  Star,
+  MapPin,
+  Edit,
+  Trash2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -8,19 +17,17 @@ import { ProductChat } from "@/components/Chat/ProductChat";
 import { LikeButton } from "@/components/Likes/LikeButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiClient, queryClient } from "@/lib/queryClient";
-import { CarEquipmentIcons } from "@/components/UI/CarEquipmentIcons";
+import { apiClient } from "@/lib/queryClient";
 import { ProductMap } from "@/components/Map/ProductMap";
 
 // Default images for products
 const defaultImageUrls = [
-  '/src/assets/tesla-model3.jpg',
-  '/src/assets/motherboard-i5.jpg', 
-  '/src/assets/modern-sofa.jpg',
-  '/src/assets/iphone-15-pro.jpg',
-  '/src/assets/mountain-bike.jpg',
-  '/src/assets/tractor-holland.jpg'
+  "/src/assets/tesla-model3.jpg",
+  "/src/assets/motherboard-i5.jpg",
+  "/src/assets/modern-sofa.jpg",
+  "/src/assets/iphone-15-pro.jpg",
+  "/src/assets/mountain-bike.jpg",
+  "/src/assets/tractor-holland.jpg",
 ];
 
 interface ProductDetailProps {
@@ -29,7 +36,11 @@ interface ProductDetailProps {
   onEdit?: (productId: string) => void;
 }
 
-export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps) => {
+export const ProductDetail = ({
+  productId,
+  onBack,
+  onEdit,
+}: ProductDetailProps) => {
   const [product, setProduct] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showChat, setShowChat] = useState(false);
@@ -42,26 +53,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-    
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60),
+    );
+
     if (diffInMinutes < 60) return `${diffInMinutes}min`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h`;
     return `${Math.floor(diffInMinutes / 1440)}j`;
   };
 
   const formatPrice = (price: any) => {
-    // Gérer les produits gratuits
-    if (price === 'Free' || price === 'free' || price === 'Gratuit' || price === 'gratuit') {
-      return 'Gratuit';
+    if (
+      price === "Free" ||
+      price === "free" ||
+      price === "Gratuit" ||
+      price === "gratuit"
+    ) {
+      return "Gratuit";
     }
-    
-    // Convertir en nombre et vérifier si c'est valide
     const numPrice = parseFloat(price);
     if (isNaN(numPrice) || numPrice === null || numPrice === undefined) {
-      return 'Prix non spécifié';
+      return "Prix non spécifié";
     }
-    
-    return `${numPrice.toLocaleString('fr-FR')} TND`;
+    return `${numPrice.toLocaleString("fr-FR")} TND`;
   };
 
   useEffect(() => {
@@ -76,9 +90,9 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       const data = await apiClient.getProduct(productId!);
       setProduct(data);
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error("Error fetching product:", error);
       toast({
-        title: "Erreur", 
+        title: "Erreur",
         description: "Impossible de charger le produit",
         variant: "destructive",
       });
@@ -87,53 +101,20 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   };
 
-
-  const handleRating = async (rating: number) => {
-    if (!user) {
-      toast({
-        title: "Connexion requise",
-        description: "Vous devez être connecté pour noter un produit",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      await apiClient.request(`/products/${productId}/rate`, {
-        method: 'POST',
-        body: JSON.stringify({ rating })
-      });
-
-      setUserRating(rating);
-      fetchProduct(); // Refresh to get updated rating
-      toast({
-        title: "Note enregistrée",
-        description: `Vous avez donné ${rating} étoile${rating > 1 ? 's' : ''} à ce produit`,
-      });
-    } catch (error) {
-      console.error('Error rating product:', error);
-      toast({
-        title: "Erreur",
-        description: "Impossible d'enregistrer votre note",
-        variant: "destructive",
-      });
-    }
-  };
-
   const handleShare = async () => {
     try {
-      // Check if Web Share API is available and supported
-      if (navigator.share && typeof navigator.share === 'function') {
+      if (navigator.share && typeof navigator.share === "function") {
         await navigator.share({
-          title: product?.title || 'Produit Tomati Market',
-          text: product?.description || 'Découvrez ce produit',
+          title: product?.title || "Produit Tomati Market",
+          text: product?.description || "Découvrez ce produit",
           url: window.location.href,
         });
         return;
       }
-
-      // Fallback to clipboard API if available
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+      if (
+        navigator.clipboard &&
+        typeof navigator.clipboard.writeText === "function"
+      ) {
         await navigator.clipboard.writeText(window.location.href);
         toast({
           title: "Lien copié",
@@ -141,33 +122,29 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         });
         return;
       }
-
-      // Final fallback - show link in a prompt for manual copying
-      const dummy = document.createElement('input');
+      const dummy = document.createElement("input");
       dummy.value = window.location.href;
       document.body.appendChild(dummy);
       dummy.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(dummy);
-      
       toast({
         title: "Lien copié",
         description: "Le lien a été copié dans le presse-papiers",
       });
     } catch (error) {
-      console.error('Error sharing:', error);
-      // Show error message to user instead of silent failure
+      console.error("Error sharing:", error);
       toast({
         title: "Erreur de partage",
-        description: "Impossible de partager le lien. Veuillez copier l'URL manuellement.",
-        variant: "destructive"
+        description: "Impossible de partager le lien.",
+        variant: "destructive",
       });
     }
   };
 
   const handleDelete = async () => {
-    if (!window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) return;
-    
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?"))
+      return;
     try {
       await apiClient.deleteProduct(productId!);
       toast({
@@ -176,7 +153,7 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
       });
       onBack?.();
     } catch (error) {
-      console.error('Error deleting product:', error);
+      console.error("Error deleting product:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer le produit",
@@ -185,308 +162,12 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     }
   };
 
-  const renderProductDetails = () => {
-    if (!product) return null;
-
-    switch (product.category) {
-      case 'Auto':
-      case 'Voiture':
-        const carEquipment = product.car_equipment ? JSON.parse(product.car_equipment || '[]') : [];
-        
-        return (
-          <div className="pt-4">
-            <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Caractéristiques véhicule
-            </h3>
-            <div className="space-y-2">
-              {(product.car_brand || product.brand) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Marque:</span>
-                  <span className="text-black font-medium">{product.car_brand || product.brand}</span>
-                </div>
-              )}
-              {(product.car_model || product.model) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Modèle:</span>
-                  <span className="text-black font-medium">{product.car_model || product.model}</span>
-                </div>
-              )}
-              {(product.car_year || product.year) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Année:</span>
-                  <span className="text-black font-medium">{product.car_year || product.year}</span>
-                </div>
-              )}
-              {(product.car_mileage || product.mileage) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Kilométrage:</span>
-                  <span className="text-black font-medium">{(product.car_mileage || product.mileage).toLocaleString()} km</span>
-                </div>
-              )}
-              {(product.car_fuel_type || product.fuel_type) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Carburant:</span>
-                  <span className="text-black font-medium">{product.car_fuel_type || product.fuel_type}</span>
-                </div>
-              )}
-              {(product.car_transmission || product.transmission) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Transmission:</span>
-                  <span className="text-black font-medium">{product.car_transmission || product.transmission}</span>
-                </div>
-              )}
-              {(product.car_condition || product.condition) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">État:</span>
-                  <span className="text-black font-medium">{product.car_condition || product.condition}</span>
-                </div>
-              )}
-              {product.car_engine_size && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Cylindrée:</span>
-                  <span className="text-black font-medium">{product.car_engine_size}</span>
-                </div>
-              )}
-              {product.car_doors && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Portes:</span>
-                  <span className="text-black font-medium">{product.car_doors}</span>
-                </div>
-              )}
-              {product.car_seats && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Places:</span>
-                  <span className="text-black font-medium">{product.car_seats}</span>
-                </div>
-              )}
-              {product.car_color && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Couleur:</span>
-                  <span className="text-black font-medium">{product.car_color}</span>
-                </div>
-              )}
-            </div>
-            
-            {/* Équipements avec icônes - Style comme l'image */}
-            <div className="pt-4">
-              <h4 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Équipements:
-              </h4>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { key: 'alloy_wheels', label: 'Jantes\naluminium', icon: '⚙️' },
-                  { key: 'abs', label: 'ABS', icon: '🛡️' },
-                  { key: 'power_steering', label: 'Direction\nassistée', icon: '🎯' },
-                  { key: 'air_conditioning', label: 'Climatisation', icon: '❄️' },
-                  { key: 'esp', label: 'ESP', icon: '⚖️' },
-                  { key: 'electric_windows', label: 'Vitres\nélectriques', icon: '🪟' },
-                  { key: 'car_navigation', label: 'Système de\nnavigation', icon: '📍', dbField: 'car_navigation' },
-                  { key: 'central_locking', label: 'Fermeture\ncentrale', icon: '🔐' },
-                  { key: 'airbags', label: 'Airbags', icon: '🎈' },
-                  { key: 'bluetooth', label: 'MP3\nBluetooth', icon: '📡' },
-                  { key: 'car_rear_camera', label: 'Radar De\nRecul', icon: '📶', dbField: 'car_rear_camera' },
-                  { key: 'traction_control', label: 'Antipatinage', icon: '🛞' },
-                  { key: 'speed_limiter', label: 'Limiteur De\nVitesse', icon: '⏱️' },
-                  { key: 'car_cruise_control', label: 'Régulateur\nde vitesse', icon: '⚡', dbField: 'car_cruise_control' },
-                  { key: 'car_parking_sensors', label: 'Capteurs de\nstationnement', icon: '📡', dbField: 'car_parking_sensors' },
-                  { key: 'car_sunroof', label: 'Toit ouvrant', icon: '🌞', dbField: 'car_sunroof' }
-                ].map((equip) => {
-                  // Vérifier si l'équipement est activé
-                  let isActive = false;
-                  
-                  // Chercher dans les champs de base de données spécifiques
-                  if (equip.dbField && product[equip.dbField as keyof typeof product]) {
-                    isActive = true;
-                  }
-                  // Chercher dans la liste d'équipements générale  
-                  else if (carEquipment.some((item: string) => 
-                    item.toLowerCase().includes(equip.label.toLowerCase().split('\n')[0]) || 
-                    item.toLowerCase().includes(equip.key.toLowerCase())
-                  )) {
-                    isActive = true;
-                  }
-                  
-                  return (
-                    <div 
-                      key={equip.key}
-                      className={`border-2 rounded-lg p-3 text-center transition-all ${
-                        isActive 
-                          ? 'border-red-500 bg-red-50' 
-                          : 'border-gray-200 bg-gray-50 opacity-50'
-                      }`}
-                    >
-                      <div className="text-2xl mb-2">{equip.icon}</div>
-                      <div 
-                        className={`text-xs font-medium whitespace-pre-line ${
-                          isActive ? 'text-black' : 'text-gray-400'
-                        }`}
-                        style={{ fontFamily: 'Arial, sans-serif' }}
-                      >
-                        {equip.label}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'Immobilier':
-        return (
-          <div className="pt-4">
-            <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Caractéristiques immobilier
-            </h3>
-            <div className="space-y-2">
-              {(product.real_estate_type || product.property_type) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Type de bien:</span>
-                  <span className="text-black font-medium">{product.real_estate_type || product.property_type}</span>
-                </div>
-              )}
-              {(product.real_estate_surface || product.surface_area) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Surface:</span>
-                  <span className="text-black font-medium">{product.real_estate_surface || product.surface_area} m²</span>
-                </div>
-              )}
-              {(product.real_estate_rooms || product.bedrooms) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Pièces:</span>
-                  <span className="text-black font-medium">{product.real_estate_rooms || product.bedrooms}</span>
-                </div>
-              )}
-              {(product.real_estate_bathrooms || product.bathrooms) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Salles de bain:</span>
-                  <span className="text-black font-medium">{product.real_estate_bathrooms || product.bathrooms}</span>
-                </div>
-              )}
-              {(product.real_estate_floor || product.floor) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Étage:</span>
-                  <span className="text-black font-medium">{product.real_estate_floor || product.floor}</span>
-                </div>
-              )}
-              {product.real_estate_condition && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">État:</span>
-                  <span className="text-black font-medium">{product.real_estate_condition}</span>
-                </div>
-              )}
-            </div>
-            
-            {/* Commodités */}
-            <div className="pt-4">
-              <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Commodités
-              </h4>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                {product.real_estate_furnished && <span className="text-green-600">• Meublé</span>}
-                {product.real_estate_parking && <span className="text-green-600">• Place de parking</span>}
-                {product.real_estate_garden && <span className="text-green-600">• Jardin</span>}
-                {product.real_estate_balcony && <span className="text-green-600">• Balcon</span>}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'Emplois':
-        const jobBenefits = product.job_benefits ? JSON.parse(product.job_benefits || '[]') : [];
-        
-        return (
-          <div className="pt-4">
-            <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-              Détails de l'emploi
-            </h3>
-            <div className="space-y-2">
-              {product.job_type && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Type de contrat:</span>
-                  <span className="text-black font-medium">{product.job_type}</span>
-                </div>
-              )}
-              {(product.job_company || product.company) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Entreprise:</span>
-                  <span className="text-black font-medium">{product.job_company || product.company}</span>
-                </div>
-              )}
-              {product.job_sector && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Secteur:</span>
-                  <span className="text-black font-medium">{product.job_sector}</span>
-                </div>
-              )}
-              {(product.job_experience || product.experience_level) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Expérience:</span>
-                  <span className="text-black font-medium">{product.job_experience || product.experience_level}</span>
-                </div>
-              )}
-              {product.job_education && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Formation:</span>
-                  <span className="text-black font-medium">{product.job_education}</span>
-                </div>
-              )}
-              {(product.job_salary_min || product.job_salary_max || product.salary_range) && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Salaire:</span>
-                  <span className="text-black font-medium">
-                    {product.salary_range || 
-                     (product.job_salary_min && product.job_salary_max ? 
-                      `${product.job_salary_min.toLocaleString()} - ${product.job_salary_max.toLocaleString()} TND` :
-                      product.job_salary_min ? `À partir de ${product.job_salary_min.toLocaleString()} TND` :
-                      product.job_salary_max ? `Jusqu'à ${product.job_salary_max.toLocaleString()} TND` : 'À négocier'
-                     )}
-                  </span>
-                </div>
-              )}
-              {product.job_urgency && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Urgence:</span>
-                  <span className="text-black font-medium">{product.job_urgency}</span>
-                </div>
-              )}
-              {product.job_remote !== undefined && (
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Télétravail:</span>
-                  <span className="text-black font-medium">{product.job_remote ? 'Possible' : 'Non'}</span>
-                </div>
-              )}
-            </div>
-            
-            {/* Avantages */}
-            {jobBenefits.length > 0 && (
-              <div className="pt-4">
-                <h4 className="text-md font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  Avantages
-                </h4>
-                <div className="grid grid-cols-1 gap-2">
-                  {jobBenefits.map((benefit: string, index: number) => (
-                    <div key={index} className="text-sm text-gray-700 bg-gray-50 px-2 py-1 rounded">
-                      • {benefit}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        );
-
-      default:
-        return null;
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Chargement...</p>
+          <p className="text-gray-600">Chargement...</p>
         </div>
       </div>
     );
@@ -496,10 +177,10 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-bold text-black mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
+          <h2 className="text-xl font-bold text-black mb-2">
             Produit non trouvé
           </h2>
-          <p className="text-gray-600 mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+          <p className="text-gray-600 mb-4">
             Le produit que vous recherchez n'existe pas ou a été supprimé.
           </p>
           <Button onClick={onBack} className="bg-red-500 text-white">
@@ -514,8 +195,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
   const isOwner = user?.id === product.user_id;
 
   return (
-    <div className="min-h-screen bg-white" style={{ fontFamily: 'Arial, sans-serif' }}>
-      {/* Header avec boutons */}
+    <div className="min-h-screen bg-white">
+      {/* Header */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-40">
         <div className="flex items-center justify-between">
           <Button
@@ -524,10 +205,8 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
             size="sm"
             className="text-black"
           >
-            <ArrowLeft size={18} className="mr-1" />
-            Retour
+            <ArrowLeft size={18} className="mr-1" /> Retour
           </Button>
-          
           <div className="flex items-center gap-2">
             <LikeButton productId={product.id} />
             <Button
@@ -562,96 +241,80 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
         </div>
       </div>
 
-      {/* Layout principal en 2 colonnes avec scroll */}
+      {/* Layout */}
       <div className="flex h-[calc(100vh-80px)] max-w-7xl mx-auto">
-        
-        {/* COLONNE GAUCHE - FIXE : Photo + Vendeur */}
+        {/* Colonne gauche */}
         <div className="w-1/2 p-6 space-y-6">
-            {/* Galerie d'images */}
-            <ImageGallery 
-              images={(() => {
-                try {
-                  const images = (product as any).images ? JSON.parse((product as any).images) : [];
-                  return images.length > 0 ? images : (product.image_url ? [product.image_url] : defaultImages.slice(0, 3));
-                } catch (e) {
-                  console.error('Error parsing product images:', e);
-                  return product.image_url ? [product.image_url] : defaultImages.slice(0, 3);
-                }
-              })()} 
-              title={product.title}
-              className="w-full"
-            />
-            
-            {/* Informations vendeur */}
-            <div className="border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-black mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-                Informations vendeur
-              </h3>
-              <div className="flex items-start gap-4">
-                <Avatar className="w-12 h-12 bg-red-100">
-                  <AvatarFallback className="bg-red-100 text-red-600 font-bold text-lg">
-                    {product.user_name ? product.user_name.charAt(0).toUpperCase() : 'U'}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-semibold text-black" style={{ fontFamily: 'Arial, sans-serif' }}>
-                      {product.user_name || 'Utilisateur'}
-                    </span>
-                    <div className="w-2 h-2 bg-green-500"></div>
-                  </div>
-                  <div className="flex items-center gap-1 mb-1 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    <span className="text-yellow-500">⭐</span>
-                    <span className="text-black">4.8</span>
-                    <span className="text-gray-500">•</span>
-                    <span className="text-gray-600">Membre vérifié</span>
-                  </div>
-                  <div className="text-sm text-gray-600 mb-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Membre depuis {new Date(product.user_created_at || product.created_at).getFullYear()}
-                  </div>
-                  <div className="text-sm text-gray-600 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    "Membre actif de la communauté Tomati Market."
-                  </div>
-                  {!isOwner && (
-                    <Button 
-                      onClick={() => setShowChat(true)}
-                      className="w-full bg-red-500 text-white"
-                      style={{ fontFamily: 'Arial, sans-serif' }}
-                    >
-                      <MessageCircle size={18} className="mr-2" />
-                      Contacter
-                    </Button>
-                  )}
+          <ImageGallery
+            images={(() => {
+              try {
+                const images = (product as any).images
+                  ? JSON.parse((product as any).images)
+                  : [];
+                return images.length > 0
+                  ? images
+                  : product.image_url
+                    ? [product.image_url]
+                    : defaultImages.slice(0, 3);
+              } catch (e) {
+                return product.image_url
+                  ? [product.image_url]
+                  : defaultImages.slice(0, 3);
+              }
+            })()}
+            title={product.title}
+            className="w-full"
+          />
+
+          {/* Vendeur */}
+          <div className="border border-gray-200 p-6">
+            <h3 className="text-lg font-bold text-black mb-4">
+              Informations vendeur
+            </h3>
+            <div className="flex items-start gap-4">
+              <Avatar className="w-12 h-12 bg-red-100">
+                <AvatarFallback className="bg-red-100 text-red-600 font-bold text-lg">
+                  {product.user_name
+                    ? product.user_name.charAt(0).toUpperCase()
+                    : "U"}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-semibold text-black">
+                    {product.user_name || "Utilisateur"}
+                  </span>
+                  <div className="w-2 h-2 bg-green-500"></div>
                 </div>
+                <div className="text-sm text-gray-600 mb-2">
+                  Membre depuis{" "}
+                  {new Date(
+                    product.user_created_at || product.created_at,
+                  ).getFullYear()}
+                </div>
+                {!isOwner && (
+                  <Button
+                    onClick={() => setShowChat(true)}
+                    className="w-full bg-red-500 text-white"
+                  >
+                    <MessageCircle size={18} className="mr-2" /> Contacter
+                  </Button>
+                )}
               </div>
             </div>
           </div>
+        </div>
 
-        {/* COLONNE DROITE - SCROLLABLE : Infos produit */}
+        {/* Colonne droite */}
         <div className="w-1/2 overflow-y-auto p-6">
           <div className="space-y-6">
-            {/* Titre et Prix */}
+            {/* Titre & prix */}
             <div>
-              <h1 className="text-3xl font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <h1 className="text-3xl font-bold text-black mb-3">
                 {product.title}
               </h1>
-              <div className="text-4xl font-bold text-red-500 mb-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <div className="text-4xl font-bold text-red-500 mb-4">
                 {formatPrice(product.price)}
-              </div>
-              <div className="flex gap-2 mb-4">
-                <span className="px-3 py-1 bg-gray-100 text-black text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  {product.category}
-                </span>
-                {product.is_reserved && (
-                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Réservé
-                  </span>
-                )}
-                {product.is_advertisement && (
-                  <span className="px-3 py-1 bg-yellow-100 text-yellow-600 text-sm" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Publicité
-                  </span>
-                )}
               </div>
               <div className="flex items-center gap-2 text-gray-600 text-sm mb-4">
                 <MapPin size={14} />
@@ -663,110 +326,65 @@ export const ProductDetail = ({ productId, onBack, onEdit }: ProductDetailProps)
 
             {/* Description */}
             <div className="pt-4">
-              <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Description</h3>
-              <p className="text-gray-600 leading-relaxed" style={{ fontFamily: 'Arial, sans-serif' }}>
+              <h3 className="text-lg font-bold text-black mb-3">Description</h3>
+              <p className="text-gray-600 leading-relaxed">
                 {product.description || "Aucune description fournie."}
               </p>
             </div>
 
-            {/* Informations générales du produit */}
+            {/* Localisation */}
             <div className="pt-4">
-              <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Informations générales</h3>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Date de publication:</span>
-                  <span className="text-black font-medium">
-                    {formatTimeAgo(product.created_at)}
-                  </span>
-                </div>
-                {product.updated_at && product.updated_at !== product.created_at && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Dernière modification:</span>
-                    <span className="text-black font-medium">
-                      {formatTimeAgo(product.updated_at)}
-                    </span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Catégorie:</span>
-                  <span className="text-black font-medium">{product.category}</span>
-                </div>
-                {product.is_free && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Type:</span>
-                    <span className="text-green-600 font-medium">Gratuit</span>
-                  </div>
-                )}
-                {product.is_reserved && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Statut:</span>
-                    <span className="text-orange-600 font-medium">Réservé</span>
-                  </div>
-                )}
-                {product.is_promoted && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Promotion:</span>
-                    <span className="text-blue-600 font-medium">Produit mis en avant</span>
-                  </div>
-                )}
-                {product.is_advertisement && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Type d'annonce:</span>
-                    <span className="text-yellow-600 font-medium">Publicité</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Caractéristiques du produit */}
-            {renderProductDetails()}
-
-            {/* Localisation sur la carte */}
-            <div className="pt-4">
-              <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-2" style={{ fontFamily: 'Arial, sans-serif' }}>
-                <MapPin size={20} className="text-red-500" />
-                Localisation
+              <h3 className="text-lg font-bold text-black mb-3 flex items-center gap-2">
+                <MapPin size={20} className="text-red-500" /> Localisation
               </h3>
               <div className="bg-gray-50 rounded-lg p-4 mb-2">
-                <p className="text-gray-700 mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>
-                  📍 {product.location}
-                </p>
+                <p className="text-gray-700 mb-3">📍 {product.location}</p>
                 <div className="h-64 w-full rounded-lg overflow-hidden">
-                  <ProductMap 
-                    location={product.location} 
+                  <ProductMap
+                    location={product.location}
                     readonly={true}
                     className="w-full h-full"
                   />
                 </div>
               </div>
-            </div>
 
-            {/* Statistiques - Vues, J'aime et Notes */}
-            <div className="pt-4">
-              <h3 className="text-lg font-bold text-black mb-3" style={{ fontFamily: 'Arial, sans-serif' }}>Statistiques</h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-red-500">{product.view_count || 0}</div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>Vues</div>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-red-500">
-                    {product.like_count || 0}
+              {/* ✅ Nouvelle section en dessous de la Map */}
+              <div className="bg-gray-50 rounded-lg p-4 mt-4">
+                <h4 className="text-md font-bold text-black mb-3">
+                  Infos supplémentaires
+                </h4>
+                <div className="grid grid-cols-2 gap-4 text-sm text-gray-700">
+                  <div>
+                    📞 Contact:{" "}
+                    <span className="font-medium">
+                      {product.user_phone || "Non spécifié"}
+                    </span>
                   </div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>J'aime</div>
-                </div>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-red-500">
-                    {product.rating ? product.rating.toFixed(1) : '0.0'}
+                  <div>
+                    📧 Email:{" "}
+                    <span className="font-medium">
+                      {product.user_email || "Non spécifié"}
+                    </span>
                   </div>
-                  <div className="text-sm text-gray-600" style={{ fontFamily: 'Arial, sans-serif' }}>
-                    Note ({product.rating_count || 0} avis)
+                  <div>
+                    📦 Livraison:{" "}
+                    <span className="font-medium">
+                      {product.delivery_available
+                        ? "Disponible"
+                        : "Non disponible"}
+                    </span>
+                  </div>
+                  <div>
+                    ✅ Garantie:{" "}
+                    <span className="font-medium">
+                      {product.warranty || "Non spécifié"}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Chat Mobile */}
+            {/* Chat mobile */}
             {showChat && !isOwner && (
               <div className="pt-4">
                 <ProductChat

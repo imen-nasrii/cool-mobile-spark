@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Layout/Header";
 import { BottomNav } from "@/components/Layout/BottomNav";
+import { Footer } from "@/components/Layout/Footer";
 import { AddButton } from "@/components/UI/FloatingButtons";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -113,15 +114,20 @@ export const MainLayout = ({
         />
       )}
       
-      <main className="pb-20 md:pb-0">
+      <main className="pb-20">
         {children}
       </main>
       
-      {/* BottomNav pour mobile uniquement */}
+      {/* Navigation visible sur toutes les tailles d'écran */}
       <BottomNav 
         activeTab={activeTab} 
         onTabChange={handleTabChange} 
       />
+      
+      {/* Footer - visible uniquement sur desktop */}
+      <div className="hidden md:block">
+        <Footer />
+      </div>
       
       {/* AddButton is now handled by Index.tsx */}
     </div>

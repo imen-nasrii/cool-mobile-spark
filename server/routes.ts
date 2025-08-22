@@ -33,17 +33,7 @@ const authenticateToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
-  // For testing purposes, allow bypassing auth with a specific token
-  if (token === 'test-token-bypass') {
-    // Create a mock user for testing
-    req.user = {
-      id: '00000000-0000-0000-0000-000000000001',
-      email: 'test@test.com',
-      display_name: 'Test User',
-      role: 'user'
-    };
-    return next();
-  }
+  // Test token bypass removed for security
 
   if (!token || token === 'null' || token === 'undefined') {
     return res.status(401).json({ error: 'Access token required' });
