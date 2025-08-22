@@ -187,25 +187,21 @@ export default function MapView() {
       {/* Main Header with Navigation */}
       <Header />
       
-      {/* Map Controls Bar */}
-      <div className="bg-gray-50 border-b p-3">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Badge variant="outline" className="flex items-center gap-1 bg-white">
-                <Navigation size={12} />
-                {filteredProducts.length} produits trouvés
-              </Badge>
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 bg-white"
-            >
-              <Filter size={16} />
-              Filtres
-            </Button>
-          </div>
+      {/* Simplified Controls - NO DUPLICATE NAV */}
+      <div className="bg-white border-b px-4 py-2">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <Badge variant="secondary" className="text-sm">
+            📍 {filteredProducts.length} produits trouvés
+          </Badge>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setShowFilters(!showFilters)}
+            className="text-sm"
+          >
+            <Filter size={14} className="mr-1" />
+            Filtres
+          </Button>
         </div>
       </div>
 
