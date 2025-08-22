@@ -187,16 +187,12 @@ export default function MapView() {
       {/* Main Header with Navigation */}
       <Header />
       
-      {/* Map Header with Filters */}
-      <div className="bg-white border-b p-4">
+      {/* Map Controls Bar */}
+      <div className="bg-gray-50 border-b p-3">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold flex items-center gap-2">
-                <MapPin className="text-primary" />
-                Carte Interactive
-              </h1>
-              <Badge variant="outline" className="flex items-center gap-1">
+              <Badge variant="outline" className="flex items-center gap-1 bg-white">
                 <Navigation size={12} />
                 {filteredProducts.length} produits trouvés
               </Badge>
@@ -204,7 +200,7 @@ export default function MapView() {
             <Button
               variant="outline"
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-white"
             >
               <Filter size={16} />
               Filtres
