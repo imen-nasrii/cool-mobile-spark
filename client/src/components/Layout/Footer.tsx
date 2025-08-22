@@ -1,4 +1,4 @@
-import { Heart, Mail, MapPin, Phone, ExternalLink } from "lucide-react";
+import { Heart, Mail, MapPin, Phone, Smartphone, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
@@ -115,13 +115,22 @@ export const Footer = () => {
             
             <div className="flex items-center gap-4">
               <Button
-                variant="outline"
-                size="sm"
                 onClick={() => navigate('/download')}
-                className="text-gray-600 hover:text-red-500 border-gray-300"
+                className="
+                  bg-gradient-to-r from-pink-400 via-red-500 to-yellow-500 
+                  hover:from-pink-500 hover:via-red-600 hover:to-yellow-600
+                  text-white font-bold py-3 px-6 rounded-full 
+                  shadow-lg hover:shadow-xl transform hover:scale-105 
+                  transition-all duration-300 ease-in-out
+                  border-2 border-white hover:border-yellow-300
+                  text-sm
+                "
               >
-                <ExternalLink size={14} className="mr-2" />
-                Télécharger l'app
+                <div className="flex items-center gap-2">
+                  <Smartphone size={16} className="animate-pulse" />
+                  <span>📱 Télécharger l'app 🚀</span>
+                  <Download size={16} className="animate-bounce" />
+                </div>
               </Button>
             </div>
           </div>
