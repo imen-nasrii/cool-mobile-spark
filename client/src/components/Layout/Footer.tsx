@@ -1,7 +1,7 @@
 import { Heart, Mail, MapPin, Phone, Smartphone, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import tomatiLogo from "@assets/aae7f946-dd84-4586-bf04-366fe47253c4_1755638455493.jpg";
+import tomatiLogo from "@assets/image_1755872663834.png";
 
 export const Footer = () => {
   const navigate = useNavigate();
