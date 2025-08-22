@@ -124,10 +124,8 @@ export const MainLayout = ({
         onTabChange={handleTabChange} 
       />
       
-      {/* Footer - visible uniquement sur desktop */}
-      <div className="hidden md:block">
-        <Footer />
-      </div>
+      {/* Footer - visible partout */}
+      <Footer />
       
       {/* AddButton is now handled by Index.tsx */}
     </div>

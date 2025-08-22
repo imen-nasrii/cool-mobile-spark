@@ -39,12 +39,12 @@ const App = () => (
             <Toaster />
             <Sonner />
             <BrowserRouter>
+            <TamtoumaAssistant />
             <Routes>
               <Route path="/" element={
                 <MainLayout>
                   <Index />
                   <PWAInstallPrompt />
-                  <TamtoumaAssistant />
                 </MainLayout>
               } />
               <Route path="/auth" element={<Auth />} />
