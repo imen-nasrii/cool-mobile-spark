@@ -1,0 +1,37 @@
+ubuntu@vps-8dfc48b5:~/cool-mobile-spark$ pm2 logs backend
+[TAILING] Tailing last 15 lines for [backend] process (change the value with --lines option)
+/home/ubuntu/.pm2/logs/backend-error.log last 15 lines:
+0|backend  |   detail: undefined,
+0|backend  |   hint: undefined,
+0|backend  |   position: undefined,
+0|backend  |   internalPosition: undefined,
+0|backend  |   internalQuery: undefined,
+0|backend  |   where: undefined,
+0|backend  |   schema: undefined,
+0|backend  |   table: undefined,
+0|backend  |   column: undefined,
+0|backend  |   dataType: undefined,
+0|backend  |   constraint: undefined,
+0|backend  |   file: undefined,
+0|backend  |   line: undefined,
+0|backend  |   routine: undefined
+0|backend  | }
+
+/home/ubuntu/.pm2/logs/backend-out.log last 15 lines:
+0|backend  | Storage.getProducts called with category: undefined search: undefined limit: 20 offset: 0
+0|backend  | Returning 7 products for category: undefined
+0|backend  | GET /api/products - category: undefined search: undefined page: 1 limit: 20
+0|backend  | Storage.getProducts called with category: undefined search: undefined limit: 20 offset: 0
+0|backend  | Returning 7 products for category: undefined
+0|backend  | GET /api/products - category: undefined search: undefined page: 1 limit: 20
+0|backend  | Storage.getProducts called with category: undefined search: undefined limit: 20 offset: 0
+0|backend  | Returning 7 products for category: undefined
+0|backend  | GET /api/products - category: undefined search: undefined page: 1 limit: 20
+0|backend  | Storage.getProducts called with category: undefined search: undefined limit: 20 offset: 0
+0|backend  | Returning 7 products for category: undefined
+0|backend  | GET /api/products - category: undefined search: undefined page: 1 limit: 20
+0|backend  | Storage.getProducts called with category: undefined search: undefined limit: 20 offset: 0
+0|backend  | Returning 7 products for category: undefined
+0|backend  | 8:50:59 PM [express] Server running on port 5000
+
+
