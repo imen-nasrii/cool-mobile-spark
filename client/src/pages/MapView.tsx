@@ -184,10 +184,7 @@ export default function MapView() {
 
   return (
     <div className="h-full">
-      {/* Main Header with Navigation */}
-      <Header />
-      
-      {/* Just the map - no extra bars */}
+      {/* MainLayout already provides the Header - no duplicate needed */}
 
       <div className="flex relative">
         {/* Floating Filters Button */}
