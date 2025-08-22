@@ -93,10 +93,10 @@ export const ProductGrid = ({ category, sortBy = "date", searchTerm, onProductCl
         throw error;
       }
     },
-    staleTime: 30 * 1000, // 30 seconds cache for faster updates
+    staleTime: 0, // No cache - always fresh data
     retry: 1, // Reduced retries for faster error handling
     refetchOnWindowFocus: true, // Refetch when window gains focus
-    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnMount: true // Always refetch when component mounts
   });
 
   // Apply search filter and sorting to products
