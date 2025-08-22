@@ -436,47 +436,6 @@ export default function MessagesPage() {
                   </div>
                 )}
 
-                {/* Quick Response Suggestions */}
-                <div className="border-t p-3 bg-white">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <button 
-                      onClick={() => setNewMessage("Pouvez-vous me donner votre localisation exacte ?")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Localisation
-                    </button>
-                    <button 
-                      onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Rendez-vous
-                    </button>
-                    <button 
-                      onClick={() => setNewMessage("Quel est votre meilleur prix ?")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Prix
-                    </button>
-                    <button 
-                      onClick={() => setNewMessage("Le produit est-il encore disponible ?")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Disponibilité
-                    </button>
-                    <button 
-                      onClick={() => setNewMessage("Pouvez-vous m'envoyer plus de photos ?")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Photos
-                    </button>
-                    <button 
-                      onClick={() => setNewMessage("Merci beaucoup !")}
-                      className="px-3 py-1 text-xs bg-red-500 text-white border border-red-500 hover:bg-red-600"
-                    >
-                      Merci
-                    </button>
-                  </div>
-                </div>
 
                 {/* Message Input */}
                 <div className="p-4 bg-white border-t border-gray-300">

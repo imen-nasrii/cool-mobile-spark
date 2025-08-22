@@ -397,60 +397,6 @@ export default function MessagesPage() {
                   </div>
                 )}
 
-                {/* Quick Response Suggestions */}
-                <div className="border-t p-3 bg-gray-50">
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setNewMessage("Pouvez-vous me donner votre localisation exacte ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      📍 Localisation
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setShowAppointmentModal(true)}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      <Calendar className="h-3 w-3 mr-1" />
-                      Rendez-vous
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setNewMessage("Quel est votre meilleur prix ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      💰 Prix
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setNewMessage("Le produit est-il encore disponible ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      ✅ Disponibilité
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setNewMessage("Pouvez-vous m'envoyer plus de photos ?")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      📸 Photos
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setNewMessage("Merci beaucoup !")}
-                      className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
-                    >
-                      🙏 Merci
-                    </Button>
-                  </div>
-                </div>
 
                 {/* Message Input */}
                 <div className="p-4 bg-gray-50">
