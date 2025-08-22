@@ -1,6 +1,4 @@
-import React from 'react';
-
-// Ultra minimal test - just plain HTML with proper React import
+// Ultra minimal test - just plain HTML
 function App() {
   return (
     <div style={{ 
