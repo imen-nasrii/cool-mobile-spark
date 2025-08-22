@@ -9,6 +9,7 @@ import { PreferencesProvider } from "@/contexts/PreferencesContext";
 import { ProtectedRoute } from "@/components/Auth/ProtectedRoute";
 import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { SafeErrorBoundary } from "@/components/ErrorBoundary/SafeErrorBoundary";
 import { MainLayout } from "@/components/Layout/MainLayout";
 import { queryClient } from "@/lib/queryClient";
 import Index from "./pages/Index";
@@ -27,17 +28,24 @@ import AdminAdvertisements from "./pages/AdminAdvertisements";
 import { Notifications } from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
+import { WelcomeScreen } from "./components/Welcome/WelcomeScreen";
+import { useWelcome } from "./hooks/useWelcome";
 
-const App = () => (
-  <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <LanguageProvider>
-          <AuthProvider>
-            <PreferencesProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+const App = () => {
+  const { showWelcome, hideWelcome } = useWelcome();
+
+  return (
+    <SafeErrorBoundary>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            <LanguageProvider>
+              <AuthProvider>
+                <PreferencesProvider>
+                <Toaster />
+                <Sonner />
+                {showWelcome && <WelcomeScreen onClose={hideWelcome} />}
+                <BrowserRouter>
             <Routes>
               <Route path="/" element={
                 <MainLayout>
@@ -143,13 +151,15 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-            </BrowserRouter>
-            </PreferencesProvider>
-          </AuthProvider>
-        </LanguageProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </ErrorBoundary>
-);
+                </BrowserRouter>
+                </PreferencesProvider>
+              </AuthProvider>
+            </LanguageProvider>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </SafeErrorBoundary>
+  );
+};
 
 export default App;
