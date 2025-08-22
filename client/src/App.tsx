@@ -30,9 +30,10 @@ import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
 import { WelcomeScreen } from "./components/Welcome/WelcomeScreen";
 import { useWelcome } from "./hooks/useWelcome";
+import { AppLoading } from "./components/LoadingScreen/AppLoading";
 
 const App = () => {
-  const { showWelcome, hideWelcome } = useWelcome();
+  const { showWelcome, hideWelcome, isLoaded } = useWelcome();
 
   return (
     <SafeErrorBoundary>
@@ -44,7 +45,8 @@ const App = () => {
                 <PreferencesProvider>
                 <Toaster />
                 <Sonner />
-                {showWelcome && <WelcomeScreen onClose={hideWelcome} />}
+                {!isLoaded && <AppLoading />}
+                {isLoaded && showWelcome && <WelcomeScreen onClose={hideWelcome} />}
                 <BrowserRouter>
             <Routes>
               <Route path="/" element={
