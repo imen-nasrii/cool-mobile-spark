@@ -3,13 +3,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft, Video, ImageIcon } from 'lucide-react';
+import { MessageCircle, Send, Phone, Heart, Smile, ArrowLeft, Video, ImageIcon, Calendar } from 'lucide-react';
 import { useMessaging } from '@/hooks/useMessaging';
 import { useAuth } from '@/hooks/useAuth';
 import { formatDistanceToNow } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { CallInterface } from '@/components/MessagingComponents/CallInterface';
 import { FileUpload, FilePreview } from '@/components/MessagingComponents/FileUpload';
+import { AppointmentScheduler } from '@/components/Appointments/AppointmentScheduler';
+import { AppointmentCard } from '@/components/Appointments/AppointmentCard';
+import { useAppointments } from '@/hooks/useAppointments';
 
 export default function MessagesPage() {
   const { user } = useAuth();
@@ -20,12 +23,14 @@ export default function MessagesPage() {
     sendMessage, 
     isSendingMessage 
   } = useMessaging();
+  const { appointments } = useAppointments();
   
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileType, setFileType] = useState<'image' | 'file' | 'camera' | null>(null);
   const [uploadingFile, setUploadingFile] = useState(false);
+  const [showAppointmentModal, setShowAppointmentModal] = useState(false);
   const [activeCall, setActiveCall] = useState<{
     type: 'audio' | 'video';
     isIncoming: boolean;
@@ -34,6 +39,12 @@ export default function MessagesPage() {
   } | null>(null);
 
   const messagesQuery = useConversationMessages(selectedConversation);
+  const selectedConversationData = conversations.find((c: any) => c.id === selectedConversation);
+  
+  // Get appointments for selected conversation
+  const conversationAppointments = appointments.filter((apt: any) => 
+    apt.conversation_id === selectedConversation
+  );
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !selectedConversation) return;
@@ -266,13 +277,33 @@ export default function MessagesPage() {
               </CardHeader>
               
               <CardContent className="flex-1 flex flex-col p-0 bg-white">
+                {/* Appointments section */}
+                {conversationAppointments.length > 0 && (
+                  <div className="border-b p-4 bg-blue-50">
+                    <h3 className="font-semibold text-sm text-black mb-3 flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-red-500" />
+                      Rendez-vous ({conversationAppointments.length})
+                    </h3>
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
+                      {conversationAppointments.map((appointment: any) => (
+                        <AppointmentCard 
+                          key={appointment.id} 
+                          appointment={appointment} 
+                          currentUserId={user?.id || ''} 
+                          isInMessage={true}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px]">
                   {messagesQuery.isLoading ? (
                     <div className="flex items-center justify-center h-full">
                       <div className="animate-pulse text-gray-500">Chargement des messages...</div>
                     </div>
-                  ) : messagesQuery.data?.length === 0 ? (
+                  ) : messagesQuery.data?.length === 0 && conversationAppointments.length === 0 ? (
                     <div className="text-center text-gray-500 py-8">
                       <MessageCircle className="h-12 w-12 mx-auto mb-3 text-gray-300" />
                       <p>Commencez la conversation</p>
@@ -382,7 +413,7 @@ export default function MessagesPage() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      onClick={() => setNewMessage("Pouvons-nous prendre rendez-vous pour voir le produit ?")}
+                      onClick={() => setShowAppointmentModal(true)}
                       className="text-xs bg-white hover:bg-red-50 border border-red-200 text-red-700"
                     >
                       📅 Rendez-vous
@@ -478,6 +509,20 @@ export default function MessagesPage() {
           onEnd={handleEndCall}
           callType={activeCall.type}
           isActive={activeCall.isActive}
+        />
+      )}
+
+      {/* Appointment Scheduler Modal */}
+      {showAppointmentModal && selectedConversationData && (
+        <AppointmentScheduler
+          conversationId={selectedConversation!}
+          productId={selectedConversationData.product_id}
+          productTitle={selectedConversationData.product_title}
+          onClose={() => setShowAppointmentModal(false)}
+          onSuccess={() => {
+            // Refresh messages to show appointment
+            messagesQuery.refetch?.();
+          }}
         />
       )}
     </div>

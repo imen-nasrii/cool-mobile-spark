@@ -13,7 +13,7 @@ import { promotionService } from "./promotionService";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, or } from "drizzle-orm";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -949,6 +949,252 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({ success: true, message: "Produit supprimé avec succès" });
     } catch (error: any) {
       console.error('Error deleting product:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Appointments routes
+  app.get("/api/appointments", authenticateToken, async (req: any, res: any) => {
+    try {
+      const userId = req.user.id;
+      const allAppointments = await db
+        .select({
+          id: appointments.id,
+          conversation_id: appointments.conversation_id,
+          product_id: appointments.product_id,
+          requester_id: appointments.requester_id,
+          owner_id: appointments.owner_id,
+          appointment_date: appointments.appointment_date,
+          location: appointments.location,
+          notes: appointments.notes,
+          status: appointments.status,
+          created_at: appointments.created_at,
+          updated_at: appointments.updated_at
+        })
+        .from(appointments)
+        .where(
+          or(
+            eq(appointments.requester_id, userId),
+            eq(appointments.owner_id, userId)
+          )
+        )
+        .orderBy(desc(appointments.appointment_date));
+
+      // Enrich with product and user information
+      const enrichedAppointments = await Promise.all(allAppointments.map(async (appointment) => {
+        const product = await storage.getProduct(appointment.product_id);
+        const requester = await storage.getUser(appointment.requester_id);
+        const owner = await storage.getUser(appointment.owner_id);
+
+        return {
+          ...appointment,
+          product_title: product?.title,
+          requester_name: requester?.display_name || requester?.email?.split('@')[0],
+          owner_name: owner?.display_name || owner?.email?.split('@')[0]
+        };
+      }));
+
+      res.json(enrichedAppointments);
+    } catch (error: any) {
+      console.error('Error fetching appointments:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.post("/api/appointments", authenticateToken, async (req: any, res: any) => {
+    try {
+      const { conversation_id, product_id, appointment_date, location, notes } = req.body;
+      const requesterId = req.user.id;
+
+      // Get the product to find the owner
+      const product = await storage.getProduct(product_id);
+      if (!product) {
+        return res.status(404).json({ error: "Produit non trouvé" });
+      }
+
+      if (product.user_id === requesterId) {
+        return res.status(400).json({ error: "Vous ne pouvez pas prendre rendez-vous pour votre propre produit" });
+      }
+
+      const appointmentData = insertAppointmentSchema.parse({
+        conversation_id,
+        product_id,
+        requester_id: requesterId,
+        owner_id: product.user_id,
+        appointment_date,
+        location: location || '',
+        notes: notes || '',
+        status: 'pending'
+      });
+
+      const newAppointment = await db.insert(appointments).values(appointmentData).returning();
+
+      // Send notification to product owner
+      await notificationService.createNotification({
+        user_id: product.user_id!,
+        title: "📅 Nouvelle demande de rendez-vous",
+        message: `${req.user.display_name || req.user.email?.split('@')[0]} souhaite prendre rendez-vous pour "${product.title}"`,
+        type: "appointment",
+        related_id: newAppointment[0].id,
+        is_read: false
+      });
+
+      res.json(newAppointment[0]);
+    } catch (error: any) {
+      console.error('Error creating appointment:', error);
+      res.status(400).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/appointments/:id/status", authenticateToken, async (req: any, res: any) => {
+    try {
+      const appointmentId = req.params.id;
+      const { status } = req.body;
+      const userId = req.user.id;
+
+      if (!['pending', 'confirmed', 'cancelled', 'completed'].includes(status)) {
+        return res.status(400).json({ error: "Statut invalide" });
+      }
+
+      // Get the appointment
+      const appointment = await db
+        .select()
+        .from(appointments)
+        .where(eq(appointments.id, appointmentId))
+        .limit(1);
+
+      if (appointment.length === 0) {
+        return res.status(404).json({ error: "Rendez-vous non trouvé" });
+      }
+
+      const appt = appointment[0];
+
+      // Only owner can confirm/cancel, requester can cancel
+      if (appt.owner_id !== userId && !(appt.requester_id === userId && status === 'cancelled')) {
+        return res.status(403).json({ error: "Non autorisé à modifier ce rendez-vous" });
+      }
+
+      // Update appointment status
+      const updatedAppointment = await db
+        .update(appointments)
+        .set({ 
+          status,
+          updated_at: new Date()
+        })
+        .where(eq(appointments.id, appointmentId))
+        .returning();
+
+      // If confirmed, reserve the product
+      if (status === 'confirmed') {
+        await db
+          .update(products)
+          .set({ is_reserved: true })
+          .where(eq(products.id, appt.product_id));
+
+        // Notify requester
+        await notificationService.createNotification({
+          user_id: appt.requester_id,
+          title: "✅ Rendez-vous confirmé",
+          message: "Votre demande de rendez-vous a été acceptée. Le produit est maintenant réservé.",
+          type: "appointment",
+          related_id: appointmentId,
+          is_read: false
+        });
+      }
+
+      // If cancelled or completed, unreserve the product
+      if (status === 'cancelled' || status === 'completed') {
+        await db
+          .update(products)
+          .set({ is_reserved: false })
+          .where(eq(products.id, appt.product_id));
+
+        if (status === 'cancelled' && appt.owner_id === userId) {
+          // Notify requester of cancellation
+          await notificationService.createNotification({
+            user_id: appt.requester_id,
+            title: "❌ Rendez-vous annulé",
+            message: "Votre rendez-vous a été annulé par le vendeur.",
+            type: "appointment",
+            related_id: appointmentId,
+            is_read: false
+          });
+        }
+
+        if (status === 'completed') {
+          // Notify requester that meeting is completed
+          await notificationService.createNotification({
+            user_id: appt.requester_id,
+            title: "🎉 Rendez-vous terminé",
+            message: "Le rendez-vous a été marqué comme terminé. Le produit redevient disponible.",
+            type: "appointment",
+            related_id: appointmentId,
+            is_read: false
+          });
+        }
+      }
+
+      res.json(updatedAppointment[0]);
+    } catch (error: any) {
+      console.error('Error updating appointment status:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  app.patch("/api/appointments/:id/cancel", authenticateToken, async (req: any, res: any) => {
+    try {
+      const appointmentId = req.params.id;
+      const userId = req.user.id;
+
+      // Get the appointment
+      const appointment = await db
+        .select()
+        .from(appointments)
+        .where(eq(appointments.id, appointmentId))
+        .limit(1);
+
+      if (appointment.length === 0) {
+        return res.status(404).json({ error: "Rendez-vous non trouvé" });
+      }
+
+      const appt = appointment[0];
+
+      // Only participants can cancel
+      if (appt.owner_id !== userId && appt.requester_id !== userId) {
+        return res.status(403).json({ error: "Non autorisé à annuler ce rendez-vous" });
+      }
+
+      // Update appointment status
+      await db
+        .update(appointments)
+        .set({ 
+          status: 'cancelled',
+          updated_at: new Date()
+        })
+        .where(eq(appointments.id, appointmentId));
+
+      // Unreserve the product
+      await db
+        .update(products)
+        .set({ is_reserved: false })
+        .where(eq(products.id, appt.product_id));
+
+      // Notify the other party
+      const otherUserId = appt.owner_id === userId ? appt.requester_id : appt.owner_id;
+      const userRole = appt.owner_id === userId ? "vendeur" : "acheteur";
+
+      await notificationService.createNotification({
+        user_id: otherUserId,
+        title: "❌ Rendez-vous annulé",
+        message: `Le ${userRole} a annulé le rendez-vous.`,
+        type: "appointment",
+        related_id: appointmentId,
+        is_read: false
+      });
+
+      res.json({ success: true, message: "Rendez-vous annulé avec succès" });
+    } catch (error: any) {
+      console.error('Error cancelling appointment:', error);
       res.status(500).json({ error: error.message });
     }
   });
