@@ -27,6 +27,7 @@ import AdminAdvertisements from "./pages/AdminAdvertisements";
 import { Notifications } from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
 import { PWAInstallPrompt } from "./components/PWA/PWAInstallPrompt";
+import { TamtoumaAssistant } from "./components/AI/TamtoumaAssistant";
 
 const App = () => (
   <ErrorBoundary>
@@ -43,6 +44,7 @@ const App = () => (
                 <MainLayout>
                   <Index />
                   <PWAInstallPrompt />
+                  <TamtoumaAssistant />
                 </MainLayout>
               } />
               <Route path="/auth" element={<Auth />} />
