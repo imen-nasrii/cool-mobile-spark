@@ -310,7 +310,7 @@ export default function MessagesPage() {
                       </p>
                     </div>
                   </div>
-                  <div className="flex gap-3">
+                  <div className="flex gap-2">
                     <Button 
                       variant="outline" 
                       size="sm"
@@ -328,6 +328,15 @@ export default function MessagesPage() {
                       className="border-gray-300 hover:bg-gray-50"
                     >
                       <Video className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => setShowAppointmentBooking(true)}
+                      title="Prendre rendez-vous"
+                      className="border-red-300 text-red-600 hover:bg-red-50"
+                    >
+                      <Calendar className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
@@ -496,6 +505,23 @@ export default function MessagesPage() {
           callType={activeCall.type}
           isActive={activeCall.isActive}
         />
+      )}
+
+      {/* Appointment Booking Modal */}
+      {showAppointmentBooking && selectedConversationData && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <AppointmentBooking
+              conversationId={selectedConversation!}
+              productId={selectedConversationData.product_id}
+              productTitle={selectedConversationData.product_title}
+              productLocation={selectedConversationData.product_location || 'À définir'}
+              sellerId={selectedConversationData.other_user_id}
+              currentUserId={user?.id!}
+              onClose={() => setShowAppointmentBooking(false)}
+            />
+          </div>
+        </div>
       )}
 
     </div>
