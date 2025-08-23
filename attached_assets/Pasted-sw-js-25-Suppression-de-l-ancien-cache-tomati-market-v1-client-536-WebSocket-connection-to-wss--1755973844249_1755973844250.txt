@@ -1,0 +1,34 @@
+sw.js:25 Suppression de l'ancien cache: tomati-market-v1
+client:536 WebSocket connection to 'wss://6cea9b86-4694-4d0f-948e-08c5d2e1f7e6-00-u17kma55oacy.riker.replit.dev/?token=9oyh29Z_nZeR' failed: 
+setupWebSocket @ client:536
+client:536 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=9oyh29Z_nZeR' is invalid.
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+chunk-RPCDYKBN.js?v=915a81c6:21551 Download the React DevTools for a better development experience: https://reactjs.org/link/react-devtools
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+ProductGrid.tsx:83 ProductGrid - Fetching products from: /api/products?limit=20
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+VM12:6 SW registered:  ServiceWorkerRegistration
+ProductGrid.tsx:89 ProductGrid - Fetched products: 7 items
+SimpleTamtouma.tsx:15 🤖 Tamtouma component loaded successfully!
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+ProductGrid.tsx:83 ProductGrid - Fetching products from: /api/products?limit=20
+ProductGrid.tsx:89 ProductGrid - Fetched products: 7 items
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+api/products/acdef0db-ed2b-4840-82ce-78bacba055e7:1  Failed to load resource: the server responded with a status of 404 (Not Found)
+ProductDetail.tsx:94 Error fetching product: Error: Product not found
+    at ApiClient.request (apiClient.ts:56:13)
+    at async fetchProduct (ProductDetail.tsx:91:20)
+fetchProduct @ ProductDetail.tsx:94
+Index.tsx:183 renderContent called with activeTab: home selectedCategory: 
+ProductGrid.tsx:83 ProductGrid - Fetching products from: /api/products?limit=20
+ProductGrid.tsx:89 ProductGrid - Fetched products: 7 items
+LikeButton.tsx:125 Updating liked state from query: false
+AppointmentBooking.tsx:96 Error creating appointment: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+handleSubmit @ AppointmentBooking.tsx:96
+AppointmentBooking.tsx:96 Error creating appointment: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+handleSubmit @ AppointmentBooking.tsx:96
+AppointmentBooking.tsx:96 Error creating appointment: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+handleSubmit @ AppointmentBooking.tsx:96
