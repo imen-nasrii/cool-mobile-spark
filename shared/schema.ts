@@ -319,6 +319,8 @@ export const insertAppointmentSchema = createInsertSchema(appointments).omit({
   id: true,
   created_at: true,
   updated_at: true,
+}).extend({
+  appointment_date: z.string().transform((val) => new Date(val))
 });
 
 // Types
