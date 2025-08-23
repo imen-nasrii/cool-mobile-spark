@@ -509,8 +509,8 @@ export default function MessagesPage() {
 
       {/* Appointment Booking Modal - Optimisé mobile */}
       {showAppointmentBooking && selectedConversationData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
-          <div className="bg-white rounded-lg w-full max-w-sm sm:max-w-md max-h-[95vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-start justify-center z-[9999] p-2 sm:p-4 pt-8 pb-20">
+          <div className="bg-white rounded-lg w-full max-w-sm sm:max-w-md max-h-[80vh] overflow-y-auto shadow-2xl">
             <AppointmentBooking
               conversationId={selectedConversation!}
               productId={selectedConversationData.product_id}
