@@ -4,6 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Animation pour le chatbot Tamtouma */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
 /* Effets 3D et animations modernes */
 @layer components {
   .glass-card {

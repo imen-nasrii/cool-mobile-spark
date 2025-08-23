@@ -1,16 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-// CSS for animation
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-`;
-document.head.appendChild(style);
-
 export const SimpleTamtouma = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -74,7 +63,7 @@ export const SimpleTamtouma = () => {
           cursor: 'pointer',
           boxShadow: '0 8px 20px rgba(255,0,0,0.8)',
           border: '4px solid #ffffff',
-          animation: 'pulse 2s infinite'
+          animation: 'pulse 2s infinite ease-in-out'
         }}
         onClick={() => setIsOpen(true)}
       >
