@@ -6,11 +6,22 @@ export const SimpleTamtouma = () => {
     { id: '1', text: "Yoo ! 🍅 Tamtouma dans la place ! Ton assistant perso le plus stylé ! Qu'est-ce qu'on fait aujourd'hui ? 🔥😎", isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isReady, setIsReady] = useState(false);
 
-  // Debug: Vérifier que le composant se charge
+  // Attendre que l'application soit complètement chargée
   useEffect(() => {
-    console.log('🤖 Tamtouma component loaded successfully!');
+    const timer = setTimeout(() => {
+      setIsReady(true);
+      console.log('🤖 Tamtouma component loaded successfully!');
+    }, 2000); // Attendre 2 secondes
+
+    return () => clearTimeout(timer);
   }, []);
+
+  // Ne pas afficher si l'app n'est pas prête
+  if (!isReady) {
+    return null;
+  }
 
   const quickResponses = [
     { keywords: ['salut', 'bonjour', 'hello', 'yo', 'hey'], response: "Yoo ! 🍅 Tamtouma dans la place ! Prêt pour faire des affaires de ouf ? 🔥" },
