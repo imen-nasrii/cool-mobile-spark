@@ -44,12 +44,25 @@ class ApiClient {
     const response = await fetch(url, config);
     
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Network error' }));
+      console.log('API Error - Status:', response.status, 'URL:', url);
+      
+      // Try to get response text first
+      const responseText = await response.text();
+      console.log('API Error - Response:', responseText);
+      
+      let error = { error: 'Network error' };
+      try {
+        // Try to parse as JSON
+        error = JSON.parse(responseText);
+      } catch (e) {
+        // If not JSON, it's probably HTML error page
+        console.log('Response is not JSON, probably HTML error page');
+        error = { error: `HTTP ${response.status}: ${response.statusText}` };
+      }
       
       // If unauthorized, clear token and redirect to login
       if (response.status === 401 || response.status === 403) {
         this.clearToken();
-        // The error will be caught by the calling component
         throw new Error('Votre session a expiré. Veuillez vous reconnecter.');
       }
       

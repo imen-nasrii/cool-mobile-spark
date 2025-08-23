@@ -1,0 +1,64 @@
+AppointmentBooking.tsx:96 Error creating appointment: SyntaxError: Unexpected token '<', "<!DOCTYPE "... is not valid JSON
+handleSubmit	@	AppointmentBooking.tsx:96
+ChatGPT a dit :
+
+That error usually happens when your frontend expects JSON, but the server is actually returning HTML (often an error page, like a 404 Not Found or a framework’s default error response).
+
+Let’s break it down:
+
+Why it happens
+
+Unexpected token '<' → JSON can’t start with <, but HTML does (<!DOCTYPE html> or <html>).
+
+Your fetch/axios call is trying to parse the response as JSON (response.json()), but the server didn’t return JSON.
+
+Common causes
+
+Wrong API URL → Maybe the request is going to the frontend server instead of the backend, returning your index.html.
+
+Backend error → The API hit an error and returned an HTML error page.
+
+Missing headers → Some APIs require Content-Type: application/json in the request.
+
+Proxy misconfiguration → If you’re using something like CRA’s proxy or Next.js API routes, the request might not be routed correctly.
+
+How to debug
+
+Check the Network tab (DevTools → Network)
+
+Find your request.
+
+See what URL was hit and what the response body looks like.
+
+If it’s HTML → the issue is on the backend or the URL.
+
+Log the raw response before parsing
+
+const response = await fetch("/api/appointments", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(appointmentData),
+});
+
+const text = await response.text();
+console.log("Raw response:", text);
+
+try {
+  const data = JSON.parse(text);
+  console.log("Parsed JSON:", data);
+} catch (e) {
+  console.error("Not valid JSON:", e);
+}
+
+
+That will confirm if the backend is actually sending JSON.
+
+Fix the root issue
+
+If it’s returning HTML → check your API route, URL, and backend logs.
+
+If it’s returning an error page → fix the backend error.
+
+Ensure the API always responds with valid JSON (even for errors).
+
+👉 Can you share the fetch/axios code you’re using on line 96 of AppointmentBooking.tsx and maybe the request URL? That’ll help me pinpoint whether it’s a URL mismatch or a backend response issue.
