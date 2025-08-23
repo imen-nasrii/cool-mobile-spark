@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { apiClient } from '@/lib/apiClient';
+import { apiRequest } from '@/lib/queryClient';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -68,9 +68,8 @@ export const AppointmentBooking = ({
     try {
       const appointmentDateTime = new Date(`${selectedDate}T${selectedTime}:00.000Z`);
       
-      const response = await apiClient.request('/appointments', {
+      const response = await apiRequest('/api/appointments', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           conversation_id: conversationId,
           product_id: productId,
@@ -83,7 +82,7 @@ export const AppointmentBooking = ({
       });
 
       // Marquer le produit comme réservé
-      await apiClient.request(`/products/${productId}/reserve`, {
+      await apiRequest(`/api/products/${productId}/reserve`, {
         method: 'PATCH'
       });
 
