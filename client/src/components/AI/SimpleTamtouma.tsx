@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const SimpleTamtouma = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -6,6 +6,11 @@ export const SimpleTamtouma = () => {
     { id: '1', text: "Yoo ! 🍅 Tamtouma dans la place ! Ton assistant perso le plus stylé ! Qu'est-ce qu'on fait aujourd'hui ? 🔥😎", isBot: true }
   ]);
   const [inputValue, setInputValue] = useState('');
+
+  // Debug: Vérifier que le composant se charge
+  useEffect(() => {
+    console.log('🤖 Tamtouma component loaded successfully!');
+  }, []);
 
   const quickResponses = [
     { keywords: ['salut', 'bonjour', 'hello', 'yo', 'hey'], response: "Yoo ! 🍅 Tamtouma dans la place ! Prêt pour faire des affaires de ouf ? 🔥" },
