@@ -1021,7 +1021,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         product_id,
         requester_id: requesterId,
         owner_id: product.user_id,
-        appointment_date,
+        appointment_date: new Date(appointment_date),
         location: location || '',
         notes: notes || '',
         status: 'pending'
